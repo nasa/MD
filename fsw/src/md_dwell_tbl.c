@@ -1,8 +1,8 @@
 /*************************************************************************
 ** File:
-**   $Id: md_dwell_tbl.c 1.13 2015/03/01 17:17:55EST sstrege Exp  $
+**   $Id: md_dwell_tbl.c 1.10 2017/05/23 15:15:26EDT mdeschu Exp  $
 **
-**  Copyright © 2007-2014 United States Government as represented by the 
+**  Copyright (c) 2007-2014 United States Government as represented by the 
 **  Administrator of the National Aeronautics and Space Administration. 
 **  All Other Rights Reserved.  
 **
@@ -14,45 +14,6 @@
 ** Purpose: 
 **   Functions used for validating and copying CFS Memory Dwell Tables.
 **
-**   $Log: md_dwell_tbl.c  $
-**   Revision 1.13 2015/03/01 17:17:55EST sstrege 
-**   Added copyright information
-**   Revision 1.12 2012/01/09 18:09:14EST aschoeni 
-**   Fixed buffer overflow issue.
-**   Revision 1.11 2012/01/09 18:00:22EST aschoeni 
-**   Added ability to not force 32 bit alignment
-**   Revision 1.10 2009/10/09 14:01:19EDT aschoeni 
-**   Fixed event output for 0 delay dwell tables (as it should not be in the error clause since it is not an error)
-**   Revision 1.9 2009/09/30 15:00:10EDT aschoeni 
-**   Table is not longer rejected if rate is zero (event now reports if no processing will occur due to enabled table having 0 rate).
-**   Revision 1.8 2009/09/30 14:12:50EDT aschoeni 
-**   Added check to make sure signature is null terminated.
-**   Revision 1.7 2009/06/12 14:19:04EDT rmcgraw 
-**   DCR82191:1 Changed OS_Mem function calls to CFE_PSP_Mem
-**   Revision 1.6 2009/04/02 14:39:50EDT nschweis 
-**   Modified code so that operations having to do with signature capability are conditionally compiled 
-**   only when the signature option has been enabled.
-**   CP 7326:1.
-**   Revision 1.5 2009/02/11 16:07:14EST nschweis 
-**   Fixed signature copy from dwell table so that it is only performed once.
-**   It was previously performed within a loop so that it was unnecessarily executed once for each
-**   dwell table entry.  
-**   CPID 4205:2.
-**   Revision 1.4 2009/01/12 14:29:55EST nschweis 
-**   Removed debug statements from source code.  CPID 4688:1.
-**   Revision 1.3 2008/12/10 15:44:24EST nschweis 
-**   1) Added functions to change contents of Table Services buffer.
-**   2) When a new dwell table is loaded or recovered, copy signature to local data structure.
-**   CPID 2624:1.
-**   Revision 1.2 2008/08/08 14:10:02EDT nsschweiss 
-**   1) Changed included file name from cfs_lib.h to cfs_utils.h.
-**   2) Corrected code used by table validation function.
-**   3) Modified MD_CopyUpdatedTbl() to take additional argument, a dwell table pointer, and to remove its 
-**   CFE_TBL_GetAddress call.  This corrects bug in which CFE_TBL_GetAddress was called twice for each 
-**   table on initialization.
-**   Revision 1.1 2008/07/02 13:49:53EDT nsschweiss 
-**   Initial revision
-**   Member added to project c:/MKSDATA/MKS-REPOSITORY/CFS-REPOSITORY/md/fsw/src/project.pj
 ** 
 *************************************************************************/
 
@@ -70,91 +31,6 @@
 
 
 extern MD_AppData_t MD_AppData;
-
-
-
-/* Forward References */
-/*****************************************************************************/
-/**
-** \brief Read Dwell Table to extract address count, byte size, and rate.
-**
-** \par Description
-**          Read active entries and count number of dwell addresses,
-**          number of bytes to be dwelled on, and number of wakeup calls
-**          between sending of dwell packets.
-** 
-** \par Assumptions, External Events, and Notes:
-**          None
-**
-** \param[in] TblPtr Table pointer
-**    
-** \param[out] *ActiveAddrCountPtr Number of addresses to be sampled.
-**                                  
-** \param[out] *SizePtr            Size, in bytes, of data to be sampled. 
-**
-** \param[out] *RatePtr            Rate, in number of wakeup calls, between 
-**                                 sending of dwell packets. 
-**                                 
-** \retval CFE_SUCCESS
-******************************************************************************/
-int32 MD_ReadDwellTable(MD_DwellTableLoad_t *TblPtr, 
-                uint16 *ActiveAddrCountPtr, 
-                uint16 *SizePtr, 
-                uint32 *RatePtr);
-
-/*****************************************************************************/
-/**
-** \brief Validate dwell table entry.
-**
-** \par Description
-**          Validates whether specified dwell table entry is valid. 
-** 
-** \par Assumptions, External Events, and Notes:
-**          To be valid, entry must either be a null entry
-**          (specified by a zero field length) or all of its
-**          address and length fields must pass various checks.
-**
-** \param[in] TblEntryPtr Entry pointer
-**    
-**                                 
-** \returns
-** \retcode #CFE_SUCCESS           \retdesc \copydoc CFE_SUCCESS            \endcode
-** \retcode #MD_RESOLVE_ERROR      \retdesc \copydoc MD_RESOLVE_ERROR       \endcode
-** \retcode #MD_INVALID_ADDR_ERROR \retdesc \copydoc MD_INVALID_ADDR_ERROR  \endcode
-** \retcode #MD_INVALID_LEN_ERROR  \retdesc \copydoc MD_INVALID_LEN_ERROR   \endcode
-** \retcode #MD_NOT_ALIGNED_ERROR  \retdesc \copydoc MD_NOT_ALIGNED_ERROR   \endcode
-** \endreturns
-******************************************************************************/
-int32 MD_ValidTableEntry (MD_TableLoadEntry_t *TblEntryPtr);
-
-/*****************************************************************************/
-/**
-** \brief Validate dwell entries in specified Dwell Table.
-**
-** \par Description
-**          Validate memory ranges for dwell address and field length,
-**          and validate field length size for entries in specified Dwell Table.
-** 
-** \par Assumptions, External Events, and Notes:
-**          For table to be valid, each entry must be a null entry
-**          (specified by a zero field length) or the entry's address
-**          and length field must pass various checks.
-**
-** \param[in] TblPtr Table pointer
-**    
-** \param[out] *ErrorEntryArg  Entry number (0..) of first detected error, if any.
-**                                 
-** \returns
-** \retcode #CFE_SUCCESS           \retdesc \copydoc CFE_SUCCESS            \endcode
-** \retcode #MD_RESOLVE_ERROR      \retdesc \copydoc MD_RESOLVE_ERROR       \endcode
-** \retcode #MD_INVALID_ADDR_ERROR \retdesc \copydoc MD_INVALID_ADDR_ERROR  \endcode
-** \retcode #MD_INVALID_LEN_ERROR  \retdesc \copydoc MD_INVALID_LEN_ERROR   \endcode
-** \retcode #MD_NOT_ALIGNED_ERROR  \retdesc \copydoc MD_NOT_ALIGNED_ERROR   \endcode
-** \endreturns
-******************************************************************************/
-int32 MD_CheckTableEntries(MD_DwellTableLoad_t *TblPtr, 
-                uint16 *ErrorEntryArg);
-
 
 /******************************************************************************/
 int32 MD_TableValidationFunc (void *TblPtr)
@@ -189,7 +65,7 @@ int32 MD_TableValidationFunc (void *TblPtr)
     {
         CFE_EVS_SendEvent(MD_TBL_ENA_FLAG_EID, CFE_EVS_ERROR, 
         "Dwell Table rejected because value of enable flag (%d) is invalid", 
-                          LocalTblPtr->Enabled); 
+                          (int)LocalTblPtr->Enabled); 
         Status = MD_TBL_ENA_FLAG_ERROR;
     }
 
@@ -221,7 +97,7 @@ int32 MD_TableValidationFunc (void *TblPtr)
                CFE_EVS_SendEvent(MD_RESOLVE_ERR_EID, CFE_EVS_ERROR, 
                "Dwell Table rejected because address (sym='%s'/offset=0x%08X) in entry #%d couldn't be resolved", 
                    LocalTblPtr->Entry[TblErrorEntryIndex].DwellAddress.SymName,
-                   LocalTblPtr->Entry[TblErrorEntryIndex].DwellAddress.Offset,
+                   (unsigned int)LocalTblPtr->Entry[TblErrorEntryIndex].DwellAddress.Offset,
                    TblErrorEntryIndex + 1); 
             }
             else if (Status == MD_INVALID_ADDR_ERROR)
@@ -229,7 +105,7 @@ int32 MD_TableValidationFunc (void *TblPtr)
                 CFE_EVS_SendEvent(MD_RANGE_ERR_EID, CFE_EVS_ERROR, 
                 "Dwell Table rejected because address (sym='%s'/offset=0x%08X) in entry #%d was out of range", 
                    LocalTblPtr->Entry[TblErrorEntryIndex].DwellAddress.SymName,
-                   LocalTblPtr->Entry[TblErrorEntryIndex].DwellAddress.Offset,
+                   (unsigned int)LocalTblPtr->Entry[TblErrorEntryIndex].DwellAddress.Offset,
                    TblErrorEntryIndex + 1); 
 
             }
@@ -245,7 +121,7 @@ int32 MD_TableValidationFunc (void *TblPtr)
                 CFE_EVS_SendEvent(MD_TBL_ALIGN_ERR_EID, CFE_EVS_ERROR, 
                 "Dwell Table rejected because address (sym='%s'/offset=0x%08X) in entry #%d not properly aligned for %d-byte dwell", 
                    LocalTblPtr->Entry[TblErrorEntryIndex].DwellAddress.SymName,
-                   LocalTblPtr->Entry[TblErrorEntryIndex].DwellAddress.Offset,
+                   (unsigned int)LocalTblPtr->Entry[TblErrorEntryIndex].DwellAddress.Offset,
                    TblErrorEntryIndex + 1,
                    LocalTblPtr->Entry[TblErrorEntryIndex].Length
                    ); 
@@ -299,7 +175,13 @@ int32 MD_CheckTableEntries(MD_DwellTableLoad_t *TblPtr,
 {
     int32       Status               = CFE_SUCCESS;
     uint16      EntryIndex;
-    *ErrorEntryArg  = 0 ;
+    int32       FirstBadIndex = -1;
+    
+    int32 GoodCount   = 0;
+    int32 BadCount    = 0;
+    int32 UnusedCount = 0;
+    
+    *ErrorEntryArg  = 0;
     
     /* 
     **   Check each Dwell Table entry for valid address range 
@@ -311,14 +193,42 @@ int32 MD_CheckTableEntries(MD_DwellTableLoad_t *TblPtr,
 
         Status = MD_ValidTableEntry(&TblPtr->Entry[EntryIndex]);
         
-        
-        if (Status != CFE_SUCCESS)
+        if (Status == CFE_SUCCESS)
         {
-            *ErrorEntryArg = EntryIndex;
+            if (TblPtr->Entry[EntryIndex].Length == 0)
+            {
+                /* 
+                ** Stop reading through the table when the entry length is
+                ** zero, remaining entries count as unused
+                */
+                break;
+            }
+            else
+            {
+                GoodCount++;
+            }
+        }
+        else 
+        {
+            /* Status != CFE_SUCCESS */
+            BadCount++;
+            if (FirstBadIndex == -1)
+            {
+                FirstBadIndex = EntryIndex;
+                *ErrorEntryArg = FirstBadIndex;
+                /* Keep counting good,bad,unused, don't exit immediately */
+            }
         }
     }
 
+    UnusedCount = MD_DWELL_TABLE_SIZE - EntryIndex;
        
+    /*
+    ** Generate informational event with error totals
+    */
+    CFE_EVS_SendEvent(MD_DWELL_TBL_INF_EID, CFE_EVS_INFORMATION,
+                     "MD Dwell Tbl verify results: good = %d, bad = %d, unused = %d",
+                      (int)GoodCount, (int)BadCount, (int)UnusedCount);
     return Status;
 
 } /* End of MD_CheckTableEntries */
@@ -328,7 +238,7 @@ int32 MD_ValidTableEntry (MD_TableLoadEntry_t *TblEntryPtr)
 {
     int32       Status;
     uint16      DwellLength;
-    uint32      ResolvedAddr    = 0;
+    cpuaddr      ResolvedAddr    = 0;
 
     DwellLength= TblEntryPtr->Length ;
     
@@ -385,7 +295,7 @@ int32 MD_ValidTableEntry (MD_TableLoadEntry_t *TblEntryPtr)
 void MD_CopyUpdatedTbl(MD_DwellTableLoad_t *MD_LoadTablePtr, uint8 TblIndex)
 {
     uint8                    EntryIndex;
-    uint32                   ResolvedAddr;
+    cpuaddr                  ResolvedAddr;
     MD_TableLoadEntry_t     *ThisLoadEntry;
 	MD_DwellPacketControl_t *LocalControlStruct;
 	

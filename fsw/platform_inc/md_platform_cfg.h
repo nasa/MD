@@ -1,8 +1,8 @@
 /*************************************************************************
 ** File:
-**   $Id: md_platform_cfg.h 1.9 2015/03/01 17:17:58EST sstrege Exp  $
+**   $Id: md_platform_cfg.h 1.4 2017/05/22 14:59:23EDT mdeschu Exp  $
 **
-**  Copyright © 2007-2014 United States Government as represented by the 
+**  Copyright (c) 2007-2014 United States Government as represented by the 
 **  Administrator of the National Aeronautics and Space Administration. 
 **  All Other Rights Reserved.  
 **
@@ -17,25 +17,6 @@
 **
 ** Notes:
 **
-**   $Log: md_platform_cfg.h  $
-**   Revision 1.9 2015/03/01 17:17:58EST sstrege 
-**   Added copyright information
-**   Revision 1.8 2012/05/31 16:00:53EDT lwalling 
-**   Move definition of MD_MISSION_REV from md_version.h to md_platform_cfg.h
-**   Revision 1.7 2012/01/09 15:01:54PST aschoeni 
-**   Added ability to not force 32 bit alignment
-**   Revision 1.6 2009/10/02 19:12:51EDT aschoeni 
-**   Updated verify.h and platform config file.
-**   Revision 1.5 2009/09/30 14:14:44EDT aschoeni 
-**   Added note about signature length.
-**   Revision 1.4 2008/10/06 10:29:51EDT dkobe 
-**   Updated and Corrected Doxygen Comments
-**   Revision 1.3 2008/09/05 17:43:56EDT nsschweiss 
-**   Deleted perf id.
-**   Revision 1.2 2008/07/02 13:34:55EDT nsschweiss 
-**   CFS MD Post Code Review Version
-**   Date: 08/05/09
-**   CPID: 1653:2
 ** 
 *************************************************************************/
 
@@ -53,6 +34,19 @@
 #define MD_PIPE_NAME       "MD_CMD_PIPE"
 #define MD_PIPE_DEPTH      50
 /** \} */
+
+
+/** \mdcfg Memory Dwell Base Filename
+**  
+**  \par Description:
+**       Default base name and location for Memory Dwell filenames
+**       AppInit will append 01,02,03, up to number of tables.
+**
+**  \par Limits:
+**       This string shouldn't be longer than #OS_MAX_PATH_LEN for the
+**       target platform in question
+*/
+#define MD_TBL_FILENAME_FORMAT                "/cf/apps/md_dw\%02d.tbl"
 
 /**
 **  \mdcfg Number of memory dwell tables.

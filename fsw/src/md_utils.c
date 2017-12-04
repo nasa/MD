@@ -1,8 +1,8 @@
 /*************************************************************************
 ** File:
-**   $Id: md_utils.c 1.7 2015/03/01 17:17:17EST sstrege Exp  $
+**   $Id: md_utils.c 1.4 2017/05/22 14:56:29EDT mdeschu Exp  $
 **
-**  Copyright © 2007-2014 United States Government as represented by the 
+**  Copyright (c) 2007-2014 United States Government as represented by the 
 **  Administrator of the National Aeronautics and Space Administration. 
 **  All Other Rights Reserved.  
 **
@@ -14,21 +14,6 @@
 ** Purpose: 
 **   Utility functions used for processing CFS Memory Dwell commands
 **
-**   $Log: md_utils.c  $
-**   Revision 1.7 2015/03/01 17:17:17EST sstrege 
-**   Added copyright information
-**   Revision 1.6 2012/01/09 18:14:23EST aschoeni 
-**   Fixed buffer overflow issue
-**   Revision 1.5 2009/06/18 10:11:53EDT rmcgraw 
-**   DCR8291:1 Changed #defines from OS_MEM_ to CFE_PSP_MEM_
-**   Revision 1.4 2009/06/12 14:19:05EDT rmcgraw 
-**   DCR82191:1 Changed OS_Mem function calls to CFE_PSP_Mem
-**   Revision 1.3 2009/01/12 14:33:35EST nschweis 
-**   Removed debug statements from source code.  CPID 4688:1.
-**   Revision 1.2 2008/07/02 13:53:39EDT nsschweiss 
-**   CFS MD Post Code Review Version
-**   Date: 08/05/09
-**   CPID: 1653:2
 ** 
 *************************************************************************/
 
@@ -122,7 +107,7 @@ boolean MD_ValidEntryId            ( uint16 EntryId )
 
 /******************************************************************************/
 
-boolean MD_ValidAddrRange( uint32 Addr, uint32 Size )
+boolean MD_ValidAddrRange( cpuaddr Addr, uint32 Size )
 {
     boolean IsValid;
 

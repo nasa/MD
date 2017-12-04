@@ -1,8 +1,8 @@
 /*************************************************************************
 ** File:
-**   $Id: md_dwell_tbl.h 1.6 2015/03/01 17:17:54EST sstrege Exp  $
+**   $Id: md_dwell_tbl.h 1.4 2017/05/22 14:56:35EDT mdeschu Exp  $
 **
-**  Copyright © 2007-2014 United States Government as represented by the 
+**  Copyright (c) 2007-2014 United States Government as represented by the 
 **  Administrator of the National Aeronautics and Space Administration. 
 **  All Other Rights Reserved.  
 **
@@ -16,25 +16,6 @@
 **
 ** Notes:
 **
-**   $Log: md_dwell_tbl.h  $
-**   Revision 1.6 2015/03/01 17:17:54EST sstrege 
-**   Added copyright information
-**   Revision 1.5 2009/04/02 14:46:55EDT nschweis 
-**   Modified code so that function signature and corresponding user documentation only compiles 
-**   if signature option has been enabled.
-**   CPID 7326:1.
-**   Revision 1.4 2009/02/11 16:08:55EST nschweis 
-**   Updated comments for MD_CopyUpdatedTbl function.  
-**   CPID 4205:2.
-**   Revision 1.3 2008/12/10 15:04:07EST nschweis 
-**   Added functions to change contents of Table Services buffer.
-**   CPID 2624:1.
-**   Revision 1.2 2008/08/08 14:56:31EDT nsschweiss 
-**   Function signature and description of MD_CopyUpdatedTbl are modified to reflect addition of a
-**   table pointer argument.
-**   Revision 1.1 2008/07/02 13:49:59EDT nsschweiss 
-**   Initial revision
-**   Member added to project c:/MKSDATA/MKS-REPOSITORY/CFS-REPOSITORY/md/fsw/src/project.pj
 ** 
 *************************************************************************/
 
@@ -175,6 +156,87 @@ void MD_UpdateTableDwellEntry (uint16 TableIndex,
 void MD_UpdateTableSignature (uint16 TableIndex, 
                                char NewSignature[MD_SIGNATURE_FIELD_LENGTH]);
 #endif
+
+/*****************************************************************************/
+/**
+** \brief Read Dwell Table to extract address count, byte size, and rate.
+**
+** \par Description
+**          Read active entries and count number of dwell addresses,
+**          number of bytes to be dwelled on, and number of wakeup calls
+**          between sending of dwell packets.
+** 
+** \par Assumptions, External Events, and Notes:
+**          None
+**
+** \param[in] TblPtr Table pointer
+**    
+** \param[out] *ActiveAddrCountPtr Number of addresses to be sampled.
+**                                  
+** \param[out] *SizePtr            Size, in bytes, of data to be sampled. 
+**
+** \param[out] *RatePtr            Rate, in number of wakeup calls, between 
+**                                 sending of dwell packets. 
+**                                 
+** \retval CFE_SUCCESS
+******************************************************************************/
+int32 MD_ReadDwellTable(MD_DwellTableLoad_t *TblPtr, 
+                uint16 *ActiveAddrCountPtr, 
+                uint16 *SizePtr, 
+                uint32 *RatePtr);
+
+/*****************************************************************************/
+/**
+** \brief Validate dwell table entry.
+**
+** \par Description
+**          Validates whether specified dwell table entry is valid. 
+** 
+** \par Assumptions, External Events, and Notes:
+**          To be valid, entry must either be a null entry
+**          (specified by a zero field length) or all of its
+**          address and length fields must pass various checks.
+**
+** \param[in] TblEntryPtr Entry pointer
+**    
+**                                 
+** \returns
+** \retcode #CFE_SUCCESS           \retdesc \copydoc CFE_SUCCESS            \endcode
+** \retcode #MD_RESOLVE_ERROR      \retdesc \copydoc MD_RESOLVE_ERROR       \endcode
+** \retcode #MD_INVALID_ADDR_ERROR \retdesc \copydoc MD_INVALID_ADDR_ERROR  \endcode
+** \retcode #MD_INVALID_LEN_ERROR  \retdesc \copydoc MD_INVALID_LEN_ERROR   \endcode
+** \retcode #MD_NOT_ALIGNED_ERROR  \retdesc \copydoc MD_NOT_ALIGNED_ERROR   \endcode
+** \endreturns
+******************************************************************************/
+int32 MD_ValidTableEntry (MD_TableLoadEntry_t *TblEntryPtr);
+
+/*****************************************************************************/
+/**
+** \brief Validate dwell entries in specified Dwell Table.
+**
+** \par Description
+**          Validate memory ranges for dwell address and field length,
+**          and validate field length size for entries in specified Dwell Table.
+** 
+** \par Assumptions, External Events, and Notes:
+**          For table to be valid, each entry must be a null entry
+**          (specified by a zero field length) or the entry's address
+**          and length field must pass various checks.
+**
+** \param[in] TblPtr Table pointer
+**    
+** \param[out] *ErrorEntryArg  Entry number (0..) of first detected error, if any.
+**                                 
+** \returns
+** \retcode #CFE_SUCCESS           \retdesc \copydoc CFE_SUCCESS            \endcode
+** \retcode #MD_RESOLVE_ERROR      \retdesc \copydoc MD_RESOLVE_ERROR       \endcode
+** \retcode #MD_INVALID_ADDR_ERROR \retdesc \copydoc MD_INVALID_ADDR_ERROR  \endcode
+** \retcode #MD_INVALID_LEN_ERROR  \retdesc \copydoc MD_INVALID_LEN_ERROR   \endcode
+** \retcode #MD_NOT_ALIGNED_ERROR  \retdesc \copydoc MD_NOT_ALIGNED_ERROR   \endcode
+** \endreturns
+******************************************************************************/
+int32 MD_CheckTableEntries(MD_DwellTableLoad_t *TblPtr, 
+                uint16 *ErrorEntryArg);
 
 #endif /* _md_dwell_tbl_h_ */
 /************************/

@@ -67,12 +67,14 @@ PROC $sc_$cpu_md_gencmds
 ;   None
 ;
 ;  Change History
-;
-;   Date          Name     	Description
-;   05/20/08      S. Jonke	Original Procedure
-;   12/04/09      W. Moleski    Turned logging off around code that did not
-;                               provide any significant benefit of logging
-;   04/28/11      W. Moleski    Added variables for the App and table names
+;   Date        Name        Description
+;   05/20/08    S. Jonke    Original Procedure
+;   12/04/09    W. Moleski  Turned logging off around code that did not
+;                           provide any significant benefit of logging
+;   04/28/11    W. Moleski  Added variables for the App and table names
+;   06/12/17    W. Moleski  Updated to use CPU1 for commanding and added a
+;                           hostCPU variable for the utility procs to connect
+;                           to the proper host.
 ;
 ;  Arguments
 ;   None
@@ -134,19 +136,20 @@ local testdata_addr
 local errcnt
 
 local MDAppName = "MD"
+local hostCPU = "$CPU"
 
 write ";*********************************************************************"
-write ";  Step 1.0:  Initialize the CPU for this test. "
+write ";  Step 1.0: Initialize the CPU for this test. "
 write ";*********************************************************************"
-write ";             Command a Power-On Reset on $CPU. "
+write ";            Command a Power-On Reset. "
 write ";********************************************************************"
 /$SC_$CPU_ES_POWERONRESET
 wait 10
 
 close_data_center
-wait 75
-                                                                                
-cfe_startup $CPU
+wait 60
+
+cfe_startup {hostCPU}
 wait 5
 
 write ";*********************************************************************"
@@ -156,7 +159,7 @@ write ";********************************************************************"
 ut_setupevents "$SC", "$CPU", "CFE_ES", CFE_ES_START_INF_EID, "INFO", 1
 ut_setupevents "$SC", "$CPU", "TST_MD", TST_MD_INIT_INF_EID, "INFO", 2
 
-s load_start_app ("TST_MD","$CPU","TST_MD_AppMain")
+s load_start_app ("TST_MD",hostCPU,"TST_MD_AppMain")
 
 ; Wait for app startup events
 ut_tlmwait  $SC_$CPU_find_event[2].num_found_messages, 1
@@ -170,15 +173,9 @@ else
   write "<!> Failed - TST_MD Application start Event Message not received."
 endif
 
-;;; Need to set the stream based upon the cpu being used
-;;; CPU1 is the default
+;; Need to set the stream based upon the cpu being used
+;; CPU1 is the default
 stream1 = x'92D'
-
-if ("$CPU" = "CPU2") then
-  stream1 = x'A2D'
-elseif ("$CPU" = "CPU3") then
-  stream1 = x'B2D'
-endif
 
 write "Sending command to add subscription for TST_MD HK packet."
 /$SC_$CPU_TO_ADDPACKET Stream=stream1 Pkt_Size=x'0' Priority=x'0' Reliability=x'1' Buflimit=x'4'
@@ -199,7 +196,7 @@ write ";********************************************************************"
 ut_setupevents "$SC", "$CPU", "CFE_ES", CFE_ES_START_INF_EID, "INFO", 1
 ut_setupevents "$SC", "$CPU", {MDAppName}, MD_INIT_INF_EID, "INFO", 2
 
-s load_start_app (MDAppName,"$CPU","MD_AppMain")
+s load_start_app (MDAppName,hostCPU,"MD_AppMain")
 
 ; Wait for app startup events
 ut_tlmwait  $SC_$CPU_find_event[2].num_found_messages, 1
@@ -222,22 +219,6 @@ dwell1 = x'891'
 dwell2 = x'892'
 dwell3 = x'893'
 dwell4 = x'894'
-
-if ("$CPU" = "CPU2") then
-  stream1 = x'990'
-  hkPktId = "p190"
-  dwell1 = x'991'
-  dwell2 = x'992'
-  dwell3 = x'993'
-  dwell4 = x'994'
-elseif ("$CPU" = "CPU3") then
-  stream1 = x'A90'
-  hkPktId = "p290"
-  dwell1 = x'A91'
-  dwell2 = x'A92'
-  dwell3 = x'A93'
-  dwell4 = x'A94'
-endif
 
 write "Sending commands to add subscriptions for MD HK and dwell packets."
 /$SC_$CPU_TO_ADDPACKET Stream=stream1 Pkt_Size=x'0' Priority=x'0' Reliability=x'1' Buflimit=x'4'
@@ -401,12 +382,6 @@ rawcmd = ""
 ;;; CPU1 is the default
 rawcmd = "1890C000000200A8"
 
-if ("$CPU" = "CPU2") then
-  rawcmd = "1990C000000200A8"
-elseif ("$CPU" = "CPU3") then
-  rawcmd = "1A90C000000200A8"
-endif
-
 ut_sendrawcmd "$SC_$CPU_MD", (rawcmd)
 
 ut_tlmwait $SC_$CPU_MD_CMDEC, {errcnt}
@@ -444,12 +419,6 @@ rawcmd = ""
 
 ;;; CPU1 is the default
 rawcmd = "1890C000000402A80000"
-
-if ("$CPU" = "CPU2") then
-  rawcmd = "1990C000000402A80000"
-elseif ("$CPU" = "CPU3") then
-  rawcmd = "1A90C000000402A80000"
-endif
 
 ut_sendrawcmd "$SC_$CPU_MD", (rawcmd)
 
@@ -489,12 +458,6 @@ rawcmd = ""
 ;;; CPU1 is the default
 rawcmd = "1890C000000403A80000"
 
-if ("$CPU" = "CPU2") then
-  rawcmd = "1990C000000403A80000"
-elseif ("$CPU" = "CPU3") then
-  rawcmd = "1A90C000000403A80000"
-endif
-
 ut_sendrawcmd "$SC_$CPU_MD", (rawcmd)
 
 ut_tlmwait $SC_$CPU_MD_CMDEC, {errcnt}
@@ -532,12 +495,6 @@ rawcmd = ""
 
 ;;; CPU1 is the default
 rawcmd = "1890C000005F04A800000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000"
-
-if ("$CPU" = "CPU2") then
-  rawcmd = "1990C000005F04A800000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000"
-elseif ("$CPU" = "CPU3") then
-  rawcmd = "1A90C000005F04A800000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000"
-endif
 
 ut_sendrawcmd "$SC_$CPU_MD", (rawcmd)
 
@@ -631,12 +588,6 @@ rawcmd = ""
 ;;; CPU1 is the default
 rawcmd = "1890C000000401AD"
 
-if ("$CPU" = "CPU2") then
-  rawcmd = "1990C000000401AD"
-elseif ("$CPU" = "CPU3") then
-  rawcmd = "1A90C000000401AD"
-endif
-
 ut_sendrawcmd "$SC_$CPU_MD", (rawcmd)
 
 ut_tlmwait $SC_$CPU_MD_CMDEC, {errcnt}
@@ -670,12 +621,6 @@ ut_setupevents "$SC", "$CPU", {MDAppName}, MD_CC_NOT_IN_TBL_ERR_EID, "ERROR", 1
 errcnt = $SC_$CPU_MD_CMDEC + 1
 ;;; CPU1 is the default
 rawcmd = "1890C0000001aa"
-
-if ("$CPU" = "CPU2") then
-  rawcmd = "1990C0000001aa"
-elseif ("$CPU" = "CPU3") then
-  rawcmd = "1A90C0000001aa"
-endif
 
 ut_sendrawcmd "$SC_$CPU_MD", (rawcmd)
 
@@ -767,7 +712,7 @@ wait 5
 write ";*********************************************************************"
 write ";  Step 2.11: Send a Jam Dwell command specifying an invalid symbol and offset."
 write ";*********************************************************************"
-ut_setupevents "$SC", "$CPU", {MDAppName}, MD_CANT_RESOLVE_JAM_ADDR_ERR_EID, "ERROR", 1
+ut_setupevents "$SC","$CPU",{MDAppName},MD_CANT_RESOLVE_JAM_ADDR_ERR_EID,"ERROR", 1
 
 errcnt = $SC_$CPU_MD_CMDEC + 1
 
@@ -803,9 +748,9 @@ write ";*********************************************************************"
 wait 10
 
 close_data_center
-wait 75
-                                                                                
-cfe_startup $CPU
+wait 60
+
+cfe_startup {hostCPU}
 wait 5
 
 write "**** Requirements Status Reporting"

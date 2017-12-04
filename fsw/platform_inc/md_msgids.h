@@ -1,8 +1,8 @@
 /*************************************************************************
 ** File:
-**   $Id: md_msgids.h 1.4 2015/03/01 17:17:50EST sstrege Exp  $
+**   $Id: md_msgids.h 1.3 2017/05/22 14:56:34EDT mdeschu Exp  $
 **
-**  Copyright © 2007-2014 United States Government as represented by the 
+**  Copyright (c) 2007-2014 United States Government as represented by the 
 **  Administrator of the National Aeronautics and Space Administration. 
 **  All Other Rights Reserved.  
 **
@@ -18,18 +18,6 @@
 **
 ** Notes:
 **
-**   $Log: md_msgids.h  $
-**   Revision 1.4 2015/03/01 17:17:50EST sstrege 
-**   Added copyright information
-**   Revision 1.3 2009/09/16 15:30:01EDT aschoeni 
-**   Updated MIDs to development standards document value for cpu1
-**   Revision 1.2 2008/09/12 12:16:11EDT nsschweiss 
-**   Changed Message IDs to those specified in CFS Flight Software Development Standards Document, 
-**   Appendix A.
-**   CPID 4289:1.
-**   Revision 1.1 2008/07/02 13:25:33EDT nsschweiss 
-**   Initial revision
-**   Member added to project c:/MKSDATA/MKS-REPOSITORY/CFS-REPOSITORY/md/fsw/platform_inc/project.pj
 ** 
 *************************************************************************/
 #ifndef _md_msgids_h_

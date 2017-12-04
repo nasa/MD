@@ -1,8 +1,8 @@
 /*************************************************************************
 ** File:
-**   $Id: md_cmds.c 1.9 2015/03/01 17:17:42EST sstrege Exp  $
+**   $Id: md_cmds.c 1.5 2017/05/22 14:56:32EDT mdeschu Exp  $
 **
-**  Copyright © 2007-2014 United States Government as represented by the 
+**  Copyright (c) 2007-2014 United States Government as represented by the 
 **  Administrator of the National Aeronautics and Space Administration. 
 **  All Other Rights Reserved.  
 **
@@ -14,29 +14,6 @@
 ** Purpose: 
 **   Functions for processing individual CFS Memory Dwell commands
 **
-**   $Log: md_cmds.c  $
-**   Revision 1.9 2015/03/01 17:17:42EST sstrege 
-**   Added copyright information
-**   Revision 1.8 2012/01/09 18:01:10EST aschoeni 
-**   Added ability to not force 32 bit alignment
-**   Revision 1.7 2009/09/30 17:31:07EDT aschoeni 
-**   Added message if a dwell is jammed to zero in an enabled table
-**   Revision 1.6 2009/09/30 15:53:32EDT aschoeni 
-**   Updated Enable command to output event if table with a delay of 0 is enabled.
-**   Revision 1.5 2009/09/30 14:13:40EDT aschoeni 
-**   Added check to make sure signature is null terminated.
-**   Revision 1.4 2009/01/12 14:33:23EST nschweis 
-**   Removed debug statements from source code.  CPID 4688:1.
-**   Revision 1.3 2008/12/10 14:59:57EST nschweis 
-**   Modified to test changes in DCR #2624: Keep Memory Dwell in sync with Table Services buffer.
-**   Modified code so that state changes triggered by Start, Stop, Jam, and Set Signature commands are
-**   copied to the Table Services buffer.
-**   CPID 2624:1.
-**   Revision 1.2 2008/08/07 16:55:08EDT nsschweiss 
-**   Changed name of included file from cfs_lib.h to cfs_utils.h.
-**   Revision 1.1 2008/07/02 13:47:00EDT nsschweiss 
-**   Initial revision
-**   Member added to project c:/MKSDATA/MKS-REPOSITORY/CFS-REPOSITORY/md/fsw/src/project.pj
 ** 
 *************************************************************************/
 
@@ -186,7 +163,7 @@ void MD_ProcessJamCmd(CFE_SB_MsgPtr_t MessagePtr)
     /* Local variables */
     MD_CmdJam_t            *Jam = 0;
     boolean                 AllInputsValid = TRUE;
-    uint32                  ResolvedAddr=0;
+    cpuaddr                 ResolvedAddr=0;
     MD_DwellControlEntry_t *DwellEntryPtr = 0; /* points to local task data */
     uint16                  EntryIndex = 0;
     uint8                   TableIndex = 0;
@@ -282,7 +259,7 @@ void MD_ProcessJamCmd(CFE_SB_MsgPtr_t MessagePtr)
                 /* Issue event message that ResolvedAddr is invalid */
                 CFE_EVS_SendEvent(MD_INVALID_JAM_ADDR_ERR_EID, CFE_EVS_ERROR,
                                  "Jam Cmd rejected because address 0x%08X is not in a valid range", 
-                                  ResolvedAddr);
+                                  (unsigned int)ResolvedAddr);
                 AllInputsValid = FALSE;
             }
 #if MD_ENFORCE_DWORD_ALIGN == 0
@@ -300,7 +277,7 @@ void MD_ProcessJamCmd(CFE_SB_MsgPtr_t MessagePtr)
             {
                 CFE_EVS_SendEvent(MD_JAM_ADDR_NOT_32BIT_ERR_EID, CFE_EVS_ERROR,
                                  "Jam Cmd rejected because address 0x%08X is not 32-bit aligned", 
-                                  ResolvedAddr);
+                                  (unsigned int)ResolvedAddr);
                 AllInputsValid = FALSE;
             }
 #endif
@@ -308,7 +285,7 @@ void MD_ProcessJamCmd(CFE_SB_MsgPtr_t MessagePtr)
             {
                 CFE_EVS_SendEvent(MD_JAM_ADDR_NOT_16BIT_ERR_EID, CFE_EVS_ERROR,
                                  "Jam Cmd rejected because address 0x%08X is not 16-bit aligned", 
-                                  ResolvedAddr);
+                                  (unsigned int)ResolvedAddr);
                 AllInputsValid = FALSE;
             }
 

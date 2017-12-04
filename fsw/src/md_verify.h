@@ -1,8 +1,8 @@
 /*************************************************************************
 ** File:
-**   $Id: md_verify.h 1.5 2015/03/01 17:17:27EST sstrege Exp  $
+**   $Id: md_verify.h 1.3 2017/05/22 14:56:30EDT mdeschu Exp  $
 **
-**  Copyright © 2007-2014 United States Government as represented by the 
+**  Copyright (c) 2007-2014 United States Government as represented by the 
 **  Administrator of the National Aeronautics and Space Administration. 
 **  All Other Rights Reserved.  
 **

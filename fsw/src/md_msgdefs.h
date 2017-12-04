@@ -1,8 +1,8 @@
 /************************************************************************
 ** File:
-**   $Id: md_msgdefs.h 1.2 2015/03/01 17:17:31EST sstrege Exp  $
+**   $Id: md_msgdefs.h 1.3 2017/05/22 14:56:30EDT mdeschu Exp  $
 **
-**  Copyright © 2007-2014 United States Government as represented by the 
+**  Copyright (c) 2007-2014 United States Government as represented by the 
 **  Administrator of the National Aeronautics and Space Administration. 
 **  All Other Rights Reserved.  
 **
@@ -23,20 +23,6 @@
 **   TYPEDEFS OR STRUCTURE DEFINITIONS IN THIS FILE!
 **   ADD THEM TO md_msg.h IF NEEDED!
 **
-**   $Log: md_msgdefs.h  $
-**   Revision 1.2 2015/03/01 17:17:31EST sstrege 
-**   Added copyright information
-**   Revision 1.1 2009/10/02 19:23:02EDT aschoeni 
-**   Initial revision
-**   Member added to project c:/MKSDATA/MKS-REPOSITORY/CFS-REPOSITORY/md/fsw/src/project.pj
-**   Revision 1.4 2008/10/06 10:29:49EDT dkobe 
-**   Updated and Corrected Doxygen Comments
-**   Revision 1.3 2008/08/07 16:24:43EDT nsschweiss 
-**   Changed included filename from cfs_lib.h to cfs_utils.h.
-**   Revision 1.2 2008/07/02 13:29:38EDT nsschweiss 
-**   CFS MD Post Code Review Version
-**   Date: 08/05/09
-**   CPID: 1653:2
 ** 
 *************************************************************************/
 

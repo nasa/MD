@@ -1,8 +1,8 @@
 /*************************************************************************
 ** File:
-**   $Id: md_utils.h 1.4 2015/03/01 17:18:01EST sstrege Exp  $
+**   $Id: md_utils.h 1.4 2017/05/22 14:56:38EDT mdeschu Exp  $
 **
-**  Copyright © 2007-2014 United States Government as represented by the 
+**  Copyright (c) 2007-2014 United States Government as represented by the 
 **  Administrator of the National Aeronautics and Space Administration. 
 **  All Other Rights Reserved.  
 **
@@ -16,15 +16,6 @@
 **
 ** Notes:
 **
-**   $Log: md_utils.h  $
-**   Revision 1.4 2015/03/01 17:18:01EST sstrege 
-**   Added copyright information
-**   Revision 1.3 2009/04/18 15:06:41EDT dkobe 
-**   Corrected parameter description for function prolog
-**   Revision 1.2 2008/07/02 13:54:42EDT nsschweiss 
-**   CFS MD Post Code Review Version
-**   Date: 08/05/09
-**   CPID: 1653:2
 ** 
 *************************************************************************/
 
@@ -139,7 +130,7 @@ boolean MD_ValidEntryId            ( uint16 EntryId );
 ** \endreturns
 **
 ******************************************************************************/
-boolean MD_ValidAddrRange( uint32 Addr, uint32 Size );
+boolean MD_ValidAddrRange( cpuaddr Addr, uint32 Size );
 
 /*****************************************************************************/
 /**

@@ -108,12 +108,15 @@ PROC $sc_$cpu_md_dwellproc
 ;
 ;  Change History
 ;
-;   Date          Name          Description
-;   09/9/08       S. Jonke	Original Procedure
-;   12/04/09      W. Moleski    Added requirements to this prolog and also
-;                               turned logging off around code that did not
-;                               provide any significant benefit of logging
-;   04/28/11      W. Moleski    Added variables for the App and table names 
+;   Date        Name        Description
+;   09/09/08    S. Jonke    Original Procedure
+;   12/04/09    W. Moleski  Added requirements to this prolog and also
+;                           turned logging off around code that did not
+;                           provide any significant benefit of logging
+;   04/28/11    W. Moleski  Added variables for the App and table names 
+;   06/12/17    W. Moleski  Updated to use CPU1 for commanding and added a
+;                           hostCPU variable for the utility procs to connect
+;                           to the proper host.
 ;
 ;  Arguments
 ;   None
@@ -193,6 +196,7 @@ local MDTblName1 = MDAppName & ".DWELL_TABLE1"
 local MDTblName2 = MDAppName & ".DWELL_TABLE2"
 local MDTblName3 = MDAppName & ".DWELL_TABLE3"
 local MDTblName4 = MDAppName & ".DWELL_TABLE4"
+local hostCPU = "$CPU"
 
 ;; CPU1 is the default
 dwell_tbl1_load_pkt = "0FA8"
@@ -207,34 +211,6 @@ dwell_pkt1_appid = "091"
 dwell_pkt2_appid = "092"
 dwell_pkt3_appid = "093"
 dwell_pkt4_appid = "094"
-
-if ("$CPU" = "CPU2") then
-  dwell_tbl1_load_pkt = "0FC6"
-  dwell_tbl2_load_pkt = "0FC7"
-  dwell_tbl3_load_pkt = "0FC8"
-  dwell_tbl4_load_pkt = "0FC9"
-  dwell_tbl1_load_appid = 4038
-  dwell_tbl2_load_appid = 4039
-  dwell_tbl3_load_appid = 4040
-  dwell_tbl4_load_appid = 4041
-  dwell_pkt1_appid = "191"
-  dwell_pkt2_appid = "192"
-  dwell_pkt3_appid = "193"
-  dwell_pkt4_appid = "194"
-elseif ("$CPU" = "CPU3") then
-  dwell_tbl1_load_pkt = "0FE6"
-  dwell_tbl2_load_pkt = "0FE7"
-  dwell_tbl3_load_pkt = "0FE8"
-  dwell_tbl4_load_pkt = "0FE9"
-  dwell_tbl1_load_appid = 4070
-  dwell_tbl2_load_appid = 4071
-  dwell_tbl3_load_appid = 4072
-  dwell_tbl4_load_appid = 4073
-  dwell_pkt1_appid = "291"
-  dwell_pkt2_appid = "292"
-  dwell_pkt3_appid = "293"
-  dwell_pkt4_appid = "294"
-endif
 
 ; Local dwell data storage holding 30 entries of up to 62 bytes each
 local dwelldata[30,62]
@@ -257,15 +233,15 @@ enddo
 write ";*********************************************************************"
 write ";  Step 1.0:  Initialize the CPU for this test. "
 write ";*********************************************************************"
-write ";             Command a Power-On Reset on $CPU. "
+write ";             Command a Power-On Reset. "
 write ";********************************************************************"
 /$SC_$CPU_ES_POWERONRESET
 wait 10
 
 close_data_center
-wait 75
-                                                                                
-cfe_startup $CPU
+wait 60
+
+cfe_startup {hostCPU}
 wait 5
 
 write ";*********************************************************************"
@@ -275,7 +251,7 @@ write ";********************************************************************"
 ut_setupevents "$SC", "$CPU", "CFE_ES", CFE_ES_START_INF_EID, "INFO", 1
 ut_setupevents "$SC", "$CPU", "TST_MD", TST_MD_INIT_INF_EID, "INFO", 2
 
-s load_start_app ("TST_MD","$CPU", "TST_MD_AppMain")
+s load_start_app ("TST_MD", hostCPU, "TST_MD_AppMain")
 
 ; Wait for app startup events
 ut_tlmwait  $SC_$CPU_find_event[2].num_found_messages, 1
@@ -294,11 +270,6 @@ endif
 ;;; Need to set the stream based upon the cpu being used
 ;;; CPU1 is the default
 stream1 = x'92D'
-if ("$CPU" = "CPU2") then
-  stream1 = x'A2D'
-elseif ("$CPU" = "CPU3") then
-  stream1 = x'B2D'
-endif
 
 write "Sending command to add subscription for TST_MD HK packet."
 /$SC_$CPU_TO_ADDPACKET Stream=stream1 Pkt_Size=x'0' Priority=x'0' Reliability=x'1' Buflimit=x'4'
@@ -321,7 +292,7 @@ write ";********************************************************************"
 ut_setupevents "$SC", "$CPU", "CFE_ES", CFE_ES_START_INF_EID, "INFO", 1
 ut_setupevents "$SC", "$CPU", {MDAppName}, MD_INIT_INF_EID, "INFO", 2
 
-s load_start_app (MDAppName,"$CPU", "MD_AppMain")
+s load_start_app (MDAppName,hostCPU, "MD_AppMain")
 
 ; Wait for app startup events
 ut_tlmwait  $SC_$CPU_find_event[2].num_found_messages, 1
@@ -345,22 +316,6 @@ dwell2 = x'892'
 dwell3 = x'893'
 dwell4 = x'894'
 
-if ("$CPU" = "CPU2") then
-  stream1 = x'990'
-  hkPktId = "p190"
-  dwell1 = x'991'
-  dwell2 = x'992'
-  dwell3 = x'993'
-  dwell4 = x'994'
-elseif ("$CPU" = "CPU3") then
-  stream1 = x'A90'
-  hkPktId = "p290"
-  dwell1 = x'A91'
-  dwell2 = x'A92'
-  dwell3 = x'A93'
-  dwell4 = x'A94'
-endif
-
 write "Sending commands to add subscriptions for MD HK and dwell packets."
 /$SC_$CPU_TO_ADDPACKET Stream=stream1 Pkt_Size=x'0' Priority=x'0' Reliability=x'1' Buflimit=x'4'
 /$SC_$CPU_TO_ADDPACKET Stream=dwell1 Pkt_Size=x'0' Priority=x'0' Reliability=x'1' Buflimit=x'4'
@@ -374,7 +329,7 @@ write "Opening MD HK Page."
 page $SC_$CPU_MD_HK
 
 ;;;; Dump the Table Registry
-s get_file_to_cvt (ramDir, "cfe_tbl_reg.log", "$sc_$cpu_tbl_reg.log", "$CPU")
+s get_file_to_cvt (ramDir, "cfe_tbl_reg.log", "$sc_$cpu_tbl_reg.log", hostCPU)
 wait 10
 
 ; Search the Table Registry for the locations of the dwell tables
@@ -536,11 +491,11 @@ $SC_$CPU_MD_Dwell_Load_Tbl1.MD_DTL_Entry[2].MD_TLE_SymName = ""
 ; Create a load file for dwell table #1 with this data (including signature)
 ut_setupevents "$SC", "$CPU", "CFE_TBL", CFE_TBL_FILE_LOADED_INF_EID, "INFO", 1
 
-s create_tbl_file_from_cvt ("$CPU",dwell_tbl1_load_appid,"Dwell Table #1 Load", "md_dwl_ld_sg_tbl1",MDTblName1, "$SC_$CPU_MD_Dwell_Load_Tbl1.MD_DTL_Enabled", "$SC_$CPU_MD_Dwell_Load_Tbl1.MD_DTL_Entry[2]")
+s create_tbl_file_from_cvt (hostCPU,dwell_tbl1_load_appid,"Dwell Table #1 Load", "md_dwl_ld_sg_tbl1",MDTblName1, "$SC_$CPU_MD_Dwell_Load_Tbl1.MD_DTL_Enabled", "$SC_$CPU_MD_Dwell_Load_Tbl1.MD_DTL_Entry[2]")
 
 cmdcnt = $SC_$CPU_TBL_CMDPC+1
 
-start load_table ("md_dwl_ld_sg_tbl1", "$CPU")
+start load_table ("md_dwl_ld_sg_tbl1", hostCPU)
 
 ut_tlmwait $SC_$CPU_TBL_CMDPC, {cmdcnt}
 if (UT_TW_Status = UT_Success) then
@@ -944,11 +899,11 @@ $SC_$CPU_MD_Dwell_Load_Tbl2.MD_DTL_Entry[13].MD_TLE_SymName = ""
 ; Create a load file for dwell table #2 with this data (including signature)
 ut_setupevents $SC, $CPU, CFE_TBL, CFE_TBL_FILE_LOADED_INF_EID, INFO, 1
 
-s create_tbl_file_from_cvt ("$CPU",dwell_tbl2_load_appid,"Dwell Table #2 Load", "md_dwl_ld_sg_tbl2",MDTblName2, "$SC_$CPU_MD_Dwell_Load_Tbl2.MD_DTL_Enabled", "$SC_$CPU_MD_Dwell_Load_Tbl2.MD_DTL_Entry[13]")
+s create_tbl_file_from_cvt (hostCPU,dwell_tbl2_load_appid,"Dwell Table #2 Load", "md_dwl_ld_sg_tbl2",MDTblName2, "$SC_$CPU_MD_Dwell_Load_Tbl2.MD_DTL_Enabled", "$SC_$CPU_MD_Dwell_Load_Tbl2.MD_DTL_Entry[13]")
 
 cmdcnt = $SC_$CPU_TBL_CMDPC+1
 
-start load_table ("md_dwl_ld_sg_tbl2", "$CPU")
+start load_table ("md_dwl_ld_sg_tbl2", hostCPU)
 
 ut_tlmwait $SC_$CPU_TBL_CMDPC, {cmdcnt}
 if (UT_TW_Status = UT_Success) then
@@ -972,7 +927,7 @@ wait 5
 write ";**********************************************************************"
 write "; Validate the inactive buffer for Dwell Table #2."
 write ";**********************************************************************"
-ut_setupevents "$SC", "$CPU", "CFE_TBL", CFE_TBL_VAL_REQ_MADE_INF_EID, "DEBUG", 1
+ut_setupevents "$SC","$CPU","CFE_TBL",CFE_TBL_VAL_REQ_MADE_INF_EID,"DEBUG", 1
                                                                                 
 ut_sendcmd "$SC_$CPU_TBL_VALIDATE INACTIVE VTABLENAME=MDTblName2"
 
@@ -1463,11 +1418,11 @@ $SC_$CPU_MD_Dwell_Load_Tbl4.MD_DTL_Entry[25].MD_TLE_SymName = ""
 ; Create a load file for dwell table #4 with this data (including signature)
 ut_setupevents $SC, $CPU, CFE_TBL, CFE_TBL_FILE_LOADED_INF_EID, INFO, 1
 
-s create_tbl_file_from_cvt ("$CPU",dwell_tbl4_load_appid,"Dwell Table #4 Load", "md_dwl_ld_sg_tbl4",MDTblName4, "$SC_$CPU_MD_Dwell_Load_Tbl4.MD_DTL_Enabled", "$SC_$CPU_MD_Dwell_Load_Tbl4.MD_DTL_Entry[25]")
+s create_tbl_file_from_cvt (hostCPU,dwell_tbl4_load_appid,"Dwell Table #4 Load", "md_dwl_ld_sg_tbl4",MDTblName4, "$SC_$CPU_MD_Dwell_Load_Tbl4.MD_DTL_Enabled", "$SC_$CPU_MD_Dwell_Load_Tbl4.MD_DTL_Entry[25]")
 
 cmdcnt = $SC_$CPU_TBL_CMDPC+1
 
-start load_table ("md_dwl_ld_sg_tbl4", "$CPU")
+start load_table ("md_dwl_ld_sg_tbl4", hostCPU)
 
 ut_tlmwait $SC_$CPU_TBL_CMDPC, {cmdcnt}
 if (UT_TW_Status = UT_Success) then
@@ -1491,7 +1446,7 @@ wait 5
 write ";**********************************************************************"
 write "; Validate the inactive buffer for Dwell Table #4."
 write ";**********************************************************************"
-ut_setupevents "$SC", "$CPU", "CFE_TBL", CFE_TBL_VAL_REQ_MADE_INF_EID, "DEBUG", 1
+ut_setupevents "$SC","$CPU","CFE_TBL",CFE_TBL_VAL_REQ_MADE_INF_EID,"DEBUG", 1
                                                                                 
 ut_sendcmd "$SC_$CPU_TBL_VALIDATE INACTIVE VTABLENAME=MDTblName4"
 
@@ -2053,11 +2008,11 @@ $SC_$CPU_MD_Dwell_Load_Tbl3.MD_DTL_Entry[4].MD_TLE_SymName = ""
 ; Create a load file for dwell table #3 with this data (including signature)
 ut_setupevents $SC, $CPU, CFE_TBL, CFE_TBL_FILE_LOADED_INF_EID, INFO, 1
 
-s create_tbl_file_from_cvt ("$CPU",dwell_tbl3_load_appid,"Dwell Table #3 Load", "md_dwl_ld_sg_tbl3",MDTblName3, "$SC_$CPU_MD_Dwell_Load_Tbl3.MD_DTL_Enabled", "$SC_$CPU_MD_Dwell_Load_Tbl3.MD_DTL_Entry[4]")
+s create_tbl_file_from_cvt (hostCPU,dwell_tbl3_load_appid,"Dwell Table #3 Load", "md_dwl_ld_sg_tbl3",MDTblName3, "$SC_$CPU_MD_Dwell_Load_Tbl3.MD_DTL_Enabled", "$SC_$CPU_MD_Dwell_Load_Tbl3.MD_DTL_Entry[4]")
 
 cmdcnt = $SC_$CPU_TBL_CMDPC+1
 
-start load_table ("md_dwl_ld_sg_tbl3", "$CPU")
+start load_table ("md_dwl_ld_sg_tbl3", hostCPU)
 
 ut_tlmwait $SC_$CPU_TBL_CMDPC, {cmdcnt}
 if (UT_TW_Status = UT_Success) then
@@ -2081,7 +2036,7 @@ wait 5
 write ";**********************************************************************"
 write "; Validate the inactive buffer for Dwell Table #3."
 write ";**********************************************************************"
-ut_setupevents "$SC", "$CPU", "CFE_TBL", CFE_TBL_VAL_REQ_MADE_INF_EID, "DEBUG", 1
+ut_setupevents "$SC","$CPU","CFE_TBL",CFE_TBL_VAL_REQ_MADE_INF_EID,"DEBUG", 1
 
 ut_sendcmd "$SC_$CPU_TBL_VALIDATE INACTIVE VTABLENAME=MDTblName3"
 
@@ -2394,11 +2349,11 @@ $SC_$CPU_MD_Dwell_Load_Tbl4.MD_DTL_Entry[6].MD_TLE_SymName = ""
 ; Create a load file for dwell table #4 with this data (including signature)
 ut_setupevents $SC, $CPU, CFE_TBL, CFE_TBL_FILE_LOADED_INF_EID, INFO, 1
 
-s create_tbl_file_from_cvt ("$CPU",dwell_tbl4_load_appid,"Dwell Table #4 Load", "md_dwl_ld_sg_tbl4",MDTblName4, "$SC_$CPU_MD_Dwell_Load_Tbl4.MD_DTL_Enabled", "$SC_$CPU_MD_Dwell_Load_Tbl4.MD_DTL_Entry[25]")
+s create_tbl_file_from_cvt (hostCPU,dwell_tbl4_load_appid,"Dwell Table #4 Load", "md_dwl_ld_sg_tbl4",MDTblName4, "$SC_$CPU_MD_Dwell_Load_Tbl4.MD_DTL_Enabled", "$SC_$CPU_MD_Dwell_Load_Tbl4.MD_DTL_Entry[25]")
 
 cmdcnt = $SC_$CPU_TBL_CMDPC+1
 
-start load_table ("md_dwl_ld_sg_tbl4", "$CPU")
+start load_table ("md_dwl_ld_sg_tbl4", hostCPU)
 
 ut_tlmwait $SC_$CPU_TBL_CMDPC, {cmdcnt}
 if (UT_TW_Status = UT_Success) then
@@ -2422,7 +2377,7 @@ wait 5
 write ";**********************************************************************"
 write "; Validate the inactive buffer for Dwell Table #4."
 write ";**********************************************************************"
-ut_setupevents "$SC", "$CPU", "CFE_TBL", CFE_TBL_VAL_REQ_MADE_INF_EID, "DEBUG", 1
+ut_setupevents "$SC","$CPU","CFE_TBL",CFE_TBL_VAL_REQ_MADE_INF_EID,"DEBUG", 1
                                                                                 
 ut_sendcmd "$SC_$CPU_TBL_VALIDATE INACTIVE VTABLENAME=MDTblName4"
 
@@ -2872,11 +2827,11 @@ $SC_$CPU_MD_Dwell_Load_Tbl1.MD_DTL_Entry[2].MD_TLE_SymName = ""
 ; Create a load file for dwell table #1 with this data (including signature)
 ut_setupevents $SC, $CPU, CFE_TBL, CFE_TBL_FILE_LOADED_INF_EID, INFO, 1
 
-s create_tbl_file_from_cvt ("$CPU",dwell_tbl1_load_appid,"Dwell Table #1 Load", "md_dwl_ld_sg_tbl1",MDTblName1, "$SC_$CPU_MD_Dwell_Load_Tbl1.MD_DTL_Enabled", "$SC_$CPU_MD_Dwell_Load_Tbl1.MD_DTL_Entry[2]")
+s create_tbl_file_from_cvt (hostCPU,dwell_tbl1_load_appid,"Dwell Table #1 Load", "md_dwl_ld_sg_tbl1",MDTblName1, "$SC_$CPU_MD_Dwell_Load_Tbl1.MD_DTL_Enabled", "$SC_$CPU_MD_Dwell_Load_Tbl1.MD_DTL_Entry[2]")
 
 cmdcnt = $SC_$CPU_TBL_CMDPC+1
 
-start load_table ("md_dwl_ld_sg_tbl1", "$CPU")
+start load_table ("md_dwl_ld_sg_tbl1", hostCPU)
 
 ut_tlmwait $SC_$CPU_TBL_CMDPC, {cmdcnt}
 if (UT_TW_Status = UT_Success) then
@@ -2900,10 +2855,10 @@ wait 5
 write ";**********************************************************************"
 write "; Validate the inactive buffer for Dwell Table #1."
 write ";**********************************************************************"
-ut_setupevents "$SC", "$CPU", "CFE_TBL", CFE_TBL_VAL_REQ_MADE_INF_EID, "DEBUG", 1
-ut_setupevents "$SC", "$CPU", "CFE_TBL", CFE_TBL_VALIDATION_ERR_EID, "ERROR", 2
-ut_setupevents "$SC", "$CPU", {MDAppName}, MD_RESOLVE_ERR_EID, "ERROR", 3
-                                                                                
+ut_setupevents "$SC","$CPU","CFE_TBL",CFE_TBL_VAL_REQ_MADE_INF_EID,"DEBUG", 1
+ut_setupevents "$SC","$CPU","CFE_TBL",CFE_TBL_VALIDATION_ERR_EID,"ERROR", 2
+ut_setupevents "$SC","$CPU",{MDAppName},MD_RESOLVE_ERR_EID,"ERROR", 3
+
 ut_sendcmd "$SC_$CPU_TBL_VALIDATE INACTIVE VTABLENAME=MDTblName1"
 
 if (UT_SC_Status = UT_SC_Success) then
@@ -2975,11 +2930,11 @@ $SC_$CPU_MD_Dwell_Load_Tbl1.MD_DTL_Entry[2].MD_TLE_SymName = ""
 ; Create a load file for dwell table #1 with this data (including signature)
 ut_setupevents $SC, $CPU, CFE_TBL, CFE_TBL_FILE_LOADED_INF_EID, INFO, 1
 
-s create_tbl_file_from_cvt ("$CPU",dwell_tbl1_load_appid,"Dwell Table #1 Load", "md_dwl_ld_sg_tbl1",MDTblName1, "$SC_$CPU_MD_Dwell_Load_Tbl1.MD_DTL_Enabled", "$SC_$CPU_MD_Dwell_Load_Tbl1.MD_DTL_Entry[2]")
+s create_tbl_file_from_cvt (hostCPU,dwell_tbl1_load_appid,"Dwell Table #1 Load", "md_dwl_ld_sg_tbl1",MDTblName1, "$SC_$CPU_MD_Dwell_Load_Tbl1.MD_DTL_Enabled", "$SC_$CPU_MD_Dwell_Load_Tbl1.MD_DTL_Entry[2]")
 
 cmdcnt = $SC_$CPU_TBL_CMDPC+1
 
-start load_table ("md_dwl_ld_sg_tbl1", "$CPU")
+start load_table ("md_dwl_ld_sg_tbl1", hostCPU)
 
 ut_tlmwait $SC_$CPU_TBL_CMDPC, {cmdcnt}
 if (UT_TW_Status = UT_Success) then
@@ -3003,10 +2958,10 @@ wait 5
 write ";**********************************************************************"
 write "; Validate the inactive buffer for Dwell Table #1."
 write ";**********************************************************************"
-ut_setupevents "$SC", "$CPU", "CFE_TBL", CFE_TBL_VAL_REQ_MADE_INF_EID, "DEBUG", 1
-ut_setupevents "$SC", "$CPU", "CFE_TBL", CFE_TBL_VALIDATION_ERR_EID, "ERROR", 2
-ut_setupevents "$SC", "$CPU", {MDAppName}, MD_RANGE_ERR_EID, "ERROR", 3
-                                                                                
+ut_setupevents "$SC","$CPU","CFE_TBL",CFE_TBL_VAL_REQ_MADE_INF_EID,"DEBUG", 1
+ut_setupevents "$SC","$CPU","CFE_TBL",CFE_TBL_VALIDATION_ERR_EID,"ERROR", 2
+ut_setupevents "$SC","$CPU",{MDAppName},MD_RANGE_ERR_EID,"ERROR", 3
+
 ut_sendcmd "$SC_$CPU_TBL_VALIDATE INACTIVE VTABLENAME=MDTblName1"
 
 if (UT_SC_Status = UT_SC_Success) then
@@ -3079,11 +3034,11 @@ $SC_$CPU_MD_Dwell_Load_Tbl1.MD_DTL_Entry[2].MD_TLE_SymName = ""
 ; Create a load file for dwell table #1 with this data (including signature)
 ut_setupevents $SC, $CPU, CFE_TBL, CFE_TBL_FILE_LOADED_INF_EID, INFO, 1
 
-s create_tbl_file_from_cvt ("$CPU",dwell_tbl1_load_appid,"Dwell Table #1 Load", "md_dwl_ld_sg_tbl1",MDTblName1, "$SC_$CPU_MD_Dwell_Load_Tbl1.MD_DTL_Enabled", "$SC_$CPU_MD_Dwell_Load_Tbl1.MD_DTL_Entry[2]")
+s create_tbl_file_from_cvt (hostCPU,dwell_tbl1_load_appid,"Dwell Table #1 Load", "md_dwl_ld_sg_tbl1",MDTblName1, "$SC_$CPU_MD_Dwell_Load_Tbl1.MD_DTL_Enabled", "$SC_$CPU_MD_Dwell_Load_Tbl1.MD_DTL_Entry[2]")
 
 cmdcnt = $SC_$CPU_TBL_CMDPC+1
 
-start load_table ("md_dwl_ld_sg_tbl1", "$CPU")
+start load_table ("md_dwl_ld_sg_tbl1", hostCPU)
 
 ut_tlmwait $SC_$CPU_TBL_CMDPC, {cmdcnt}
 if (UT_TW_Status = UT_Success) then
@@ -3186,11 +3141,11 @@ $SC_$CPU_MD_Dwell_Load_Tbl1.MD_DTL_Entry[2].MD_TLE_SymName = ""
 ; Create a load file for dwell table #1 with this data (including signature)
 ut_setupevents $SC, $CPU, CFE_TBL, CFE_TBL_FILE_LOADED_INF_EID, INFO, 1
 
-s create_tbl_file_from_cvt ("$CPU",dwell_tbl1_load_appid,"Dwell Table #1 Load", "md_dwl_ld_sg_tbl1",MDTblName1, "$SC_$CPU_MD_Dwell_Load_Tbl1.MD_DTL_Enabled", "$SC_$CPU_MD_Dwell_Load_Tbl1.MD_DTL_Entry[2]")
+s create_tbl_file_from_cvt (hostCPU,dwell_tbl1_load_appid,"Dwell Table #1 Load", "md_dwl_ld_sg_tbl1",MDTblName1, "$SC_$CPU_MD_Dwell_Load_Tbl1.MD_DTL_Enabled", "$SC_$CPU_MD_Dwell_Load_Tbl1.MD_DTL_Entry[2]")
 
 cmdcnt = $SC_$CPU_TBL_CMDPC+1
 
-start load_table ("md_dwl_ld_sg_tbl1", "$CPU")
+start load_table ("md_dwl_ld_sg_tbl1", hostCPU)
 
 ut_tlmwait $SC_$CPU_TBL_CMDPC, {cmdcnt}
 if (UT_TW_Status = UT_Success) then
@@ -3306,11 +3261,11 @@ $SC_$CPU_MD_Dwell_Load_Tbl1.MD_DTL_Entry[2].MD_TLE_SymName = ""
 ; Create a load file for dwell table #1 with this data (including signature)
 ut_setupevents "$SC", "$CPU", "CFE_TBL", CFE_TBL_FILE_LOADED_INF_EID, "INFO", 1
 
-s create_tbl_file_from_cvt ("$CPU",dwell_tbl1_load_appid,"Dwell Table #1 Load", "md_dwl_ld_sg_tbl1",MDTblName1,"$SC_$CPU_MD_Dwell_Load_Tbl1.MD_DTL_Enabled", "$SC_$CPU_MD_Dwell_Load_Tbl1.MD_DTL_Entry[2]")
+s create_tbl_file_from_cvt (hostCPU,dwell_tbl1_load_appid,"Dwell Table #1 Load", "md_dwl_ld_sg_tbl1",MDTblName1,"$SC_$CPU_MD_Dwell_Load_Tbl1.MD_DTL_Enabled", "$SC_$CPU_MD_Dwell_Load_Tbl1.MD_DTL_Entry[2]")
 
 cmdcnt = $SC_$CPU_TBL_CMDPC+1
 
-start load_table ("md_dwl_ld_sg_tbl1", "$CPU")
+start load_table ("md_dwl_ld_sg_tbl1", hostCPU)
 
 ut_tlmwait $SC_$CPU_TBL_CMDPC, {cmdcnt}
 if (UT_TW_Status = UT_Success) then
@@ -3381,9 +3336,9 @@ write ";*********************************************************************"
 wait 10
 
 close_data_center
-wait 75
+wait 60
                                                                                 
-cfe_startup $CPU
+cfe_startup {hostCPU}
 wait 5
 
 write "**** Requirements Status Reporting"
@@ -3410,8 +3365,6 @@ clear $sc_$cpu_md_dwell_pkt1
 clear $sc_$cpu_md_dwell_pkt2
 clear $sc_$cpu_md_dwell_pkt3
 clear $sc_$cpu_md_dwell_pkt4
-
-
 
 write ";*********************************************************************"
 write ";  End procedure $SC_$CPU_md_DwellProc                                "

@@ -7,7 +7,6 @@ PROC $sc_$cpu_md_deftables
 ;  Test Description
 ;   The purpose of this test is to setup and load the default set of dwell
 ;   tables used by some of the tests
-;   
 ;
 ;  Requirements Tested
 ;	None
@@ -22,13 +21,15 @@ PROC $sc_$cpu_md_deftables
 ;   None
 ;
 ;  Change History
-;
 ;   Date        Name	    Description
 ;   08/13/08	S. Jonke    Original Procedure
 ;   09/30/08	S. Jonke    Removed some unneccessary code and added comments
 ;   12/07/09	W. Moleski  Turned logging off around code that did not provide
 ;			    any significant benefit of logging
 ;   04/28/11	W. Moleski  Added variables for App and table names
+;   06/12/17    W. Moleski  Updated to use CPU1 for commanding and added a
+;			    hostCPU variable for the utility procs to connect
+;			    to the proper host.
 ;
 ;  Arguments
 ;   None
@@ -115,6 +116,7 @@ local MDTblName1 = MDAppName & ".DWELL_TABLE1"
 local MDTblName2 = MDAppName & ".DWELL_TABLE2"
 local MDTblName3 = MDAppName & ".DWELL_TABLE3"
 local MDTblName4 = MDAppName & ".DWELL_TABLE4"
+local hostCPU = "$CPU"
 
 ;; CPU1 is the default
 dwell_tbl1_load_pkt = "0FA8"
@@ -125,26 +127,6 @@ dwell_tbl1_load_appid = 4008
 dwell_tbl2_load_appid = 4009
 dwell_tbl3_load_appid = 4010
 dwell_tbl4_load_appid = 4011
-
-if ("$CPU" = "CPU2") then
-  dwell_tbl1_load_pkt = "0FC6"
-  dwell_tbl2_load_pkt = "0FC7"
-  dwell_tbl3_load_pkt = "0FC8"
-  dwell_tbl4_load_pkt = "0FC9"
-  dwell_tbl1_load_appid = 4038
-  dwell_tbl2_load_appid = 4039
-  dwell_tbl3_load_appid = 4040
-  dwell_tbl4_load_appid = 4041
-elseif ("$CPU" = "CPU3") then
-  dwell_tbl1_load_pkt = "0FE6"
-  dwell_tbl2_load_pkt = "0FE7"
-  dwell_tbl3_load_pkt = "0FE8"
-  dwell_tbl4_load_pkt = "0FE9"
-  dwell_tbl1_load_appid = 4070
-  dwell_tbl2_load_appid = 4071
-  dwell_tbl3_load_appid = 4072
-  dwell_tbl4_load_appid = 4073
-endif
 
 write ";*********************************************************************"
 write ";  Start procedure $SC_$CPU_md_DefTables                            "
@@ -186,11 +168,11 @@ $SC_$CPU_MD_Dwell_Load_Tbl1.MD_DTL_Entry[3].MD_TLE_SymName = ""
 ; Create a load file for dwell table #1 with this data (including signature)
 ut_setupevents $SC, $CPU, CFE_TBL, CFE_TBL_FILE_LOADED_INF_EID, INFO, 1
 
-s create_tbl_file_from_cvt ("$CPU",dwell_tbl1_load_appid,"Dwell Table #1 Load","md_dwl_ld_sg_tbl1",MDTblName1,"$SC_$CPU_MD_Dwell_Load_Tbl1.MD_DTL_Enabled","$SC_$CPU_MD_Dwell_Load_Tbl1.MD_DTL_Entry[3]")
+s create_tbl_file_from_cvt (hostCPU,dwell_tbl1_load_appid,"Dwell Table #1 Load","md_dwl_ld_sg_tbl1",MDTblName1,"$SC_$CPU_MD_Dwell_Load_Tbl1.MD_DTL_Enabled","$SC_$CPU_MD_Dwell_Load_Tbl1.MD_DTL_Entry[3]")
 
 cmdcnt = $SC_$CPU_TBL_CMDPC+1
 
-start load_table ("md_dwl_ld_sg_tbl1", "$CPU")
+start load_table ("md_dwl_ld_sg_tbl1", hostCPU)
 
 ut_tlmwait $SC_$CPU_TBL_CMDPC, {cmdcnt}
 if (UT_TW_Status = UT_Success) then
@@ -303,11 +285,11 @@ $SC_$CPU_MD_Dwell_Load_Tbl2.MD_DTL_Entry[3].MD_TLE_SymName = ""
 ; Create a load file for dwell table #2 with this data (including signature)
 ut_setupevents $SC, $CPU, CFE_TBL, CFE_TBL_FILE_LOADED_INF_EID, INFO, 1
 
-s create_tbl_file_from_cvt ("$CPU",dwell_tbl2_load_appid,"Dwell Table #2 Load", "md_dwl_ld_sg_tbl2",MDTblName2,"$SC_$CPU_MD_Dwell_Load_Tbl2.MD_DTL_Enabled","$SC_$CPU_MD_Dwell_Load_Tbl2.MD_DTL_Entry[3]")
+s create_tbl_file_from_cvt (hostCPU,dwell_tbl2_load_appid,"Dwell Table #2 Load", "md_dwl_ld_sg_tbl2",MDTblName2,"$SC_$CPU_MD_Dwell_Load_Tbl2.MD_DTL_Enabled","$SC_$CPU_MD_Dwell_Load_Tbl2.MD_DTL_Entry[3]")
 
 cmdcnt = $SC_$CPU_TBL_CMDPC+1
 
-start load_table ("md_dwl_ld_sg_tbl2", "$CPU")
+start load_table ("md_dwl_ld_sg_tbl2", hostCPU)
 
 ut_tlmwait $SC_$CPU_TBL_CMDPC, {cmdcnt}
 if (UT_TW_Status = UT_Success) then
@@ -420,11 +402,11 @@ $SC_$CPU_MD_Dwell_Load_Tbl3.MD_DTL_Entry[3].MD_TLE_SymName = ""
 ; Create a load file for dwell table #3 with this data (including signature)
 ut_setupevents $SC, $CPU, CFE_TBL, CFE_TBL_FILE_LOADED_INF_EID, INFO,1
 
-s create_tbl_file_from_cvt ("$CPU",dwell_tbl3_load_appid,"Dwell Table #3 Load", "md_dwl_ld_sg_tbl3",MDTblName3,"$SC_$CPU_MD_Dwell_Load_Tbl3.MD_DTL_Enabled","$SC_$CPU_MD_Dwell_Load_Tbl3.MD_DTL_Entry[3]")
+s create_tbl_file_from_cvt (hostCPU,dwell_tbl3_load_appid,"Dwell Table #3 Load", "md_dwl_ld_sg_tbl3",MDTblName3,"$SC_$CPU_MD_Dwell_Load_Tbl3.MD_DTL_Enabled","$SC_$CPU_MD_Dwell_Load_Tbl3.MD_DTL_Entry[3]")
 
 cmdcnt = $SC_$CPU_TBL_CMDPC+1
 
-start load_table ("md_dwl_ld_sg_tbl3", "$CPU")
+start load_table ("md_dwl_ld_sg_tbl3", hostCPU)
 
 ut_tlmwait $SC_$CPU_TBL_CMDPC, {cmdcnt}
 if (UT_TW_Status = UT_Success) then
@@ -537,11 +519,11 @@ $SC_$CPU_MD_Dwell_Load_Tbl4.MD_DTL_Entry[3].MD_TLE_SymName = ""
 ; Create a load file for dwell table #4 with this data (including signature)
 ut_setupevents $SC, $CPU, CFE_TBL, CFE_TBL_FILE_LOADED_INF_EID, INFO, 1
 
-s create_tbl_file_from_cvt ("$CPU",dwell_tbl4_load_appid,"Dwell Table #4 Load", "md_dwl_ld_sg_tbl4",MDTblName4,"$SC_$CPU_MD_Dwell_Load_Tbl4.MD_DTL_Enabled","$SC_$CPU_MD_Dwell_Load_Tbl4.MD_DTL_Entry[3]")
+s create_tbl_file_from_cvt (hostCPU,dwell_tbl4_load_appid,"Dwell Table #4 Load", "md_dwl_ld_sg_tbl4",MDTblName4,"$SC_$CPU_MD_Dwell_Load_Tbl4.MD_DTL_Enabled","$SC_$CPU_MD_Dwell_Load_Tbl4.MD_DTL_Entry[3]")
 
 cmdcnt = $SC_$CPU_TBL_CMDPC+1
 
-start load_table ("md_dwl_ld_sg_tbl4", "$CPU")
+start load_table ("md_dwl_ld_sg_tbl4", hostCPU)
 
 ut_tlmwait $SC_$CPU_TBL_CMDPC, {cmdcnt}
 if (UT_TW_Status = UT_Success) then
@@ -620,7 +602,7 @@ endif
 
 wait 10
 ;;;; Dump the Table Registry
-s get_file_to_cvt (ramDir,"cfe_tbl_reg.log","$sc_$cpu_tbl_reg.log","$CPU")
+s get_file_to_cvt (ramDir,"cfe_tbl_reg.log","$sc_$cpu_tbl_reg.log",hostCPU)
 wait 10
 
 write ";*********************************************************************"

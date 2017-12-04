@@ -1,8 +1,8 @@
 /*************************************************************************
 ** File:
-**   $Id: md_dwell_pkt.h 1.3 2015/03/01 17:17:49EST sstrege Exp  $
+**   $Id: md_dwell_pkt.h 1.3 2017/05/22 14:56:34EDT mdeschu Exp  $
 **
-**  Copyright © 2007-2014 United States Government as represented by the 
+**  Copyright (c) 2007-2014 United States Government as represented by the 
 **  Administrator of the National Aeronautics and Space Administration. 
 **  All Other Rights Reserved.  
 **
@@ -17,14 +17,6 @@
 **
 ** Notes:
 **
-**   $Log: md_dwell_pkt.h  $
-**   Revision 1.3 2015/03/01 17:17:49EST sstrege 
-**   Added copyright information
-**   Revision 1.2 2008/10/21 13:59:39EDT nsschweiss 
-**   Added MD_StartDwellStream to initialize dwell packet processing parameters.
-**   Revision 1.1 2008/07/02 13:48:29EDT nsschweiss 
-**   Initial revision
-**   Member added to project c:/MKSDATA/MKS-REPOSITORY/CFS-REPOSITORY/md/fsw/src/project.pj
 ** 
 *************************************************************************/
 

@@ -1,8 +1,8 @@
 /*************************************************************************
 ** File:
-**   $Id: md_cmds.h 1.3 2015/03/01 17:17:37EST sstrege Exp  $
+**   $Id: md_cmds.h 1.3 2017/05/22 14:56:31EDT mdeschu Exp  $
 **
-**  Copyright © 2007-2014 United States Government as represented by the 
+**  Copyright (c) 2007-2014 United States Government as represented by the 
 **  Administrator of the National Aeronautics and Space Administration. 
 **  All Other Rights Reserved.  
 **
@@ -17,14 +17,6 @@
 **
 ** Notes:
 **
-**   $Log: md_cmds.h  $
-**   Revision 1.3 2015/03/01 17:17:37EST sstrege 
-**   Added copyright information
-**   Revision 1.2 2009/04/18 15:08:15EDT dkobe 
-**   Corrected comment for function parameter
-**   Revision 1.1 2008/07/02 13:47:14EDT nsschweiss 
-**   Initial revision
-**   Member added to project c:/MKSDATA/MKS-REPOSITORY/CFS-REPOSITORY/md/fsw/src/project.pj
 ** 
 *************************************************************************/
 /*

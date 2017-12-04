@@ -1,8 +1,8 @@
 /************************************************************************
 ** File:
-**   $Id: md_events.h 1.10 2015/03/01 17:17:34EST sstrege Exp  $
+**   $Id: md_events.h 1.5 2017/05/22 14:56:31EDT mdeschu Exp  $
 **
-**  Copyright © 2007-2014 United States Government as represented by the 
+**  Copyright (c) 2007-2014 United States Government as represented by the 
 **  Administrator of the National Aeronautics and Space Administration. 
 **  All Other Rights Reserved.  
 **
@@ -16,26 +16,6 @@
 **
 ** Notes:
 **
-** $Log: md_events.h  $
-** Revision 1.10 2015/03/01 17:17:34EST sstrege 
-** Added copyright information
-** Revision 1.9 2009/10/20 17:48:13EDT aschoeni 
-** Added event on start up to report number of tables initialized and recovered.
-** Revision 1.8 2009/10/20 09:42:33EDT aschoeni 
-** Updated to remove doxygen warning
-** Revision 1.7 2009/09/30 15:53:49EDT aschoeni 
-** Updated Enable command to output event if table with a delay of 0 is enabled.
-** Revision 1.5 2009/09/30 14:14:22EDT aschoeni 
-** Added check to make sure signature is null terminated.
-** Revision 1.4 2008/10/06 10:29:50EDT dkobe 
-** Updated and Corrected Doxygen Comments
-** Revision 1.3 2008/09/12 11:32:38EDT nsschweiss 
-** Updated to event wording to reflect added version # in initialization and noop events.
-** CPID 4289:1.
-** Revision 1.2 2008/07/02 13:51:35EDT nsschweiss 
-** CFS MD Post Code Review Version
-** Date: 08/05/09
-** CPID: 1653:2
 **
 *************************************************************************/
 #ifndef _md_events_h_
@@ -519,20 +499,6 @@
 #define MD_INVALID_SIGNATURE_TABLE_ERR_EID 47
 
 
-/** \brief <tt> 'Set Signature cmd rejected because Signature too long (%d chars -- max is %d)' </tt>
-**  \event <tt> 'Set Signature cmd rejected because Signature too long (%d chars -- max is %d)' </tt> 
-**
-**  \par Type: ERROR
-**
-**  \par Cause:
-**
-**  Length of signature argument is too big for dwell packet signature field.
-**  Either the command's signature field was too long, or string was not 
-**  properly terminated with a null character.   
-**/
-#define MD_SIGNATURE_TOO_LONG_ERR_EID 48
-
-
 /** \brief <tt> 'Set Signature cmd rejected due to invalid Signature length' </tt>
 **  \event <tt> 'Set Signature cmd rejected due to invalid Signature length' </tt> 
 **
@@ -579,6 +545,23 @@
 **/
 #define MD_ZERO_RATE_CMD_INF_EID 51
 
+
+/** \brief <tt> 'MD Dwell Tbl verify results: good = \%d, bad = \%d, unused = \%d' </tt>
+**  \event <tt> 'MD Dwell Tbl verify results: good = \%d, bad = \%d, unused = \%d' </tt> 
+**  
+**  \par Type: INFORMATION
+**
+**  \par Cause:
+**
+**  This event message is issued when a table validation has been 
+**  completed for memory dwell table load 
+**
+**  The \c good field is number of entries that passed, the \c bad field
+**  is number of entries that failed, the \c unused field is the 
+**  number of entries that weren't checked because they were 
+**  marked unused.
+*/
+#define MD_DWELL_TBL_INF_EID 52
 
 #endif
 /************************/

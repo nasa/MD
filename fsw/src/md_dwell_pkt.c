@@ -1,8 +1,8 @@
 /************************************************************************
 ** File:
-**   $Id: md_dwell_pkt.c 1.6 2015/03/01 17:17:51EST sstrege Exp  $
+**   $Id: md_dwell_pkt.c 1.4 2017/05/22 14:56:35EDT mdeschu Exp  $
 **
-**  Copyright © 2007-2014 United States Government as represented by the 
+**  Copyright (c) 2007-2014 United States Government as represented by the 
 **  Administrator of the National Aeronautics and Space Administration. 
 **  All Other Rights Reserved.  
 **
@@ -14,21 +14,6 @@
 ** Purpose: 
 **   Functions used to populate and send Memory Dwell packets.
 **
-**   $Log: md_dwell_pkt.c  $
-**   Revision 1.6 2015/03/01 17:17:51EST sstrege 
-**   Added copyright information
-**   Revision 1.5 2009/06/12 14:19:06EDT rmcgraw 
-**   DCR82191:1 Changed OS_Mem function calls to CFE_PSP_Mem
-**   Revision 1.4 2009/01/12 14:33:27EST nschweis 
-**   Removed debug statements from source code.  CPID 4688:1.
-**   Revision 1.3 2008/10/21 13:59:02EDT nsschweiss 
-**   Added MD_StartDwellStream to initialize dwell packet processing parameters.
-**   Revision 1.2 2008/08/08 13:38:08EDT nsschweiss 
-**   1) Changed name of include file from cfs_lib.h to cfs_utils.h.
-**   2) Changed the way the length of the dwell packet is computed.
-**   Revision 1.1 2008/07/02 13:48:22EDT nsschweiss 
-**   Initial revision
-**   Member added to project c:/MKSDATA/MKS-REPOSITORY/CFS-REPOSITORY/md/fsw/src/project.pj
 ** 
 *************************************************************************/
 
@@ -155,7 +140,7 @@ int32 MD_GetDwellData( uint16 TblIndex, uint16 EntryIndex )
     uint8                    NumBytes;  /* Num of bytes to read */
     uint32                   MemReadVal; /* 1-, 2-, or 4-byte value */
     MD_DwellPacketControl_t *TblPtr; /* Points to table struct */
-    uint32                   DwellAddress;    /* dwell address */
+    cpuaddr                  DwellAddress;    /* dwell address */
     int32                    Status;
     
     Status  = CFE_SUCCESS;
@@ -192,6 +177,7 @@ int32 MD_GetDwellData( uint16 TblIndex, uint16 EntryIndex )
           Status = -1;
        }
     }
+    
     else /* Invalid dwell length */
          /* Shouldn't ever get here unless length value was corrupted. */
     {

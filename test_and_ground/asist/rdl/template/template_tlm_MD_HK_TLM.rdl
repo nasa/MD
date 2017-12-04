@@ -35,7 +35,18 @@ PACKET Pxxxx APID=nnnn, DESC="$sc $cpu MD Telemetry Data Packet",
   UB   $sc_$cpu_MD_CMDPC       DESC="$sc $cpu MD Command Processed Counter",
                                UNITS=Counts
 !
-  UI   $sc_$cpu_MD_EnableMask  DESC="$sc $cpu MD Enable Mask"
+  UNION $sc_$cpu_MD_MASK	DESC="$sc $cpu MD Enable Status for each table"
+      UI   $sc_$cpu_MD_EnableMask  DESC="$sc $cpu MD Enable Mask"
+      UI   $sc_$cpu_MD_Tblstat1 MASK= %x0001, DESC= "MD Table 1 Enable/Disable status",
+                                DISCRETE, DRANGE =(0,1), DLABEL=("DIS","ENA")
+      UI   $sc_$cpu_MD_Tblstat2 MASK= %x0002, DESC= "MD Table 2 Enable/Disable status",
+                                DISCRETE, DRANGE =(0,1), DLABEL=("DIS","ENA")
+      UI   $sc_$cpu_MD_Tblstat3 MASK= %x0004, DESC= "MD Table 3 Enable/Disable status",
+                                DISCRETE, DRANGE =(0,1), DLABEL=("DIS","ENA")
+      UI   $sc_$cpu_MD_Tblstat4 MASK= %x0008, DESC= "MD Table 4 Enable/Disable status",
+                                DISCRETE, DRANGE =(0,1), DLABEL=("DIS","ENA")
+  END
+
 !
   UI   $sc_$cpu_MD_AddrCnt[MD_NUM_DWELL_TABLES] DESC="$sc $cpu MD number of dwell addresses for each table"
 !

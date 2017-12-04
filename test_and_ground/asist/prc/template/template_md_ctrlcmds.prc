@@ -78,15 +78,17 @@ PROC $sc_$cpu_md_ctrlcmds
 ;   None
 ;
 ;  Change History
-;
-;   Date         Name        Description
-;   06/20/08     S. Jonke    Original Procedure
-;   02/24/09     W. Moleski  Updated for MD 1.1.0.0
-;   12/04/09     W. Moleski  Added requirements to this prolog and also turned 
-;			     logging off around code that did not provide any
-;			     significant benefit of logging
-;   04/28/11     W. Moleski  Added a variable for the app name and replaced the
-;			     hard-coded app name with the variable
+;   Date         Name		Description
+;   06/20/08	S. Jonke	Original Procedure
+;   02/24/09	W. Moleski	Updated for MD 1.1.0.0
+;   12/04/09	W. Moleski	Added requirements to this prolog and also
+;				turned logging off around code that did not
+;				provide any significant benefit of logging
+;   04/28/11	W. Moleski	Added a variable for the app name and replaced
+;				hard-coded app name with the variable
+;   06/12/17	W. Moleski	Updated to use CPU1 for commanding and added a
+;				hostCPU variable for the utility procs to
+;				connect to the proper host.
 ;
 ;  Arguments
 ;   None
@@ -151,6 +153,7 @@ LOCAL dwell_tbl1_load_appid, dwell_tbl2_load_appid, dwell_tbl3_load_appid, dwell
 local testdata_addr
 
 local MDAppName = "MD"
+local hostCPU = "$CPU"
 
 ;; CPU1 is the default
 dwell_tbl1_load_pkt = "0FA8"
@@ -162,48 +165,28 @@ dwell_tbl2_load_appid = 4009
 dwell_tbl3_load_appid = 4010
 dwell_tbl4_load_appid = 4011
 
-if ("$CPU" = "CPU2") then
-  dwell_tbl1_load_pkt = "0FC6"
-  dwell_tbl2_load_pkt = "0FC7"
-  dwell_tbl3_load_pkt = "0FC8"
-  dwell_tbl4_load_pkt = "0FC9"
-  dwell_tbl1_load_appid = 4038
-  dwell_tbl2_load_appid = 4039
-  dwell_tbl3_load_appid = 4040
-  dwell_tbl4_load_appid = 4041
-elseif ("$CPU" = "CPU3") then
-  dwell_tbl1_load_pkt = "0FE6"
-  dwell_tbl2_load_pkt = "0FE7"
-  dwell_tbl3_load_pkt = "0FE8"
-  dwell_tbl4_load_pkt = "0FE9"
-  dwell_tbl1_load_appid = 4070
-  dwell_tbl2_load_appid = 4071
-  dwell_tbl3_load_appid = 4072
-  dwell_tbl4_load_appid = 4073
-endif
-
 write ";*********************************************************************"
-write ";  Step 1.0:  Initialize the CPU for this test. "
+write ";  Step 1.0: Initialize the CPU for this test. "
 write ";*********************************************************************"
-write ";             Command a Power-On Reset on $CPU. "
+write ";            Command a Power-On Reset. "
 write ";********************************************************************"
 /$SC_$CPU_ES_POWERONRESET
 wait 10
 
 close_data_center
-wait 75
-                                                                                
-cfe_startup $CPU
+wait 60
+
+cfe_startup {hostCPU}
 wait 5
 
 write ";*********************************************************************"
-write ";  Step 1.1:  Start the Memory Dwell Test (TST_MD) Application and "
+write ";  Step 1.1: Start the Memory Dwell Test (TST_MD) Application and "
 write ";  add any required subscriptions.  "
 write ";********************************************************************"
 ut_setupevents "$SC", "$CPU", "CFE_ES", CFE_ES_START_INF_EID, "INFO", 1
 ut_setupevents "$SC", "$CPU", "TST_MD", TST_MD_INIT_INF_EID, "INFO", 2
 
-s load_start_app ("TST_MD","$CPU", "TST_MD_AppMain")
+s load_start_app ("TST_MD",hostCPU, "TST_MD_AppMain")
 
 ; Wait for app startup events
 ut_tlmwait  $SC_$CPU_find_event[2].num_found_messages, 1
@@ -219,11 +202,6 @@ endif
 
 ;;; Need to set the stream based upon the cpu being used
 stream1 = x'92D'
-if ("$CPU" = "CPU2") then
-  stream1 = x'A2D'
-elseif ("$CPU" = "CPU3") then
-  stream1 = x'B2D'
-endif
 
 write "Sending command to add subscription for TST_MD HK packet."
 /$SC_$CPU_TO_ADDPACKET Stream=stream1 Pkt_Size=x'0' Priority=x'0' Reliability=x'1' Buflimit=x'4'
@@ -237,6 +215,15 @@ wait 5
 ; get the address of the test data area
 testdata_addr = $SC_$CPU_TST_MD_TSTDATAADR
 
+;; Load the default MD tables
+local loadFileName;
+FOR i = 1 to MD_NUM_DWELL_TABLES DO
+  loadFileName = sprintf("md_dw%02d.tbl",i)
+
+  s ftp_file("CF:0/apps",loadFileName,loadFileName,hostCPU,"P")
+  wait 5
+ENDDO
+
 write ";*********************************************************************"
 write ";  Step 1.2:  Start the Memory Dwell (MD) Application and "
 write ";  add any required subscriptions.  "
@@ -244,7 +231,7 @@ write ";********************************************************************"
 ut_setupevents "$SC", "$CPU", "CFE_ES", CFE_ES_START_INF_EID, "INFO", 1
 ut_setupevents "$SC", "$CPU", {MDAppName}, MD_INIT_INF_EID, "INFO", 2
 
-s load_start_app (MDAppName,"$CPU","MD_AppMain")
+s load_start_app (MDAppName,hostCPU,"MD_AppMain")
 
 ; Wait for app startup events
 ut_tlmwait  $SC_$CPU_find_event[2].num_found_messages, 1
@@ -265,22 +252,6 @@ dwell1 = x'891'
 dwell2 = x'892'
 dwell3 = x'893'
 dwell4 = x'894'
-
-if ("$CPU" = "CPU2") then
-  stream1 = x'990'
-  hkPktId = "p190"
-  dwell1 = x'991'
-  dwell2 = x'992'
-  dwell3 = x'993'
-  dwell4 = x'994'
-elseif ("$CPU" = "CPU3") then
-  stream1 = x'A90'
-  hkPktId = "p290"
-  dwell1 = x'A91'
-  dwell2 = x'A92'
-  dwell3 = x'A93'
-  dwell4 = x'A94'
-endif
 
 write "Sending commands to add subscriptions for MD HK and dwell packets."
 /$SC_$CPU_TO_ADDPACKET Stream=stream1 Pkt_Size=x'0' Priority=x'0' Reliability=x'1' Buflimit=x'4'
@@ -1455,9 +1426,9 @@ write ";*********************************************************************"
 wait 10
 
 close_data_center
-wait 75
+wait 60
                                                                                 
-cfe_startup $CPU
+cfe_startup {hostCPU}
 wait 5
 
 write "**** Requirements Status Reporting"

@@ -1,8 +1,8 @@
 /************************************************************************
 ** File:
-**   $Id: md_tbldefs.h 1.6 2015/03/01 17:17:58EST sstrege Exp  $
+**   $Id: md_tbldefs.h 1.3 2017/05/22 14:56:36EDT mdeschu Exp  $
 **
-**  Copyright © 2007-2014 United States Government as represented by the 
+**  Copyright (c) 2007-2014 United States Government as represented by the 
 **  Administrator of the National Aeronautics and Space Administration. 
 **  All Other Rights Reserved.  
 **
@@ -16,21 +16,6 @@
 **
 ** Notes:
 **
-**   $Log: md_tbldefs.h  $
-**   Revision 1.6 2015/03/01 17:17:58EST sstrege 
-**   Added copyright information
-**   Revision 1.5 2009/10/20 09:42:58EDT aschoeni 
-**   Updated to remove doxygen warning
-**   Revision 1.4 2009/04/02 18:07:36EDT nschweis 
-**   Signature field of table structure is now conditionally compilable based on configuration.
-**   CPID 7099:1.
-**   Revision 1.3 2008/12/09 16:02:52EST nschweis 
-**   Add signature field to dwell table structure.
-**   Revision 1.2 2008/08/07 16:37:25EDT nsschweiss 
-**   Changed name of included file from cfs_lib.h to cfs_utils.h.
-**   Revision 1.1 2008/07/02 13:37:16EDT nsschweiss 
-**   Initial revision
-**   Member added to project c:/MKSDATA/MKS-REPOSITORY/CFS-REPOSITORY/md/fsw/src/project.pj
 ** 
 *************************************************************************/
 
