@@ -1,16 +1,23 @@
 /*************************************************************************
-** File:
-**   $Id: md_app.c 1.6 2017/05/22 14:56:30EDT mdeschu Exp  $
+** File: md_app.c 
 **
-**  Copyright (c) 2007-2014 United States Government as represented by the 
-**  Administrator of the National Aeronautics and Space Administration. 
-**  All Other Rights Reserved.  
+** NASA Docket No. GSC-18,450-1, identified as “Core Flight Software System (CFS)
+** Memory Dwell Application Version 2.3.2” 
 **
-**  This software was created at NASA's Goddard Space Flight Center.
-**  This software is governed by the NASA Open Source Agreement and may be 
-**  used, distributed and modified only pursuant to the terms of that 
-**  agreement.
+** Copyright © 2019 United States Government as represented by the Administrator of
+** the National Aeronautics and Space Administration. All Rights Reserved. 
 **
+** Licensed under the Apache License, Version 2.0 (the "License"); 
+** you may not use this file except in compliance with the License. 
+** You may obtain a copy of the License at 
+** http://www.apache.org/licenses/LICENSE-2.0 
+**
+** Unless required by applicable law or agreed to in writing, software 
+** distributed under the License is distributed on an "AS IS" BASIS, 
+** WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. 
+** See the License for the specific language governing permissions and 
+** limitations under the License. 
+*
 ** Purpose: 
 **   CFS Memory Dwell Application top-level procedures.
 **
@@ -45,12 +52,14 @@ const MD_CmdHandlerTblRec_t MD_CmdHandlerTbl[] = {
 {             0,                   0,                 0,       MD_TERM_MSGTYPE}
 };
 
+MD_AppData_t MD_AppData;
+
 void MD_AppMain ( void )
 {
    CFE_SB_MsgId_t     MessageID;
-   int32              Status;
-   uint8              TblIndex;
-   boolean            IsRegistered;
+   int32              Status  = CFE_SUCCESS;
+   uint8              TblIndex = 0;
+   boolean            IsRegistered = FALSE;
 
    /* 
    ** Register the Application with Executive Services 
@@ -113,7 +122,7 @@ void MD_AppMain ( void )
       CFE_ES_PerfLogEntry(MD_APPMAIN_PERF_ID);         
 
       /* Process Executive Request */
-      if(Status == CFE_SUCCESS)
+      if((Status == CFE_SUCCESS) && (MD_AppData.MsgPtr != NULL))
       {
         MessageID = CFE_SB_GetMsgId(MD_AppData.MsgPtr);
                  
@@ -192,7 +201,7 @@ int32 MD_AppInit( void )
     /*
     ** Locals
     */
-    int32   Status; 
+    int32   Status = CFE_SUCCESS; 
     
     /* Initialize local control structures */
     MD_InitControlStructures();
@@ -245,33 +254,19 @@ int32 MD_AppInit( void )
 /******************************************************************************/
 void MD_InitControlStructures(void)
 {
-    uint16  TblIndex;
-    uint16  EntryIndex;
-    MD_DwellPacketControl_t *DwellControlPtr;
-    MD_DwellControlEntry_t  *DwellEntryPtr;
+    uint16  TblIndex = 0;
+    MD_DwellPacketControl_t *DwellControlPtr = NULL;
     
     for (TblIndex=0; TblIndex < MD_NUM_DWELL_TABLES; TblIndex++)
     {
         DwellControlPtr = &MD_AppData.MD_DwellTables[TblIndex];
-        DwellControlPtr->Enabled = 0;    
-        DwellControlPtr->AddrCount = 0;      
-        DwellControlPtr->Rate = 0; 
+
+        CFE_PSP_MemSet(DwellControlPtr, 0, sizeof(MD_DwellPacketControl_t));
+        
         /* Countdown must be set to 1 since it's decremented at the top of */
         /* the dwell loop. */           
         DwellControlPtr->Countdown = 1;      
-	    DwellControlPtr->PktOffset = 0;    
-	    DwellControlPtr->CurrentEntry = 0; 
-	    DwellControlPtr->DataSize = 0;        
-        DwellControlPtr->Filler = 0;    
-        
-        for (EntryIndex = 0; EntryIndex < MD_DWELL_TABLE_SIZE; EntryIndex++)
-        {
-            DwellEntryPtr = &DwellControlPtr->Entry[EntryIndex];
-            DwellEntryPtr->Length = 0;      
-	        DwellEntryPtr->Delay = 0;          
-            DwellEntryPtr->ResolvedAddress = 0; 
-        } /* end for EntryIndex loop */
-        
+	                  
 #if MD_SIGNATURE_OPTION == 1   
         strncpy(DwellControlPtr->Signature,"", MD_SIGNATURE_FIELD_LENGTH);          
 #endif
@@ -283,8 +278,8 @@ void MD_InitControlStructures(void)
 /******************************************************************************/
 int32 MD_InitSoftwareBusServices( void )
 {
-    int32    Status;
-    uint16   TblIndex;
+    int32    Status = CFE_SUCCESS;
+    uint16   TblIndex = 0;
 
    /*
    ** Initialize housekeeping telemetry packet (clear user data area) 
@@ -381,13 +376,13 @@ int32 MD_InitSoftwareBusServices( void )
 
 int32 MD_InitTableServices( void )
 {
-    int32                   Status; 
-    int32                   GetAddressResult; 
-    uint8                   TblIndex;
-    boolean                 RecoveredValidTable;        /* for current table */
+    int32                   Status = CFE_SUCCESS; 
+    int32                   GetAddressResult = 0; 
+    uint8                   TblIndex = 0;
+    boolean                 RecoveredValidTable = TRUE;        /* for current table */
     boolean                 TableInitValidFlag = TRUE;  /* for all tables so far*/
     MD_DwellTableLoad_t     InitMemDwellTable;
-    MD_DwellTableLoad_t*    MD_LoadTablePtr = 0; 
+    MD_DwellTableLoad_t*    MD_LoadTablePtr = NULL; 
     uint16                  TblRecos = 0; /* Number of Tables Recovered */
     uint16                  TblInits = 0; /* Number of Tables Initialized */
     char                    TblFileName[OS_MAX_PATH_LEN];
@@ -408,14 +403,42 @@ int32 MD_InitTableServices( void )
         RecoveredValidTable = FALSE;
         
         /* Prepare Table Name */
-        snprintf(MD_AppData.MD_TableName[TblIndex], 
-                 CFE_TBL_MAX_NAME_LENGTH + 1, /* allows total of CFE_TBL_MAX_NAME_LENGTH characters to be copied */
-                 "%s%d", MD_DWELL_TABLE_BASENAME, TblIndex + 1); 
+        Status = snprintf(MD_AppData.MD_TableName[TblIndex], 
+                          sizeof(MD_AppData.MD_TableName[TblIndex]),
+                          "%s%d", MD_DWELL_TABLE_BASENAME, TblIndex + 1); 
+        if(Status < 0) 
+        {
+            CFE_EVS_SendEvent(MD_INIT_TBL_NAME_ERR_EID,
+                              CFE_EVS_ERROR,
+                              "TableName could not be made. Err=0x%08X, Idx=%d",
+                              Status,
+                              TblIndex);
 
-        snprintf(TblFileName, 
+
+            TableInitValidFlag = FALSE;
+
+            /* Advance to the next index */
+            continue;
+        }
+
+        Status = snprintf(TblFileName, 
                  OS_MAX_PATH_LEN, /* allows total of CFE_TBL_MAX_NAME_LENGTH characters to be copied */
                  MD_TBL_FILENAME_FORMAT, TblIndex + 1); 
         
+        if(Status < 0) 
+        {
+            CFE_EVS_SendEvent(MD_INIT_TBL_FILENAME_ERR_EID,
+                              CFE_EVS_ERROR,
+                              "TblFileName could not be made. Err=0x%08X, Idx=%d",
+                              Status,
+                              TblIndex);
+
+            TableInitValidFlag = FALSE;
+
+            /* Advance to the next index */
+            continue;
+        }
+
         /* Register Dwell Table #tblnum */
         Status = CFE_TBL_Register(
                 &MD_AppData.MD_TableHandle[TblIndex],  /* Table Handle (to be returned) */
@@ -474,10 +497,9 @@ int32 MD_InitTableServices( void )
         else if (Status == CFE_TBL_ERR_INVALID_SIZE)
         {
             CFE_EVS_SendEvent (MD_DWELL_TBL_TOO_LARGE_CRIT_EID, CFE_EVS_CRITICAL,
-                              "Dwell Table(s) are too large to register: %d > %d bytes, %d > %d entries",
-                               MD_TBL_LOAD_LNGTH, CFE_TBL_MAX_SNGL_TABLE_SIZE,
-                               MD_DWELL_TABLE_SIZE, 
-                              (uint16) ((CFE_TBL_MAX_SNGL_TABLE_SIZE - sizeof(uint32) ) / sizeof (MD_TableLoadEntry_t)));
+                               "Dwell Table(s) are too large to register: %d bytes, %d entries",
+                               MD_TBL_LOAD_LNGTH,
+                               MD_DWELL_TABLE_SIZE);
             TableInitValidFlag = FALSE;
         }   /* end if */
         
@@ -488,6 +510,12 @@ int32 MD_InitTableServices( void )
                                (unsigned int)Status,TblIndex+1);
             TableInitValidFlag = FALSE;
         }   /* end if */
+        else
+        {
+            /* Table is registered and valid */
+            TableInitValidFlag = TRUE;
+        }
+        
 
         /* 
         ** Load initial values if needed 
@@ -545,7 +573,7 @@ int32 MD_InitTableServices( void )
 int32 MD_ManageDwellTable (uint8 TblIndex)
 {
     int32                Status = CFE_SUCCESS;
-    int32                GetAddressResult; 
+    int32                GetAddressResult = 0; 
     boolean              FinishedManaging = FALSE;
     MD_DwellTableLoad_t *MD_LoadTablePtr = 0; 
 
@@ -624,10 +652,10 @@ int32 MD_ManageDwellTable (uint8 TblIndex)
 
 void MD_ExecRequest(CFE_SB_MsgPtr_t MessagePtr )
 {
-    uint16          CommandCode;
-    CFE_SB_MsgId_t  MessageID;
-    int16           CmdIndx;
-    uint16          ActualLength;
+    uint16          CommandCode = 0;
+    CFE_SB_MsgId_t  MessageID = (CFE_SB_MsgId_t)0;
+    int16           CmdIndx = 0;
+    uint16          ActualLength = 0;
 
     /* Extract Command Code and Message Id */
     CommandCode = CFE_SB_GetCmdCode(MessagePtr);
@@ -728,9 +756,9 @@ void MD_ExecRequest(CFE_SB_MsgPtr_t MessagePtr )
 void MD_HkStatus()
 {
     uint8                        TblIndex = 0;
-    uint16                       MemDwellEnableBits;
-    MD_HkTlm_t                  *HkPktPtr;
-    MD_DwellPacketControl_t     *ThisDwellTablePtr;
+    uint16                       MemDwellEnableBits = 0;
+    MD_HkTlm_t                  *HkPktPtr = NULL;
+    MD_DwellPacketControl_t     *ThisDwellTablePtr = NULL;
     
     /* Assign pointer used as shorthand to access Housekeeping Packet fields */
     HkPktPtr = &MD_AppData.HkPkt;

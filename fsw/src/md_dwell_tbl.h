@@ -1,16 +1,23 @@
 /*************************************************************************
-** File:
-**   $Id: md_dwell_tbl.h 1.4 2017/05/22 14:56:35EDT mdeschu Exp  $
+** File: md_dwell_tbl.h 
 **
-**  Copyright (c) 2007-2014 United States Government as represented by the 
-**  Administrator of the National Aeronautics and Space Administration. 
-**  All Other Rights Reserved.  
+** NASA Docket No. GSC-18,450-1, identified as “Core Flight Software System (CFS)
+** Memory Dwell Application Version 2.3.2” 
 **
-**  This software was created at NASA's Goddard Space Flight Center.
-**  This software is governed by the NASA Open Source Agreement and may be 
-**  used, distributed and modified only pursuant to the terms of that 
-**  agreement.
+** Copyright © 2019 United States Government as represented by the Administrator of
+** the National Aeronautics and Space Administration. All Rights Reserved. 
 **
+** Licensed under the Apache License, Version 2.0 (the "License"); 
+** you may not use this file except in compliance with the License. 
+** You may obtain a copy of the License at 
+** http://www.apache.org/licenses/LICENSE-2.0 
+**
+** Unless required by applicable law or agreed to in writing, software 
+** distributed under the License is distributed on an "AS IS" BASIS, 
+** WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. 
+** See the License for the specific language governing permissions and 
+** limitations under the License. 
+*
 ** Purpose: 
 **   Functions used for validating and copying CFS Memory Dwell Tables.
 **
@@ -101,11 +108,18 @@ void MD_CopyUpdatedTbl(MD_DwellTableLoad_t *MD_LoadTablePtr, uint8 TblIndex);
 ** \param[in] TableIndex An identifier specifying which dwell table is to be 
 **             modified.  Internal values [0..MD_NUM_DWELL_TABLES-1] are used.
 ** \param[in] FieldValue New value for Enabled field.
-**    
-**                                 
-** \retval None
+**                                   
+** \returns
+** \retcode #CFE_SUCCESS             \retdesc \copydoc CFE_SUCCESS            \endcode
+** \retcode #CFE_TBL_ERR_BAD_APP_ID  \retdesc \copydoc CFE_TBL_ERR_BAD_APP_ID \endcode
+** \retcode #CFE_TBL_ERR_NO_ACCESS   \retdesc \copydoc CFE_TBL_ERR_NO_ACCESS  \endcode
+** \retcode #CFE_TBL_ERR_INVALID_HANDLE \retdesc \copydoc CFE_TBL_ERR_INVALID_HANDLE \endcode
+** \retcode #CFE_ES_ERR_APPNAME         \retdesc \copydoc CFE_ES_ERR_APPNAME \endcode
+** \retcode #CFE_ES_ERR_BUFFER          \retdesc \copydoc CFE_ES_ERR_BUFFER  \endcode
+** \retcode #CFE_TBL_ERR_NEVER_LOADED   \retdesc \copydoc CFE_TBL_ERR_NEVER_LOADED  \endcode
+** \endreturns
 ******************************************************************************/
-void MD_UpdateTableEnabledField (uint16 TableIndex, uint16 FieldValue);
+int32 MD_UpdateTableEnabledField (uint16 TableIndex, uint16 FieldValue);
 
 /*****************************************************************************/
 /**
@@ -128,9 +142,17 @@ void MD_UpdateTableEnabledField (uint16 TableIndex, uint16 FieldValue);
 ** \param[in] NewDelay          Number of counts before next dwell.
 ** \param[in] NewDwellAddress   Memory address to be dwelled on.
 **                                 
-** \retval None
+** \returns
+** \retcode #CFE_SUCCESS             \retdesc \copydoc CFE_SUCCESS            \endcode
+** \retcode #CFE_TBL_ERR_BAD_APP_ID  \retdesc \copydoc CFE_TBL_ERR_BAD_APP_ID \endcode
+** \retcode #CFE_TBL_ERR_NO_ACCESS   \retdesc \copydoc CFE_TBL_ERR_NO_ACCESS  \endcode
+** \retcode #CFE_TBL_ERR_INVALID_HANDLE \retdesc \copydoc CFE_TBL_ERR_INVALID_HANDLE \endcode
+** \retcode #CFE_ES_ERR_APPNAME         \retdesc \copydoc CFE_ES_ERR_APPNAME \endcode
+** \retcode #CFE_ES_ERR_BUFFER          \retdesc \copydoc CFE_ES_ERR_BUFFER  \endcode
+** \retcode #CFE_TBL_ERR_NEVER_LOADED   \retdesc \copydoc CFE_TBL_ERR_NEVER_LOADED  \endcode
+** \endreturns
 ******************************************************************************/
-void MD_UpdateTableDwellEntry (uint16 TableIndex, 
+int32 MD_UpdateTableDwellEntry (uint16 TableIndex, 
                                uint16 EntryIndex, 
                                uint16 NewLength,
                                uint16 NewDelay,
@@ -151,9 +173,17 @@ void MD_UpdateTableDwellEntry (uint16 TableIndex,
 **             modified.  Internal values [0..MD_NUM_DWELL_TABLES-1] are used.
 ** \param[in] NewSignature   New Dwell Table signature.
 **                                 
-** \retval None
+** \returns
+** \retcode #CFE_SUCCESS             \retdesc \copydoc CFE_SUCCESS            \endcode
+** \retcode #CFE_TBL_ERR_BAD_APP_ID  \retdesc \copydoc CFE_TBL_ERR_BAD_APP_ID \endcode
+** \retcode #CFE_TBL_ERR_NO_ACCESS   \retdesc \copydoc CFE_TBL_ERR_NO_ACCESS  \endcode
+** \retcode #CFE_TBL_ERR_INVALID_HANDLE \retdesc \copydoc CFE_TBL_ERR_INVALID_HANDLE \endcode
+** \retcode #CFE_ES_ERR_APPNAME         \retdesc \copydoc CFE_ES_ERR_APPNAME \endcode
+** \retcode #CFE_ES_ERR_BUFFER          \retdesc \copydoc CFE_ES_ERR_BUFFER  \endcode
+** \retcode #CFE_TBL_ERR_NEVER_LOADED   \retdesc \copydoc CFE_TBL_ERR_NEVER_LOADED  \endcode
+** \endreturns
 ******************************************************************************/
-void MD_UpdateTableSignature (uint16 TableIndex, 
+int32 MD_UpdateTableSignature (uint16 TableIndex, 
                                char NewSignature[MD_SIGNATURE_FIELD_LENGTH]);
 #endif
 

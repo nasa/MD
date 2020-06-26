@@ -1,15 +1,22 @@
 /*************************************************************************
-** File:
-**   $Id: md_utils.c 1.4 2017/05/22 14:56:29EDT mdeschu Exp  $
+** File: md_utils.c
 **
-**  Copyright (c) 2007-2014 United States Government as represented by the 
-**  Administrator of the National Aeronautics and Space Administration. 
-**  All Other Rights Reserved.  
+** NASA Docket No. GSC-18,450-1, identified as “Core Flight Software System (CFS)
+** Memory Dwell Application Version 2.3.2” 
 **
-**  This software was created at NASA's Goddard Space Flight Center.
-**  This software is governed by the NASA Open Source Agreement and may be 
-**  used, distributed and modified only pursuant to the terms of that 
-**  agreement.
+** Copyright © 2019 United States Government as represented by the Administrator of
+** the National Aeronautics and Space Administration. All Rights Reserved. 
+**
+** Licensed under the Apache License, Version 2.0 (the "License"); 
+** you may not use this file except in compliance with the License. 
+** You may obtain a copy of the License at 
+** http://www.apache.org/licenses/LICENSE-2.0 
+**
+** Unless required by applicable law or agreed to in writing, software 
+** distributed under the License is distributed on an "AS IS" BASIS, 
+** WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. 
+** See the License for the specific language governing permissions and 
+** limitations under the License. 
 **
 ** Purpose: 
 **   Utility functions used for processing CFS Memory Dwell commands
@@ -32,7 +39,7 @@ extern MD_AppData_t MD_AppData;
 boolean MD_TableIsInMask(int16 TableId, uint16 TableMask)
 {
    uint16  LocalMask = TableMask;
-   boolean Status;
+   boolean Status = FALSE;
    
    /* Shift TableId - 1 times */
    if (TableId - 1)
@@ -44,8 +51,6 @@ boolean MD_TableIsInMask(int16 TableId, uint16 TableMask)
    /* then table is in mask. */
    if ( (LocalMask & (uint16) 1) == (uint16) 1)
       Status = TRUE;
-   else
-      Status = FALSE;
     
    return Status;
    
@@ -90,17 +95,14 @@ void MD_UpdateDwellControlInfo (uint16 TableIndex)
 /******************************************************************************/
 boolean MD_ValidEntryId            ( uint16 EntryId )
 {
-    boolean IsValid;
+    boolean IsValid = FALSE;
     
     if ((EntryId >= 1) && ( EntryId <= MD_DWELL_TABLE_SIZE ))  
     {
         /* validate  value (1..MD_DWELL_TABLE_SIZE ) */
         IsValid = TRUE;
     }
-    else
-    {
-        IsValid = FALSE;
-    }
+    
     return IsValid;
 }
 
@@ -109,31 +111,23 @@ boolean MD_ValidEntryId            ( uint16 EntryId )
 
 boolean MD_ValidAddrRange( cpuaddr Addr, uint32 Size )
 {
-    boolean IsValid;
+    boolean IsValid = FALSE;
 
     if ( CFE_PSP_MemValidateRange (Addr,Size, CFE_PSP_MEM_ANY) == OS_SUCCESS ) 
     {
         IsValid = TRUE;
     }
-   else                                         
-    { 
-        IsValid = FALSE;
-    }  
     
     return IsValid;
 }
 /******************************************************************************/
 boolean MD_ValidTableId( uint16 TableId)
 {
-    boolean IsValid;
+    boolean IsValid = FALSE;
     
     if ((TableId >= 1) && (TableId <= MD_NUM_DWELL_TABLES)) 
     {
        IsValid=TRUE;
-    }
-    else
-    {
-       IsValid=FALSE;
     }
       
     return IsValid;
@@ -144,7 +138,7 @@ boolean MD_ValidTableId( uint16 TableId)
 boolean MD_ValidFieldLength( uint16 FieldLength)
 {
 
-    boolean IsValid;
+    boolean IsValid = FALSE;
 
     if ( (FieldLength == 0)  || 
          (FieldLength == 1)  ||
@@ -152,10 +146,6 @@ boolean MD_ValidFieldLength( uint16 FieldLength)
          (FieldLength == 4) )
     {
         IsValid= TRUE;
-    }
-    else
-    {
-        IsValid= FALSE;
     }
     
     return IsValid;

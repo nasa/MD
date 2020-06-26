@@ -9,3 +9,9 @@ aux_source_directory(fsw/src APP_SRC_FILES)
 
 # Create the app module
 add_cfe_app(md ${APP_SRC_FILES})
+
+# Add tables to build
+include_directories(fsw/tables)
+include_directories(fsw/src)
+aux_source_directory(fsw/tables APP_TBL_FILES)
+add_cfe_tables(md ${APP_TBL_FILES})

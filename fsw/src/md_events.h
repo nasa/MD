@@ -1,16 +1,23 @@
 /************************************************************************
-** File:
-**   $Id: md_events.h 1.5 2017/05/22 14:56:31EDT mdeschu Exp  $
+** File: md_events.h 
 **
-**  Copyright (c) 2007-2014 United States Government as represented by the 
-**  Administrator of the National Aeronautics and Space Administration. 
-**  All Other Rights Reserved.  
+** NASA Docket No. GSC-18,450-1, identified as “Core Flight Software System (CFS)
+** Memory Dwell Application Version 2.3.2” 
 **
-**  This software was created at NASA's Goddard Space Flight Center.
-**  This software is governed by the NASA Open Source Agreement and may be 
-**  used, distributed and modified only pursuant to the terms of that 
-**  agreement.
+** Copyright © 2019 United States Government as represented by the Administrator of
+** the National Aeronautics and Space Administration. All Rights Reserved. 
 **
+** Licensed under the Apache License, Version 2.0 (the "License"); 
+** you may not use this file except in compliance with the License. 
+** You may obtain a copy of the License at 
+** http://www.apache.org/licenses/LICENSE-2.0 
+**
+** Unless required by applicable law or agreed to in writing, software 
+** distributed under the License is distributed on an "AS IS" BASIS, 
+** WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. 
+** See the License for the specific language governing permissions and 
+** limitations under the License. 
+*
 ** Purpose:
 **  The CFS Memory Dwell (MD) Application event id header file
 **
@@ -562,6 +569,200 @@
 **  marked unused.
 */
 #define MD_DWELL_TBL_INF_EID 52
+
+/** \brief <tt> 'MD_UpdateTableEnabledField, TableIndex \%d: CFE_TBL_GetAddress Returned 0x\%08x' </tt>
+**  \event <tt> 'MD_UpdateTableEnabledField, TableIndex \%d: CFE_TBL_GetAddress Returned 0x\%08x' </tt>
+**
+**  \par Type: ERROR
+**  
+**  \par Cause:
+**
+**  This event message is issued when the table address cannot be acquired in
+**  the #MD_UpdateTableEnabledField function.  This event is issued when the
+**  #CFE_TBL_GetAddress function returns a value other than CFE_SUCCESS or 
+**  CFE_TBL_INFO_UPDATED.
+**
+**  The \c TableIndex field is the index of the dwell table for which the
+**  failure occurred
+**  The \c Returned field is the value returned from #CFE_Tbl_GetAddress
+*/
+#define MD_UPDATE_TBL_EN_ERR_EID  53
+
+/** \brief <tt> 'MD_UpdateTableDwellEntry, TableIndex %d: CFE_TBL_GetAddress Returned 0x\%08x' </tt>
+**  \event <tt> 'MD_UpdateTableDwellEntry, TableIndex %d: CFE_TBL_GetAddress Returned 0x\%08x' </tt>
+**
+**  \par Type: ERROR
+**  
+**  \par Cause:
+**
+**  This event message is issued when the table address cannot be acquired in
+**  the #MD_UpdateTableDwellEntry function.  This event is issued when the
+**  #CFE_TBL_GetAddress function returns a value other than CFE_SUCCESS or 
+**  CFE_TBL_INFO_UPDATED.
+**
+**  The \c TableIndex field is the index of the dwell table for which the
+**  failure occurred
+**  The \c Returned field is the value returned from #CFE_Tbl_GetAddress
+*/
+#define MD_UPDATE_TBL_DWELL_ERR_EID  54
+
+
+/** \brief <tt> 'MD_UpdateTableSignature, TableIndex %d: CFE_TBL_GetAddress Returned 0x\%08x' </tt>
+**  \event <tt> 'MD_UpdateTableSignature, TableIndex %d: CFE_TBL_GetAddress Returned 0x\%08x' </tt>
+**
+**  \par Type: ERROR
+**  
+**  \par Cause:
+**
+**  This event message is issued when the table address cannot be acquired in
+**  the #MD_UpdateTableSignature function.  This event is issued when the
+**  #CFE_TBL_GetAddress function returns a value other than CFE_SUCCESS or 
+**  CFE_TBL_INFO_UPDATED.
+**
+**  The \c TableIndex field is the index of the dwell table for which the
+**  failure occurred
+**  The \c Returned field is the value returned from #CFE_Tbl_GetAddress
+*/
+#define MD_UPDATE_TBL_SIG_ERR_EID  55
+
+/** \brief <tt> 'Start Dwell Table for mask 0x\%04X failed for \%d of \%d tables' </tt>
+**  \event <tt> 'Start Dwell Table for mask 0x\%04X failed for \%d of \%d tables' </tt>
+**
+**  \par Type: ERROR
+**  
+**  \par Cause:
+**
+**  This event message is issued when the table address cannot be acquired for
+**  one of the tables being started with the #MD_ProcessStartCmd.  In addition
+**  to this summary message, a #MD_UPDATE_TBL_EN_ERR_EID event is issed for each
+**  failure.
+**
+**  The \c mask  field is the mask of tables to start specified in the command.
+**  The \c integer fields "\%d or \%d" states the total number of tables that
+**  could not be started.
+*/
+#define MD_START_DWELL_ERR_EID 56
+
+/** \brief <tt> 'Stop Dwell Table for mask 0x\%04X failed for \%d of \%d tables' </tt>
+**  \event <tt> 'Stop Dwell Table for mask 0x\%04X failed for \%d of \%d tables' </tt>
+**
+**  \par Type: ERROR
+**  
+**  \par Cause:
+**
+**  This event message is issued when the table address cannot be acquired for
+**  one of the tables being started with the #MD_ProcessStopCmd.  In addition
+**  to this summary message, a #MD_UPDATE_TBL_EN_ERR_EID event is issed for each
+**  failure.
+**
+**  The \c mask  field is the mask of tables to start specified in the command.
+**  The \c integer fields "\%d or \%d" states the total number of tables that
+**  could not be started.
+*/
+#define MD_STOP_DWELL_ERR_EID 57
+
+/** \brief <tt> 'Failed to set signature for Dwell Tbl#\%d. Update returned 0x\%08X' </tt>
+**  \event <tt> 'Failed to set signature for Dwell Tbl#\%d. Update returned 0x\%08X' </tt>
+**
+**  \par Type: ERROR
+**
+**  \par Cause:
+**
+**  This event message is issued when the table address cannot be acquired
+**  for the table specified in the #MD_ProcessSignatureCmd. 
+**
+**  The \c Tbl field is the index of the dwell table for which the error occurred.
+**  The \c returned field is the value returned from #MD_UpdateTableSignature.
+*/
+#define MD_SET_SIGNATURE_ERR_EID 58
+
+/** \brief <tt> 'Failed Jam to Dwell Tbl#%d Entry #%d' </tt>
+**  \event <tt> 'Failed Jam to Dwell Tbl#%d Entry #%d' </tt> 
+**
+**  \par Type: ERROR
+**
+**  \par Cause:
+**
+**  This event is issued for a failed jam operation.
+**
+**  The \c Tbl field is the index of the table for which the failure occurred.
+**  The \c Entry field is the index of the entry for which the failure occurred.
+**/
+#define MD_JAM_DWELL_ERR_EID 59
+
+/** \brief <tt> 'Failed Jam of a Null Dwell Entry to Dwell Tbl#%d Entry #%d' </tt>
+**  \event <tt> 'Failed Jam of a Null Dwell Entry to Dwell Tbl#%d Entry #%d' </tt> 
+**
+**  \par Type: ERROR
+**
+**  \par Cause:
+**
+**  This event is issued for a failed jam operation in which a null dwell entry is 
+**  specified.  A null entry is specified when the input dwell length is zero.
+**  All dwell fields (address, length, and delay) will be set to zero in this case.
+** 
+**  The \c Tbl field is the index of the table for which the failure occurred.
+**  The \c Entry field is the index of the entry for which the failure occurred.
+**/
+#define MD_JAM_NULL_DWELL_ERR_EID 60
+
+/** \brief <tt> 'TableName could not be made. Err=0x\%08X, Idx=\%d" </tt>
+**  \event <tt> 'TableName could not be made. Err=0x\%08X, Idx=\%d" </tt>
+**
+**  \par Type: ERROR
+**
+**  \par Cause:
+**
+**  This event message is issued if the snprintf call used to create the 
+**  TableName in #MD_InitTableServices function fails.
+**
+**  The \c Err field in the event text is the value returned from snprintf.
+**  The \c Idx field in the event text is the TblIndex at which the error
+**  occurred.
+*/
+#define MD_INIT_TBL_NAME_ERR_EID 61
+
+/** \brief <tt> 'TblFileName could not be made. Err=0x\%08X, Idx=\%d" </tt>
+**  \event <tt> 'TblFileName could not be made. Err=0x\%08X, Idx=\%d" </tt>
+**
+**  \par Type: ERROR
+**
+**  \par Cause:
+**
+**  This event message is issued if the snprintf call used to create the 
+**  TblFileName in #MD_InitTableServices function fails.
+**
+**  The \c Err field in the event text is the value returned from snprintf.
+**  The \c Idx field in the event text is the TblIndex at which the error
+**  occurred.
+*/
+
+#define MD_INIT_TBL_FILENAME_ERR_EID 62
+
+/** \brief <tt> 'Dwell Table rejected because of null table pointer' </tt>
+**  \event <tt> 'Dwell Table rejected because of null table pointer' </tt>
+**
+**  \par Type: ERROR
+** 
+**  \par Cause:
+**
+**  This event message is issued when the table pointer passed to
+**  #MD_TableValidationFunc is null.
+*/
+#define MD_TBL_VAL_NULL_PTR_ERR_EID 55
+
+
+/** \brief <tt> 'Dwell Table failed to read entry %d in table %d' </tt>
+**  \event <tt> 'Dwell Table failed to read entry %d in table %d' </tt>
+**
+**  \par Type: ERROR
+** 
+**  \par Cause:
+**
+**  This event message is issued when the PSP returns an error when attempting
+**  to read the memory address of an entry
+*/
+#define MD_DWELL_LOOP_GET_DWELL_DATA_ERR_EID 70
 
 #endif
 /************************/
