@@ -23,8 +23,7 @@ Introduction
   specific configuration information contained in the application's Doxygen
   user's guide available in https://github.com/nasa/MD/tree/master/docs.
 
-  This software is licensed under the NASA Open Source Agreement.
-  http://ti.arc.nasa.gov/opensource/nosa
+  This software is licensed under the Apache 2.0 license.
 
 
 Software Included
@@ -35,10 +34,10 @@ Software Included
 Software Required
 ------------------
 
- Operating System Abstraction Layer 4.2.0 or higher can be
+ Operating System Abstraction Layer 5.0.0 or higher can be
  obtained at https://github.com/nasa/osal
 
- core Flight Executive 6.6.0 or higher can be obtained at
+ core Flight Executive 6.8.0 or higher can be obtained at
  https://github.com/nasa/cfe
 
  Note: An integrated bundle including the cFE, OSAL, and PSP can
