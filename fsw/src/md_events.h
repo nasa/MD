@@ -2,7 +2,7 @@
 ** File: md_events.h 
 **
 ** NASA Docket No. GSC-18,450-1, identified as “Core Flight Software System (CFS)
-** Memory Dwell Application Version 2.3.2” 
+** Memory Dwell Application Version 2.3.3” 
 **
 ** Copyright © 2019 United States Government as represented by the Administrator of
 ** the National Aeronautics and Space Administration. All Rights Reserved. 
@@ -763,6 +763,61 @@
 **  to read the memory address of an entry
 */
 #define MD_DWELL_LOOP_GET_DWELL_DATA_ERR_EID 70
+
+
+/** \brief <tt> 'Failed to create pipe.  RC = %d' </tt>
+**  \event <tt> 'Failed to create pipe.  RC = %d' </tt>
+**
+**  \par Type: ERROR
+** 
+**  \par Cause:
+**
+**  This event message is issued when MD cannot create the software bus pipe.
+**  The RC field is the return code from #CFE_SB_CreatePipe.
+*/
+#define MD_CREATE_PIPE_ERR_EID               71
+
+
+/** \brief <tt> 'Failed to subscribe to HK requests.  RC = %d' </tt>
+**  \event <tt> 'Failed to subscribe to HK requests.  RC = %d' </tt>
+**
+**  \par Type: ERROR
+** 
+**  \par Cause:
+**
+**  This event message is issued when MD cannot subscribe to housekeeping
+**  requests.
+**  The RC field is the return code from #CFE_SB_Subscribe
+*/
+#define MD_SUB_HK_ERR_EID                   72
+
+
+/** \brief <tt> 'Failed to subscribe to commands.  RC = %d' </tt>
+**  \event <tt> 'Failed to subscribe to commands.  RC = %d' </tt>
+**
+**  \par Type: ERROR
+** 
+**  \par Cause:
+**
+**  This event message is issued when MD cannot subscribe to commands.
+**  The RC field is the return code from #CFE_SB_Subscribe
+*/
+#define MD_SUB_CMD_ERR_EID                  73
+
+
+/** \brief <tt> 'Failed to subscribe to wakeup messages.  RC = %d' </tt>
+**  \event <tt> 'Failed to subscribe to wakeup messages.  RC = %d' </tt>
+**
+**  \par Type: ERROR
+** 
+**  \par Cause:
+**
+**  This event message is issued when MD cannot subscribe to wakeup 
+**  messages.
+**  The RC field is the return code from #CFE_SB_Subscribe
+*/
+#define MD_SUB_WAKEUP_ERR_EID                74
+
 
 #endif
 /************************/

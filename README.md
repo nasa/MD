@@ -4,10 +4,10 @@ core Flight System (cFS) Memory Dwell Application (MD)
 Open Source Release Readme
 ==========================
 
-MD Release 2.3.2
+MD Release 2.3.3
 
 Date:
-4/1/2020
+10/7/2020
 
 Introduction
 -------------
@@ -29,7 +29,7 @@ Introduction
 
 Software Included
 ------------------
-  Memory Dwell application (MD) 2.3.2
+  Memory Dwell application (MD) 2.3.3
 
 
 Software Required

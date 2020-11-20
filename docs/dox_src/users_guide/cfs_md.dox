@@ -36,6 +36,8 @@
   Member added to project c:/MKSDATA/MKS-REPOSITORY/CFS-REPOSITORY/md/docs/dox_src/users_guide/project.pj
   \endverbatim
   
+  Next: \ref cfsmdintro
+  
 **/
 
 /**
@@ -106,7 +108,9 @@
   <TR><TD WIDTH="20%"> UTC     </TD> <TD WIDTH="40%"> Universal time code                             </TD>
   </TABLE>
 
-  Next: \ref cfsmdovr
+  Next: \ref cfsmdovr <BR>
+  Prev: \ref cfsmdrevhist
+  
 **/
 
 /**
@@ -138,7 +142,8 @@
     information for each Memory Dwell included in Table Loads is saved to the CDS.  Enabled/disabled 
     state information set by commands is not saved to the CDS.
 
-  Next: \ref cfsmdopr
+  Next: \ref cfsmdopr <BR>
+  Pref: \ref cfsmdintro
 **/
     
 /**
@@ -243,6 +248,9 @@
 
 /**
     \page cfsmdcmds CFS Memory Dwell Commands
+	
+	Next: \ref cfsmdtlm <BR>
+    Prev: \ref cfsmddg 
     
     <TABLE BORDER="1" CELLPADDING="2" WIDTH="60%" ALIGN="CENTER">
     <TR><TD WIDTH="20%" ALIGN="CENTER"> <B>\ref cfsmdtlm</B> </TD> 
@@ -255,12 +263,15 @@
 
 /**
     \page cfsmdtlm CFS Memory Dwell Telemetry
+	
+	Next: \ref cfsmdtbl <BR>
+    Prev: \ref cfsmdcmds 
 
-  <TABLE BORDER="1" CELLPADDING="2" WIDTH="60%" ALIGN="CENTER">
-  <TR><TD WIDTH="20%" ALIGN="CENTER"> <B>\ref cfsmdcmds</B> </TD> 
-      <TD WIDTH="20%" ALIGN="CENTER"> <B>\ref cfsmdtbl</B></TD>
-      <TD WIDTH="20%" ALIGN="CENTER"> <B>\ref cfsmdcfg</B></TD>
-  </TABLE>
+    <TABLE BORDER="1" CELLPADDING="2" WIDTH="60%" ALIGN="CENTER">
+    <TR><TD WIDTH="20%" ALIGN="CENTER"> <B>\ref cfsmdcmds</B> </TD> 
+        <TD WIDTH="20%" ALIGN="CENTER"> <B>\ref cfsmdtbl</B></TD>
+        <TD WIDTH="20%" ALIGN="CENTER"> <B>\ref cfsmdcfg</B></TD>
+    </TABLE>
   
     The Memory Dwell Application sends the following telemetry to the ground: <BR>
 **/
@@ -268,11 +279,14 @@
 /**
     \page cfsmdtbl CFS Memory Dwell Table Definitions
 
-  <TABLE BORDER="1" CELLPADDING="2" WIDTH="60%" ALIGN="CENTER">
-  <TR><TD WIDTH="20%" ALIGN="CENTER"> <B>\ref cfsmdcmds</B></TD>
-      <TD WIDTH="20%" ALIGN="CENTER"> <B>\ref cfsmdtlm</B> </TD> 
-      <TD WIDTH="20%" ALIGN="CENTER"> <B>\ref cfsmdcfg</B></TD>
-  </TABLE>
+	Next: \ref cfsmdcfg <BR>
+    Prev: \ref cfsmdtlm 
+	
+    <TABLE BORDER="1" CELLPADDING="2" WIDTH="60%" ALIGN="CENTER">
+    <TR><TD WIDTH="20%" ALIGN="CENTER"> <B>\ref cfsmdcmds</B></TD>
+        <TD WIDTH="20%" ALIGN="CENTER"> <B>\ref cfsmdtlm</B> </TD> 
+        <TD WIDTH="20%" ALIGN="CENTER"> <B>\ref cfsmdcfg</B></TD>
+    </TABLE>
   
     The Memory Dwell Application uses one type of table, a Memory Dwell Load Table.  One table is used for 
     each dwell stream that MD is configured to manage.  The #MD_NUM_DWELL_TABLES configuration parameter 
@@ -304,14 +318,17 @@
 /**
   \page cfsmdcfg CFS Memory Dwell Configuration Parameters
 
-  <TABLE BORDER="1" CELLPADDING="2" WIDTH="60%" ALIGN="CENTER">
-  <TR><TD WIDTH="20%" ALIGN="CENTER"> <B>\ref cfsmdcmds</B></TD>
-      <TD WIDTH="20%" ALIGN="CENTER"> <B>\ref cfsmdtlm</B> </TD> 
-      <TD WIDTH="20%" ALIGN="CENTER"> <B>\ref cfsmdtbl</B></TD>
-  </TABLE>
+    Next: \ref cfsmdcons <BR>
+    Prev: \ref cfsmdtbl 
   
-  The following are configuration parameters used to configure the CFS Memory Dwell
-  Application either for each platform or for a mission as a whole.
+    <TABLE BORDER="1" CELLPADDING="2" WIDTH="60%" ALIGN="CENTER">
+    <TR><TD WIDTH="20%" ALIGN="CENTER"> <B>\ref cfsmdcmds</B></TD>
+        <TD WIDTH="20%" ALIGN="CENTER"> <B>\ref cfsmdtlm</B> </TD> 
+        <TD WIDTH="20%" ALIGN="CENTER"> <B>\ref cfsmdtbl</B></TD>
+    </TABLE>
+  
+    The following are configuration parameters used to configure the CFS Memory Dwell
+    Application either for each platform or for a mission as a whole.
 
 **/
 
@@ -332,8 +349,8 @@
     If a pipe read error is encountered from the CFE Software Bus, 
     the Memory Dwell task will send an error message and then terminate. 
     
-  Next: \ref cfsmdfaqs <BR>
-  Prev: \ref cfsmdtbl 
+    Next: \ref cfsmdfaqs <BR>
+    Prev: \ref cfsmdcfg 
 **/
 
 /**

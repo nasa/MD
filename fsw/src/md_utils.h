@@ -2,7 +2,7 @@
 ** File: md_utils.h
 **
 ** NASA Docket No. GSC-18,450-1, identified as “Core Flight Software System (CFS)
-** Memory Dwell Application Version 2.3.2” 
+** Memory Dwell Application Version 2.3.3” 
 **
 ** Copyright © 2019 United States Government as represented by the Administrator of
 ** the National Aeronautics and Space Administration. All Rights Reserved. 
@@ -57,7 +57,7 @@
 ** \retstmt Returns TRUE or FALSE   
 ** \endreturns
 ******************************************************************************/
-boolean MD_TableIsInMask(int16 TableId, uint16 TableMask);
+bool MD_TableIsInMask(int16 TableId, uint16 TableMask);
 
 /*****************************************************************************/
 /**
@@ -95,7 +95,7 @@ void MD_UpdateDwellControlInfo (uint16 TableIndex);
 ** \endreturns
 **
 ******************************************************************************/
-boolean MD_ValidEntryId            ( uint16 EntryId );
+bool MD_ValidEntryId            ( uint16 EntryId );
 
 /*****************************************************************************/
 /**
@@ -117,7 +117,7 @@ boolean MD_ValidEntryId            ( uint16 EntryId );
 ** \endreturns
 **
 ******************************************************************************/
-boolean MD_ValidAddrRange( cpuaddr Addr, uint32 Size );
+bool MD_ValidAddrRange( cpuaddr Addr, uint32 Size );
 
 /*****************************************************************************/
 /**
@@ -139,7 +139,7 @@ boolean MD_ValidAddrRange( cpuaddr Addr, uint32 Size );
 ** \endreturns
 **
 ******************************************************************************/
-boolean MD_ValidTableId( uint16 TableId );
+bool MD_ValidTableId( uint16 TableId );
 
 /*****************************************************************************/
 /**
@@ -159,7 +159,7 @@ boolean MD_ValidTableId( uint16 TableId );
 ** \endreturns
 **
 ******************************************************************************/
-boolean MD_ValidFieldLength(uint16 FieldLength);
+bool MD_ValidFieldLength(uint16 FieldLength);
 
 
 

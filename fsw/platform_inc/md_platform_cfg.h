@@ -2,7 +2,7 @@
 ** File: md_platform_cfg.h 
 **
 ** NASA Docket No. GSC-18,450-1, identified as “Core Flight Software System (CFS)
-** Memory Dwell Application Version 2.3.2” 
+** Memory Dwell Application Version 2.3.3” 
 **
 ** Copyright © 2019 United States Government as represented by the Administrator of
 ** the National Aeronautics and Space Administration. All Rights Reserved. 
@@ -53,7 +53,7 @@
 **       This string shouldn't be longer than #OS_MAX_PATH_LEN for the
 **       target platform in question
 */
-#define MD_TBL_FILENAME_FORMAT                "/cf/md_dw\%02d.tbl"
+#define MD_TBL_FILENAME_FORMAT                "/cf/md_dw%02d.tbl"
 
 /**
 **  \mdcfg Number of memory dwell tables.

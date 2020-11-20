@@ -2,7 +2,7 @@
  ** File: md_dwell_tbl_test.c 
  **
  ** NASA Docket No. GSC-18,450-1, identified as “Core Flight Software System (CFS)
- ** Memory Dwell Application Version 2.3.2” 
+ ** Memory Dwell Application Version 2.3.3” 
  **
  ** Copyright © 2019 United States Government as represented by the Administrator of
  ** the National Aeronautics and Space Administration. All Rights Reserved. 

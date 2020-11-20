@@ -2,7 +2,7 @@
 ** File: md_msg.h
 **
 ** NASA Docket No. GSC-18,450-1, identified as “Core Flight Software System (CFS)
-** Memory Dwell Application Version 2.3.2” 
+** Memory Dwell Application Version 2.3.3” 
 **
 ** Copyright © 2019 United States Government as represented by the Administrator of
 ** the National Aeronautics and Space Administration. All Rights Reserved. 
@@ -62,7 +62,7 @@
 */
 typedef struct
 {
-    uint8   CmdHeader[CFE_SB_CMD_HDR_SIZE];   /**< \brief cFE Software Bus Command Message Header */
+    CFE_SB_CmdHdr_t   CmdHeader;              /**< \brief cFE Software Bus Command Message Header */
 
 } MD_NoArgsCmd_t;
 
@@ -74,9 +74,10 @@ typedef struct
 **/
 typedef struct                             
 {
-    uint8           Header[CFE_SB_CMD_HDR_SIZE]; /**< \brief cFE Software Bus Command Message Header */
-    uint16          TableMask;        /**< \brief 0x0001=TBL1  bit,
+    CFE_SB_CmdHdr_t  Header;           /**< \brief cFE Software Bus Command Message Header */
+    uint16           TableMask;        /**< \brief 0x0001=TBL1  bit,
             0x0002=TBL2 bit,0x0004=TBL3 bit,0x0008=TBL4 enable bit, etc. */
+    uint16           Padding;          /**< \brief structure padding */
 } MD_CmdStartStop_t;
 
 
@@ -89,7 +90,8 @@ typedef struct
 **/
 typedef struct                              /* for MD_JAM_DWELL */
 {
-    uint8    Header[CFE_SB_CMD_HDR_SIZE];  /**< \brief cFE Software Bus Command Message Header */
+    CFE_SB_CmdHdr_t  Header;    /**< \brief cFE Software Bus Command Message Header */
+
     uint16   TableId;           /**< \brief Table Id: 1..#MD_NUM_DWELL_TABLES */
     uint16   EntryId;           /**< \brief Address index: 1..#MD_DWELL_TABLE_SIZE  */
     uint16	 FieldLength;       /**< \brief Length of Dwell Field : 0, 1, 2, or 4  */
@@ -106,8 +108,8 @@ typedef struct                              /* for MD_JAM_DWELL */
 **/
 typedef struct                              
 {
-    uint8    Header[CFE_SB_CMD_HDR_SIZE];  
-    /**< \brief cFE Software Bus Command Message Header */
+    CFE_SB_CmdHdr_t  Header;    /**< \brief cFE Software Bus Command Message Header */
+    
     uint16   TableId;      /**< \brief Table Id: 1..MD_NUM_DWELL_TABLES */
     uint16   Padding; /**< \brief Padding  */
     char     Signature[MD_SIGNATURE_FIELD_LENGTH];
@@ -125,18 +127,20 @@ typedef struct
 
 typedef struct
     {
-    uint8             TlmHeader[CFE_SB_TLM_HDR_SIZE];  /**< \brief cFE SB Tlm Msg Hdr */
+    CFE_SB_TlmHdr_t   TlmHeader;       /**< \brief cFE SB Tlm Msg Hdr */
+
     /*
     ** Task command interface counters...
     */
-	uint8                  InvalidCmdCntr;     /**< \mdtlmmnemonic \MD_CMDEC 
-                                                    \brief Count of invalid commands received */
-    uint8                  ValidCmdCntr;       /**< \mdtlmmnemonic \MD_CMDPC 
-                                                    \brief Count of valid commands received */
-    uint16                 DwellEnabledMask;   /**< \mdtlmmnemonic \MD_ENABLEMASK 
-                                                    \brief Each bit in bit mask enables a table
-                                                    0x0001=TBL1 enable bit,0x0002=TBL2 enable bit,
-                                                    0x0004=TBL3 enable bit,0x0008=TBL4 enable bit, etc. */
+	uint8   InvalidCmdCntr;     /**< \mdtlmmnemonic \MD_CMDEC 
+                                     \brief Count of invalid commands received */
+    uint8   ValidCmdCntr;       /**< \mdtlmmnemonic \MD_CMDPC 
+                                     \brief Count of valid commands received */
+    uint16  DwellEnabledMask;   /**< \mdtlmmnemonic \MD_ENABLEMASK 
+                                     \brief Each bit in bit mask enables a table
+                                      0x0001=TBL1 enable bit,0x0002=TBL2 enable bit
+                                      0x0004=TBL3 enable bit,0x0008=TBL4 enable bit, etc. */
+
     uint16  DwellTblAddrCount[MD_NUM_DWELL_TABLES]; /**< \mdtlmmnemonic \MD_ADDRCNT
                                                          \brief Number of dwell addresses in table */
     uint16  NumWaitsPerPkt[MD_NUM_DWELL_TABLES];    /**< \mdtlmmnemonic \MD_RATES
@@ -155,13 +159,14 @@ typedef struct
 
 #define MD_HK_TLM_LNGTH        sizeof(MD_HkTlm_t)
 
+
 /**********************************/
 /** 
 **  \mdtlm Memory Dwell Telemetry Packet format 
 **/
 typedef struct                          /* Actual Dwell information */
     {
-    uint8             TlmHeader[CFE_SB_TLM_HDR_SIZE];  /**< \brief cFE SB Tlm Msg Hdr */
+    CFE_SB_TlmHdr_t   TlmHeader;       /**< \brief cFE SB Tlm Msg Hdr */
     
     uint8             TableId;         /**< \mdtlmmnemonic \MD_TABLEID
                                             \brief TableId from 1 to #MD_NUM_DWELL_TABLES */
@@ -176,7 +181,7 @@ typedef struct                          /* Actual Dwell information */
     uint32            Rate;            /**< \mdtlmmnemonic \MD_RATE \brief Number of counts between packet sends*/
 
 #if MD_SIGNATURE_OPTION == 1      
-    char                Signature[MD_SIGNATURE_FIELD_LENGTH];    
+    char              Signature[MD_SIGNATURE_FIELD_LENGTH];    
                                        /**< \mdtlmmnemonic \MD_SIGNATURE \brief Signature */
     
 #endif

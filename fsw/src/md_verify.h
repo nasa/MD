@@ -2,7 +2,7 @@
 ** File: md_verify.h 
 **
 ** NASA Docket No. GSC-18,450-1, identified as “Core Flight Software System (CFS)
-** Memory Dwell Application Version 2.3.2” 
+** Memory Dwell Application Version 2.3.3” 
 **
 ** Copyright © 2019 United States Government as represented by the Administrator of
 ** the National Aeronautics and Space Administration. All Rights Reserved. 
@@ -55,7 +55,7 @@
 /*  will be too large for Table Services */
 #if MD_DWELL_TABLE_SIZE  < 1
    #error MD_DWELL_TABLE_SIZE must be at least one.
-#elif MD_NUM_DWELL_TABLES > 65535
+#elif MD_DWELL_TABLE_SIZE > 65535
    #error MD_DWELL_TABLE_SIZE cannot be greater than 65535.
 #endif 
 

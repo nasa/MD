@@ -2,7 +2,7 @@
 ** File: md_app.h 
 **
 ** NASA Docket No. GSC-18,450-1, identified as “Core Flight Software System (CFS)
-** Memory Dwell Application Version 2.3.2” 
+** Memory Dwell Application Version 2.3.3” 
 **
 ** Copyright © 2019 United States Government as represented by the Administrator of
 ** the National Aeronautics and Space Administration. All Rights Reserved. 
@@ -50,19 +50,21 @@
 **  \name   Function Return Codes for Table Validation function and related routines */
 /** \{ */
 
-#define MD_TBL_ENA_FLAG_ERROR   (0xc0000001L) /**< \brief Enable flag in table load is invalid (valid values are 0 and 1) */
+#define MD_ERROR                (-1)         /**< \brief Generic error value */
 
-#define MD_ZERO_RATE_TBL_ERROR  (0xc0000002L) /**< \brief Table has zero value for total delay, and at least one dwell specified */
+#define MD_TBL_ENA_FLAG_ERROR   (0xc0000001) /**< \brief Enable flag in table load is invalid (valid values are 0 and 1) */
 
-#define MD_RESOLVE_ERROR        (0xc0000003L) /**< \brief Symbolic address couldn't be resolved */ 
+#define MD_ZERO_RATE_TBL_ERROR  (0xc0000002) /**< \brief Table has zero value for total delay, and at least one dwell specified */
 
-#define MD_INVALID_ADDR_ERROR   (0xc0000004L) /**< \brief Invalid address found */
+#define MD_RESOLVE_ERROR        (0xc0000003) /**< \brief Symbolic address couldn't be resolved */ 
 
-#define MD_INVALID_LEN_ERROR    (0xc0000005L) /**< \brief Invalid dwell length found */
+#define MD_INVALID_ADDR_ERROR   (0xc0000004) /**< \brief Invalid address found */
 
-#define MD_NOT_ALIGNED_ERROR    (0xc0000006L) /**< \brief Dwell address improperly aligned for specified dwell length */
+#define MD_INVALID_LEN_ERROR    (0xc0000005) /**< \brief Invalid dwell length found */
 
-#define MD_SIG_LEN_TBL_ERROR    (0xc0000007L) /**< \brief Signature not null terminated in table */
+#define MD_NOT_ALIGNED_ERROR    (0xc0000006) /**< \brief Dwell address improperly aligned for specified dwell length */
+
+#define MD_SIG_LEN_TBL_ERROR    (0xc0000007) /**< \brief Signature not null terminated in table */
 
 /** \} */
 
@@ -137,7 +139,7 @@ typedef struct
     **  Initialization data (not reported in housekeeping)
     */
 
-    char                        MD_TableName[MD_NUM_DWELL_TABLES][CFE_TBL_MAX_NAME_LENGTH + 1]; /**< \brief Array of table names used for TBL Services */
+    char                        MD_TableName[MD_NUM_DWELL_TABLES][CFE_MISSION_TBL_MAX_NAME_LENGTH + 1]; /**< \brief Array of table names used for TBL Services */
     CFE_TBL_Handle_t            MD_TableHandle[ MD_NUM_DWELL_TABLES];  /**< \brief Array of handle ids provided by TBL Services  */
 
 } MD_AppData_t;

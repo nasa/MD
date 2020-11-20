@@ -2,7 +2,7 @@
 ** File: md_dwell_tbl.c 
 **
 ** NASA Docket No. GSC-18,450-1, identified as “Core Flight Software System (CFS)
-** Memory Dwell Application Version 2.3.2” 
+** Memory Dwell Application Version 2.3.3” 
 **
 ** Copyright © 2019 United States Government as represented by the Administrator of
 ** the National Aeronautics and Space Administration. All Rights Reserved. 
@@ -54,7 +54,7 @@ int32 MD_TableValidationFunc (void *TblPtr)
     {
         Status = MD_INVALID_ADDR_ERROR;
 
-        CFE_EVS_SendEvent(MD_TBL_VAL_NULL_PTR_ERR_EID, CFE_EVS_ERROR,
+        CFE_EVS_SendEvent(MD_TBL_VAL_NULL_PTR_ERR_EID, CFE_EVS_EventType_ERROR,
                           "Dwell Table rejected because of null table pointer");
         
         return Status;
@@ -80,7 +80,7 @@ int32 MD_TableValidationFunc (void *TblPtr)
     if ((LocalTblPtr->Enabled != MD_DWELL_STREAM_DISABLED) && 
         (LocalTblPtr->Enabled != MD_DWELL_STREAM_ENABLED))
     {
-        CFE_EVS_SendEvent(MD_TBL_ENA_FLAG_EID, CFE_EVS_ERROR, 
+        CFE_EVS_SendEvent(MD_TBL_ENA_FLAG_EID, CFE_EVS_EventType_ERROR, 
         "Dwell Table rejected because value of enable flag (%d) is invalid", 
                           (int)LocalTblPtr->Enabled); 
         Status = MD_TBL_ENA_FLAG_ERROR;
@@ -90,7 +90,7 @@ int32 MD_TableValidationFunc (void *TblPtr)
 
     else if(StringLength >= MD_SIGNATURE_FIELD_LENGTH)
     {      
-        CFE_EVS_SendEvent(MD_TBL_SIG_LEN_ERR_EID, CFE_EVS_ERROR,
+        CFE_EVS_SendEvent(MD_TBL_SIG_LEN_ERR_EID, CFE_EVS_EventType_ERROR,
          "Dwell Table rejected because Signature length was invalid");
           
         Status = MD_SIG_LEN_TBL_ERROR;
@@ -111,13 +111,13 @@ int32 MD_TableValidationFunc (void *TblPtr)
             /* Allow ground to uplink a table with 0 delay, but if the table is enabled, report that the table will not be processed */
             if ((LocalTblPtr->Enabled == MD_DWELL_STREAM_ENABLED) && (Rate == 0))
             {
-                CFE_EVS_SendEvent(MD_ZERO_RATE_TBL_INF_EID, CFE_EVS_INFORMATION, 
+                CFE_EVS_SendEvent(MD_ZERO_RATE_TBL_INF_EID, CFE_EVS_EventType_INFORMATION, 
                 "Dwell Table is enabled but no processing will occur for table being loaded (rate is zero)"); 
             }
         }
         else if (Status == MD_RESOLVE_ERROR)
         {
-            CFE_EVS_SendEvent(MD_RESOLVE_ERR_EID, CFE_EVS_ERROR, 
+            CFE_EVS_SendEvent(MD_RESOLVE_ERR_EID, CFE_EVS_EventType_ERROR, 
             "Dwell Table rejected because address (sym='%s'/offset=0x%08X) in entry #%d couldn't be resolved", 
                 LocalTblPtr->Entry[TblErrorEntryIndex].DwellAddress.SymName,
                 (unsigned int)LocalTblPtr->Entry[TblErrorEntryIndex].DwellAddress.Offset,
@@ -125,7 +125,7 @@ int32 MD_TableValidationFunc (void *TblPtr)
         }
         else if (Status == MD_INVALID_ADDR_ERROR)
         {
-            CFE_EVS_SendEvent(MD_RANGE_ERR_EID, CFE_EVS_ERROR, 
+            CFE_EVS_SendEvent(MD_RANGE_ERR_EID, CFE_EVS_EventType_ERROR, 
             "Dwell Table rejected because address (sym='%s'/offset=0x%08X) in entry #%d was out of range", 
                 LocalTblPtr->Entry[TblErrorEntryIndex].DwellAddress.SymName,
                 (unsigned int)LocalTblPtr->Entry[TblErrorEntryIndex].DwellAddress.Offset,
@@ -134,14 +134,14 @@ int32 MD_TableValidationFunc (void *TblPtr)
         }
         else if (Status == MD_INVALID_LEN_ERROR)
         {
-            CFE_EVS_SendEvent(MD_TBL_HAS_LEN_ERR_EID, CFE_EVS_ERROR, 
+            CFE_EVS_SendEvent(MD_TBL_HAS_LEN_ERR_EID, CFE_EVS_EventType_ERROR, 
             "Dwell Table rejected because length (%d) in entry #%d was invalid", 
                         LocalTblPtr->Entry[TblErrorEntryIndex].Length,  
                         TblErrorEntryIndex + 1); 
         }
         else if(Status == MD_NOT_ALIGNED_ERROR)
         {
-            CFE_EVS_SendEvent(MD_TBL_ALIGN_ERR_EID, CFE_EVS_ERROR, 
+            CFE_EVS_SendEvent(MD_TBL_ALIGN_ERR_EID, CFE_EVS_EventType_ERROR, 
             "Dwell Table rejected because address (sym='%s'/offset=0x%08X) in entry #%d not properly aligned for %d-byte dwell", 
                 LocalTblPtr->Entry[TblErrorEntryIndex].DwellAddress.SymName,
                 (unsigned int)LocalTblPtr->Entry[TblErrorEntryIndex].DwellAddress.Offset,
@@ -170,7 +170,7 @@ int32 MD_ReadDwellTable(MD_DwellTableLoad_t *TblPtr,
 {
     /* parameters cannot be NULL - checked by calling function */
 
-     uint16 EntryId = 0;
+     uint16 EntryId;
     *ActiveAddrCountPtr = 0;
     *SizePtr = 0;
     *RatePtr = 0;
@@ -193,13 +193,13 @@ int32 MD_ReadDwellTable(MD_DwellTableLoad_t *TblPtr,
 int32 MD_CheckTableEntries(MD_DwellTableLoad_t *TblPtr, 
                 uint16 *ErrorEntryArg)
 {
-    int32       Status               = CFE_SUCCESS;
-    uint16      EntryIndex = 0;
-    int32       FirstBadIndex = -1;
+    int32   Status = CFE_SUCCESS;
+    uint16  EntryIndex;
+    int32   FirstBadIndex = -1;
     
-    int32 GoodCount   = 0;
-    int32 BadCount    = 0;
-    int32 UnusedCount = 0;
+    int32   GoodCount   = 0;
+    int32   BadCount    = 0;
+    int32   UnusedCount = 0;
     
     *ErrorEntryArg  = 0;
     
@@ -248,7 +248,7 @@ int32 MD_CheckTableEntries(MD_DwellTableLoad_t *TblPtr,
     /*
     ** Generate informational event with error totals
     */
-    CFE_EVS_SendEvent(MD_DWELL_TBL_INF_EID, CFE_EVS_INFORMATION,
+    CFE_EVS_SendEvent(MD_DWELL_TBL_INF_EID, CFE_EVS_EventType_INFORMATION,
                      "MD Dwell Tbl verify results: good = %d, bad = %d, unused = %d",
                       (int)GoodCount, (int)BadCount, (int)UnusedCount);
     return Status;
@@ -258,7 +258,7 @@ int32 MD_CheckTableEntries(MD_DwellTableLoad_t *TblPtr,
 /******************************************************************************/
 int32 MD_ValidTableEntry (MD_TableLoadEntry_t *TblEntryPtr)
 {
-    int32       Status = CFE_SUCCESS;
+    int32       Status = MD_ERROR;
     uint16      DwellLength = 0;
     cpuaddr     ResolvedAddr    = 0;
 
@@ -271,34 +271,34 @@ int32 MD_ValidTableEntry (MD_TableLoadEntry_t *TblEntryPtr)
     else
     {
        if (CFS_ResolveSymAddr(&TblEntryPtr->DwellAddress,  
-                              &ResolvedAddr) != TRUE)
+                              &ResolvedAddr) != true)
        {  /* Symbol was non-null AND was not in Symbol Table */
              Status = MD_RESOLVE_ERROR;
        } /* end CFS_ResolveSymAddr */
 
-       else  if  (MD_ValidAddrRange( ResolvedAddr, (uint32)DwellLength) != TRUE)
+       else  if  (MD_ValidAddrRange( ResolvedAddr, (uint32)DwellLength) != true)
        {  /* Address is in invalid range  */
             Status = MD_INVALID_ADDR_ERROR;
        }
-       else if (MD_ValidFieldLength(DwellLength) != TRUE)
+       else if (MD_ValidFieldLength(DwellLength) != true)
        {
              Status = MD_INVALID_LEN_ERROR;
        }
 #if MD_ENFORCE_DWORD_ALIGN == 0
        else if ((DwellLength == 4)
-            && CFS_Verify16Aligned(ResolvedAddr, (uint32)DwellLength) != TRUE)
+            && CFS_Verify16Aligned(ResolvedAddr, (uint32)DwellLength) != true)
        {
              Status = MD_NOT_ALIGNED_ERROR;
        }
 #else
        else if ((DwellLength == 4) 
-            && CFS_Verify32Aligned(ResolvedAddr, (uint32)DwellLength) != TRUE)
+            && CFS_Verify32Aligned(ResolvedAddr, (uint32)DwellLength) != true)
        {
              Status = MD_NOT_ALIGNED_ERROR;
        }
 #endif
        else if ((DwellLength == 2) 
-            && CFS_Verify16Aligned(ResolvedAddr, (uint32)DwellLength) != TRUE)
+            && CFS_Verify16Aligned(ResolvedAddr, (uint32)DwellLength) != true)
        {
              Status = MD_NOT_ALIGNED_ERROR;
        }
@@ -316,7 +316,7 @@ int32 MD_ValidTableEntry (MD_TableLoadEntry_t *TblEntryPtr)
 /******************************************************************************/
 void MD_CopyUpdatedTbl(MD_DwellTableLoad_t *MD_LoadTablePtr, uint8 TblIndex)
 {
-    uint8                    EntryIndex = 0;
+    uint8                    EntryIndex;
     cpuaddr                  ResolvedAddr = 0;
     MD_TableLoadEntry_t     *ThisLoadEntry = NULL;
 	MD_DwellPacketControl_t *LocalControlStruct = NULL;
@@ -380,7 +380,7 @@ int32 MD_UpdateTableEnabledField (uint16 TableIndex, uint16 FieldValue)
    if((GetAddressResult != CFE_SUCCESS) && 
        (GetAddressResult != CFE_TBL_INFO_UPDATED)) 
    {
-        CFE_EVS_SendEvent(MD_UPDATE_TBL_EN_ERR_EID, CFE_EVS_ERROR,
+        CFE_EVS_SendEvent(MD_UPDATE_TBL_EN_ERR_EID, CFE_EVS_EventType_ERROR,
              "MD_UpdateTableEnabledField, TableIndex %d: CFE_TBL_GetAddress Returned 0x%08x",
              TableIndex, GetAddressResult);
         Status = GetAddressResult;   
@@ -419,7 +419,7 @@ int32 MD_UpdateTableDwellEntry (uint16 TableIndex,
    if((GetAddressResult != CFE_SUCCESS) && 
        (GetAddressResult != CFE_TBL_INFO_UPDATED)) 
    {
-        CFE_EVS_SendEvent(MD_UPDATE_TBL_DWELL_ERR_EID, CFE_EVS_ERROR,
+        CFE_EVS_SendEvent(MD_UPDATE_TBL_DWELL_ERR_EID, CFE_EVS_EventType_ERROR,
              "MD_UpdateTableDwellEntry, TableIndex %d: CFE_TBL_GetAddress Returned 0x%08x",
               TableIndex, GetAddressResult);
         Status = GetAddressResult;
@@ -471,7 +471,7 @@ int32 MD_UpdateTableSignature (uint16 TableIndex,
    if((GetAddressResult != CFE_SUCCESS) && 
        (GetAddressResult != CFE_TBL_INFO_UPDATED)) 
    {
-        CFE_EVS_SendEvent(MD_UPDATE_TBL_SIG_ERR_EID, CFE_EVS_ERROR,
+        CFE_EVS_SendEvent(MD_UPDATE_TBL_SIG_ERR_EID, CFE_EVS_EventType_ERROR,
               "MD_UpdateTableSignature, TableIndex %d: CFE_TBL_GetAddress Returned 0x%08x",
               TableIndex, GetAddressResult);
         Status = GetAddressResult;
