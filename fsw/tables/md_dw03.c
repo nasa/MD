@@ -1,30 +1,26 @@
 /************************************************************************
-** File: md_dw03.c
-**
-** NASA Docket No. GSC-18,450-1, identified as “Core Flight Software System (CFS)
-** Memory Dwell Application Version 2.3.3”
-**
-** Copyright © 2019 United States Government as represented by the Administrator of
-** the National Aeronautics and Space Administration. All Rights Reserved.
-**
-** Licensed under the Apache License, Version 2.0 (the "License");
-** you may not use this file except in compliance with the License.
-** You may obtain a copy of the License at
-** http://www.apache.org/licenses/LICENSE-2.0
-**
-** Unless required by applicable law or agreed to in writing, software
-** distributed under the License is distributed on an "AS IS" BASIS,
-** WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-** See the License for the specific language governing permissions and
-** limitations under the License.
-**
-** Purpose:
-**  The CFS Memory Dwell (MD) Example Dwell Table #3
-**
-** Notes:
-**
-**
-*************************************************************************/
+ * NASA Docket No. GSC-18,922-1, and identified as “Core Flight
+ * System (cFS) Memory Dwell Application Version 2.4.0”
+ *
+ * Copyright (c) 2021 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * @file
+ *  The CFS Memory Dwell (MD) Example Dwell Table 3
+ */
 
 /************************************************************************
 ** Includes
@@ -32,7 +28,6 @@
 #include "cfe.h"
 #include "md_tbldefs.h"
 #include "md_app.h"
-#include "cfs_utils.h"
 #include "cfe_tbl_filedef.h"
 #include "md_platform_cfg.h"
 

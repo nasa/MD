@@ -1,28 +1,26 @@
-/*************************************************************************
-** File: md_utils.c
-**
-** NASA Docket No. GSC-18,450-1, identified as “Core Flight Software System (CFS)
-** Memory Dwell Application Version 2.3.3”
-**
-** Copyright © 2019 United States Government as represented by the Administrator of
-** the National Aeronautics and Space Administration. All Rights Reserved.
-**
-** Licensed under the Apache License, Version 2.0 (the "License");
-** you may not use this file except in compliance with the License.
-** You may obtain a copy of the License at
-** http://www.apache.org/licenses/LICENSE-2.0
-**
-** Unless required by applicable law or agreed to in writing, software
-** distributed under the License is distributed on an "AS IS" BASIS,
-** WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-** See the License for the specific language governing permissions and
-** limitations under the License.
-**
-** Purpose:
-**   Utility functions used for processing CFS Memory Dwell commands
-**
-**
-*************************************************************************/
+/************************************************************************
+ * NASA Docket No. GSC-18,922-1, and identified as “Core Flight
+ * System (cFS) Memory Dwell Application Version 2.4.0”
+ *
+ * Copyright (c) 2021 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * @file
+ *   Utility functions used for processing CFS Memory Dwell commands
+ */
 
 /*************************************************************************
 ** Includes
@@ -144,6 +142,88 @@ bool MD_ValidFieldLength(uint16 FieldLength)
 }
 
 /******************************************************************************/
+
+bool MD_Verify32Aligned(cpuaddr Address, uint32 Size)
+{
+    bool IsAligned;
+
+    if (Address % sizeof(uint32) != 0)
+    {
+        IsAligned = false;
+    }
+    else if (Size % sizeof(uint32) != 0)
+    {
+        IsAligned = false;
+    }
+    else
+    {
+        IsAligned = true;
+    }
+
+    return (IsAligned);
+}
+
+/******************************************************************************/
+
+bool MD_Verify16Aligned(cpuaddr Address, uint32 Size)
+{
+    bool IsAligned;
+
+    if (Address % sizeof(uint16) != 0)
+    {
+        IsAligned = false;
+    }
+    else if (Size % sizeof(uint16) != 0)
+    {
+        IsAligned = false;
+    }
+    else
+    {
+        IsAligned = true;
+    }
+
+    return (IsAligned);
+}
+
+/******************************************************************************/
+
+bool MD_ResolveSymAddr(MD_SymAddr_t *SymAddr, cpuaddr *ResolvedAddr)
+{
+    bool  Valid;
+    int32 OS_Status = OS_SUCCESS;
+
+    /*
+    ** NUL terminate the very end of the symbol name string array as a
+    ** safety measure
+    */
+    SymAddr->SymName[OS_MAX_SYM_LEN - 1] = '\0';
+
+    /*
+    ** If the symbol name string is a nul string
+    ** we use the offset as the absolute address
+    */
+    if (strlen(SymAddr->SymName) == 0)
+    {
+        *ResolvedAddr = SymAddr->Offset;
+        Valid         = true;
+    }
+    else
+    {
+        /*
+        ** If symbol name is not an empty string look it up
+        ** using the OSAL API and add the offset if it succeeds
+        */
+        OS_Status = OS_SymbolLookup(ResolvedAddr, SymAddr->SymName);
+        if (OS_Status == OS_SUCCESS)
+        {
+            *ResolvedAddr += SymAddr->Offset;
+            Valid = true;
+        }
+        else
+            Valid = false;
+    }
+    return (Valid);
+}
 
 /************************/
 /*  End of File Comment */

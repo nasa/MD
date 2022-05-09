@@ -1,3 +1,21 @@
+/************************************************************************
+ * NASA Docket No. GSC-18,922-1, and identified as “Core Flight
+ * System (cFS) Memory Dwell Application Version 2.4.0”
+ *
+ * Copyright (c) 2021 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
 
 /*
  * Includes
@@ -9,7 +27,6 @@
 #include "md_events.h"
 #include "md_version.h"
 #include "md_test_utils.h"
-#include <sys/fcntl.h>
 #include <unistd.h>
 #include <stdlib.h>
 
@@ -375,6 +392,115 @@ void MD_ValidFieldLength_Test_Invalid(void)
 
 } /* end MD_ValidFieldLength_Test_Invalid */
 
+void MD_Verify32Aligned_Test(void)
+{
+    bool    Result;
+    cpuaddr Addr;
+    uint32  Size;
+
+    Addr = 0; /* address is aligned */
+    Size = 4; /* size is aligned */
+
+    /* Execute the function being tested */
+    Result = MD_Verify32Aligned(Addr, Size);
+
+    /* Verify results */
+    UtAssert_True(Result == true, "Result == true");
+
+    Addr = 0; /* address is aligned */
+    Size = 1; /* size is not aligned */
+
+    /* Execute the function being tested */
+    Result = MD_Verify32Aligned(Addr, Size);
+
+    /* Verify results */
+    UtAssert_True(Result == false, "Result == false");
+
+    Addr = 1; /* address is not aligned */
+    Size = 0; /* size is aligned */
+
+    /* Execute the function being tested */
+    Result = MD_Verify32Aligned(Addr, Size);
+
+    /* Verify results */
+    UtAssert_True(Result == false, "Result == false");
+
+} /* end MD_Verify32Aligned_Test */
+
+void MD_Verify16Aligned_Test(void)
+{
+    bool    Result;
+    cpuaddr Addr;
+    uint32  Size;
+
+    Addr = 0; /* address is aligned */
+    Size = 4; /* size is aligned */
+
+    /* Execute the function being tested */
+    Result = MD_Verify16Aligned(Addr, Size);
+
+    /* Verify results */
+    UtAssert_True(Result == true, "Result == true");
+
+    Addr = 0; /* address is aligned */
+    Size = 1; /* size is not aligned */
+
+    /* Execute the function being tested */
+    Result = MD_Verify16Aligned(Addr, Size);
+
+    /* Verify results */
+    UtAssert_True(Result == false, "Result == false");
+
+    Addr = 1; /* address is not aligned */
+    Size = 0; /* size is aligned */
+
+    /* Execute the function being tested */
+    Result = MD_Verify16Aligned(Addr, Size);
+
+    /* Verify results */
+    UtAssert_True(Result == false, "Result == false");
+
+} /* end MD_Verify16Aligned_Test */
+
+void MD_ResolveSymAddr_Test(void)
+{
+    MD_SymAddr_t SymAddr;
+    cpuaddr      ResolvedAddr;
+    bool         Result;
+
+    memset(&SymAddr, 0, sizeof(MD_SymAddr_t));
+
+    SymAddr.Offset = 99;
+
+    /* Execute the function being tested */
+    Result = MD_ResolveSymAddr(&SymAddr, &ResolvedAddr);
+
+    /* Verify results */
+    UtAssert_True(Result == true, "Result == true");
+    UtAssert_True(ResolvedAddr == SymAddr.Offset, "ResolvedAddr == SymAddr.Offset");
+
+    ResolvedAddr = 0;
+    strncpy(SymAddr.SymName, "symname", OS_MAX_PATH_LEN);
+
+    UT_SetDataBuffer(UT_KEY(OS_SymbolLookup), &ResolvedAddr, sizeof(ResolvedAddr), false);
+    UT_SetDefaultReturnValue(UT_KEY(OS_SymbolLookup), OS_SUCCESS);
+
+    /* Execute the function being tested */
+    Result = MD_ResolveSymAddr(&SymAddr, &ResolvedAddr);
+
+    /* Verify results */
+    UtAssert_True(Result == true, "Result == true");
+    UtAssert_True(ResolvedAddr == SymAddr.Offset, "ResolvedAddr == SymAddr.Offset");
+
+    UT_SetDefaultReturnValue(UT_KEY(OS_SymbolLookup), -1);
+
+    /* Execute the function being tested */
+    Result = MD_ResolveSymAddr(&SymAddr, &ResolvedAddr);
+
+    /* Verify results */
+    UtAssert_True(Result == false, "Result == false");
+}
+
 void UtTest_Setup(void)
 {
     UtTest_Add(MD_TableIsInMask_Test_ShiftOddResult, MD_Test_Setup, MD_Test_TearDown,
@@ -408,6 +534,11 @@ void UtTest_Setup(void)
     UtTest_Add(MD_ValidFieldLength_Test_ValidFieldLength4, MD_Test_Setup, MD_Test_TearDown,
                "MD_ValidFieldLength_Test_ValidFieldLength4");
     UtTest_Add(MD_ValidFieldLength_Test_Invalid, MD_Test_Setup, MD_Test_TearDown, "MD_ValidFieldLength_Test_Invalid");
+
+    UtTest_Add(MD_Verify32Aligned_Test, MD_Test_Setup, MD_Test_TearDown, "MD_Verify32Aligned_Test");
+    UtTest_Add(MD_Verify16Aligned_Test, MD_Test_Setup, MD_Test_TearDown, "MD_Verify16Aligned_Test");
+
+    UtTest_Add(MD_ResolveSymAddr_Test, MD_Test_Setup, MD_Test_TearDown, "MD_ResolveSymAddr_Test");
 
 } /* end UtTest_Setup */
 

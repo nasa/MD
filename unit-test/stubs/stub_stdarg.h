@@ -18,22 +18,32 @@
  ************************************************************************/
 
 /**
- * @file
- *  The CFS Memory Dwell (MD) Application header file containing version number
- */
-#ifndef MD_VERSION_H
-#define MD_VERSION_H
-
-/**
- * \defgroup cfsmdversion CFS Memory Dwell Version
- * \ref cfsversions
- * \{
+ * \file
+ *   Coverage stub replacement for stdarg.h
  */
 
-#define MD_MAJOR_VERSION 2  /**< \brief Major version number */
-#define MD_MINOR_VERSION 4  /**< \brief Minor version number */
-#define MD_REVISION      99 /**< \brief Revision number */
+#ifndef STUB_STDARG_H
+#define STUB_STDARG_H
 
-/**\}*/
+#include "stub_basetypes.h"
+
+/* ----------------------------------------- */
+/* constants normally defined in stdarg.h */
+/* ----------------------------------------- */
+
+/* ----------------------------------------- */
+/* types normally defined in stdarg.h */
+/* ----------------------------------------- */
+typedef struct
+{
+    void *p;
+} stub_va_list;
+
+/* ----------------------------------------- */
+/* prototypes normally declared in stdarg.h */
+/* ----------------------------------------- */
+
+#define stub_va_start(ap, last) ap.p = &last
+#define stub_va_end(ap)
 
 #endif

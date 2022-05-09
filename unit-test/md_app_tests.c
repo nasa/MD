@@ -1,3 +1,21 @@
+/************************************************************************
+ * NASA Docket No. GSC-18,922-1, and identified as “Core Flight
+ * System (cFS) Memory Dwell Application Version 2.4.0”
+ *
+ * Copyright (c) 2021 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
 
 /*
  * Includes
@@ -11,10 +29,10 @@
 #include "md_events.h"
 #include "md_version.h"
 #include "md_test_utils.h"
-#include <sys/fcntl.h>
 #include <unistd.h>
 #include <stdlib.h>
-#include <OCS_stdio.h>
+
+#include "stub_stdio.h"
 
 /* UT includes */
 #include "uttest.h"
@@ -23,22 +41,6 @@
 
 /* md_app_tests globals */
 uint8 call_count_CFE_EVS_SendEvent;
-
-CFE_SB_Buffer_t DummyBuffer;
-
-/*
- * Function Definitions
- */
-
-int32 MD_APP_TEST_CFE_SB_ReceiveBufferHook(void *UserObj, int32 StubRetcode, uint32 CallCount,
-                                           const UT_StubContext_t *Context)
-{
-    void **BufPtr = (void **)Context->ArgPtr[0];
-
-    *BufPtr = &DummyBuffer;
-
-    return CFE_SUCCESS;
-}
 
 int32 MD_APP_TEST_CFE_TBL_GetAddressHook1(void *UserObj, int32 StubRetcode, uint32 CallCount,
                                           const UT_StubContext_t *Context)
@@ -85,9 +87,6 @@ void MD_AppMain_Test_AppInitError(void)
     char  ExpectedSysLogString[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
     snprintf(ExpectedSysLogString, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH, "MD:Application Init Failed,RC=%%d\n");
 
-    CFE_ES_WriteToSysLog_context_t context_CFE_ES_WriteToSysLog[2];
-    UT_SetHookFunction(UT_KEY(CFE_ES_WriteToSysLog), UT_Utils_stub_reporter_hook, &context_CFE_ES_WriteToSysLog);
-
     /* Set to make MD_AppInit return -1, in order to generate log message "Application Init Failed" */
     UT_SetDeferredRetcode(UT_KEY(CFE_EVS_Register), 1, -1);
 
@@ -102,12 +101,10 @@ void MD_AppMain_Test_AppInitError(void)
     UtAssert_True(call_count_CFE_EVS_SendEvent == 0, "CFE_EVS_SendEvent was called %u time(s), expected 0",
                   call_count_CFE_EVS_SendEvent);
 
-    strCmpResult =
-        strncmp(ExpectedSysLogString, context_CFE_ES_WriteToSysLog[1].Spec, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH);
+    strCmpResult = strncmp(ExpectedSysLogString, context_CFE_ES_WriteToSysLog.Spec, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH);
 
     /* Generates 1 log message we don't care about in this test */
-    UtAssert_True(strCmpResult == 0, "Sys Log string matched expected result, '%s'",
-                  context_CFE_ES_WriteToSysLog[1].Spec);
+    UtAssert_True(strCmpResult == 0, "Sys Log string matched expected result, '%s'", context_CFE_ES_WriteToSysLog.Spec);
 
 } /* end MD_AppMain_Test_AppInitError */
 
@@ -118,9 +115,6 @@ void MD_AppMain_Test_RcvMsgError(void)
 
     snprintf(ExpectedEventString, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH,
              "SB Pipe Read Error, App will exit. Pipe Return Status = %%d");
-
-    CFE_EVS_SendEvent_context_t context_CFE_EVS_SendEvent[3];
-    UT_SetHookFunction(UT_KEY(CFE_EVS_SendEvent), UT_Utils_stub_reporter_hook, &context_CFE_EVS_SendEvent);
 
     /* Set to prevent unintended error messages */
     UT_SetDefaultReturnValue(UT_KEY(CFE_TBL_Load), CFE_SUCCESS);
@@ -205,7 +199,8 @@ void MD_AppMain_Test_WakeupNominal(void)
 {
     CFE_SB_MsgId_t  TestMsgId;
     size_t          MsgSize;
-    CFE_SB_Buffer_t TempBuf;
+    MD_NoArgsCmd_t  Packet;
+    MD_NoArgsCmd_t *TempBuf = &Packet;
 
     /* Set to prevent unintended error messages */
     UT_SetDefaultReturnValue(UT_KEY(CFE_TBL_Load), CFE_SUCCESS);
@@ -219,7 +214,7 @@ void MD_AppMain_Test_WakeupNominal(void)
     /* Set to provide a non-null buffer pointer */
     UT_SetDataBuffer(UT_KEY(CFE_SB_ReceiveBuffer), &TempBuf, sizeof(TempBuf), false);
 
-    TestMsgId = MD_WAKEUP_MID;
+    TestMsgId = CFE_SB_ValueToMsgId(MD_WAKEUP_MID);
     MsgSize   = sizeof(MD_NoArgsCmd_t);
     UT_SetDataBuffer(UT_KEY(CFE_MSG_GetMsgId), &TestMsgId, sizeof(TestMsgId), false);
     UT_SetDataBuffer(UT_KEY(CFE_MSG_GetSize), &MsgSize, sizeof(MsgSize), false);
@@ -247,13 +242,11 @@ void MD_AppMain_Test_WakeupLengthError(void)
     size_t          MsgSize;
     int32           strCmpResult;
     char            ExpectedEventString[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
-    CFE_SB_Buffer_t TempBuf;
+    MD_NoArgsCmd_t  Packet;
+    MD_NoArgsCmd_t *TempBuf = &Packet;
 
     snprintf(ExpectedEventString, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH,
-             "Msg with Bad length Rcvd: ID = 0x%%08X, Exp Len = %%u, Len = %%d");
-
-    CFE_EVS_SendEvent_context_t context_CFE_EVS_SendEvent[3];
-    UT_SetHookFunction(UT_KEY(CFE_EVS_SendEvent), UT_Utils_stub_reporter_hook, context_CFE_EVS_SendEvent);
+             "Msg with Bad length Rcvd: ID = 0x%%08lX, Exp Len = %%u, Len = %%d");
 
     /* Set to prevent unintended error messages */
     UT_SetDefaultReturnValue(UT_KEY(CFE_TBL_Load), CFE_SUCCESS);
@@ -265,7 +258,7 @@ void MD_AppMain_Test_WakeupLengthError(void)
 
     UT_SetDataBuffer(UT_KEY(CFE_SB_ReceiveBuffer), &TempBuf, sizeof(TempBuf), false);
 
-    TestMsgId = MD_WAKEUP_MID;
+    TestMsgId = CFE_SB_ValueToMsgId(MD_WAKEUP_MID);
     MsgSize   = sizeof(MD_NoArgsCmd_t) + 1;
     UT_SetDataBuffer(UT_KEY(CFE_MSG_GetMsgId), &TestMsgId, sizeof(TestMsgId), false);
     UT_SetDataBuffer(UT_KEY(CFE_MSG_GetSize), &MsgSize, sizeof(MsgSize), false);
@@ -296,10 +289,8 @@ void MD_AppMain_Test_CmdNominal(void)
     CFE_SB_MsgId_t    TestMsgId;
     CFE_MSG_FcnCode_t FcnCode;
     size_t            MsgSize;
-    CFE_SB_Buffer_t   TempBuf;
-
-    CFE_EVS_SendEvent_context_t context_CFE_EVS_SendEvent[3];
-    UT_SetHookFunction(UT_KEY(CFE_EVS_SendEvent), UT_Utils_stub_reporter_hook, &context_CFE_EVS_SendEvent);
+    MD_NoArgsCmd_t    Packet;
+    MD_NoArgsCmd_t *  TempBuf = &Packet;
 
     /* Set to prevent unintended error messages */
     UT_SetDefaultReturnValue(UT_KEY(CFE_TBL_Load), CFE_SUCCESS);
@@ -310,7 +301,7 @@ void MD_AppMain_Test_CmdNominal(void)
     /* Set to provide a non-null buffer pointer */
     UT_SetDataBuffer(UT_KEY(CFE_SB_ReceiveBuffer), &TempBuf, sizeof(TempBuf), false);
 
-    TestMsgId = MD_CMD_MID;
+    TestMsgId = CFE_SB_ValueToMsgId(MD_CMD_MID);
     FcnCode   = 0;
     MsgSize   = sizeof(MD_NoArgsCmd_t);
     UT_SetDataBuffer(UT_KEY(CFE_MSG_GetMsgId), &TestMsgId, sizeof(TestMsgId), false);
@@ -336,10 +327,8 @@ void MD_AppMain_Test_SendHkNominal(void)
 {
     CFE_SB_MsgId_t  TestMsgId;
     size_t          MsgSize;
-    CFE_SB_Buffer_t TempBuf;
-
-    CFE_EVS_SendEvent_context_t context_CFE_EVS_SendEvent[3];
-    UT_SetHookFunction(UT_KEY(CFE_EVS_SendEvent), UT_Utils_stub_reporter_hook, &context_CFE_EVS_SendEvent);
+    MD_NoArgsCmd_t  Packet;
+    MD_NoArgsCmd_t *TempBuf = &Packet;
 
     /* Set to prevent unintended error messages */
     UT_SetDefaultReturnValue(UT_KEY(CFE_TBL_Load), CFE_SUCCESS);
@@ -350,7 +339,7 @@ void MD_AppMain_Test_SendHkNominal(void)
     /* Set to provide a non-null buffer pointer */
     UT_SetDataBuffer(UT_KEY(CFE_SB_ReceiveBuffer), &TempBuf, sizeof(TempBuf), false);
 
-    TestMsgId = MD_SEND_HK_MID;
+    TestMsgId = CFE_SB_ValueToMsgId(MD_SEND_HK_MID);
     MsgSize   = sizeof(MD_NoArgsCmd_t);
     UT_SetDataBuffer(UT_KEY(CFE_MSG_GetMsgId), &TestMsgId, sizeof(TestMsgId), false);
     UT_SetDataBuffer(UT_KEY(CFE_MSG_GetSize), &MsgSize, sizeof(MsgSize), false);
@@ -375,13 +364,11 @@ void MD_AppMain_Test_SendHkLengthError(void)
     size_t          MsgSize;
     int32           strCmpResult;
     char            ExpectedEventString[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
-    CFE_SB_Buffer_t TempBuf;
+    MD_NoArgsCmd_t  Packet;
+    MD_NoArgsCmd_t *TempBuf = &Packet;
 
     snprintf(ExpectedEventString, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH,
-             "Msg with Bad length Rcvd: ID = 0x%%08X, Exp Len = %%u, Len = %%d");
-
-    CFE_EVS_SendEvent_context_t context_CFE_EVS_SendEvent[3];
-    UT_SetHookFunction(UT_KEY(CFE_EVS_SendEvent), UT_Utils_stub_reporter_hook, &context_CFE_EVS_SendEvent);
+             "Msg with Bad length Rcvd: ID = 0x%%08lX, Exp Len = %%u, Len = %%d");
 
     /* Set to prevent unintended error messages */
     UT_SetDefaultReturnValue(UT_KEY(CFE_TBL_Load), CFE_SUCCESS);
@@ -392,7 +379,7 @@ void MD_AppMain_Test_SendHkLengthError(void)
     /* Set to provide a non-null buffer pointer */
     UT_SetDataBuffer(UT_KEY(CFE_SB_ReceiveBuffer), &TempBuf, sizeof(TempBuf), false);
 
-    TestMsgId = MD_SEND_HK_MID;
+    TestMsgId = CFE_SB_ValueToMsgId(MD_SEND_HK_MID);
     MsgSize   = 1;
     UT_SetDataBuffer(UT_KEY(CFE_MSG_GetMsgId), &TestMsgId, sizeof(TestMsgId), false);
     UT_SetDataBuffer(UT_KEY(CFE_MSG_GetSize), &MsgSize, sizeof(MsgSize), false);
@@ -420,16 +407,14 @@ void MD_AppMain_Test_SendHkLengthError(void)
 
 void MD_AppMain_Test_InvalidMessageID(void)
 {
-    CFE_SB_MsgId_t  TestMsgId;
+    CFE_SB_MsgId_t  TestMsgId = MD_UT_MID_1;
     int32           strCmpResult;
     char            ExpectedEventString[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
-    CFE_SB_Buffer_t TempBuf;
+    MD_NoArgsCmd_t  Packet;
+    MD_NoArgsCmd_t *TempBuf = &Packet;
 
     snprintf(ExpectedEventString, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH,
-             "Msg with Invalid message ID Rcvd -- ID = 0x%%08X");
-
-    CFE_EVS_SendEvent_context_t context_CFE_EVS_SendEvent[3];
-    UT_SetHookFunction(UT_KEY(CFE_EVS_SendEvent), UT_Utils_stub_reporter_hook, &context_CFE_EVS_SendEvent);
+             "Msg with Invalid message ID Rcvd -- ID = 0x%%08lX");
 
     /* Set to prevent unintended error messages */
     UT_SetDefaultReturnValue(UT_KEY(CFE_TBL_Load), CFE_SUCCESS);
@@ -439,8 +424,6 @@ void MD_AppMain_Test_InvalidMessageID(void)
 
     /* Set to provide a non-null buffer pointer */
     UT_SetDataBuffer(UT_KEY(CFE_SB_ReceiveBuffer), &TempBuf, sizeof(TempBuf), false);
-
-    TestMsgId = 99;
     UT_SetDataBuffer(UT_KEY(CFE_MSG_GetMsgId), &TestMsgId, sizeof(TestMsgId), false);
 
     /* Execute the function being tested */
@@ -471,9 +454,6 @@ void MD_AppInit_Test_Nominal(void)
     char  ExpectedEventString[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
 
     snprintf(ExpectedEventString, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH, "MD Initialized.  Version %%d.%%d.%%d.%%d");
-
-    CFE_EVS_SendEvent_context_t context_CFE_EVS_SendEvent[2];
-    UT_SetHookFunction(UT_KEY(CFE_EVS_SendEvent), UT_Utils_stub_reporter_hook, &context_CFE_EVS_SendEvent);
 
     MD_AppData.CmdCounter = 1;
     MD_AppData.ErrCounter = 1;
@@ -510,9 +490,6 @@ void MD_AppInit_Test_EvsRegisterNotSuccess(void)
     snprintf(ExpectedSysLogString, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH,
              "MD_APP:Call to CFE_EVS_Register Failed:RC=%%d\n");
 
-    CFE_ES_WriteToSysLog_context_t context_CFE_ES_WriteToSysLog[2];
-    UT_SetHookFunction(UT_KEY(CFE_ES_WriteToSysLog), UT_Utils_stub_reporter_hook, &context_CFE_ES_WriteToSysLog);
-
     /* Set to make MD_AppInit return -1, in order to generate log message "Application Init Failed" */
     UT_SetDeferredRetcode(UT_KEY(CFE_EVS_Register), 1, -1);
 
@@ -527,11 +504,9 @@ void MD_AppInit_Test_EvsRegisterNotSuccess(void)
     UtAssert_True(call_count_CFE_EVS_SendEvent == 0, "CFE_EVS_SendEvent was called %u time(s), expected 0",
                   call_count_CFE_EVS_SendEvent);
 
-    strCmpResult =
-        strncmp(ExpectedSysLogString, context_CFE_ES_WriteToSysLog[0].Spec, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH);
+    strCmpResult = strncmp(ExpectedSysLogString, context_CFE_ES_WriteToSysLog.Spec, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH);
 
-    UtAssert_True(strCmpResult == 0, "Sys Log string matched expected result, '%s'",
-                  context_CFE_ES_WriteToSysLog[0].Spec);
+    UtAssert_True(strCmpResult == 0, "Sys Log string matched expected result, '%s'", context_CFE_ES_WriteToSysLog.Spec);
 
     call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
 
@@ -706,9 +681,6 @@ void MD_InitSoftwareBusServices_Test_CreatePipeError(void)
 
     snprintf(ExpectedEventString, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH, "Failed to create pipe.  RC = %%d");
 
-    CFE_EVS_SendEvent_context_t context_CFE_EVS_SendEvent;
-    UT_SetHookFunction(UT_KEY(CFE_EVS_SendEvent), UT_Utils_stub_reporter_hook, &context_CFE_EVS_SendEvent);
-
     /* Set to generate error message "MD_APP: Error creating cmd pipe" */
     UT_SetDeferredRetcode(UT_KEY(CFE_SB_CreatePipe), 1, -1);
 
@@ -726,12 +698,12 @@ void MD_InitSoftwareBusServices_Test_CreatePipeError(void)
 
     UtAssert_True(Result == -1, "Result == -1");
 
-    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent.EventID, MD_CREATE_PIPE_ERR_EID);
-    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent.EventType, CFE_EVS_EventType_ERROR);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, MD_CREATE_PIPE_ERR_EID);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_ERROR);
 
-    strCmpResult = strncmp(ExpectedEventString, context_CFE_EVS_SendEvent.Spec, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH);
+    strCmpResult = strncmp(ExpectedEventString, context_CFE_EVS_SendEvent[0].Spec, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH);
 
-    UtAssert_True(strCmpResult == 0, "Event string matched expected result, '%s'", context_CFE_EVS_SendEvent.Spec);
+    UtAssert_True(strCmpResult == 0, "Event string matched expected result, '%s'", context_CFE_EVS_SendEvent[0].Spec);
 
     call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
 
@@ -747,9 +719,6 @@ void MD_InitSoftwareBusServices_Test_SubscribeHkError(void)
     char  ExpectedEventString[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
 
     snprintf(ExpectedEventString, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH, "Failed to subscribe to HK requests  RC = %%d");
-
-    CFE_EVS_SendEvent_context_t context_CFE_EVS_SendEvent;
-    UT_SetHookFunction(UT_KEY(CFE_EVS_SendEvent), UT_Utils_stub_reporter_hook, &context_CFE_EVS_SendEvent);
 
     /* Set to generate error message MD_SUB_HK_ERR_EID */
     UT_SetDeferredRetcode(UT_KEY(CFE_SB_Subscribe), 1, -1);
@@ -768,12 +737,12 @@ void MD_InitSoftwareBusServices_Test_SubscribeHkError(void)
 
     UtAssert_True(Result == -1, "Result == -1");
 
-    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent.EventID, MD_SUB_HK_ERR_EID);
-    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent.EventType, CFE_EVS_EventType_ERROR);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, MD_SUB_HK_ERR_EID);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_ERROR);
 
-    strCmpResult = strncmp(ExpectedEventString, context_CFE_EVS_SendEvent.Spec, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH);
+    strCmpResult = strncmp(ExpectedEventString, context_CFE_EVS_SendEvent[0].Spec, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH);
 
-    UtAssert_True(strCmpResult == 0, "Event string matched expected result, '%s'", context_CFE_EVS_SendEvent.Spec);
+    UtAssert_True(strCmpResult == 0, "Event string matched expected result, '%s'", context_CFE_EVS_SendEvent[0].Spec);
 
     call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
 
@@ -789,9 +758,6 @@ void MD_InitSoftwareBusServices_Test_SubscribeCmdError(void)
     char  ExpectedEventString[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
 
     snprintf(ExpectedEventString, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH, "Failed to subscribe to commands.  RC = %%d");
-
-    CFE_EVS_SendEvent_context_t context_CFE_EVS_SendEvent;
-    UT_SetHookFunction(UT_KEY(CFE_EVS_SendEvent), UT_Utils_stub_reporter_hook, &context_CFE_EVS_SendEvent);
 
     /* Set to generate error message MD_SUB_HK_ERR_EID */
     UT_SetDeferredRetcode(UT_KEY(CFE_SB_Subscribe), 2, -1);
@@ -810,12 +776,12 @@ void MD_InitSoftwareBusServices_Test_SubscribeCmdError(void)
 
     UtAssert_True(Result == -1, "Result == -1");
 
-    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent.EventID, MD_SUB_CMD_ERR_EID);
-    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent.EventType, CFE_EVS_EventType_ERROR);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, MD_SUB_CMD_ERR_EID);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_ERROR);
 
-    strCmpResult = strncmp(ExpectedEventString, context_CFE_EVS_SendEvent.Spec, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH);
+    strCmpResult = strncmp(ExpectedEventString, context_CFE_EVS_SendEvent[0].Spec, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH);
 
-    UtAssert_True(strCmpResult == 0, "Event string matched expected result, '%s'", context_CFE_EVS_SendEvent.Spec);
+    UtAssert_True(strCmpResult == 0, "Event string matched expected result, '%s'", context_CFE_EVS_SendEvent[0].Spec);
 
     call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
 
@@ -832,9 +798,6 @@ void MD_InitSoftwareBusServices_Test_SubscribeWakeupError(void)
 
     snprintf(ExpectedEventString, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH,
              "Failed to subscribe to wakeup messages.  RC = %%d");
-
-    CFE_EVS_SendEvent_context_t context_CFE_EVS_SendEvent;
-    UT_SetHookFunction(UT_KEY(CFE_EVS_SendEvent), UT_Utils_stub_reporter_hook, &context_CFE_EVS_SendEvent);
 
     /* Set to generate error message MD_SUB_HK_ERR_EID */
     UT_SetDeferredRetcode(UT_KEY(CFE_SB_Subscribe), 3, -1);
@@ -853,12 +816,12 @@ void MD_InitSoftwareBusServices_Test_SubscribeWakeupError(void)
 
     UtAssert_True(Result == -1, "Result == -1");
 
-    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent.EventID, MD_SUB_WAKEUP_ERR_EID);
-    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent.EventType, CFE_EVS_EventType_ERROR);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, MD_SUB_WAKEUP_ERR_EID);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_ERROR);
 
-    strCmpResult = strncmp(ExpectedEventString, context_CFE_EVS_SendEvent.Spec, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH);
+    strCmpResult = strncmp(ExpectedEventString, context_CFE_EVS_SendEvent[0].Spec, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH);
 
-    UtAssert_True(strCmpResult == 0, "Event string matched expected result, '%s'", context_CFE_EVS_SendEvent.Spec);
+    UtAssert_True(strCmpResult == 0, "Event string matched expected result, '%s'", context_CFE_EVS_SendEvent[0].Spec);
 
     call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
 
@@ -882,12 +845,6 @@ void MD_InitTableServices_Test_GetAddressErrorAndLoadError(void)
 
     snprintf(ExpectedSysLogString, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH,
              "MD_APP: Error 0x%%08X received loading tbl#%%d\n");
-
-    CFE_ES_WriteToSysLog_context_t context_CFE_ES_WriteToSysLog;
-    UT_SetHookFunction(UT_KEY(CFE_ES_WriteToSysLog), UT_Utils_stub_reporter_hook, &context_CFE_ES_WriteToSysLog);
-
-    CFE_EVS_SendEvent_context_t context_CFE_EVS_SendEvent[3];
-    UT_SetHookFunction(UT_KEY(CFE_EVS_SendEvent), UT_Utils_stub_reporter_hook, &context_CFE_EVS_SendEvent);
 
     /* Set to satisfy condition "Status == CFE_TBL_INFO_RECOVERED_TBL" */
     UT_SetDeferredRetcode(UT_KEY(CFE_TBL_Register), 1, CFE_TBL_INFO_RECOVERED_TBL);
@@ -951,9 +908,6 @@ void MD_InitTableServices_Test_TblRecoveredValidThenTblInits(void)
     snprintf(ExpectedEventString[1], CFE_MISSION_EVS_MAX_MESSAGE_LENGTH,
              "Dwell Tables Recovered: %%d, Dwell Tables Initialized: %%d");
 
-    CFE_EVS_SendEvent_context_t context_CFE_EVS_SendEvent[3];
-    UT_SetHookFunction(UT_KEY(CFE_EVS_SendEvent), UT_Utils_stub_reporter_hook, context_CFE_EVS_SendEvent);
-
     /* Set to satisfy condition "Status == CFE_TBL_INFO_RECOVERED_TBL" */
     UT_SetDeferredRetcode(UT_KEY(CFE_TBL_Register), 1, CFE_TBL_INFO_RECOVERED_TBL);
 
@@ -999,14 +953,13 @@ void MD_InitTableServices_Test_TblRecoveredNotValid(void)
     MD_DwellTableLoad_t  LoadTbl;
     MD_DwellTableLoad_t *LoadTblPtr = &LoadTbl;
 
+    memset(&LoadTbl, 0, sizeof(LoadTbl));
+
     snprintf(ExpectedEventString[0], CFE_MISSION_EVS_MAX_MESSAGE_LENGTH,
              "Recovered Dwell Table #%%d is valid and has been copied to the MD App");
 
     snprintf(ExpectedEventString[1], CFE_MISSION_EVS_MAX_MESSAGE_LENGTH,
              "Dwell Tables Recovered: %%d, Dwell Tables Initialized: %%d");
-
-    CFE_EVS_SendEvent_context_t context_CFE_EVS_SendEvent[3];
-    UT_SetHookFunction(UT_KEY(CFE_EVS_SendEvent), UT_Utils_stub_reporter_hook, context_CFE_EVS_SendEvent);
 
     /* Set to satisfy condition "Status == CFE_TBL_INFO_RECOVERED_TBL" */
     UT_SetDeferredRetcode(UT_KEY(CFE_TBL_Register), 1, CFE_TBL_INFO_RECOVERED_TBL);
@@ -1074,9 +1027,6 @@ void MD_InitTableServices_Test_DwellStreamEnabled(void)
     snprintf(ExpectedEventString[1], CFE_MISSION_EVS_MAX_MESSAGE_LENGTH,
              "Dwell Tables Recovered: %%d, Dwell Tables Initialized: %%d");
 
-    CFE_EVS_SendEvent_context_t context_CFE_EVS_SendEvent[3];
-    UT_SetHookFunction(UT_KEY(CFE_EVS_SendEvent), UT_Utils_stub_reporter_hook, &context_CFE_EVS_SendEvent);
-
     /* Set to satisfy condition "Status == CFE_TBL_INFO_RECOVERED_TBL" */
     UT_SetDeferredRetcode(UT_KEY(CFE_TBL_Register), 1, CFE_TBL_INFO_RECOVERED_TBL);
 
@@ -1142,9 +1092,6 @@ void MD_InitTableServices_Test_TblNotRecovered(void)
     snprintf(ExpectedEventString[1], CFE_MISSION_EVS_MAX_MESSAGE_LENGTH,
              "Dwell Tables Recovered: %%d, Dwell Tables Initialized: %%d");
 
-    CFE_EVS_SendEvent_context_t context_CFE_EVS_SendEvent[3];
-    UT_SetHookFunction(UT_KEY(CFE_EVS_SendEvent), UT_Utils_stub_reporter_hook, &context_CFE_EVS_SendEvent);
-
     /* Set to satisfy condition "Status == CFE_TBL_INFO_RECOVERED_TBL" */
     UT_SetDeferredRetcode(UT_KEY(CFE_TBL_Register), 1, CFE_TBL_INFO_RECOVERED_TBL);
 
@@ -1206,9 +1153,6 @@ void MD_InitTableServices_Test_TblTooLarge(void)
     snprintf(ExpectedEventString[1], CFE_MISSION_EVS_MAX_MESSAGE_LENGTH,
              "Dwell Tables Recovered: %%d, Dwell Tables Initialized: %%d");
 
-    CFE_EVS_SendEvent_context_t context_CFE_EVS_SendEvent[3];
-    UT_SetHookFunction(UT_KEY(CFE_EVS_SendEvent), UT_Utils_stub_reporter_hook, &context_CFE_EVS_SendEvent);
-
     /* Set to satisfy condition "Status == CFE_TBL_ERR_INVALID_SIZE" */
     UT_SetDeferredRetcode(UT_KEY(CFE_TBL_Register), 1, CFE_TBL_ERR_INVALID_SIZE);
 
@@ -1255,9 +1199,6 @@ void MD_InitTableServices_Test_TblRegisterCriticalError(void)
 
     snprintf(ExpectedEventString[1], CFE_MISSION_EVS_MAX_MESSAGE_LENGTH,
              "Dwell Tables Recovered: %%d, Dwell Tables Initialized: %%d");
-
-    CFE_EVS_SendEvent_context_t context_CFE_EVS_SendEvent[2];
-    UT_SetHookFunction(UT_KEY(CFE_EVS_SendEvent), UT_Utils_stub_reporter_hook, &context_CFE_EVS_SendEvent);
 
     /* Set to satisfy condition "Status != CFE_SUCCESS" */
     UT_SetDeferredRetcode(UT_KEY(CFE_TBL_Register), 1, -1);
@@ -1307,9 +1248,6 @@ void MD_InitTableServices_Test_TblNameError(void)
     snprintf(ExpectedEventString[1], CFE_MISSION_EVS_MAX_MESSAGE_LENGTH,
              "Dwell Tables Recovered: %%d, Dwell Tables Initialized: %%d");
 
-    CFE_EVS_SendEvent_context_t context_CFE_EVS_SendEvent[2];
-    UT_SetHookFunction(UT_KEY(CFE_EVS_SendEvent), UT_Utils_stub_reporter_hook, &context_CFE_EVS_SendEvent);
-
     /* Set to satisfy condition "Status == CFE_TBL_INFO_RECOVERED_TBL" */
     UT_SetDeferredRetcode(UT_KEY(CFE_TBL_Register), 1, CFE_TBL_INFO_RECOVERED_TBL);
 
@@ -1321,7 +1259,7 @@ void MD_InitTableServices_Test_TblNameError(void)
     UT_SetHookFunction(UT_KEY(CFE_TBL_GetAddress), &MD_DWELL_TBL_TEST_CFE_TBL_GetAddressHook, NULL);
 
     /* Set to generate snprintf error MD_INIT_TBL_NAME_ERR_EID */
-    UT_SetDeferredRetcode(UT_KEY(OCS_snprintf), 1, -1);
+    UT_SetDeferredRetcode(UT_KEY(stub_snprintf), 1, -1);
 
     /* Execute the function being tested */
     Result = MD_InitTableServices();
@@ -1364,9 +1302,6 @@ void MD_InitTableServices_Test_TblFileNameError(void)
     snprintf(ExpectedEventString[1], CFE_MISSION_EVS_MAX_MESSAGE_LENGTH,
              "Dwell Tables Recovered: %%d, Dwell Tables Initialized: %%d");
 
-    CFE_EVS_SendEvent_context_t context_CFE_EVS_SendEvent[2];
-    UT_SetHookFunction(UT_KEY(CFE_EVS_SendEvent), UT_Utils_stub_reporter_hook, &context_CFE_EVS_SendEvent);
-
     /* Set to satisfy condition "Status == CFE_TBL_INFO_RECOVERED_TBL" */
     UT_SetDeferredRetcode(UT_KEY(CFE_TBL_Register), 1, CFE_TBL_INFO_RECOVERED_TBL);
 
@@ -1378,7 +1313,7 @@ void MD_InitTableServices_Test_TblFileNameError(void)
     UT_SetHookFunction(UT_KEY(CFE_TBL_GetAddress), &MD_DWELL_TBL_TEST_CFE_TBL_GetAddressHook, NULL);
 
     /* Set to generate snprintf MD_INIT_TBL_FILENAME_ERR_EID error */
-    UT_SetDeferredRetcode(UT_KEY(OCS_snprintf), 2, -1);
+    UT_SetDeferredRetcode(UT_KEY(stub_snprintf), 2, -1);
 
     /* Execute the function being tested */
     Result = MD_InitTableServices();
@@ -1543,9 +1478,6 @@ void MD_ManageDwellTable_Test_UpdatePendingTblCopyError(void)
     snprintf(ExpectedEventString, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH,
              "Didn't update MD tbl #%%d due to unexpected CFE_TBL_GetAddress return: %%d");
 
-    CFE_EVS_SendEvent_context_t context_CFE_EVS_SendEvent;
-    UT_SetHookFunction(UT_KEY(CFE_EVS_SendEvent), UT_Utils_stub_reporter_hook, &context_CFE_EVS_SendEvent);
-
     /* Set to satisfy condition "Status == CFE_TBL_INFO_UPDATE_PENDING" */
     UT_SetDeferredRetcode(UT_KEY(CFE_TBL_GetStatus), 1, CFE_TBL_INFO_UPDATE_PENDING);
 
@@ -1558,12 +1490,12 @@ void MD_ManageDwellTable_Test_UpdatePendingTblCopyError(void)
     /* Verify results */
     UtAssert_True(Result == CFE_SUCCESS, "Result == CFE_SUCCESS");
 
-    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent.EventID, MD_NO_TBL_COPY_ERR_EID);
-    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent.EventType, CFE_EVS_EventType_ERROR);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, MD_NO_TBL_COPY_ERR_EID);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_ERROR);
 
-    strCmpResult = strncmp(ExpectedEventString, context_CFE_EVS_SendEvent.Spec, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH);
+    strCmpResult = strncmp(ExpectedEventString, context_CFE_EVS_SendEvent[0].Spec, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH);
 
-    UtAssert_True(strCmpResult == 0, "Event string matched expected result, '%s'", context_CFE_EVS_SendEvent.Spec);
+    UtAssert_True(strCmpResult == 0, "Event string matched expected result, '%s'", context_CFE_EVS_SendEvent[0].Spec);
 
     call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
 
@@ -1582,9 +1514,6 @@ void MD_ManageDwellTable_Test_TblStatusErr(void)
     snprintf(ExpectedEventString, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH,
              "Received unexpected error %%d from CFE_TBL_GetStatus for tbl #%%d");
 
-    CFE_EVS_SendEvent_context_t context_CFE_EVS_SendEvent;
-    UT_SetHookFunction(UT_KEY(CFE_EVS_SendEvent), UT_Utils_stub_reporter_hook, &context_CFE_EVS_SendEvent);
-
     /* Set to satisfy condition "(Status & CFE_SEVERITY_BITMASK) == CFE_SEVERITY_ERROR" */
     UT_SetDeferredRetcode(UT_KEY(CFE_TBL_GetStatus), 1, CFE_SEVERITY_BITMASK);
 
@@ -1594,12 +1523,12 @@ void MD_ManageDwellTable_Test_TblStatusErr(void)
     /* Verify results */
     UtAssert_True(Result == CFE_SEVERITY_BITMASK, "Result == CFE_SEVERITY_BITMASK");
 
-    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent.EventID, MD_TBL_STATUS_ERR_EID);
-    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent.EventType, CFE_EVS_EventType_ERROR);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, MD_TBL_STATUS_ERR_EID);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_ERROR);
 
-    strCmpResult = strncmp(ExpectedEventString, context_CFE_EVS_SendEvent.Spec, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH);
+    strCmpResult = strncmp(ExpectedEventString, context_CFE_EVS_SendEvent[0].Spec, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH);
 
-    UtAssert_True(strCmpResult == 0, "Event string matched expected result, '%s'", context_CFE_EVS_SendEvent.Spec);
+    UtAssert_True(strCmpResult == 0, "Event string matched expected result, '%s'", context_CFE_EVS_SendEvent[0].Spec);
 
     call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
 
@@ -1631,35 +1560,29 @@ void MD_ManageDwellTable_Test_OtherStatus(void)
 
 void MD_ExecRequest_Test_SearchCmdHndlrTblError(void)
 {
-    MD_NoArgsCmd_t    CmdPacket;
-    CFE_SB_MsgId_t    TestMsgId;
-    CFE_MSG_FcnCode_t FcnCode;
+    CFE_SB_MsgId_t    TestMsgId = MD_UT_MID_1;
+    CFE_MSG_FcnCode_t FcnCode   = 0;
     int32             strCmpResult;
     char              ExpectedEventString[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
 
     snprintf(ExpectedEventString, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH,
              "Command Code %%d not found in MD_CmdHandlerTbl structure");
 
-    CFE_EVS_SendEvent_context_t context_CFE_EVS_SendEvent;
-    UT_SetHookFunction(UT_KEY(CFE_EVS_SendEvent), UT_Utils_stub_reporter_hook, &context_CFE_EVS_SendEvent);
-
-    TestMsgId = 99;
-    FcnCode   = 0;
     UT_SetDataBuffer(UT_KEY(CFE_MSG_GetMsgId), &TestMsgId, sizeof(TestMsgId), false);
     UT_SetDataBuffer(UT_KEY(CFE_MSG_GetFcnCode), &FcnCode, sizeof(FcnCode), false);
 
     /* Execute the function being tested */
-    MD_ExecRequest((CFE_SB_Buffer_t *)(&CmdPacket));
+    MD_ExecRequest(&UT_CmdBuf.Buf);
 
     /* Verify results */
     UtAssert_True(MD_AppData.ErrCounter == 1, "MD_AppData.ErrCounter == 1");
 
-    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent.EventID, MD_CC_NOT_IN_TBL_ERR_EID);
-    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent.EventType, CFE_EVS_EventType_ERROR);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, MD_CC_NOT_IN_TBL_ERR_EID);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_ERROR);
 
-    strCmpResult = strncmp(ExpectedEventString, context_CFE_EVS_SendEvent.Spec, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH);
+    strCmpResult = strncmp(ExpectedEventString, context_CFE_EVS_SendEvent[0].Spec, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH);
 
-    UtAssert_True(strCmpResult == 0, "Event string matched expected result, '%s'", context_CFE_EVS_SendEvent.Spec);
+    UtAssert_True(strCmpResult == 0, "Event string matched expected result, '%s'", context_CFE_EVS_SendEvent[0].Spec);
 
     call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
 
@@ -1670,7 +1593,6 @@ void MD_ExecRequest_Test_SearchCmdHndlrTblError(void)
 
 void MD_ExecRequest_Test_CmdLengthError(void)
 {
-    MD_NoArgsCmd_t    CmdPacket;
     CFE_SB_MsgId_t    TestMsgId;
     CFE_MSG_FcnCode_t FcnCode;
     size_t            MsgSize;
@@ -1678,12 +1600,9 @@ void MD_ExecRequest_Test_CmdLengthError(void)
     char              ExpectedEventString[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
 
     snprintf(ExpectedEventString, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH,
-             "Cmd Msg with Bad length Rcvd: ID = 0x%%08X, CC = %%d, Exp Len = %%d, Len = %%d");
+             "Cmd Msg with Bad length Rcvd: ID = 0x%%08lX, CC = %%d, Exp Len = %%d, Len = %%d");
 
-    CFE_EVS_SendEvent_context_t context_CFE_EVS_SendEvent;
-    UT_SetHookFunction(UT_KEY(CFE_EVS_SendEvent), UT_Utils_stub_reporter_hook, &context_CFE_EVS_SendEvent);
-
-    TestMsgId = MD_CMD_MID;
+    TestMsgId = CFE_SB_ValueToMsgId(MD_CMD_MID);
     FcnCode   = 0;
     /* Set to generate error message MD_CMD_LEN_ERR_EID */
     MsgSize = 1;
@@ -1692,17 +1611,17 @@ void MD_ExecRequest_Test_CmdLengthError(void)
     UT_SetDataBuffer(UT_KEY(CFE_MSG_GetSize), &MsgSize, sizeof(MsgSize), false);
 
     /* Execute the function being tested */
-    MD_ExecRequest((CFE_SB_Buffer_t *)(&CmdPacket));
+    MD_ExecRequest(&UT_CmdBuf.Buf);
 
     /* Verify results */
     UtAssert_True(MD_AppData.ErrCounter == 1, "MD_AppData.ErrCounter == 1");
 
-    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent.EventID, MD_CMD_LEN_ERR_EID);
-    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent.EventType, CFE_EVS_EventType_ERROR);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, MD_CMD_LEN_ERR_EID);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_ERROR);
 
-    strCmpResult = strncmp(ExpectedEventString, context_CFE_EVS_SendEvent.Spec, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH);
+    strCmpResult = strncmp(ExpectedEventString, context_CFE_EVS_SendEvent[0].Spec, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH);
 
-    UtAssert_True(strCmpResult == 0, "Event string matched expected result, '%s'", context_CFE_EVS_SendEvent.Spec);
+    UtAssert_True(strCmpResult == 0, "Event string matched expected result, '%s'", context_CFE_EVS_SendEvent[0].Spec);
 
     call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
 
@@ -1713,7 +1632,6 @@ void MD_ExecRequest_Test_CmdLengthError(void)
 
 void MD_ExecRequest_Test_Noop(void)
 {
-    MD_NoArgsCmd_t    CmdPacket;
     CFE_SB_MsgId_t    TestMsgId;
     CFE_MSG_FcnCode_t FcnCode;
     size_t            MsgSize;
@@ -1722,10 +1640,7 @@ void MD_ExecRequest_Test_Noop(void)
 
     snprintf(ExpectedEventString, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH, "No-op command, Version %%d.%%d.%%d.%%d");
 
-    CFE_EVS_SendEvent_context_t context_CFE_EVS_SendEvent;
-    UT_SetHookFunction(UT_KEY(CFE_EVS_SendEvent), UT_Utils_stub_reporter_hook, &context_CFE_EVS_SendEvent);
-
-    TestMsgId = MD_CMD_MID;
+    TestMsgId = CFE_SB_ValueToMsgId(MD_CMD_MID);
     FcnCode   = MD_NOOP_CC;
     MsgSize   = sizeof(MD_NoArgsCmd_t);
     UT_SetDataBuffer(UT_KEY(CFE_MSG_GetMsgId), &TestMsgId, sizeof(TestMsgId), false);
@@ -1733,17 +1648,17 @@ void MD_ExecRequest_Test_Noop(void)
     UT_SetDataBuffer(UT_KEY(CFE_MSG_GetSize), &MsgSize, sizeof(MsgSize), false);
 
     /* Execute the function being tested */
-    MD_ExecRequest((CFE_SB_Buffer_t *)(&CmdPacket));
+    MD_ExecRequest(&UT_CmdBuf.Buf);
 
     /* Verify results */
     UtAssert_True(MD_AppData.CmdCounter == 1, "MD_AppData.CmdCounter == 1");
 
-    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent.EventID, MD_NOOP_INF_EID);
-    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent.EventType, CFE_EVS_EventType_INFORMATION);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, MD_NOOP_INF_EID);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_INFORMATION);
 
-    strCmpResult = strncmp(ExpectedEventString, context_CFE_EVS_SendEvent.Spec, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH);
+    strCmpResult = strncmp(ExpectedEventString, context_CFE_EVS_SendEvent[0].Spec, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH);
 
-    UtAssert_True(strCmpResult == 0, "Event string matched expected result, '%s'", context_CFE_EVS_SendEvent.Spec);
+    UtAssert_True(strCmpResult == 0, "Event string matched expected result, '%s'", context_CFE_EVS_SendEvent[0].Spec);
 
     call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
 
@@ -1754,7 +1669,6 @@ void MD_ExecRequest_Test_Noop(void)
 
 void MD_ExecRequest_Test_ResetCounters(void)
 {
-    MD_NoArgsCmd_t    CmdPacket;
     CFE_SB_MsgId_t    TestMsgId;
     CFE_MSG_FcnCode_t FcnCode;
     size_t            MsgSize;
@@ -1763,10 +1677,7 @@ void MD_ExecRequest_Test_ResetCounters(void)
 
     snprintf(ExpectedEventString, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH, "Reset Counters Cmd Received");
 
-    CFE_EVS_SendEvent_context_t context_CFE_EVS_SendEvent;
-    UT_SetHookFunction(UT_KEY(CFE_EVS_SendEvent), UT_Utils_stub_reporter_hook, &context_CFE_EVS_SendEvent);
-
-    TestMsgId = MD_CMD_MID;
+    TestMsgId = CFE_SB_ValueToMsgId(MD_CMD_MID);
     FcnCode   = MD_RESET_CNTRS_CC;
     MsgSize   = sizeof(MD_NoArgsCmd_t);
     UT_SetDataBuffer(UT_KEY(CFE_MSG_GetMsgId), &TestMsgId, sizeof(TestMsgId), false);
@@ -1774,18 +1685,18 @@ void MD_ExecRequest_Test_ResetCounters(void)
     UT_SetDataBuffer(UT_KEY(CFE_MSG_GetSize), &MsgSize, sizeof(MsgSize), false);
 
     /* Execute the function being tested */
-    MD_ExecRequest((CFE_SB_Buffer_t *)(&CmdPacket));
+    MD_ExecRequest(&UT_CmdBuf.Buf);
 
     /* Verify results */
     UtAssert_True(MD_AppData.CmdCounter == 0, "MD_AppData.CmdCounter == 0");
     UtAssert_True(MD_AppData.ErrCounter == 0, "MD_AppData.ErrCounter == 0");
 
-    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent.EventID, MD_RESET_CNTRS_DBG_EID);
-    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent.EventType, CFE_EVS_EventType_DEBUG);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, MD_RESET_CNTRS_DBG_EID);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_DEBUG);
 
-    strCmpResult = strncmp(ExpectedEventString, context_CFE_EVS_SendEvent.Spec, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH);
+    strCmpResult = strncmp(ExpectedEventString, context_CFE_EVS_SendEvent[0].Spec, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH);
 
-    UtAssert_True(strCmpResult == 0, "Event string matched expected result, '%s'", context_CFE_EVS_SendEvent.Spec);
+    UtAssert_True(strCmpResult == 0, "Event string matched expected result, '%s'", context_CFE_EVS_SendEvent[0].Spec);
 
     call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
 
@@ -1796,12 +1707,11 @@ void MD_ExecRequest_Test_ResetCounters(void)
 
 void MD_ExecRequest_Test_StartDwell(void)
 {
-    MD_CmdStartStop_t CmdPacket;
     CFE_SB_MsgId_t    TestMsgId;
     CFE_MSG_FcnCode_t FcnCode;
     size_t            MsgSize;
 
-    TestMsgId = MD_CMD_MID;
+    TestMsgId = CFE_SB_ValueToMsgId(MD_CMD_MID);
     FcnCode   = MD_START_DWELL_CC;
     MsgSize   = sizeof(MD_CmdStartStop_t);
     UT_SetDataBuffer(UT_KEY(CFE_MSG_GetMsgId), &TestMsgId, sizeof(TestMsgId), false);
@@ -1809,7 +1719,7 @@ void MD_ExecRequest_Test_StartDwell(void)
     UT_SetDataBuffer(UT_KEY(CFE_MSG_GetSize), &MsgSize, sizeof(MsgSize), false);
 
     /* Execute the function being tested */
-    MD_ExecRequest((CFE_SB_Buffer_t *)(&CmdPacket));
+    MD_ExecRequest(&UT_CmdBuf.Buf);
 
     /* Verify results */
     call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
@@ -1821,12 +1731,11 @@ void MD_ExecRequest_Test_StartDwell(void)
 
 void MD_ExecRequest_Test_StopDwell(void)
 {
-    MD_CmdStartStop_t CmdPacket;
     CFE_SB_MsgId_t    TestMsgId;
     CFE_MSG_FcnCode_t FcnCode;
     size_t            MsgSize;
 
-    TestMsgId = MD_CMD_MID;
+    TestMsgId = CFE_SB_ValueToMsgId(MD_CMD_MID);
     FcnCode   = MD_STOP_DWELL_CC;
     MsgSize   = sizeof(MD_CmdStartStop_t);
     UT_SetDataBuffer(UT_KEY(CFE_MSG_GetMsgId), &TestMsgId, sizeof(TestMsgId), false);
@@ -1834,7 +1743,7 @@ void MD_ExecRequest_Test_StopDwell(void)
     UT_SetDataBuffer(UT_KEY(CFE_MSG_GetSize), &MsgSize, sizeof(MsgSize), false);
 
     /* Execute the function being tested */
-    MD_ExecRequest((CFE_SB_Buffer_t *)(&CmdPacket));
+    MD_ExecRequest(&UT_CmdBuf.Buf);
 
     /* Verify results */
     call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
@@ -1846,12 +1755,11 @@ void MD_ExecRequest_Test_StopDwell(void)
 
 void MD_ExecRequest_Test_JamDwell(void)
 {
-    MD_CmdJam_t       CmdPacket;
     CFE_SB_MsgId_t    TestMsgId;
     CFE_MSG_FcnCode_t FcnCode;
     size_t            MsgSize;
 
-    TestMsgId = MD_CMD_MID;
+    TestMsgId = CFE_SB_ValueToMsgId(MD_CMD_MID);
     FcnCode   = MD_JAM_DWELL_CC;
     MsgSize   = sizeof(MD_CmdJam_t);
     UT_SetDataBuffer(UT_KEY(CFE_MSG_GetMsgId), &TestMsgId, sizeof(TestMsgId), false);
@@ -1859,7 +1767,7 @@ void MD_ExecRequest_Test_JamDwell(void)
     UT_SetDataBuffer(UT_KEY(CFE_MSG_GetSize), &MsgSize, sizeof(MsgSize), false);
 
     /* Execute the function being tested */
-    MD_ExecRequest((CFE_SB_Buffer_t *)(&CmdPacket));
+    MD_ExecRequest(&UT_CmdBuf.Buf);
 
     /* Verify results */
     call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
@@ -1872,12 +1780,11 @@ void MD_ExecRequest_Test_JamDwell(void)
 #if MD_SIGNATURE_OPTION == 1
 void MD_ExecRequest_Test_SetSignature(void)
 {
-    MD_CmdSetSignature_t CmdPacket;
-    CFE_SB_MsgId_t       TestMsgId;
-    CFE_MSG_FcnCode_t    FcnCode;
-    size_t               MsgSize;
+    CFE_SB_MsgId_t    TestMsgId;
+    CFE_MSG_FcnCode_t FcnCode;
+    size_t            MsgSize;
 
-    TestMsgId = MD_CMD_MID;
+    TestMsgId = CFE_SB_ValueToMsgId(MD_CMD_MID);
     FcnCode   = MD_SET_SIGNATURE_CC;
     MsgSize   = sizeof(MD_CmdSetSignature_t);
     UT_SetDataBuffer(UT_KEY(CFE_MSG_GetMsgId), &TestMsgId, sizeof(TestMsgId), false);
@@ -1885,7 +1792,7 @@ void MD_ExecRequest_Test_SetSignature(void)
     UT_SetDataBuffer(UT_KEY(CFE_MSG_GetSize), &MsgSize, sizeof(MsgSize), false);
 
     /* Execute the function being tested */
-    MD_ExecRequest((CFE_SB_Buffer_t *)(&CmdPacket));
+    MD_ExecRequest(&UT_CmdBuf.Buf);
 
     /* Verify results */
     call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
@@ -1976,7 +1883,7 @@ void MD_HkStatus_Test(void)
 void MD_SearchCmdHndlrTbl_Test_FoundMatch1(void)
 {
     int16          Result;
-    CFE_SB_MsgId_t MessageID   = MD_CMD_MID;
+    CFE_SB_MsgId_t MessageID   = CFE_SB_ValueToMsgId(MD_CMD_MID);
     uint16         CommandCode = MD_RESET_CNTRS_CC;
 
     /* Execute the function being tested */
@@ -1995,7 +1902,7 @@ void MD_SearchCmdHndlrTbl_Test_FoundMatch1(void)
 void MD_SearchCmdHndlrTbl_Test_BadCmdCode(void)
 {
     int16          Result;
-    CFE_SB_MsgId_t MessageID   = MD_CMD_MID;
+    CFE_SB_MsgId_t MessageID   = CFE_SB_ValueToMsgId(MD_CMD_MID);
     uint16         CommandCode = 99;
 
     /* Execute the function being tested */
@@ -2014,7 +1921,7 @@ void MD_SearchCmdHndlrTbl_Test_BadCmdCode(void)
 void MD_SearchCmdHndlrTbl_Test_BasMsgID(void)
 {
     int16          Result;
-    CFE_SB_MsgId_t MessageID   = 99;
+    CFE_SB_MsgId_t MessageID   = MD_UT_MID_1;
     uint16         CommandCode = MD_RESET_CNTRS_CC;
 
     /* Execute the function being tested */

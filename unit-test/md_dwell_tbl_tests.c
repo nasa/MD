@@ -1,3 +1,21 @@
+/************************************************************************
+ * NASA Docket No. GSC-18,922-1, and identified as “Core Flight
+ * System (cFS) Memory Dwell Application Version 2.4.0”
+ *
+ * Copyright (c) 2021 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
 
 /*
  * Includes
@@ -10,7 +28,6 @@
 #include "md_events.h"
 #include "md_version.h"
 #include "md_test_utils.h"
-#include <sys/fcntl.h>
 #include <unistd.h>
 #include <stdlib.h>
 
@@ -35,11 +52,10 @@ void MD_TableValidationFunc_Test_InvalidEnableFlag(void)
     int32               strCmpResult;
     char                ExpectedEventString[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
 
+    memset(&Table, 0, sizeof(Table));
+
     snprintf(ExpectedEventString, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH,
              "Dwell Table rejected because value of enable flag (%%d) is invalid");
-
-    CFE_EVS_SendEvent_context_t context_CFE_EVS_SendEvent;
-    UT_SetHookFunction(UT_KEY(CFE_EVS_SendEvent), UT_Utils_stub_reporter_hook, &context_CFE_EVS_SendEvent);
 
     Table.Enabled = 99;
 
@@ -49,12 +65,12 @@ void MD_TableValidationFunc_Test_InvalidEnableFlag(void)
     /* Verify results */
     UtAssert_True(Result == MD_TBL_ENA_FLAG_ERROR, "Result == MD_TBL_ENA_FLAG_ERROR");
 
-    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent.EventID, MD_TBL_ENA_FLAG_EID);
-    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent.EventType, CFE_EVS_EventType_ERROR);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, MD_TBL_ENA_FLAG_EID);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_ERROR);
 
-    strCmpResult = strncmp(ExpectedEventString, context_CFE_EVS_SendEvent.Spec, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH);
+    strCmpResult = strncmp(ExpectedEventString, context_CFE_EVS_SendEvent[0].Spec, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH);
 
-    UtAssert_True(strCmpResult == 0, "Event string matched expected result, '%s'", context_CFE_EVS_SendEvent.Spec);
+    UtAssert_True(strCmpResult == 0, "Event string matched expected result, '%s'", context_CFE_EVS_SendEvent[0].Spec);
 
     call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
 
@@ -68,22 +84,14 @@ void MD_TableValidationFunc_Test_InvalidSignatureLength(void)
 {
     int32               Result;
     MD_DwellTableLoad_t Table;
-    uint16              i;
     int32               strCmpResult;
     char                ExpectedEventString[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
 
     snprintf(ExpectedEventString, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH,
              "Dwell Table rejected because Signature length was invalid");
 
-    CFE_EVS_SendEvent_context_t context_CFE_EVS_SendEvent;
-    UT_SetHookFunction(UT_KEY(CFE_EVS_SendEvent), UT_Utils_stub_reporter_hook, &context_CFE_EVS_SendEvent);
-
     Table.Enabled = MD_DWELL_STREAM_ENABLED;
-
-    for (i = 0; i <= MD_SIGNATURE_FIELD_LENGTH; i++)
-    {
-        Table.Signature[i] = 'x';
-    }
+    memset(Table.Signature, 'x', sizeof(Table.Signature));
 
     /* Execute the function being tested */
     Result = MD_TableValidationFunc(&Table);
@@ -91,12 +99,12 @@ void MD_TableValidationFunc_Test_InvalidSignatureLength(void)
     /* Verify results */
     UtAssert_True(Result == MD_SIG_LEN_TBL_ERROR, "Result == MD_SIG_LEN_TBL_ERROR");
 
-    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent.EventID, MD_TBL_SIG_LEN_ERR_EID);
-    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent.EventType, CFE_EVS_EventType_ERROR);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, MD_TBL_SIG_LEN_ERR_EID);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_ERROR);
 
-    strCmpResult = strncmp(ExpectedEventString, context_CFE_EVS_SendEvent.Spec, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH);
+    strCmpResult = strncmp(ExpectedEventString, context_CFE_EVS_SendEvent[0].Spec, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH);
 
-    UtAssert_True(strCmpResult == 0, "Event string matched expected result, '%s'", context_CFE_EVS_SendEvent.Spec);
+    UtAssert_True(strCmpResult == 0, "Event string matched expected result, '%s'", context_CFE_EVS_SendEvent[0].Spec);
 
     call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
 
@@ -113,11 +121,10 @@ void MD_TableValidationFunc_Test_ResolveError(void)
     int32               strCmpResult;
     char                ExpectedEventString[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
 
+    memset(&Table, 0, sizeof(Table));
+
     snprintf(ExpectedEventString, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH,
              "Dwell Table rejected because address (sym='%%s'/offset=0x%%08X) in entry #%%d couldn't be resolved");
-
-    CFE_EVS_SendEvent_context_t context_CFE_EVS_SendEvent[3];
-    UT_SetHookFunction(UT_KEY(CFE_EVS_SendEvent), UT_Utils_stub_reporter_hook, &context_CFE_EVS_SendEvent);
 
     Table.Enabled = MD_DWELL_STREAM_ENABLED;
 
@@ -131,7 +138,7 @@ void MD_TableValidationFunc_Test_ResolveError(void)
     Table.Entry[0].DwellAddress.Offset = 0;
 
     /* Set to make MD_CheckTableEntries return MD_RESOLVE_ERROR */
-    UT_SetDefaultReturnValue(UT_KEY(CFS_ResolveSymAddr), false);
+    UT_SetDefaultReturnValue(UT_KEY(MD_ResolveSymAddr), false);
     /* Execute the function being tested */
     Result = MD_TableValidationFunc(&Table);
 
@@ -160,11 +167,10 @@ void MD_TableValidationFunc_Test_InvalidAddress(void)
     int32               strCmpResult;
     char                ExpectedEventString[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
 
+    memset(&Table, 0, sizeof(Table));
+
     snprintf(ExpectedEventString, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH,
              "Dwell Table rejected because address (sym='%%s'/offset=0x%%08X) in entry #%%d was out of range");
-
-    CFE_EVS_SendEvent_context_t context_CFE_EVS_SendEvent[3];
-    UT_SetHookFunction(UT_KEY(CFE_EVS_SendEvent), UT_Utils_stub_reporter_hook, &context_CFE_EVS_SendEvent);
 
     Table.Enabled = MD_DWELL_STREAM_ENABLED;
 
@@ -178,10 +184,10 @@ void MD_TableValidationFunc_Test_InvalidAddress(void)
     Table.Entry[0].Length              = 1;
 
     /* Set to make MD_CheckTableEntries return MD_RESOLVE_ERROR */
-    UT_SetDefaultReturnValue(UT_KEY(CFS_ResolveSymAddr), false);
+    UT_SetDefaultReturnValue(UT_KEY(MD_ResolveSymAddr), false);
 
     /* Set to make MD_CheckTableEntries return SUCCESS */
-    UT_SetDeferredRetcode(UT_KEY(CFS_ResolveSymAddr), 1, true);
+    UT_SetDeferredRetcode(UT_KEY(MD_ResolveSymAddr), 1, true);
 
     /* Set to make MD_CheckTableEntries return MD_INVALID_ADDR_ERROR */
     UT_SetDeferredRetcode(UT_KEY(CFE_PSP_MemValidateRange), 1, -1);
@@ -217,9 +223,6 @@ void MD_TableValidationFunc_Test_NullPtr(void)
     snprintf(ExpectedEventString, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH,
              "Dwell Table rejected because of null table pointer");
 
-    CFE_EVS_SendEvent_context_t context_CFE_EVS_SendEvent;
-    UT_SetHookFunction(UT_KEY(CFE_EVS_SendEvent), UT_Utils_stub_reporter_hook, &context_CFE_EVS_SendEvent);
-
     Table.Enabled = MD_DWELL_STREAM_ENABLED;
 
 #if MD_SIGNATURE_OPTION == 1
@@ -236,12 +239,12 @@ void MD_TableValidationFunc_Test_NullPtr(void)
     /* Verify results */
     UtAssert_True(Result == MD_INVALID_ADDR_ERROR, "Result == MD_INVALID_ADDR_ERROR");
 
-    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent.EventID, MD_TBL_VAL_NULL_PTR_ERR_EID);
-    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent.EventType, CFE_EVS_EventType_ERROR);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, MD_TBL_VAL_NULL_PTR_ERR_EID);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_ERROR);
 
-    strCmpResult = strncmp(ExpectedEventString, context_CFE_EVS_SendEvent.Spec, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH);
+    strCmpResult = strncmp(ExpectedEventString, context_CFE_EVS_SendEvent[0].Spec, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH);
 
-    UtAssert_True(strCmpResult == 0, "Event string matched expected result, '%s'", context_CFE_EVS_SendEvent.Spec);
+    UtAssert_True(strCmpResult == 0, "Event string matched expected result, '%s'", context_CFE_EVS_SendEvent[0].Spec);
 
     /* Generates 1 message we don't care about */
     call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
@@ -258,11 +261,10 @@ void MD_TableValidationFunc_Test_InvalidLength(void)
     int32               strCmpResult;
     char                ExpectedEventString[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
 
+    memset(&Table, 0, sizeof(Table));
+
     snprintf(ExpectedEventString, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH,
              "Dwell Table rejected because length (%%d) in entry #%%d was invalid");
-
-    CFE_EVS_SendEvent_context_t context_CFE_EVS_SendEvent[3];
-    UT_SetHookFunction(UT_KEY(CFE_EVS_SendEvent), UT_Utils_stub_reporter_hook, &context_CFE_EVS_SendEvent);
 
     Table.Enabled = MD_DWELL_STREAM_ENABLED;
 
@@ -276,7 +278,7 @@ void MD_TableValidationFunc_Test_InvalidLength(void)
     Table.Entry[0].Length              = 5;
 
     /* Set to make MD_CheckTableEntries return SUCCESS */
-    UT_SetDeferredRetcode(UT_KEY(CFS_ResolveSymAddr), 1, true);
+    UT_SetDeferredRetcode(UT_KEY(MD_ResolveSymAddr), 1, true);
     UT_SetDeferredRetcode(UT_KEY(MD_ValidAddrRange), 1, true);
 
     /* Execute the function being tested */
@@ -307,12 +309,11 @@ void MD_TableValidationFunc_Test_NotAligned(void)
     int32               strCmpResult;
     char                ExpectedEventString[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
 
+    memset(&Table, 0, sizeof(Table));
+
     snprintf(ExpectedEventString, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH,
              "Dwell Table rejected because address (sym='%%s'/offset=0x%%08X) in entry #%%d not properly aligned for "
              "%%d-byte dwell");
-
-    CFE_EVS_SendEvent_context_t context_CFE_EVS_SendEvent[3];
-    UT_SetHookFunction(UT_KEY(CFE_EVS_SendEvent), UT_Utils_stub_reporter_hook, &context_CFE_EVS_SendEvent);
 
     Table.Enabled = MD_DWELL_STREAM_ENABLED;
 
@@ -326,7 +327,7 @@ void MD_TableValidationFunc_Test_NotAligned(void)
     Table.Entry[0].Length              = 2;
 
     /* Set to make MD_CheckTableEntries return SUCCESS */
-    UT_SetDeferredRetcode(UT_KEY(CFS_ResolveSymAddr), 1, true);
+    UT_SetDeferredRetcode(UT_KEY(MD_ResolveSymAddr), 1, true);
     UT_SetDeferredRetcode(UT_KEY(MD_ValidAddrRange), 1, true);
     UT_SetDeferredRetcode(UT_KEY(MD_ValidFieldLength), 1, true);
 
@@ -362,9 +363,6 @@ void MD_TableValidationFunc_Test_ZeroRate(void)
     snprintf(ExpectedEventString[1], CFE_MISSION_EVS_MAX_MESSAGE_LENGTH,
              "Dwell Table is enabled but no processing will occur for table being loaded (rate is zero)");
 
-    CFE_EVS_SendEvent_context_t context_CFE_EVS_SendEvent[2];
-    UT_SetHookFunction(UT_KEY(CFE_EVS_SendEvent), UT_Utils_stub_reporter_hook, &context_CFE_EVS_SendEvent);
-
     Table.Enabled = MD_DWELL_STREAM_ENABLED;
 
 #if MD_SIGNATURE_OPTION == 1
@@ -381,7 +379,7 @@ void MD_TableValidationFunc_Test_ZeroRate(void)
     }
 
     /* Set to make MD_CheckTableEntries return SUCCESS */
-    UT_SetDefaultReturnValue(UT_KEY(CFS_ResolveSymAddr), true);
+    UT_SetDefaultReturnValue(UT_KEY(MD_ResolveSymAddr), true);
     UT_SetDefaultReturnValue(UT_KEY(MD_ValidAddrRange), true);
     UT_SetDefaultReturnValue(UT_KEY(MD_ValidFieldLength), true);
 
@@ -429,7 +427,7 @@ void MD_TableValidationFunc_Test_SuccessStreamDisabled(void)
     }
 
     /* Set to make MD_CheckTableEntries return SUCCESS */
-    UT_SetDefaultReturnValue(UT_KEY(CFS_ResolveSymAddr), true);
+    UT_SetDefaultReturnValue(UT_KEY(MD_ResolveSymAddr), true);
     UT_SetDefaultReturnValue(UT_KEY(MD_ValidAddrRange), true);
     UT_SetDefaultReturnValue(UT_KEY(MD_ValidFieldLength), true);
 
@@ -469,7 +467,7 @@ void MD_TableValidationFunc_Test_Success(void)
     }
 
     /* Set to make MD_CheckTableEntries return SUCCESS */
-    UT_SetDefaultReturnValue(UT_KEY(CFS_ResolveSymAddr), true);
+    UT_SetDefaultReturnValue(UT_KEY(MD_ResolveSymAddr), true);
     UT_SetDefaultReturnValue(UT_KEY(MD_ValidAddrRange), true);
     UT_SetDefaultReturnValue(UT_KEY(MD_ValidFieldLength), true);
 
@@ -527,11 +525,10 @@ void MD_CheckTableEntries_Test_Error(void)
     int32               strCmpResult;
     char                ExpectedEventString[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
 
+    memset(&Table, 0, sizeof(Table));
+
     snprintf(ExpectedEventString, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH,
              "MD Dwell Tbl verify results: good = %%d, bad = %%d, unused = %%d");
-
-    CFE_EVS_SendEvent_context_t context_CFE_EVS_SendEvent[2];
-    UT_SetHookFunction(UT_KEY(CFE_EVS_SendEvent), UT_Utils_stub_reporter_hook, context_CFE_EVS_SendEvent);
 
     Table.Entry[0].Length              = 2;
     Table.Entry[1].Length              = 2;
@@ -539,9 +536,9 @@ void MD_CheckTableEntries_Test_Error(void)
     Table.Entry[0].DwellAddress.Offset = 0;
     Table.Entry[1].DwellAddress.Offset = 0;
     Table.Entry[2].DwellAddress.Offset = 0;
-    UT_SetDefaultReturnValue(UT_KEY(CFS_ResolveSymAddr), true);
+    UT_SetDefaultReturnValue(UT_KEY(MD_ResolveSymAddr), true);
     UT_SetDefaultReturnValue(UT_KEY(MD_ValidFieldLength), true);
-    UT_SetDefaultReturnValue(UT_KEY(CFS_Verify16Aligned), true);
+    UT_SetDefaultReturnValue(UT_KEY(MD_Verify16Aligned), true);
 
     /* Allow first entry to succeed and next 2 to fail */
     UT_SetDefaultReturnValue(UT_KEY(MD_ValidAddrRange), true);
@@ -576,16 +573,15 @@ void MD_CheckTableEntries_Test_MultiError(void)
     int32               strCmpResult;
     char                ExpectedEventString[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
 
+    memset(&Table, 0, sizeof(Table));
+
     snprintf(ExpectedEventString, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH,
              "MD Dwell Tbl verify results: good = %%d, bad = %%d, unused = %%d");
-
-    CFE_EVS_SendEvent_context_t context_CFE_EVS_SendEvent[2];
-    UT_SetHookFunction(UT_KEY(CFE_EVS_SendEvent), UT_Utils_stub_reporter_hook, context_CFE_EVS_SendEvent);
 
     Table.Entry[0].Length = 5;
 
     /* Set to make MD_CheckTableEntries return SUCCESS */
-    UT_SetDefaultReturnValue(UT_KEY(CFS_ResolveSymAddr), false);
+    UT_SetDefaultReturnValue(UT_KEY(MD_ResolveSymAddr), false);
 
     /* Execute the function being tested */
     Result = MD_CheckTableEntries(&Table, &ErrorEntryArg);
@@ -621,9 +617,6 @@ void MD_CheckTableEntries_Test_Success(void)
     snprintf(ExpectedEventString, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH,
              "MD Dwell Tbl verify results: good = %%d, bad = %%d, unused = %%d");
 
-    CFE_EVS_SendEvent_context_t context_CFE_EVS_SendEvent;
-    UT_SetHookFunction(UT_KEY(CFE_EVS_SendEvent), UT_Utils_stub_reporter_hook, &context_CFE_EVS_SendEvent);
-
     for (i = 0; i < MD_DWELL_TABLE_SIZE; i++)
     {
         Table.Entry[i].DwellAddress.Offset = 0;
@@ -637,7 +630,7 @@ void MD_CheckTableEntries_Test_Success(void)
     Table.Entry[MD_DWELL_TABLE_SIZE - 1].Delay               = 1;
 
     /* Set to make MD_CheckTableEntries return SUCCESS */
-    UT_SetDefaultReturnValue(UT_KEY(CFS_ResolveSymAddr), true);
+    UT_SetDefaultReturnValue(UT_KEY(MD_ResolveSymAddr), true);
     UT_SetDefaultReturnValue(UT_KEY(MD_ValidAddrRange), true);
     UT_SetDefaultReturnValue(UT_KEY(MD_ValidFieldLength), true);
 
@@ -649,12 +642,12 @@ void MD_CheckTableEntries_Test_Success(void)
 
     UtAssert_True(Result == CFE_SUCCESS, "Result == CFE_SUCCESS");
 
-    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent.EventID, MD_DWELL_TBL_INF_EID);
-    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent.EventType, CFE_EVS_EventType_INFORMATION);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, MD_DWELL_TBL_INF_EID);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_INFORMATION);
 
-    strCmpResult = strncmp(ExpectedEventString, context_CFE_EVS_SendEvent.Spec, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH);
+    strCmpResult = strncmp(ExpectedEventString, context_CFE_EVS_SendEvent[0].Spec, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH);
 
-    UtAssert_True(strCmpResult == 0, "Event string matched expected result, '%s'", context_CFE_EVS_SendEvent.Spec);
+    UtAssert_True(strCmpResult == 0, "Event string matched expected result, '%s'", context_CFE_EVS_SendEvent[0].Spec);
 
     call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
 
@@ -690,8 +683,8 @@ void MD_ValidTableEntry_Test_ResolveError(void)
 
     Entry.Length = 1;
 
-    /* Set to make CFS_ResolveSymAddr return MD_RESOLVE_ERROR */
-    UT_SetDefaultReturnValue(UT_KEY(CFS_ResolveSymAddr), false);
+    /* Set to make MD_ResolveSymAddr return MD_RESOLVE_ERROR */
+    UT_SetDefaultReturnValue(UT_KEY(MD_ResolveSymAddr), false);
 
     /* Execute the function being tested */
     Result = MD_ValidTableEntry(&Entry);
@@ -714,7 +707,7 @@ void MD_ValidTableEntry_Test_InvalidAddress(void)
     Entry.Length = 1;
 
     /* Set to make MD_ValidAddrRange return MD_INVALID_ADDR_ERROR */
-    UT_SetDefaultReturnValue(UT_KEY(CFS_ResolveSymAddr), true);
+    UT_SetDefaultReturnValue(UT_KEY(MD_ResolveSymAddr), true);
     UT_SetDeferredRetcode(UT_KEY(CFE_PSP_MemValidateRange), 1, -1);
 
     /* Execute the function being tested */
@@ -737,7 +730,7 @@ void MD_ValidTableEntry_Test_InvalidLength(void)
 
     Entry.Length = -1;
 
-    UT_SetDefaultReturnValue(UT_KEY(CFS_ResolveSymAddr), true);
+    UT_SetDefaultReturnValue(UT_KEY(MD_ResolveSymAddr), true);
     UT_SetDefaultReturnValue(UT_KEY(MD_ValidAddrRange), true);
     UT_SetDefaultReturnValue(UT_KEY(MD_ValidFieldLength), false);
 
@@ -763,7 +756,7 @@ void MD_ValidTableEntry_Test_NotAligned16DwellLength4(void)
     Entry.Length              = 4;
     Entry.DwellAddress.Offset = 1;
 
-    UT_SetDefaultReturnValue(UT_KEY(CFS_ResolveSymAddr), true);
+    UT_SetDefaultReturnValue(UT_KEY(MD_ResolveSymAddr), true);
     UT_SetDefaultReturnValue(UT_KEY(MD_ValidAddrRange), true);
     UT_SetDefaultReturnValue(UT_KEY(MD_ValidFieldLength), true);
 
@@ -788,11 +781,11 @@ void MD_ValidTableEntry_Test_Aligned32(void)
     Entry.Length              = 4;
     Entry.DwellAddress.Offset = 1;
 
-    UT_SetDefaultReturnValue(UT_KEY(CFS_ResolveSymAddr), true);
+    UT_SetDefaultReturnValue(UT_KEY(MD_ResolveSymAddr), true);
     UT_SetDefaultReturnValue(UT_KEY(MD_ValidAddrRange), true);
     UT_SetDefaultReturnValue(UT_KEY(MD_ValidFieldLength), true);
 
-    UT_SetDeferredRetcode(UT_KEY(CFS_Verify32Aligned), 1, true);
+    UT_SetDeferredRetcode(UT_KEY(MD_Verify32Aligned), 1, true);
 
     /* Execute the function being tested */
     Result = MD_ValidTableEntry(&Entry);
@@ -815,11 +808,11 @@ void MD_ValidTableEntry_Test_NotAligned32(void)
     Entry.Length              = 4;
     Entry.DwellAddress.Offset = 1;
 
-    UT_SetDefaultReturnValue(UT_KEY(CFS_ResolveSymAddr), true);
+    UT_SetDefaultReturnValue(UT_KEY(MD_ResolveSymAddr), true);
     UT_SetDefaultReturnValue(UT_KEY(MD_ValidAddrRange), true);
     UT_SetDefaultReturnValue(UT_KEY(MD_ValidFieldLength), true);
 
-    UT_SetDeferredRetcode(UT_KEY(CFS_Verify32Aligned), 1, false);
+    UT_SetDeferredRetcode(UT_KEY(MD_Verify32Aligned), 1, false);
 
     /* Execute the function being tested */
     Result = MD_ValidTableEntry(&Entry);
@@ -844,7 +837,7 @@ void MD_ValidTableEntry_Test_NotAligned32(void)
     Entry.Length              = 4;
     Entry.DwellAddress.Offset = 1;
 
-    UT_SetDefaultReturnValue(UT_KEY(CFS_ResolveSymAddr), true);
+    UT_SetDefaultReturnValue(UT_KEY(MD_ResolveSymAddr), true);
     UT_SetDefaultReturnValue(UT_KEY(MD_ValidAddrRange), true);
     UT_SetDefaultReturnValue(UT_KEY(MD_ValidFieldLength), false);
 
@@ -870,10 +863,10 @@ void MD_ValidTableEntry_Test_NotAligned16DwellLength2(void)
     Entry.Length              = 2;
     Entry.DwellAddress.Offset = 1;
 
-    UT_SetDefaultReturnValue(UT_KEY(CFS_ResolveSymAddr), true);
+    UT_SetDefaultReturnValue(UT_KEY(MD_ResolveSymAddr), true);
     UT_SetDefaultReturnValue(UT_KEY(MD_ValidAddrRange), true);
     UT_SetDefaultReturnValue(UT_KEY(MD_ValidFieldLength), true);
-    UT_SetDefaultReturnValue(UT_KEY(CFS_Verify16Aligned), false);
+    UT_SetDefaultReturnValue(UT_KEY(MD_Verify16Aligned), false);
 
     /* Execute the function being tested */
     Result = MD_ValidTableEntry(&Entry);
@@ -896,10 +889,10 @@ void MD_ValidTableEntry_Test_ElseSuccess(void)
     Entry.Length              = 2;
     Entry.DwellAddress.Offset = 0;
 
-    UT_SetDefaultReturnValue(UT_KEY(CFS_ResolveSymAddr), true);
+    UT_SetDefaultReturnValue(UT_KEY(MD_ResolveSymAddr), true);
     UT_SetDefaultReturnValue(UT_KEY(MD_ValidAddrRange), true);
     UT_SetDefaultReturnValue(UT_KEY(MD_ValidFieldLength), true);
-    UT_SetDefaultReturnValue(UT_KEY(CFS_Verify16Aligned), true);
+    UT_SetDefaultReturnValue(UT_KEY(MD_Verify16Aligned), true);
 
     /* Execute the function being tested */
     Result = MD_ValidTableEntry(&Entry);
@@ -1011,9 +1004,6 @@ void MD_UpdateTableEnabledField_Test_Error(void)
     snprintf(ExpectedEventString, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH,
              "MD_UpdateTableEnabledField, TableIndex %%d: CFE_TBL_GetAddress Returned 0x%%08x");
 
-    CFE_EVS_SendEvent_context_t context_CFE_EVS_SendEvent;
-    UT_SetHookFunction(UT_KEY(CFE_EVS_SendEvent), UT_Utils_stub_reporter_hook, &context_CFE_EVS_SendEvent);
-
     /* Set to make CFE_TBL_GetAddress != CFE_SUCCESS */
     UT_SetDeferredRetcode(UT_KEY(CFE_TBL_GetAddress), 1, -1);
 
@@ -1021,12 +1011,12 @@ void MD_UpdateTableEnabledField_Test_Error(void)
     MD_UpdateTableEnabledField(TableIndex, FieldValue);
 
     /* Verify results */
-    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent.EventID, MD_UPDATE_TBL_EN_ERR_EID);
-    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent.EventType, CFE_EVS_EventType_ERROR);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, MD_UPDATE_TBL_EN_ERR_EID);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_ERROR);
 
-    strCmpResult = strncmp(ExpectedEventString, context_CFE_EVS_SendEvent.Spec, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH);
+    strCmpResult = strncmp(ExpectedEventString, context_CFE_EVS_SendEvent[0].Spec, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH);
 
-    UtAssert_True(strCmpResult == 0, "Event string matched expected result, '%s'", context_CFE_EVS_SendEvent.Spec);
+    UtAssert_True(strCmpResult == 0, "Event string matched expected result, '%s'", context_CFE_EVS_SendEvent[0].Spec);
 
     call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
 
@@ -1037,11 +1027,11 @@ void MD_UpdateTableEnabledField_Test_Error(void)
 
 void MD_UpdateTableDwellEntry_Test(void)
 {
-    uint16        TableIndex = 0;
-    uint16        EntryIndex = 0;
-    uint16        NewLength  = 1;
-    uint16        NewDelay   = 1;
-    CFS_SymAddr_t NewDwellAddress;
+    uint16       TableIndex = 0;
+    uint16       EntryIndex = 0;
+    uint16       NewLength  = 1;
+    uint16       NewDelay   = 1;
+    MD_SymAddr_t NewDwellAddress;
 
     NewDwellAddress.Offset = 1;
 
@@ -1076,11 +1066,11 @@ void MD_UpdateTableDwellEntry_Test(void)
 
 void MD_UpdateTableDwellEntry_Test_Updated(void)
 {
-    uint16        TableIndex = 0;
-    uint16        EntryIndex = 0;
-    uint16        NewLength  = 1;
-    uint16        NewDelay   = 1;
-    CFS_SymAddr_t NewDwellAddress;
+    uint16       TableIndex = 0;
+    uint16       EntryIndex = 0;
+    uint16       NewLength  = 1;
+    uint16       NewDelay   = 1;
+    MD_SymAddr_t NewDwellAddress;
 
     NewDwellAddress.Offset = 1;
 
@@ -1117,19 +1107,16 @@ void MD_UpdateTableDwellEntry_Test_Updated(void)
 
 void MD_UpdateTableDwellEntry_Test_Error(void)
 {
-    uint16        TableIndex = 0;
-    uint16        EntryIndex = 0;
-    uint16        NewLength  = 1;
-    uint16        NewDelay   = 1;
-    CFS_SymAddr_t NewDwellAddress;
-    int32         strCmpResult;
-    char          ExpectedEventString[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
+    uint16       TableIndex = 0;
+    uint16       EntryIndex = 0;
+    uint16       NewLength  = 1;
+    uint16       NewDelay   = 1;
+    MD_SymAddr_t NewDwellAddress;
+    int32        strCmpResult;
+    char         ExpectedEventString[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
 
     snprintf(ExpectedEventString, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH,
              "MD_UpdateTableDwellEntry, TableIndex %%d: CFE_TBL_GetAddress Returned 0x%%08x");
-
-    CFE_EVS_SendEvent_context_t context_CFE_EVS_SendEvent;
-    UT_SetHookFunction(UT_KEY(CFE_EVS_SendEvent), UT_Utils_stub_reporter_hook, &context_CFE_EVS_SendEvent);
 
     NewDwellAddress.Offset = 1;
 
@@ -1142,12 +1129,12 @@ void MD_UpdateTableDwellEntry_Test_Error(void)
     MD_UpdateTableDwellEntry(TableIndex, EntryIndex, NewLength, NewDelay, NewDwellAddress);
 
     /* Verify results */
-    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent.EventID, MD_UPDATE_TBL_DWELL_ERR_EID);
-    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent.EventType, CFE_EVS_EventType_ERROR);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, MD_UPDATE_TBL_DWELL_ERR_EID);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_ERROR);
 
-    strCmpResult = strncmp(ExpectedEventString, context_CFE_EVS_SendEvent.Spec, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH);
+    strCmpResult = strncmp(ExpectedEventString, context_CFE_EVS_SendEvent[0].Spec, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH);
 
-    UtAssert_True(strCmpResult == 0, "Event string matched expected result, '%s'", context_CFE_EVS_SendEvent.Spec);
+    UtAssert_True(strCmpResult == 0, "Event string matched expected result, '%s'", context_CFE_EVS_SendEvent[0].Spec);
 
     call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
 
@@ -1217,9 +1204,6 @@ void MD_UpdateTableSignature_Test_Error(void)
     snprintf(ExpectedEventString, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH,
              "MD_UpdateTableSignature, TableIndex %%d: CFE_TBL_GetAddress Returned 0x%%08x");
 
-    CFE_EVS_SendEvent_context_t context_CFE_EVS_SendEvent;
-    UT_SetHookFunction(UT_KEY(CFE_EVS_SendEvent), UT_Utils_stub_reporter_hook, &context_CFE_EVS_SendEvent);
-
     /* Set to make CFE_TBL_GetAddress != CFE_SUCCESS */
     UT_SetDeferredRetcode(UT_KEY(CFE_TBL_GetAddress), 1, -1);
 
@@ -1227,12 +1211,12 @@ void MD_UpdateTableSignature_Test_Error(void)
     MD_UpdateTableSignature(TableIndex, newsignature);
 
     /* Verify results */
-    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent.EventID, MD_UPDATE_TBL_SIG_ERR_EID);
-    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent.EventType, CFE_EVS_EventType_ERROR);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, MD_UPDATE_TBL_SIG_ERR_EID);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_ERROR);
 
-    strCmpResult = strncmp(ExpectedEventString, context_CFE_EVS_SendEvent.Spec, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH);
+    strCmpResult = strncmp(ExpectedEventString, context_CFE_EVS_SendEvent[0].Spec, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH);
 
-    UtAssert_True(strCmpResult == 0, "Event string matched expected result, '%s'", context_CFE_EVS_SendEvent.Spec);
+    UtAssert_True(strCmpResult == 0, "Event string matched expected result, '%s'", context_CFE_EVS_SendEvent[0].Spec);
 
     call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
 

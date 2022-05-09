@@ -1,3 +1,21 @@
+/************************************************************************
+ * NASA Docket No. GSC-18,922-1, and identified as “Core Flight
+ * System (cFS) Memory Dwell Application Version 2.4.0”
+ *
+ * Copyright (c) 2021 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
 
 /*
  * Includes
@@ -12,7 +30,6 @@
 #include "md_version.h"
 #include "md_test_utils.h"
 #include "md_platform_cfg.h"
-#include <sys/fcntl.h>
 #include <unistd.h>
 #include <stdlib.h>
 
@@ -67,10 +84,9 @@ int32 MD_CMDS_TEST_MD_UpdateDwellControlInfoHook2(void *UserObj, int32 StubRetco
 
 void MD_ProcessStartCmd_Test_ZeroRate(void)
 {
-    MD_CmdStartStop_t CmdPacket;
-    CFE_SB_MsgId_t    TestMsgId;
-    int32             strCmpResult;
-    char              ExpectedEventString[2][CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
+    CFE_SB_MsgId_t TestMsgId;
+    int32          strCmpResult;
+    char           ExpectedEventString[2][CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
 
     snprintf(ExpectedEventString[0], CFE_MISSION_EVS_MAX_MESSAGE_LENGTH,
              "Dwell Table %%d is enabled with a delay of zero so no processing will occur");
@@ -78,13 +94,10 @@ void MD_ProcessStartCmd_Test_ZeroRate(void)
     snprintf(ExpectedEventString[1], CFE_MISSION_EVS_MAX_MESSAGE_LENGTH,
              "Start Dwell Table command processed successfully for table mask 0x%%04X");
 
-    CFE_EVS_SendEvent_context_t context_CFE_EVS_SendEvent[2];
-    UT_SetHookFunction(UT_KEY(CFE_EVS_SendEvent), UT_Utils_stub_reporter_hook, &context_CFE_EVS_SendEvent);
-
-    TestMsgId = MD_CMD_MID;
+    TestMsgId = CFE_SB_ValueToMsgId(MD_CMD_MID);
     UT_SetDataBuffer(UT_KEY(CFE_MSG_GetMsgId), &TestMsgId, sizeof(TestMsgId), false);
 
-    CmdPacket.TableMask = 1;
+    UT_CmdBuf.CmdStartStop.TableMask = 1;
 
     MD_AppData.MD_DwellTables[0].Rate = 0;
 
@@ -98,7 +111,7 @@ void MD_ProcessStartCmd_Test_ZeroRate(void)
     UT_SetDeferredRetcode(UT_KEY(MD_TableIsInMask), 3, false);
 
     /* Execute the function being tested */
-    MD_ProcessStartCmd((CFE_SB_Buffer_t *)(&CmdPacket));
+    MD_ProcessStartCmd(&UT_CmdBuf.Buf);
 
     /* Verify results */
     UtAssert_True(MD_AppData.MD_DwellTables[0].Enabled == MD_DWELL_STREAM_ENABLED,
@@ -134,21 +147,17 @@ void MD_ProcessStartCmd_Test_ZeroRate(void)
 
 void MD_ProcessStartCmd_Test_Success(void)
 {
-    MD_CmdStartStop_t CmdPacket;
-    CFE_SB_MsgId_t    TestMsgId;
-    int32             strCmpResult;
-    char              ExpectedEventString[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
+    CFE_SB_MsgId_t TestMsgId;
+    int32          strCmpResult;
+    char           ExpectedEventString[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
 
     snprintf(ExpectedEventString, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH,
              "Start Dwell Table command processed successfully for table mask 0x%%04X");
 
-    CFE_EVS_SendEvent_context_t context_CFE_EVS_SendEvent;
-    UT_SetHookFunction(UT_KEY(CFE_EVS_SendEvent), UT_Utils_stub_reporter_hook, &context_CFE_EVS_SendEvent);
-
-    TestMsgId = MD_CMD_MID;
+    TestMsgId = CFE_SB_ValueToMsgId(MD_CMD_MID);
     UT_SetDataBuffer(UT_KEY(CFE_MSG_GetMsgId), &TestMsgId, sizeof(TestMsgId), false);
 
-    CmdPacket.TableMask = 1;
+    UT_CmdBuf.CmdStartStop.TableMask = 1;
 
     MD_AppData.MD_DwellTables[0].Rate = 1;
 
@@ -162,7 +171,7 @@ void MD_ProcessStartCmd_Test_Success(void)
     UT_SetDeferredRetcode(UT_KEY(MD_TableIsInMask), 3, false);
 
     /* Execute the function being tested */
-    MD_ProcessStartCmd((CFE_SB_Buffer_t *)(&CmdPacket));
+    MD_ProcessStartCmd(&UT_CmdBuf.Buf);
 
     /* Verify results */
     UtAssert_True(MD_AppData.MD_DwellTables[0].Enabled == MD_DWELL_STREAM_ENABLED,
@@ -173,12 +182,12 @@ void MD_ProcessStartCmd_Test_Success(void)
 
     UtAssert_True(MD_AppData.CmdCounter == 1, "MD_AppData.CmdCounter == 1");
 
-    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent.EventID, MD_START_DWELL_INF_EID);
-    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent.EventType, CFE_EVS_EventType_INFORMATION);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, MD_START_DWELL_INF_EID);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_INFORMATION);
 
-    strCmpResult = strncmp(ExpectedEventString, context_CFE_EVS_SendEvent.Spec, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH);
+    strCmpResult = strncmp(ExpectedEventString, context_CFE_EVS_SendEvent[0].Spec, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH);
 
-    UtAssert_True(strCmpResult == 0, "Event string matched expected result, '%s'", context_CFE_EVS_SendEvent.Spec);
+    UtAssert_True(strCmpResult == 0, "Event string matched expected result, '%s'", context_CFE_EVS_SendEvent[0].Spec);
 
     call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
 
@@ -189,34 +198,30 @@ void MD_ProcessStartCmd_Test_Success(void)
 
 void MD_ProcessStartCmd_Test_EmptyTableMask(void)
 {
-    MD_CmdStartStop_t CmdPacket;
-    CFE_SB_MsgId_t    TestMsgId;
-    int32             strCmpResult;
-    char              ExpectedEventString[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
+    CFE_SB_MsgId_t TestMsgId;
+    int32          strCmpResult;
+    char           ExpectedEventString[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
 
     snprintf(ExpectedEventString, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH,
              "%%s command rejected because no tables were specified in table mask (0x%%04X)");
 
-    CFE_EVS_SendEvent_context_t context_CFE_EVS_SendEvent;
-    UT_SetHookFunction(UT_KEY(CFE_EVS_SendEvent), UT_Utils_stub_reporter_hook, &context_CFE_EVS_SendEvent);
-
-    TestMsgId = MD_CMD_MID;
+    TestMsgId = CFE_SB_ValueToMsgId(MD_CMD_MID);
     UT_SetDataBuffer(UT_KEY(CFE_MSG_GetMsgId), &TestMsgId, sizeof(TestMsgId), false);
 
-    CmdPacket.TableMask = 0;
+    UT_CmdBuf.CmdStartStop.TableMask = 0;
 
     /* Execute the function being tested */
-    MD_ProcessStartCmd((CFE_SB_Buffer_t *)(&CmdPacket));
+    MD_ProcessStartCmd(&UT_CmdBuf.Buf);
 
     /* Verify results */
     UtAssert_True(MD_AppData.ErrCounter == 1, "MD_AppData.ErrCounter == 1");
 
-    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent.EventID, MD_EMPTY_TBLMASK_ERR_EID);
-    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent.EventType, CFE_EVS_EventType_ERROR);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, MD_EMPTY_TBLMASK_ERR_EID);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_ERROR);
 
-    strCmpResult = strncmp(ExpectedEventString, context_CFE_EVS_SendEvent.Spec, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH);
+    strCmpResult = strncmp(ExpectedEventString, context_CFE_EVS_SendEvent[0].Spec, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH);
 
-    UtAssert_True(strCmpResult == 0, "Event string matched expected result, '%s'", context_CFE_EVS_SendEvent.Spec);
+    UtAssert_True(strCmpResult == 0, "Event string matched expected result, '%s'", context_CFE_EVS_SendEvent[0].Spec);
 
     call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
 
@@ -227,21 +232,17 @@ void MD_ProcessStartCmd_Test_EmptyTableMask(void)
 
 void MD_ProcessStartCmd_Test_NoUpdateTableEnabledField(void)
 {
-    MD_CmdStartStop_t CmdPacket;
-    CFE_SB_MsgId_t    TestMsgId;
-    int32             strCmpResult;
-    char              ExpectedEventString[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
+    CFE_SB_MsgId_t TestMsgId;
+    int32          strCmpResult;
+    char           ExpectedEventString[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
 
     snprintf(ExpectedEventString, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH,
              "Start Dwell Table for mask 0x%%04X failed for %%d of %%d tables");
 
-    CFE_EVS_SendEvent_context_t context_CFE_EVS_SendEvent;
-    UT_SetHookFunction(UT_KEY(CFE_EVS_SendEvent), UT_Utils_stub_reporter_hook, &context_CFE_EVS_SendEvent);
-
-    TestMsgId = MD_CMD_MID;
+    TestMsgId = CFE_SB_ValueToMsgId(MD_CMD_MID);
     UT_SetDataBuffer(UT_KEY(CFE_MSG_GetMsgId), &TestMsgId, sizeof(TestMsgId), false);
 
-    CmdPacket.TableMask               = 1;
+    UT_CmdBuf.CmdStartStop.TableMask  = 1;
     MD_AppData.MD_DwellTables[0].Rate = 1;
 
     /* Prevents segmentation fault in call to subfunction MD_UpdateTableEnabledField */
@@ -255,17 +256,17 @@ void MD_ProcessStartCmd_Test_NoUpdateTableEnabledField(void)
     UT_SetDeferredRetcode(UT_KEY(MD_UpdateTableEnabledField), 1, -1);
 
     /* Execute the function being tested */
-    MD_ProcessStartCmd((CFE_SB_Buffer_t *)(&CmdPacket));
+    MD_ProcessStartCmd(&UT_CmdBuf.Buf);
 
     /* Verify results */
     UtAssert_True(MD_AppData.ErrCounter == 1, "MD_AppData.ErrCounter == 1");
 
-    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent.EventID, MD_START_DWELL_ERR_EID);
-    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent.EventType, CFE_EVS_EventType_ERROR);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, MD_START_DWELL_ERR_EID);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_ERROR);
 
-    strCmpResult = strncmp(ExpectedEventString, context_CFE_EVS_SendEvent.Spec, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH);
+    strCmpResult = strncmp(ExpectedEventString, context_CFE_EVS_SendEvent[0].Spec, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH);
 
-    UtAssert_True(strCmpResult == 0, "Event string matched expected result, '%s'", context_CFE_EVS_SendEvent.Spec);
+    UtAssert_True(strCmpResult == 0, "Event string matched expected result, '%s'", context_CFE_EVS_SendEvent[0].Spec);
 
     call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
 
@@ -276,21 +277,17 @@ void MD_ProcessStartCmd_Test_NoUpdateTableEnabledField(void)
 
 void MD_ProcessStopCmd_Test_Success(void)
 {
-    MD_CmdStartStop_t CmdPacket;
-    CFE_SB_MsgId_t    TestMsgId;
-    int32             strCmpResult;
-    char              ExpectedEventString[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
+    CFE_SB_MsgId_t TestMsgId;
+    int32          strCmpResult;
+    char           ExpectedEventString[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
 
     snprintf(ExpectedEventString, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH,
              "Stop Dwell Table command processed successfully for table mask 0x%%04X");
 
-    CFE_EVS_SendEvent_context_t context_CFE_EVS_SendEvent;
-    UT_SetHookFunction(UT_KEY(CFE_EVS_SendEvent), UT_Utils_stub_reporter_hook, &context_CFE_EVS_SendEvent);
-
-    TestMsgId = MD_CMD_MID;
+    TestMsgId = CFE_SB_ValueToMsgId(MD_CMD_MID);
     UT_SetDataBuffer(UT_KEY(CFE_MSG_GetMsgId), &TestMsgId, sizeof(TestMsgId), false);
 
-    CmdPacket.TableMask = 1;
+    UT_CmdBuf.CmdStartStop.TableMask = 1;
 
     /* Prevents segmentation fault in call to subfunction MD_UpdateTableEnabledField */
     UT_SetHookFunction(UT_KEY(CFE_TBL_GetAddress), &MD_CMDS_TEST_CFE_TBL_GetAddressHook, NULL);
@@ -302,7 +299,7 @@ void MD_ProcessStopCmd_Test_Success(void)
     UT_SetDeferredRetcode(UT_KEY(MD_TableIsInMask), 3, false);
 
     /* Execute the function being tested */
-    MD_ProcessStopCmd((CFE_SB_Buffer_t *)(&CmdPacket));
+    MD_ProcessStopCmd(&UT_CmdBuf.Buf);
 
     /* Verify results */
     UtAssert_True(MD_AppData.MD_DwellTables[0].Enabled == MD_DWELL_STREAM_DISABLED,
@@ -313,12 +310,12 @@ void MD_ProcessStopCmd_Test_Success(void)
 
     UtAssert_True(MD_AppData.CmdCounter == 1, "MD_AppData.CmdCounter == 1");
 
-    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent.EventID, MD_STOP_DWELL_INF_EID);
-    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent.EventType, CFE_EVS_EventType_INFORMATION);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, MD_STOP_DWELL_INF_EID);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_INFORMATION);
 
-    strCmpResult = strncmp(ExpectedEventString, context_CFE_EVS_SendEvent.Spec, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH);
+    strCmpResult = strncmp(ExpectedEventString, context_CFE_EVS_SendEvent[0].Spec, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH);
 
-    UtAssert_True(strCmpResult == 0, "Event string matched expected result, '%s'", context_CFE_EVS_SendEvent.Spec);
+    UtAssert_True(strCmpResult == 0, "Event string matched expected result, '%s'", context_CFE_EVS_SendEvent[0].Spec);
 
     call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
 
@@ -329,34 +326,30 @@ void MD_ProcessStopCmd_Test_Success(void)
 
 void MD_ProcessStopCmd_Test_EmptyTableMask(void)
 {
-    MD_CmdStartStop_t CmdPacket;
-    CFE_SB_MsgId_t    TestMsgId;
-    int32             strCmpResult;
-    char              ExpectedEventString[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
+    CFE_SB_MsgId_t TestMsgId;
+    int32          strCmpResult;
+    char           ExpectedEventString[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
 
     snprintf(ExpectedEventString, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH,
              "%%s command rejected because no tables were specified in table mask (0x%%04X)");
 
-    CFE_EVS_SendEvent_context_t context_CFE_EVS_SendEvent;
-    UT_SetHookFunction(UT_KEY(CFE_EVS_SendEvent), UT_Utils_stub_reporter_hook, &context_CFE_EVS_SendEvent);
-
-    TestMsgId = MD_CMD_MID;
+    TestMsgId = CFE_SB_ValueToMsgId(MD_CMD_MID);
     UT_SetDataBuffer(UT_KEY(CFE_MSG_GetMsgId), &TestMsgId, sizeof(TestMsgId), false);
 
-    CmdPacket.TableMask = 0;
+    UT_CmdBuf.CmdStartStop.TableMask = 0;
 
     /* Execute the function being tested */
-    MD_ProcessStopCmd((CFE_SB_Buffer_t *)(&CmdPacket));
+    MD_ProcessStopCmd(&UT_CmdBuf.Buf);
 
     /* Verify results */
     UtAssert_True(MD_AppData.ErrCounter == 1, "MD_AppData.ErrCounter == 1");
 
-    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent.EventID, MD_EMPTY_TBLMASK_ERR_EID);
-    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent.EventType, CFE_EVS_EventType_ERROR);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, MD_EMPTY_TBLMASK_ERR_EID);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_ERROR);
 
-    strCmpResult = strncmp(ExpectedEventString, context_CFE_EVS_SendEvent.Spec, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH);
+    strCmpResult = strncmp(ExpectedEventString, context_CFE_EVS_SendEvent[0].Spec, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH);
 
-    UtAssert_True(strCmpResult == 0, "Event string matched expected result, '%s'", context_CFE_EVS_SendEvent.Spec);
+    UtAssert_True(strCmpResult == 0, "Event string matched expected result, '%s'", context_CFE_EVS_SendEvent[0].Spec);
 
     call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
 
@@ -367,21 +360,17 @@ void MD_ProcessStopCmd_Test_EmptyTableMask(void)
 
 void MD_ProcessStopCmd_Test_NoUpdateTableEnabledField(void)
 {
-    MD_CmdStartStop_t CmdPacket;
-    CFE_SB_MsgId_t    TestMsgId;
-    int32             strCmpResult;
-    char              ExpectedEventString[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
+    CFE_SB_MsgId_t TestMsgId;
+    int32          strCmpResult;
+    char           ExpectedEventString[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
 
     snprintf(ExpectedEventString, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH,
              "Stop Dwell Table for mask 0x%%04X failed for %%d of %%d tables");
 
-    CFE_EVS_SendEvent_context_t context_CFE_EVS_SendEvent;
-    UT_SetHookFunction(UT_KEY(CFE_EVS_SendEvent), UT_Utils_stub_reporter_hook, &context_CFE_EVS_SendEvent);
-
-    TestMsgId = MD_CMD_MID;
+    TestMsgId = CFE_SB_ValueToMsgId(MD_CMD_MID);
     UT_SetDataBuffer(UT_KEY(CFE_MSG_GetMsgId), &TestMsgId, sizeof(TestMsgId), false);
 
-    CmdPacket.TableMask = 1;
+    UT_CmdBuf.CmdStartStop.TableMask = 1;
 
     /* Prevents segmentation fault in call to subfunction MD_UpdateTableEnabledField */
     UT_SetHookFunction(UT_KEY(CFE_TBL_GetAddress), &MD_CMDS_TEST_CFE_TBL_GetAddressHook, NULL);
@@ -394,7 +383,7 @@ void MD_ProcessStopCmd_Test_NoUpdateTableEnabledField(void)
     UT_SetDeferredRetcode(UT_KEY(MD_UpdateTableEnabledField), 1, -1);
 
     /* Execute the function being tested */
-    MD_ProcessStopCmd((CFE_SB_Buffer_t *)(&CmdPacket));
+    MD_ProcessStopCmd(&UT_CmdBuf.Buf);
 
     /* Verify results */
     UtAssert_True(MD_AppData.MD_DwellTables[0].Enabled == MD_DWELL_STREAM_DISABLED,
@@ -405,12 +394,12 @@ void MD_ProcessStopCmd_Test_NoUpdateTableEnabledField(void)
 
     UtAssert_True(MD_AppData.ErrCounter == 1, "MD_AppData.ErrCounter == 1");
 
-    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent.EventID, MD_STOP_DWELL_ERR_EID);
-    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent.EventType, CFE_EVS_EventType_ERROR);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, MD_STOP_DWELL_ERR_EID);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_ERROR);
 
-    strCmpResult = strncmp(ExpectedEventString, context_CFE_EVS_SendEvent.Spec, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH);
+    strCmpResult = strncmp(ExpectedEventString, context_CFE_EVS_SendEvent[0].Spec, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH);
 
-    UtAssert_True(strCmpResult == 0, "Event string matched expected result, '%s'", context_CFE_EVS_SendEvent.Spec);
+    UtAssert_True(strCmpResult == 0, "Event string matched expected result, '%s'", context_CFE_EVS_SendEvent[0].Spec);
 
     call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
 
@@ -421,7 +410,6 @@ void MD_ProcessStopCmd_Test_NoUpdateTableEnabledField(void)
 
 void MD_ProcessJamCmd_Test_InvalidJamTable(void)
 {
-    MD_CmdJam_t    CmdPacket;
     CFE_SB_MsgId_t TestMsgId;
     int32          strCmpResult;
     char           ExpectedEventString[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
@@ -429,29 +417,24 @@ void MD_ProcessJamCmd_Test_InvalidJamTable(void)
     snprintf(ExpectedEventString, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH,
              "Jam Cmd rejected due to invalid Tbl Id arg = %%d (Expect 1.. %%d)");
 
-    CFE_EVS_SendEvent_context_t context_CFE_EVS_SendEvent;
-    UT_SetHookFunction(UT_KEY(CFE_EVS_SendEvent), UT_Utils_stub_reporter_hook, &context_CFE_EVS_SendEvent);
-
-    TestMsgId = MD_CMD_MID;
+    TestMsgId = CFE_SB_ValueToMsgId(MD_CMD_MID);
     UT_SetDataBuffer(UT_KEY(CFE_MSG_GetMsgId), &TestMsgId, sizeof(TestMsgId), false);
 
-    CmdPacket.TableId = 99;
-    CmdPacket.EntryId = 2;
+    UT_CmdBuf.CmdJam.TableId = 99;
+    UT_CmdBuf.CmdJam.EntryId = 2;
 
     /* Execute the function being tested */
-    MD_ProcessJamCmd((CFE_SB_Buffer_t *)(&CmdPacket));
+    MD_ProcessJamCmd(&UT_CmdBuf.Buf);
 
     /* Verify results */
-    UtAssert_True(CmdPacket.DwellAddress.SymName[OS_MAX_SYM_LEN - 1] == '\0',
-                  "CmdPacket.DwellAddress.SymName[OS_MAX_SYM_LEN - 1] == ''");
     UtAssert_True(MD_AppData.ErrCounter == 1, "MD_AppData.ErrCounter == 1");
 
-    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent.EventID, MD_INVALID_JAM_TABLE_ERR_EID);
-    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent.EventType, CFE_EVS_EventType_ERROR);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, MD_INVALID_JAM_TABLE_ERR_EID);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_ERROR);
 
-    strCmpResult = strncmp(ExpectedEventString, context_CFE_EVS_SendEvent.Spec, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH);
+    strCmpResult = strncmp(ExpectedEventString, context_CFE_EVS_SendEvent[0].Spec, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH);
 
-    UtAssert_True(strCmpResult == 0, "Event string matched expected result, '%s'", context_CFE_EVS_SendEvent.Spec);
+    UtAssert_True(strCmpResult == 0, "Event string matched expected result, '%s'", context_CFE_EVS_SendEvent[0].Spec);
 
     call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
 
@@ -462,7 +445,6 @@ void MD_ProcessJamCmd_Test_InvalidJamTable(void)
 
 void MD_ProcessJamCmd_Test_InvalidEntryArg(void)
 {
-    MD_CmdJam_t    CmdPacket;
     CFE_SB_MsgId_t TestMsgId;
     int32          strCmpResult;
     char           ExpectedEventString[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
@@ -470,31 +452,26 @@ void MD_ProcessJamCmd_Test_InvalidEntryArg(void)
     snprintf(ExpectedEventString, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH,
              "Jam Cmd rejected due to invalid Entry Id arg = %%d (Expect 1.. %%d)");
 
-    CFE_EVS_SendEvent_context_t context_CFE_EVS_SendEvent;
-    UT_SetHookFunction(UT_KEY(CFE_EVS_SendEvent), UT_Utils_stub_reporter_hook, &context_CFE_EVS_SendEvent);
-
-    TestMsgId = MD_CMD_MID;
+    TestMsgId = CFE_SB_ValueToMsgId(MD_CMD_MID);
     UT_SetDataBuffer(UT_KEY(CFE_MSG_GetMsgId), &TestMsgId, sizeof(TestMsgId), false);
 
-    CmdPacket.TableId = 1;
-    CmdPacket.EntryId = 99;
+    UT_CmdBuf.CmdJam.TableId = 1;
+    UT_CmdBuf.CmdJam.EntryId = 99;
 
     UT_SetDeferredRetcode(UT_KEY(MD_ValidTableId), 1, true);
 
     /* Execute the function being tested */
-    MD_ProcessJamCmd((CFE_SB_Buffer_t *)(&CmdPacket));
+    MD_ProcessJamCmd(&UT_CmdBuf.Buf);
 
     /* Verify results */
-    UtAssert_True(CmdPacket.DwellAddress.SymName[OS_MAX_SYM_LEN - 1] == '\0',
-                  "CmdPacket.DwellAddress.SymName[OS_MAX_SYM_LEN - 1] == ''");
     UtAssert_True(MD_AppData.ErrCounter == 1, "MD_AppData.ErrCounter == 1");
 
-    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent.EventID, MD_INVALID_ENTRY_ARG_ERR_EID);
-    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent.EventType, CFE_EVS_EventType_ERROR);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, MD_INVALID_ENTRY_ARG_ERR_EID);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_ERROR);
 
-    strCmpResult = strncmp(ExpectedEventString, context_CFE_EVS_SendEvent.Spec, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH);
+    strCmpResult = strncmp(ExpectedEventString, context_CFE_EVS_SendEvent[0].Spec, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH);
 
-    UtAssert_True(strCmpResult == 0, "Event string matched expected result, '%s'", context_CFE_EVS_SendEvent.Spec);
+    UtAssert_True(strCmpResult == 0, "Event string matched expected result, '%s'", context_CFE_EVS_SendEvent[0].Spec);
 
     call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
 
@@ -505,7 +482,6 @@ void MD_ProcessJamCmd_Test_InvalidEntryArg(void)
 
 void MD_ProcessJamCmd_Test_SuccessNullZeroRate(void)
 {
-    MD_CmdJam_t    CmdPacket;
     CFE_SB_MsgId_t TestMsgId;
     int32          strCmpResult;
     char           ExpectedEventString[2][CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
@@ -516,15 +492,12 @@ void MD_ProcessJamCmd_Test_SuccessNullZeroRate(void)
     snprintf(ExpectedEventString[1], CFE_MISSION_EVS_MAX_MESSAGE_LENGTH,
              "Dwell Table %%d is enabled with a delay of zero so no processing will occur");
 
-    CFE_EVS_SendEvent_context_t context_CFE_EVS_SendEvent[2];
-    UT_SetHookFunction(UT_KEY(CFE_EVS_SendEvent), UT_Utils_stub_reporter_hook, &context_CFE_EVS_SendEvent);
-
-    TestMsgId = MD_CMD_MID;
+    TestMsgId = CFE_SB_ValueToMsgId(MD_CMD_MID);
     UT_SetDataBuffer(UT_KEY(CFE_MSG_GetMsgId), &TestMsgId, sizeof(TestMsgId), false);
 
-    CmdPacket.TableId     = 1;
-    CmdPacket.EntryId     = 2;
-    CmdPacket.FieldLength = 0;
+    UT_CmdBuf.CmdJam.TableId     = 1;
+    UT_CmdBuf.CmdJam.EntryId     = 2;
+    UT_CmdBuf.CmdJam.FieldLength = 0;
 
     MD_AppData.MD_DwellTables[0].Rate    = 1;
     MD_AppData.MD_DwellTables[0].Enabled = MD_DWELL_STREAM_ENABLED;
@@ -540,12 +513,9 @@ void MD_ProcessJamCmd_Test_SuccessNullZeroRate(void)
     UT_SetDeferredRetcode(UT_KEY(MD_UpdateTableDwellEntry), 1, CFE_SUCCESS);
 
     /* Execute the function being tested */
-    MD_ProcessJamCmd((CFE_SB_Buffer_t *)(&CmdPacket));
+    MD_ProcessJamCmd(&UT_CmdBuf.Buf);
 
     /* Verify results */
-    UtAssert_True(CmdPacket.DwellAddress.SymName[OS_MAX_SYM_LEN - 1] == '\0',
-                  "CmdPacket.DwellAddress.SymName[OS_MAX_SYM_LEN - 1] == ''");
-
     UtAssert_True(MD_AppData.MD_DwellTables[0].Entry[1].ResolvedAddress == 0,
                   "MD_AppData.MD_DwellTables[0].Entry[1].ResolvedAddress == 0");
     UtAssert_True(MD_AppData.MD_DwellTables[0].Entry[1].Length == 0,
@@ -579,7 +549,6 @@ void MD_ProcessJamCmd_Test_SuccessNullZeroRate(void)
 
 void MD_ProcessJamCmd_Test_NullTableDwell(void)
 {
-    MD_CmdJam_t    CmdPacket;
     CFE_SB_MsgId_t TestMsgId;
     int32          strCmpResult;
     char           ExpectedEventString[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
@@ -587,18 +556,15 @@ void MD_ProcessJamCmd_Test_NullTableDwell(void)
     snprintf(ExpectedEventString, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH,
              "Failed Jam of a Null Dwell Entry to Dwell Tbl#%%d Entry #%%d");
 
-    CFE_EVS_SendEvent_context_t context_CFE_EVS_SendEvent;
-    UT_SetHookFunction(UT_KEY(CFE_EVS_SendEvent), UT_Utils_stub_reporter_hook, &context_CFE_EVS_SendEvent);
-
-    TestMsgId = MD_CMD_MID;
+    TestMsgId = CFE_SB_ValueToMsgId(MD_CMD_MID);
     UT_SetDataBuffer(UT_KEY(CFE_MSG_GetMsgId), &TestMsgId, sizeof(TestMsgId), false);
 
-    CmdPacket.TableId     = 1;
-    CmdPacket.EntryId     = 2;
-    CmdPacket.FieldLength = 0;
+    UT_CmdBuf.CmdJam.TableId     = 1;
+    UT_CmdBuf.CmdJam.EntryId     = 2;
+    UT_CmdBuf.CmdJam.FieldLength = 0;
 
-    /* Set to satisfy condition "CFS_ResolveSymAddr(&Jam->DwellAddress,&ResolvedAddr) == true" */
-    UT_SetDeferredRetcode(UT_KEY(CFS_ResolveSymAddr), 1, true);
+    /* Set to satisfy condition "MD_ResolveSymAddr(&Jam->DwellAddress,&ResolvedAddr) == true" */
+    UT_SetDeferredRetcode(UT_KEY(MD_ResolveSymAddr), 1, true);
 
     UT_SetDeferredRetcode(UT_KEY(MD_ValidTableId), 1, true);
     UT_SetDeferredRetcode(UT_KEY(MD_ValidEntryId), 1, true);
@@ -607,12 +573,9 @@ void MD_ProcessJamCmd_Test_NullTableDwell(void)
     UT_SetDeferredRetcode(UT_KEY(MD_UpdateTableDwellEntry), 1, -1);
 
     /* Execute the function being tested */
-    MD_ProcessJamCmd((CFE_SB_Buffer_t *)(&CmdPacket));
+    MD_ProcessJamCmd(&UT_CmdBuf.Buf);
 
     /* Verify results */
-    UtAssert_True(CmdPacket.DwellAddress.SymName[OS_MAX_SYM_LEN - 1] == '\0',
-                  "CmdPacket.DwellAddress.SymName[OS_MAX_SYM_LEN - 1] == ''");
-
     UtAssert_True(MD_AppData.MD_DwellTables[0].Entry[1].ResolvedAddress == 0,
                   "MD_AppData.MD_DwellTables[0].Entry[1].ResolvedAddress == 0");
     UtAssert_True(MD_AppData.MD_DwellTables[0].Entry[1].Length == 0,
@@ -620,12 +583,12 @@ void MD_ProcessJamCmd_Test_NullTableDwell(void)
 
     UtAssert_True(MD_AppData.ErrCounter == 1, "MD_AppData.ErrCounter == 1");
 
-    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent.EventID, MD_JAM_NULL_DWELL_ERR_EID);
-    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent.EventType, CFE_EVS_EventType_ERROR);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, MD_JAM_NULL_DWELL_ERR_EID);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_ERROR);
 
-    strCmpResult = strncmp(ExpectedEventString, context_CFE_EVS_SendEvent.Spec, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH);
+    strCmpResult = strncmp(ExpectedEventString, context_CFE_EVS_SendEvent[0].Spec, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH);
 
-    UtAssert_True(strCmpResult == 0, "Event string matched expected result, '%s'", context_CFE_EVS_SendEvent.Spec);
+    UtAssert_True(strCmpResult == 0, "Event string matched expected result, '%s'", context_CFE_EVS_SendEvent[0].Spec);
 
     call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
 
@@ -636,25 +599,21 @@ void MD_ProcessJamCmd_Test_NullTableDwell(void)
 
 void MD_ProcessJamCmd_Test_NoUpdateTableDwell(void)
 {
-    MD_CmdJam_t    CmdPacket;
     CFE_SB_MsgId_t TestMsgId;
     int32          strCmpResult;
     char           ExpectedEventString[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
 
     snprintf(ExpectedEventString, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH, "Failed Jam to Dwell Tbl#%%d Entry #%%d");
 
-    CFE_EVS_SendEvent_context_t context_CFE_EVS_SendEvent;
-    UT_SetHookFunction(UT_KEY(CFE_EVS_SendEvent), UT_Utils_stub_reporter_hook, &context_CFE_EVS_SendEvent);
-
-    TestMsgId = MD_CMD_MID;
+    TestMsgId = CFE_SB_ValueToMsgId(MD_CMD_MID);
     UT_SetDataBuffer(UT_KEY(CFE_MSG_GetMsgId), &TestMsgId, sizeof(TestMsgId), false);
 
-    CmdPacket.TableId     = 1;
-    CmdPacket.EntryId     = 2;
-    CmdPacket.FieldLength = 1;
+    UT_CmdBuf.CmdJam.TableId     = 1;
+    UT_CmdBuf.CmdJam.EntryId     = 2;
+    UT_CmdBuf.CmdJam.FieldLength = 1;
 
-    /* Set to satisfy condition "CFS_ResolveSymAddr(&Jam->DwellAddress,&ResolvedAddr) == true" */
-    UT_SetDeferredRetcode(UT_KEY(CFS_ResolveSymAddr), 1, true);
+    /* Set to satisfy condition "MD_ResolveSymAddr(&Jam->DwellAddress,&ResolvedAddr) == true" */
+    UT_SetDeferredRetcode(UT_KEY(MD_ResolveSymAddr), 1, true);
 
     UT_SetDeferredRetcode(UT_KEY(MD_ValidTableId), 1, true);
     UT_SetDeferredRetcode(UT_KEY(MD_ValidEntryId), 1, true);
@@ -663,12 +622,9 @@ void MD_ProcessJamCmd_Test_NoUpdateTableDwell(void)
     UT_SetDeferredRetcode(UT_KEY(MD_UpdateTableDwellEntry), 1, -1);
 
     /* Execute the function being tested */
-    MD_ProcessJamCmd((CFE_SB_Buffer_t *)(&CmdPacket));
+    MD_ProcessJamCmd(&UT_CmdBuf.Buf);
 
     /* Verify results */
-    UtAssert_True(CmdPacket.DwellAddress.SymName[OS_MAX_SYM_LEN - 1] == '\0',
-                  "CmdPacket.DwellAddress.SymName[OS_MAX_SYM_LEN - 1] == ''");
-
     UtAssert_True(MD_AppData.MD_DwellTables[0].Entry[1].ResolvedAddress == 0,
                   "MD_AppData.MD_DwellTables[0].Entry[1].ResolvedAddress == 0");
     UtAssert_True(MD_AppData.MD_DwellTables[0].Entry[1].Length == 1,
@@ -676,12 +632,12 @@ void MD_ProcessJamCmd_Test_NoUpdateTableDwell(void)
 
     UtAssert_True(MD_AppData.ErrCounter == 1, "MD_AppData.ErrCounter == 1");
 
-    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent.EventID, MD_JAM_DWELL_ERR_EID);
-    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent.EventType, CFE_EVS_EventType_ERROR);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, MD_JAM_DWELL_ERR_EID);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_ERROR);
 
-    strCmpResult = strncmp(ExpectedEventString, context_CFE_EVS_SendEvent.Spec, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH);
+    strCmpResult = strncmp(ExpectedEventString, context_CFE_EVS_SendEvent[0].Spec, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH);
 
-    UtAssert_True(strCmpResult == 0, "Event string matched expected result, '%s'", context_CFE_EVS_SendEvent.Spec);
+    UtAssert_True(strCmpResult == 0, "Event string matched expected result, '%s'", context_CFE_EVS_SendEvent[0].Spec);
 
     call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
 
@@ -692,7 +648,6 @@ void MD_ProcessJamCmd_Test_NoUpdateTableDwell(void)
 
 void MD_ProcessJamCmd_Test_CantResolveJamAddr(void)
 {
-    MD_CmdJam_t    CmdPacket;
     CFE_SB_MsgId_t TestMsgId;
     int32          strCmpResult;
     char           ExpectedEventString[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
@@ -700,39 +655,33 @@ void MD_ProcessJamCmd_Test_CantResolveJamAddr(void)
     snprintf(ExpectedEventString, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH,
              "Jam Cmd rejected because symbolic address '%%s' couldn't be resolved");
 
-    CFE_EVS_SendEvent_context_t context_CFE_EVS_SendEvent;
-    UT_SetHookFunction(UT_KEY(CFE_EVS_SendEvent), UT_Utils_stub_reporter_hook, &context_CFE_EVS_SendEvent);
-
-    TestMsgId = MD_CMD_MID;
+    TestMsgId = CFE_SB_ValueToMsgId(MD_CMD_MID);
     UT_SetDataBuffer(UT_KEY(CFE_MSG_GetMsgId), &TestMsgId, sizeof(TestMsgId), false);
 
-    CmdPacket.TableId     = 1;
-    CmdPacket.EntryId     = 2;
-    CmdPacket.FieldLength = 1;
+    UT_CmdBuf.CmdJam.TableId     = 1;
+    UT_CmdBuf.CmdJam.EntryId     = 2;
+    UT_CmdBuf.CmdJam.FieldLength = 1;
 
-    strncpy(CmdPacket.DwellAddress.SymName, "address", 10);
+    strncpy(UT_CmdBuf.CmdJam.DwellAddress.SymName, "address", 10);
 
-    /* Set to satisfy condition "CFS_ResolveSymAddr(&Jam->DwellAddress,&ResolvedAddr) == FALSE" */
-    UT_SetDeferredRetcode(UT_KEY(CFS_ResolveSymAddr), 1, false);
+    /* Set to satisfy condition "MD_ResolveSymAddr(&Jam->DwellAddress,&ResolvedAddr) == FALSE" */
+    UT_SetDeferredRetcode(UT_KEY(MD_ResolveSymAddr), 1, false);
 
     UT_SetDeferredRetcode(UT_KEY(MD_ValidTableId), 1, true);
     UT_SetDeferredRetcode(UT_KEY(MD_ValidEntryId), 1, true);
 
     /* Execute the function being tested */
-    MD_ProcessJamCmd((CFE_SB_Buffer_t *)(&CmdPacket));
+    MD_ProcessJamCmd(&UT_CmdBuf.Buf);
 
     /* Verify results */
-    UtAssert_True(CmdPacket.DwellAddress.SymName[OS_MAX_SYM_LEN - 1] == '\0',
-                  "CmdPacket.DwellAddress.SymName[OS_MAX_SYM_LEN - 1] == ''");
-
     UtAssert_True(MD_AppData.ErrCounter == 1, "MD_AppData.ErrCounter == 1");
 
-    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent.EventID, MD_CANT_RESOLVE_JAM_ADDR_ERR_EID);
-    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent.EventType, CFE_EVS_EventType_ERROR);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, MD_CANT_RESOLVE_JAM_ADDR_ERR_EID);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_ERROR);
 
-    strCmpResult = strncmp(ExpectedEventString, context_CFE_EVS_SendEvent.Spec, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH);
+    strCmpResult = strncmp(ExpectedEventString, context_CFE_EVS_SendEvent[0].Spec, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH);
 
-    UtAssert_True(strCmpResult == 0, "Event string matched expected result, '%s'", context_CFE_EVS_SendEvent.Spec);
+    UtAssert_True(strCmpResult == 0, "Event string matched expected result, '%s'", context_CFE_EVS_SendEvent[0].Spec);
 
     call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
 
@@ -743,7 +692,6 @@ void MD_ProcessJamCmd_Test_CantResolveJamAddr(void)
 
 void MD_ProcessJamCmd_Test_InvalidLenArg(void)
 {
-    MD_CmdJam_t    CmdPacket;
     CFE_SB_MsgId_t TestMsgId;
     int32          strCmpResult;
     char           ExpectedEventString[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
@@ -751,38 +699,32 @@ void MD_ProcessJamCmd_Test_InvalidLenArg(void)
     snprintf(ExpectedEventString, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH,
              "Jam Cmd rejected due to invalid Field Length arg = %%d (Expect 0,1,2,or 4)");
 
-    CFE_EVS_SendEvent_context_t context_CFE_EVS_SendEvent;
-    UT_SetHookFunction(UT_KEY(CFE_EVS_SendEvent), UT_Utils_stub_reporter_hook, &context_CFE_EVS_SendEvent);
-
-    TestMsgId = MD_CMD_MID;
+    TestMsgId = CFE_SB_ValueToMsgId(MD_CMD_MID);
     UT_SetDataBuffer(UT_KEY(CFE_MSG_GetMsgId), &TestMsgId, sizeof(TestMsgId), false);
 
-    CmdPacket.TableId     = 1;
-    CmdPacket.EntryId     = 2;
-    CmdPacket.FieldLength = 1;
+    UT_CmdBuf.CmdJam.TableId     = 1;
+    UT_CmdBuf.CmdJam.EntryId     = 2;
+    UT_CmdBuf.CmdJam.FieldLength = 1;
 
-    /* Set to satisfy condition "CFS_ResolveSymAddr(&Jam->DwellAddress,&ResolvedAddr) == TRUE" */
-    UT_SetDeferredRetcode(UT_KEY(CFS_ResolveSymAddr), 1, true);
+    /* Set to satisfy condition "MD_ResolveSymAddr(&Jam->DwellAddress,&ResolvedAddr) == TRUE" */
+    UT_SetDeferredRetcode(UT_KEY(MD_ResolveSymAddr), 1, true);
 
     UT_SetDeferredRetcode(UT_KEY(MD_ValidTableId), 1, true);
     UT_SetDeferredRetcode(UT_KEY(MD_ValidEntryId), 1, true);
     UT_SetDeferredRetcode(UT_KEY(MD_ValidFieldLength), 1, false);
 
     /* Execute the function being tested */
-    MD_ProcessJamCmd((CFE_SB_Buffer_t *)(&CmdPacket));
+    MD_ProcessJamCmd(&UT_CmdBuf.Buf);
 
     /* Verify results */
-    UtAssert_True(CmdPacket.DwellAddress.SymName[OS_MAX_SYM_LEN - 1] == '\0',
-                  "CmdPacket.DwellAddress.SymName[OS_MAX_SYM_LEN - 1] == ''");
-
     UtAssert_True(MD_AppData.ErrCounter == 1, "MD_AppData.ErrCounter == 1");
 
-    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent.EventID, MD_INVALID_LEN_ARG_ERR_EID);
-    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent.EventType, CFE_EVS_EventType_ERROR);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, MD_INVALID_LEN_ARG_ERR_EID);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_ERROR);
 
-    strCmpResult = strncmp(ExpectedEventString, context_CFE_EVS_SendEvent.Spec, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH);
+    strCmpResult = strncmp(ExpectedEventString, context_CFE_EVS_SendEvent[0].Spec, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH);
 
-    UtAssert_True(strCmpResult == 0, "Event string matched expected result, '%s'", context_CFE_EVS_SendEvent.Spec);
+    UtAssert_True(strCmpResult == 0, "Event string matched expected result, '%s'", context_CFE_EVS_SendEvent[0].Spec);
 
     call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
 
@@ -793,7 +735,6 @@ void MD_ProcessJamCmd_Test_InvalidLenArg(void)
 
 void MD_ProcessJamCmd_Test_InvalidJamAddr(void)
 {
-    MD_CmdJam_t    CmdPacket;
     CFE_SB_MsgId_t TestMsgId;
     int32          strCmpResult;
     char           ExpectedEventString[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
@@ -801,18 +742,15 @@ void MD_ProcessJamCmd_Test_InvalidJamAddr(void)
     snprintf(ExpectedEventString, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH,
              "Jam Cmd rejected because address 0x%%08X is not in a valid range");
 
-    CFE_EVS_SendEvent_context_t context_CFE_EVS_SendEvent;
-    UT_SetHookFunction(UT_KEY(CFE_EVS_SendEvent), UT_Utils_stub_reporter_hook, &context_CFE_EVS_SendEvent);
-
-    TestMsgId = MD_CMD_MID;
+    TestMsgId = CFE_SB_ValueToMsgId(MD_CMD_MID);
     UT_SetDataBuffer(UT_KEY(CFE_MSG_GetMsgId), &TestMsgId, sizeof(TestMsgId), false);
 
-    CmdPacket.TableId     = 1;
-    CmdPacket.EntryId     = 2;
-    CmdPacket.FieldLength = 1;
+    UT_CmdBuf.CmdJam.TableId     = 1;
+    UT_CmdBuf.CmdJam.EntryId     = 2;
+    UT_CmdBuf.CmdJam.FieldLength = 1;
 
-    /* Set to satisfy condition "CFS_ResolveSymAddr(&Jam->DwellAddress,&ResolvedAddr) == TRUE" */
-    UT_SetDeferredRetcode(UT_KEY(CFS_ResolveSymAddr), 1, true);
+    /* Set to satisfy condition "MD_ResolveSymAddr(&Jam->DwellAddress,&ResolvedAddr) == TRUE" */
+    UT_SetDeferredRetcode(UT_KEY(MD_ResolveSymAddr), 1, true);
 
     UT_SetDeferredRetcode(UT_KEY(MD_ValidTableId), 1, true);
     UT_SetDeferredRetcode(UT_KEY(MD_ValidEntryId), 1, true);
@@ -820,20 +758,17 @@ void MD_ProcessJamCmd_Test_InvalidJamAddr(void)
     UT_SetDeferredRetcode(UT_KEY(MD_ValidAddrRange), 1, false);
 
     /* Execute the function being tested */
-    MD_ProcessJamCmd((CFE_SB_Buffer_t *)(&CmdPacket));
+    MD_ProcessJamCmd(&UT_CmdBuf.Buf);
 
     /* Verify results */
-    UtAssert_True(CmdPacket.DwellAddress.SymName[OS_MAX_SYM_LEN - 1] == '\0',
-                  "CmdPacket.DwellAddress.SymName[OS_MAX_SYM_LEN - 1] == ''");
-
     UtAssert_True(MD_AppData.ErrCounter == 1, "MD_AppData.ErrCounter == 1");
 
-    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent.EventID, MD_INVALID_JAM_ADDR_ERR_EID);
-    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent.EventType, CFE_EVS_EventType_ERROR);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, MD_INVALID_JAM_ADDR_ERR_EID);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_ERROR);
 
-    strCmpResult = strncmp(ExpectedEventString, context_CFE_EVS_SendEvent.Spec, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH);
+    strCmpResult = strncmp(ExpectedEventString, context_CFE_EVS_SendEvent[0].Spec, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH);
 
-    UtAssert_True(strCmpResult == 0, "Event string matched expected result, '%s'", context_CFE_EVS_SendEvent.Spec);
+    UtAssert_True(strCmpResult == 0, "Event string matched expected result, '%s'", context_CFE_EVS_SendEvent[0].Spec);
 
     call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
 
@@ -845,7 +780,6 @@ void MD_ProcessJamCmd_Test_InvalidJamAddr(void)
 #if MD_ENFORCE_DWORD_ALIGN == 0
 void MD_ProcessJamCmd_Test_JamAddrNot16BitFieldLength4(void)
 {
-    MD_CmdJam_t    CmdPacket;
     CFE_SB_MsgId_t TestMsgId;
     int32          strCmpResult;
     char           ExpectedEventString[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
@@ -853,19 +787,16 @@ void MD_ProcessJamCmd_Test_JamAddrNot16BitFieldLength4(void)
     snprintf(ExpectedEventString, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH,
              "Jam Cmd rejected because address 0x%%08X is not 16-bit aligned");
 
-    CFE_EVS_SendEvent_context_t context_CFE_EVS_SendEvent;
-    UT_SetHookFunction(UT_KEY(CFE_EVS_SendEvent), UT_Utils_stub_reporter_hook, &context_CFE_EVS_SendEvent);
-
-    TestMsgId = MD_CMD_MID;
+    TestMsgId = CFE_SB_ValueToMsgId(MD_CMD_MID);
     UT_SetDataBuffer(UT_KEY(CFE_MSG_GetMsgId), &TestMsgId, sizeof(TestMsgId), false);
 
-    CmdPacket.TableId             = 1;
-    CmdPacket.EntryId             = 2;
-    CmdPacket.FieldLength         = 4;
-    CmdPacket.DwellAddress.Offset = 1;
+    UT_CmdBuf.CmdJam.TableId             = 1;
+    UT_CmdBuf.CmdJam.EntryId             = 2;
+    UT_CmdBuf.CmdJam.FieldLength         = 4;
+    UT_CmdBuf.CmdJam.DwellAddress.Offset = 1;
 
-    /* Set to satisfy condition "CFS_ResolveSymAddr(&Jam->DwellAddress,&ResolvedAddr) == TRUE" */
-    UT_SetDeferredRetcode(UT_KEY(CFS_ResolveSymAddr), 1, true);
+    /* Set to satisfy condition "MD_ResolveSymAddr(&Jam->DwellAddress,&ResolvedAddr) == TRUE" */
+    UT_SetDeferredRetcode(UT_KEY(MD_ResolveSymAddr), 1, true);
 
     UT_SetDeferredRetcode(UT_KEY(MD_ValidTableId), 1, true);
     UT_SetDeferredRetcode(UT_KEY(MD_ValidEntryId), 1, true);
@@ -873,20 +804,17 @@ void MD_ProcessJamCmd_Test_JamAddrNot16BitFieldLength4(void)
     UT_SetDeferredRetcode(UT_KEY(MD_ValidAddrRange), 1, true);
 
     /* Execute the function being tested */
-    MD_ProcessJamCmd((CFE_SB_Buffer_t *)(&CmdPacket));
+    MD_ProcessJamCmd(&UT_CmdBuf.Buf);
 
     /* Verify results */
-    UtAssert_True(CmdPacket.DwellAddress.SymName[OS_MAX_SYM_LEN - 1] == '\0',
-                  "CmdPacket.DwellAddress.SymName[OS_MAX_SYM_LEN - 1] == ''");
-
     UtAssert_True(MD_AppData.ErrCounter == 1, "MD_AppData.ErrCounter == 1");
 
-    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent.EventID, MD_JAM_ADDR_NOT_16BIT_ERR_EID);
-    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent.EventType, CFE_EVS_EventType_ERROR);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, MD_JAM_ADDR_NOT_16BIT_ERR_EID);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_ERROR);
 
-    strCmpResult = strncmp(ExpectedEventString, context_CFE_EVS_SendEvent.Spec, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH);
+    strCmpResult = strncmp(ExpectedEventString, context_CFE_EVS_SendEvent[0].Spec, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH);
 
-    UtAssert_True(strCmpResult == 0, "Event string matched expected result, '%s'", context_CFE_EVS_SendEvent.Spec);
+    UtAssert_True(strCmpResult == 0, "Event string matched expected result, '%s'", context_CFE_EVS_SendEvent[0].Spec);
 
     call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
 
@@ -899,7 +827,6 @@ void MD_ProcessJamCmd_Test_JamAddrNot16BitFieldLength4(void)
 #if MD_ENFORCE_DWORD_ALIGN == 1
 void MD_ProcessJamCmd_Test_JamAddrNot32Bit(void)
 {
-    MD_CmdJam_t    CmdPacket;
     CFE_SB_MsgId_t TestMsgId;
     int32          strCmpResult;
     char           ExpectedEventString[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
@@ -907,19 +834,16 @@ void MD_ProcessJamCmd_Test_JamAddrNot32Bit(void)
     snprintf(ExpectedEventString, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH,
              "Jam Cmd rejected because address 0x%%08X is not 32-bit aligned");
 
-    CFE_EVS_SendEvent_context_t context_CFE_EVS_SendEvent;
-    UT_SetHookFunction(UT_KEY(CFE_EVS_SendEvent), UT_Utils_stub_reporter_hook, &context_CFE_EVS_SendEvent);
-
-    TestMsgId = MD_CMD_MID;
+    TestMsgId = CFE_SB_ValueToMsgId(MD_CMD_MID);
     UT_SetDataBuffer(UT_KEY(CFE_MSG_GetMsgId), &TestMsgId, sizeof(TestMsgId), false);
 
-    CmdPacket.TableId             = 1;
-    CmdPacket.EntryId             = 2;
-    CmdPacket.FieldLength         = 4;
-    CmdPacket.DwellAddress.Offset = 1;
+    UT_CmdBuf.CmdJam.TableId             = 1;
+    UT_CmdBuf.CmdJam.EntryId             = 2;
+    UT_CmdBuf.CmdJam.FieldLength         = 4;
+    UT_CmdBuf.CmdJam.DwellAddress.Offset = 1;
 
-    /* Set to satisfy condition "CFS_ResolveSymAddr(&Jam->DwellAddress,&ResolvedAddr) == TRUE" */
-    UT_SetDeferredRetcode(UT_KEY(CFS_ResolveSymAddr), 1, true);
+    /* Set to satisfy condition "MD_ResolveSymAddr(&Jam->DwellAddress,&ResolvedAddr) == TRUE" */
+    UT_SetDeferredRetcode(UT_KEY(MD_ResolveSymAddr), 1, true);
 
     UT_SetDeferredRetcode(UT_KEY(MD_ValidTableId), 1, true);
     UT_SetDeferredRetcode(UT_KEY(MD_ValidEntryId), 1, true);
@@ -927,20 +851,17 @@ void MD_ProcessJamCmd_Test_JamAddrNot32Bit(void)
     UT_SetDeferredRetcode(UT_KEY(MD_ValidAddrRange), 1, true);
 
     /* Execute the function being tested */
-    MD_ProcessJamCmd((CFE_SB_Buffer_t *)(&CmdPacket));
+    MD_ProcessJamCmd(&UT_CmdBuf.Buf);
 
     /* Verify results */
-    UtAssert_True(CmdPacket.DwellAddress.SymName[OS_MAX_SYM_LEN - 1] == '\0',
-                  "CmdPacket.DwellAddress.SymName[OS_MAX_SYM_LEN - 1] == ''");
-
     UtAssert_True(MD_AppData.ErrCounter == 1, "MD_AppData.ErrCounter == 1");
 
-    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent.EventID, MD_JAM_ADDR_NOT_32BIT_ERR_EID);
-    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent.EventType, CFE_EVS_EventType_ERROR);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, MD_JAM_ADDR_NOT_32BIT_ERR_EID);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_ERROR);
 
-    strCmpResult = strncmp(ExpectedEventString, context_CFE_EVS_SendEvent.Spec, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH);
+    strCmpResult = strncmp(ExpectedEventString, context_CFE_EVS_SendEvent[0].Spec, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH);
 
-    UtAssert_True(strCmpResult == 0, "Event string matched expected result, '%s'", context_CFE_EVS_SendEvent.Spec);
+    UtAssert_True(strCmpResult == 0, "Event string matched expected result, '%s'", context_CFE_EVS_SendEvent[0].Spec);
 
     call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
 
@@ -952,7 +873,6 @@ void MD_ProcessJamCmd_Test_JamAddrNot32Bit(void)
 
 void MD_ProcessJamCmd_Test_JamAddrNot16BitFieldLength2(void)
 {
-    MD_CmdJam_t    CmdPacket;
     CFE_SB_MsgId_t TestMsgId;
     int32          strCmpResult;
     char           ExpectedEventString[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
@@ -960,19 +880,16 @@ void MD_ProcessJamCmd_Test_JamAddrNot16BitFieldLength2(void)
     snprintf(ExpectedEventString, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH,
              "Jam Cmd rejected because address 0x%%08X is not 16-bit aligned");
 
-    CFE_EVS_SendEvent_context_t context_CFE_EVS_SendEvent;
-    UT_SetHookFunction(UT_KEY(CFE_EVS_SendEvent), UT_Utils_stub_reporter_hook, &context_CFE_EVS_SendEvent);
-
-    TestMsgId = MD_CMD_MID;
+    TestMsgId = CFE_SB_ValueToMsgId(MD_CMD_MID);
     UT_SetDataBuffer(UT_KEY(CFE_MSG_GetMsgId), &TestMsgId, sizeof(TestMsgId), false);
 
-    CmdPacket.TableId             = 1;
-    CmdPacket.EntryId             = 2;
-    CmdPacket.FieldLength         = 2;
-    CmdPacket.DwellAddress.Offset = 1;
+    UT_CmdBuf.CmdJam.TableId             = 1;
+    UT_CmdBuf.CmdJam.EntryId             = 2;
+    UT_CmdBuf.CmdJam.FieldLength         = 2;
+    UT_CmdBuf.CmdJam.DwellAddress.Offset = 1;
 
-    /* Set to satisfy condition "CFS_ResolveSymAddr(&Jam->DwellAddress,&ResolvedAddr) == TRUE" */
-    UT_SetDeferredRetcode(UT_KEY(CFS_ResolveSymAddr), 1, true);
+    /* Set to satisfy condition "MD_ResolveSymAddr(&Jam->DwellAddress,&ResolvedAddr) == TRUE" */
+    UT_SetDeferredRetcode(UT_KEY(MD_ResolveSymAddr), 1, true);
 
     UT_SetDeferredRetcode(UT_KEY(MD_ValidTableId), 1, true);
     UT_SetDeferredRetcode(UT_KEY(MD_ValidEntryId), 1, true);
@@ -980,20 +897,17 @@ void MD_ProcessJamCmd_Test_JamAddrNot16BitFieldLength2(void)
     UT_SetDeferredRetcode(UT_KEY(MD_ValidAddrRange), 1, true);
 
     /* Execute the function being tested */
-    MD_ProcessJamCmd((CFE_SB_Buffer_t *)(&CmdPacket));
+    MD_ProcessJamCmd(&UT_CmdBuf.Buf);
 
     /* Verify results */
-    UtAssert_True(CmdPacket.DwellAddress.SymName[OS_MAX_SYM_LEN - 1] == '\0',
-                  "CmdPacket.DwellAddress.SymName[OS_MAX_SYM_LEN - 1] == ''");
-
     UtAssert_True(MD_AppData.ErrCounter == 1, "MD_AppData.ErrCounter == 1");
 
-    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent.EventID, MD_JAM_ADDR_NOT_16BIT_ERR_EID);
-    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent.EventType, CFE_EVS_EventType_ERROR);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, MD_JAM_ADDR_NOT_16BIT_ERR_EID);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_ERROR);
 
-    strCmpResult = strncmp(ExpectedEventString, context_CFE_EVS_SendEvent.Spec, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH);
+    strCmpResult = strncmp(ExpectedEventString, context_CFE_EVS_SendEvent[0].Spec, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH);
 
-    UtAssert_True(strCmpResult == 0, "Event string matched expected result, '%s'", context_CFE_EVS_SendEvent.Spec);
+    UtAssert_True(strCmpResult == 0, "Event string matched expected result, '%s'", context_CFE_EVS_SendEvent[0].Spec);
 
     call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
 
@@ -1004,7 +918,6 @@ void MD_ProcessJamCmd_Test_JamAddrNot16BitFieldLength2(void)
 
 void MD_ProcessJamCmd_Test_JamAddrNot16BitNot32Aligned(void)
 {
-    MD_CmdJam_t    CmdPacket;
     CFE_SB_MsgId_t TestMsgId;
     int32          strCmpResult;
     char           ExpectedEventString[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
@@ -1012,41 +925,35 @@ void MD_ProcessJamCmd_Test_JamAddrNot16BitNot32Aligned(void)
     snprintf(ExpectedEventString, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH,
              "Jam Cmd rejected because address 0x%%08X is not 32-bit aligned");
 
-    CFE_EVS_SendEvent_context_t context_CFE_EVS_SendEvent;
-    UT_SetHookFunction(UT_KEY(CFE_EVS_SendEvent), UT_Utils_stub_reporter_hook, &context_CFE_EVS_SendEvent);
-
-    TestMsgId = MD_CMD_MID;
+    TestMsgId = CFE_SB_ValueToMsgId(MD_CMD_MID);
     UT_SetDataBuffer(UT_KEY(CFE_MSG_GetMsgId), &TestMsgId, sizeof(TestMsgId), false);
 
-    CmdPacket.TableId             = 1;
-    CmdPacket.EntryId             = 2;
-    CmdPacket.FieldLength         = 4;
-    CmdPacket.DwellAddress.Offset = 1;
+    UT_CmdBuf.CmdJam.TableId             = 1;
+    UT_CmdBuf.CmdJam.EntryId             = 2;
+    UT_CmdBuf.CmdJam.FieldLength         = 4;
+    UT_CmdBuf.CmdJam.DwellAddress.Offset = 1;
 
-    /* Set to satisfy condition "CFS_ResolveSymAddr(&Jam->DwellAddress,&ResolvedAddr) == TRUE" */
-    UT_SetDeferredRetcode(UT_KEY(CFS_ResolveSymAddr), 1, true);
+    /* Set to satisfy condition "MD_ResolveSymAddr(&Jam->DwellAddress,&ResolvedAddr) == TRUE" */
+    UT_SetDeferredRetcode(UT_KEY(MD_ResolveSymAddr), 1, true);
 
     UT_SetDeferredRetcode(UT_KEY(MD_ValidTableId), 1, true);
     UT_SetDeferredRetcode(UT_KEY(MD_ValidEntryId), 1, true);
     UT_SetDeferredRetcode(UT_KEY(MD_ValidFieldLength), 1, true);
     UT_SetDeferredRetcode(UT_KEY(MD_ValidAddrRange), 1, true);
-    UT_SetDeferredRetcode(UT_KEY(CFS_Verify32Aligned), 1, false);
+    UT_SetDeferredRetcode(UT_KEY(MD_Verify32Aligned), 1, false);
 
     /* Execute the function being tested */
-    MD_ProcessJamCmd((CFE_SB_Buffer_t *)(&CmdPacket));
+    MD_ProcessJamCmd(&UT_CmdBuf.Buf);
 
     /* Verify results */
-    UtAssert_True(CmdPacket.DwellAddress.SymName[OS_MAX_SYM_LEN - 1] == '\0',
-                  "CmdPacket.DwellAddress.SymName[OS_MAX_SYM_LEN - 1] == ''");
-
     UtAssert_True(MD_AppData.ErrCounter == 1, "MD_AppData.ErrCounter == 1");
 
-    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent.EventID, MD_JAM_ADDR_NOT_32BIT_ERR_EID);
-    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent.EventType, CFE_EVS_EventType_ERROR);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, MD_JAM_ADDR_NOT_32BIT_ERR_EID);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_ERROR);
 
-    strCmpResult = strncmp(ExpectedEventString, context_CFE_EVS_SendEvent.Spec, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH);
+    strCmpResult = strncmp(ExpectedEventString, context_CFE_EVS_SendEvent[0].Spec, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH);
 
-    UtAssert_True(strCmpResult == 0, "Event string matched expected result, '%s'", context_CFE_EVS_SendEvent.Spec);
+    UtAssert_True(strCmpResult == 0, "Event string matched expected result, '%s'", context_CFE_EVS_SendEvent[0].Spec);
 
     call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
 
@@ -1057,48 +964,41 @@ void MD_ProcessJamCmd_Test_JamAddrNot16BitNot32Aligned(void)
 
 void MD_ProcessJamCmd_Test_JamFieldLength4Addr32Aligned(void)
 {
-    MD_CmdJam_t    CmdPacket;
     CFE_SB_MsgId_t TestMsgId;
     int32          strCmpResult;
     char           ExpectedEventString[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
 
     snprintf(ExpectedEventString, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH, "Successful Jam to Dwell Tbl#%%d Entry #%%d");
 
-    CFE_EVS_SendEvent_context_t context_CFE_EVS_SendEvent;
-    UT_SetHookFunction(UT_KEY(CFE_EVS_SendEvent), UT_Utils_stub_reporter_hook, &context_CFE_EVS_SendEvent);
-
-    TestMsgId = MD_CMD_MID;
+    TestMsgId = CFE_SB_ValueToMsgId(MD_CMD_MID);
     UT_SetDataBuffer(UT_KEY(CFE_MSG_GetMsgId), &TestMsgId, sizeof(TestMsgId), false);
 
-    CmdPacket.TableId             = 1;
-    CmdPacket.EntryId             = 2;
-    CmdPacket.FieldLength         = 4;
-    CmdPacket.DwellAddress.Offset = 1;
+    UT_CmdBuf.CmdJam.TableId             = 1;
+    UT_CmdBuf.CmdJam.EntryId             = 2;
+    UT_CmdBuf.CmdJam.FieldLength         = 4;
+    UT_CmdBuf.CmdJam.DwellAddress.Offset = 1;
 
-    /* Set to satisfy condition "CFS_ResolveSymAddr(&Jam->DwellAddress,&ResolvedAddr) == TRUE" */
-    UT_SetDeferredRetcode(UT_KEY(CFS_ResolveSymAddr), 1, true);
+    /* Set to satisfy condition "MD_ResolveSymAddr(&Jam->DwellAddress,&ResolvedAddr) == TRUE" */
+    UT_SetDeferredRetcode(UT_KEY(MD_ResolveSymAddr), 1, true);
 
     UT_SetDeferredRetcode(UT_KEY(MD_ValidTableId), 1, true);
     UT_SetDeferredRetcode(UT_KEY(MD_ValidEntryId), 1, true);
     UT_SetDeferredRetcode(UT_KEY(MD_ValidFieldLength), 1, true);
     UT_SetDeferredRetcode(UT_KEY(MD_ValidAddrRange), 1, true);
-    UT_SetDeferredRetcode(UT_KEY(CFS_Verify32Aligned), 1, true);
+    UT_SetDeferredRetcode(UT_KEY(MD_Verify32Aligned), 1, true);
 
     /* Execute the function being tested */
-    MD_ProcessJamCmd((CFE_SB_Buffer_t *)(&CmdPacket));
+    MD_ProcessJamCmd(&UT_CmdBuf.Buf);
 
     /* Verify results */
-    UtAssert_True(CmdPacket.DwellAddress.SymName[OS_MAX_SYM_LEN - 1] == '\0',
-                  "CmdPacket.DwellAddress.SymName[OS_MAX_SYM_LEN - 1] == ''");
-
     UtAssert_True(MD_AppData.CmdCounter == 1, "MD_AppData.CmdCounter == 1");
 
-    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent.EventID, MD_JAM_DWELL_INF_EID);
-    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent.EventType, CFE_EVS_EventType_INFORMATION);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, MD_JAM_DWELL_INF_EID);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_INFORMATION);
 
-    strCmpResult = strncmp(ExpectedEventString, context_CFE_EVS_SendEvent.Spec, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH);
+    strCmpResult = strncmp(ExpectedEventString, context_CFE_EVS_SendEvent[0].Spec, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH);
 
-    UtAssert_True(strCmpResult == 0, "Event string matched expected result, '%s'", context_CFE_EVS_SendEvent.Spec);
+    UtAssert_True(strCmpResult == 0, "Event string matched expected result, '%s'", context_CFE_EVS_SendEvent[0].Spec);
 
     call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
 
@@ -1109,7 +1009,6 @@ void MD_ProcessJamCmd_Test_JamFieldLength4Addr32Aligned(void)
 
 void MD_ProcessJamCmd_Test_SuccessNonNullZeroRate(void)
 {
-    MD_CmdJam_t    CmdPacket;
     CFE_SB_MsgId_t TestMsgId;
     int32          strCmpResult;
     char           ExpectedEventString[2][CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
@@ -1119,21 +1018,18 @@ void MD_ProcessJamCmd_Test_SuccessNonNullZeroRate(void)
     snprintf(ExpectedEventString[1], CFE_MISSION_EVS_MAX_MESSAGE_LENGTH,
              "Dwell Table %%d is enabled with a delay of zero so no processing will occur");
 
-    CFE_EVS_SendEvent_context_t context_CFE_EVS_SendEvent[2];
-    UT_SetHookFunction(UT_KEY(CFE_EVS_SendEvent), UT_Utils_stub_reporter_hook, &context_CFE_EVS_SendEvent);
-
-    TestMsgId = MD_CMD_MID;
+    TestMsgId = CFE_SB_ValueToMsgId(MD_CMD_MID);
     UT_SetDataBuffer(UT_KEY(CFE_MSG_GetMsgId), &TestMsgId, sizeof(TestMsgId), false);
 
-    CmdPacket.TableId     = 1;
-    CmdPacket.EntryId     = 2;
-    CmdPacket.FieldLength = 2;
-    CmdPacket.DwellDelay  = 3;
+    UT_CmdBuf.CmdJam.TableId     = 1;
+    UT_CmdBuf.CmdJam.EntryId     = 2;
+    UT_CmdBuf.CmdJam.FieldLength = 2;
+    UT_CmdBuf.CmdJam.DwellDelay  = 3;
 
     MD_AppData.MD_DwellTables[0].Entry[1].Delay = 1;
 
-    /* Set to satisfy condition "CFS_ResolveSymAddr(&Jam->DwellAddress,&ResolvedAddr) == TRUE" */
-    UT_SetDeferredRetcode(UT_KEY(CFS_ResolveSymAddr), 1, true);
+    /* Set to satisfy condition "MD_ResolveSymAddr(&Jam->DwellAddress,&ResolvedAddr) == TRUE" */
+    UT_SetDeferredRetcode(UT_KEY(MD_ResolveSymAddr), 1, true);
 
     UT_SetHookFunction(UT_KEY(MD_UpdateDwellControlInfo), &MD_CMDS_TEST_MD_UpdateDwellControlInfoHook1, NULL);
 
@@ -1141,15 +1037,12 @@ void MD_ProcessJamCmd_Test_SuccessNonNullZeroRate(void)
     UT_SetDeferredRetcode(UT_KEY(MD_ValidEntryId), 1, true);
     UT_SetDeferredRetcode(UT_KEY(MD_ValidFieldLength), 1, true);
     UT_SetDeferredRetcode(UT_KEY(MD_ValidAddrRange), 1, true);
-    UT_SetDeferredRetcode(UT_KEY(CFS_Verify16Aligned), 1, true);
+    UT_SetDeferredRetcode(UT_KEY(MD_Verify16Aligned), 1, true);
 
     /* Execute the function being tested */
-    MD_ProcessJamCmd((CFE_SB_Buffer_t *)(&CmdPacket));
+    MD_ProcessJamCmd(&UT_CmdBuf.Buf);
 
     /* Verify results */
-    UtAssert_True(CmdPacket.DwellAddress.SymName[OS_MAX_SYM_LEN - 1] == '\0',
-                  "CmdPacket.DwellAddress.SymName[OS_MAX_SYM_LEN - 1] == ''");
-
     UtAssert_True(MD_AppData.MD_DwellTables[0].Entry[1].ResolvedAddress == 0,
                   "MD_AppData.MD_DwellTables[0].Entry[1].ResolvedAddress == 0");
     UtAssert_True(MD_AppData.MD_DwellTables[0].Entry[1].Length == 2,
@@ -1184,42 +1077,35 @@ void MD_ProcessJamCmd_Test_SuccessNonNullZeroRate(void)
 
 void MD_ProcessJamCmd_Test_SuccessZeroRateStreamDisabled(void)
 {
-    MD_CmdJam_t    CmdPacket;
     CFE_SB_MsgId_t TestMsgId;
     int32          strCmpResult;
     char           ExpectedEventString[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
 
     snprintf(ExpectedEventString, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH, "Successful Jam to Dwell Tbl#%%d Entry #%%d");
 
-    CFE_EVS_SendEvent_context_t context_CFE_EVS_SendEvent;
-    UT_SetHookFunction(UT_KEY(CFE_EVS_SendEvent), UT_Utils_stub_reporter_hook, &context_CFE_EVS_SendEvent);
-
-    TestMsgId = MD_CMD_MID;
+    TestMsgId = CFE_SB_ValueToMsgId(MD_CMD_MID);
     UT_SetDataBuffer(UT_KEY(CFE_MSG_GetMsgId), &TestMsgId, sizeof(TestMsgId), false);
 
-    CmdPacket.TableId     = 1;
-    CmdPacket.EntryId     = 2;
-    CmdPacket.FieldLength = 2;
-    CmdPacket.DwellDelay  = 3;
+    UT_CmdBuf.CmdJam.TableId     = 1;
+    UT_CmdBuf.CmdJam.EntryId     = 2;
+    UT_CmdBuf.CmdJam.FieldLength = 2;
+    UT_CmdBuf.CmdJam.DwellDelay  = 3;
 
     MD_AppData.MD_DwellTables[0].Entry[1].Delay = 1;
 
-    /* Set to satisfy condition "CFS_ResolveSymAddr(&Jam->DwellAddress,&ResolvedAddr) == TRUE" */
-    UT_SetDeferredRetcode(UT_KEY(CFS_ResolveSymAddr), 1, true);
+    /* Set to satisfy condition "MD_ResolveSymAddr(&Jam->DwellAddress,&ResolvedAddr) == TRUE" */
+    UT_SetDeferredRetcode(UT_KEY(MD_ResolveSymAddr), 1, true);
 
     UT_SetDeferredRetcode(UT_KEY(MD_ValidTableId), 1, true);
     UT_SetDeferredRetcode(UT_KEY(MD_ValidEntryId), 1, true);
     UT_SetDeferredRetcode(UT_KEY(MD_ValidFieldLength), 1, true);
     UT_SetDeferredRetcode(UT_KEY(MD_ValidAddrRange), 1, true);
-    UT_SetDeferredRetcode(UT_KEY(CFS_Verify16Aligned), 1, true);
+    UT_SetDeferredRetcode(UT_KEY(MD_Verify16Aligned), 1, true);
 
     /* Execute the function being tested */
-    MD_ProcessJamCmd((CFE_SB_Buffer_t *)(&CmdPacket));
+    MD_ProcessJamCmd(&UT_CmdBuf.Buf);
 
     /* Verify results */
-    UtAssert_True(CmdPacket.DwellAddress.SymName[OS_MAX_SYM_LEN - 1] == '\0',
-                  "CmdPacket.DwellAddress.SymName[OS_MAX_SYM_LEN - 1] == ''");
-
     UtAssert_True(MD_AppData.MD_DwellTables[0].Entry[1].ResolvedAddress == 0,
                   "MD_AppData.MD_DwellTables[0].Entry[1].ResolvedAddress == 0");
     UtAssert_True(MD_AppData.MD_DwellTables[0].Entry[1].Length == 2,
@@ -1229,12 +1115,12 @@ void MD_ProcessJamCmd_Test_SuccessZeroRateStreamDisabled(void)
 
     UtAssert_True(MD_AppData.CmdCounter == 1, "MD_AppData.CmdCounter == 1");
 
-    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent.EventID, MD_JAM_DWELL_INF_EID);
-    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent.EventType, CFE_EVS_EventType_INFORMATION);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, MD_JAM_DWELL_INF_EID);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_INFORMATION);
 
-    strCmpResult = strncmp(ExpectedEventString, context_CFE_EVS_SendEvent.Spec, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH);
+    strCmpResult = strncmp(ExpectedEventString, context_CFE_EVS_SendEvent[0].Spec, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH);
 
-    UtAssert_True(strCmpResult == 0, "Event string matched expected result, '%s'", context_CFE_EVS_SendEvent.Spec);
+    UtAssert_True(strCmpResult == 0, "Event string matched expected result, '%s'", context_CFE_EVS_SendEvent[0].Spec);
 
     call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
 
@@ -1245,44 +1131,37 @@ void MD_ProcessJamCmd_Test_SuccessZeroRateStreamDisabled(void)
 
 void MD_ProcessJamCmd_Test_SuccessRateNotZero(void)
 {
-    MD_CmdJam_t    CmdPacket;
     CFE_SB_MsgId_t TestMsgId;
     int32          strCmpResult;
     char           ExpectedEventString[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
 
     snprintf(ExpectedEventString, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH, "Successful Jam to Dwell Tbl#%%d Entry #%%d");
 
-    CFE_EVS_SendEvent_context_t context_CFE_EVS_SendEvent;
-    UT_SetHookFunction(UT_KEY(CFE_EVS_SendEvent), UT_Utils_stub_reporter_hook, &context_CFE_EVS_SendEvent);
-
-    TestMsgId = MD_CMD_MID;
+    TestMsgId = CFE_SB_ValueToMsgId(MD_CMD_MID);
     UT_SetDataBuffer(UT_KEY(CFE_MSG_GetMsgId), &TestMsgId, sizeof(TestMsgId), false);
 
-    CmdPacket.TableId     = 1;
-    CmdPacket.EntryId     = 2;
-    CmdPacket.FieldLength = 2;
-    CmdPacket.DwellDelay  = 3;
+    UT_CmdBuf.CmdJam.TableId     = 1;
+    UT_CmdBuf.CmdJam.EntryId     = 2;
+    UT_CmdBuf.CmdJam.FieldLength = 2;
+    UT_CmdBuf.CmdJam.DwellDelay  = 3;
 
     MD_AppData.MD_DwellTables[0].Entry[1].Delay = 1;
 
     UT_SetHookFunction(UT_KEY(MD_UpdateDwellControlInfo), &MD_CMDS_TEST_MD_UpdateDwellControlInfoHook2, NULL);
 
-    /* Set to satisfy condition "CFS_ResolveSymAddr(&Jam->DwellAddress,&ResolvedAddr) == TRUE" */
-    UT_SetDeferredRetcode(UT_KEY(CFS_ResolveSymAddr), 1, true);
+    /* Set to satisfy condition "MD_ResolveSymAddr(&Jam->DwellAddress,&ResolvedAddr) == TRUE" */
+    UT_SetDeferredRetcode(UT_KEY(MD_ResolveSymAddr), 1, true);
 
     UT_SetDeferredRetcode(UT_KEY(MD_ValidTableId), 1, true);
     UT_SetDeferredRetcode(UT_KEY(MD_ValidEntryId), 1, true);
     UT_SetDeferredRetcode(UT_KEY(MD_ValidFieldLength), 1, true);
     UT_SetDeferredRetcode(UT_KEY(MD_ValidAddrRange), 1, true);
-    UT_SetDeferredRetcode(UT_KEY(CFS_Verify16Aligned), 1, true);
+    UT_SetDeferredRetcode(UT_KEY(MD_Verify16Aligned), 1, true);
 
     /* Execute the function being tested */
-    MD_ProcessJamCmd((CFE_SB_Buffer_t *)(&CmdPacket));
+    MD_ProcessJamCmd(&UT_CmdBuf.Buf);
 
     /* Verify results */
-    UtAssert_True(CmdPacket.DwellAddress.SymName[OS_MAX_SYM_LEN - 1] == '\0',
-                  "CmdPacket.DwellAddress.SymName[OS_MAX_SYM_LEN - 1] == ''");
-
     UtAssert_True(MD_AppData.MD_DwellTables[0].Entry[1].ResolvedAddress == 0,
                   "MD_AppData.MD_DwellTables[0].Entry[1].ResolvedAddress == 0");
     UtAssert_True(MD_AppData.MD_DwellTables[0].Entry[1].Length == 2,
@@ -1292,12 +1171,12 @@ void MD_ProcessJamCmd_Test_SuccessRateNotZero(void)
 
     UtAssert_True(MD_AppData.CmdCounter == 1, "MD_AppData.CmdCounter == 1");
 
-    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent.EventID, MD_JAM_DWELL_INF_EID);
-    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent.EventType, CFE_EVS_EventType_INFORMATION);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, MD_JAM_DWELL_INF_EID);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_INFORMATION);
 
-    strCmpResult = strncmp(ExpectedEventString, context_CFE_EVS_SendEvent.Spec, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH);
+    strCmpResult = strncmp(ExpectedEventString, context_CFE_EVS_SendEvent[0].Spec, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH);
 
-    UtAssert_True(strCmpResult == 0, "Event string matched expected result, '%s'", context_CFE_EVS_SendEvent.Spec);
+    UtAssert_True(strCmpResult == 0, "Event string matched expected result, '%s'", context_CFE_EVS_SendEvent[0].Spec);
 
     call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
 
@@ -1309,40 +1188,34 @@ void MD_ProcessJamCmd_Test_SuccessRateNotZero(void)
 #if MD_SIGNATURE_OPTION == 1
 void MD_ProcessSignatureCmd_Test_InvalidSignatureLength(void)
 {
-    uint16               i;
-    MD_CmdSetSignature_t CmdPacket;
-    CFE_SB_MsgId_t       TestMsgId;
-    int32                strCmpResult;
-    char                 ExpectedEventString[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
+    uint16         i;
+    CFE_SB_MsgId_t TestMsgId;
+    int32          strCmpResult;
+    char           ExpectedEventString[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
 
     snprintf(ExpectedEventString, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH,
              "Set Signature cmd rejected due to invalid Signature length");
 
-    CFE_EVS_SendEvent_context_t context_CFE_EVS_SendEvent;
-    UT_SetHookFunction(UT_KEY(CFE_EVS_SendEvent), UT_Utils_stub_reporter_hook, &context_CFE_EVS_SendEvent);
-
-    TestMsgId = MD_CMD_MID;
+    TestMsgId = CFE_SB_ValueToMsgId(MD_CMD_MID);
     UT_SetDataBuffer(UT_KEY(CFE_MSG_GetMsgId), &TestMsgId, sizeof(TestMsgId), false);
-
-    // CFE_SB_InitMsg (&CmdPacket, MD_CMD_MID, sizeof(MD_CmdSetSignature_t), true);
 
     for (i = 0; i < MD_SIGNATURE_FIELD_LENGTH; i++)
     {
-        CmdPacket.Signature[i] = 'x';
+        UT_CmdBuf.CmdSetSignature.Signature[i] = 'x';
     }
 
     /* Execute the function being tested */
-    MD_ProcessSignatureCmd((CFE_SB_Buffer_t *)(&CmdPacket));
+    MD_ProcessSignatureCmd(&UT_CmdBuf.Buf);
 
     /* Verify results */
     UtAssert_True(MD_AppData.ErrCounter == 1, "MD_AppData.ErrCounter == 1");
 
-    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent.EventID, MD_INVALID_SIGNATURE_LENGTH_ERR_EID);
-    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent.EventType, CFE_EVS_EventType_ERROR);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, MD_INVALID_SIGNATURE_LENGTH_ERR_EID);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_ERROR);
 
-    strCmpResult = strncmp(ExpectedEventString, context_CFE_EVS_SendEvent.Spec, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH);
+    strCmpResult = strncmp(ExpectedEventString, context_CFE_EVS_SendEvent[0].Spec, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH);
 
-    UtAssert_True(strCmpResult == 0, "Event string matched expected result, '%s'", context_CFE_EVS_SendEvent.Spec);
+    UtAssert_True(strCmpResult == 0, "Event string matched expected result, '%s'", context_CFE_EVS_SendEvent[0].Spec);
 
     call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
 
@@ -1355,36 +1228,30 @@ void MD_ProcessSignatureCmd_Test_InvalidSignatureLength(void)
 #if MD_SIGNATURE_OPTION == 1
 void MD_ProcessSignatureCmd_Test_InvalidSignatureTable(void)
 {
-    MD_CmdSetSignature_t CmdPacket;
-    CFE_SB_MsgId_t       TestMsgId;
-    int32                strCmpResult;
-    char                 ExpectedEventString[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
+    CFE_SB_MsgId_t TestMsgId;
+    int32          strCmpResult;
+    char           ExpectedEventString[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
 
     snprintf(ExpectedEventString, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH,
              "Set Signature cmd rejected due to invalid Tbl Id arg = %%d (Expect 1.. %%d)");
 
-    CFE_EVS_SendEvent_context_t context_CFE_EVS_SendEvent;
-    UT_SetHookFunction(UT_KEY(CFE_EVS_SendEvent), UT_Utils_stub_reporter_hook, &context_CFE_EVS_SendEvent);
-
-    TestMsgId = MD_CMD_MID;
+    TestMsgId = CFE_SB_ValueToMsgId(MD_CMD_MID);
     UT_SetDataBuffer(UT_KEY(CFE_MSG_GetMsgId), &TestMsgId, sizeof(TestMsgId), false);
 
-    // CFE_SB_InitMsg (&CmdPacket, MD_CMD_MID, sizeof(MD_CmdSetSignature_t), true);
-
-    CmdPacket.TableId = 0;
+    UT_CmdBuf.CmdSetSignature.TableId = 0;
 
     /* Execute the function being tested */
-    MD_ProcessSignatureCmd((CFE_SB_Buffer_t *)(&CmdPacket));
+    MD_ProcessSignatureCmd(&UT_CmdBuf.Buf);
 
     /* Verify results */
     UtAssert_True(MD_AppData.ErrCounter == 1, "MD_AppData.ErrCounter == 1");
 
-    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent.EventID, MD_INVALID_SIGNATURE_TABLE_ERR_EID);
-    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent.EventType, CFE_EVS_EventType_ERROR);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, MD_INVALID_SIGNATURE_TABLE_ERR_EID);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_ERROR);
 
-    strCmpResult = strncmp(ExpectedEventString, context_CFE_EVS_SendEvent.Spec, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH);
+    strCmpResult = strncmp(ExpectedEventString, context_CFE_EVS_SendEvent[0].Spec, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH);
 
-    UtAssert_True(strCmpResult == 0, "Event string matched expected result, '%s'", context_CFE_EVS_SendEvent.Spec);
+    UtAssert_True(strCmpResult == 0, "Event string matched expected result, '%s'", context_CFE_EVS_SendEvent[0].Spec);
 
     call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
 
@@ -1397,24 +1264,18 @@ void MD_ProcessSignatureCmd_Test_InvalidSignatureTable(void)
 #if MD_SIGNATURE_OPTION == 1
 void MD_ProcessSignatureCmd_Test_Success(void)
 {
-    MD_CmdSetSignature_t CmdPacket;
-    CFE_SB_MsgId_t       TestMsgId;
-    int32                strCmpResult;
-    char                 ExpectedEventString[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
+    CFE_SB_MsgId_t TestMsgId;
+    int32          strCmpResult;
+    char           ExpectedEventString[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
 
     snprintf(ExpectedEventString, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH,
              "Successfully set signature for Dwell Tbl#%%d to '%%s'");
 
-    CFE_EVS_SendEvent_context_t context_CFE_EVS_SendEvent;
-    UT_SetHookFunction(UT_KEY(CFE_EVS_SendEvent), UT_Utils_stub_reporter_hook, &context_CFE_EVS_SendEvent);
-
-    TestMsgId = MD_CMD_MID;
+    TestMsgId = CFE_SB_ValueToMsgId(MD_CMD_MID);
     UT_SetDataBuffer(UT_KEY(CFE_MSG_GetMsgId), &TestMsgId, sizeof(TestMsgId), false);
 
-    // CFE_SB_InitMsg (&CmdPacket, MD_CMD_MID, sizeof(MD_CmdSetSignature_t), true);
-
-    CmdPacket.TableId = 1;
-    strncpy(CmdPacket.Signature, "signature", MD_SIGNATURE_FIELD_LENGTH);
+    UT_CmdBuf.CmdSetSignature.TableId = 1;
+    strncpy(UT_CmdBuf.CmdSetSignature.Signature, "signature", MD_SIGNATURE_FIELD_LENGTH);
 
     /* Prevents segmentation fault in call to subfunction MD_UpdateTableSignature */
     UT_SetHookFunction(UT_KEY(CFE_TBL_GetAddress), &MD_CMDS_TEST_CFE_TBL_GetAddressHook, NULL);
@@ -1422,7 +1283,7 @@ void MD_ProcessSignatureCmd_Test_Success(void)
     UT_SetDeferredRetcode(UT_KEY(MD_ValidTableId), 1, true);
 
     /* Execute the function being tested */
-    MD_ProcessSignatureCmd((CFE_SB_Buffer_t *)(&CmdPacket));
+    MD_ProcessSignatureCmd(&UT_CmdBuf.Buf);
 
     /* Verify results */
     UtAssert_True(strncmp(MD_AppData.MD_DwellTables[0].Signature, "signature", MD_SIGNATURE_FIELD_LENGTH) == 0,
@@ -1430,12 +1291,12 @@ void MD_ProcessSignatureCmd_Test_Success(void)
 
     UtAssert_True(MD_AppData.CmdCounter == 1, "MD_AppData.CmdCounter == 1");
 
-    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent.EventID, MD_SET_SIGNATURE_INF_EID);
-    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent.EventType, CFE_EVS_EventType_INFORMATION);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, MD_SET_SIGNATURE_INF_EID);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_INFORMATION);
 
-    strCmpResult = strncmp(ExpectedEventString, context_CFE_EVS_SendEvent.Spec, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH);
+    strCmpResult = strncmp(ExpectedEventString, context_CFE_EVS_SendEvent[0].Spec, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH);
 
-    UtAssert_True(strCmpResult == 0, "Event string matched expected result, '%s'", context_CFE_EVS_SendEvent.Spec);
+    UtAssert_True(strCmpResult == 0, "Event string matched expected result, '%s'", context_CFE_EVS_SendEvent[0].Spec);
 
     call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
 
@@ -1448,24 +1309,18 @@ void MD_ProcessSignatureCmd_Test_Success(void)
 #if MD_SIGNATURE_OPTION == 1
 void MD_ProcessSignatureCmd_Test_NoUpdateTableSignature(void)
 {
-    MD_CmdSetSignature_t CmdPacket;
-    CFE_SB_MsgId_t       TestMsgId;
-    int32                strCmpResult;
-    char                 ExpectedEventString[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
+    CFE_SB_MsgId_t TestMsgId;
+    int32          strCmpResult;
+    char           ExpectedEventString[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
 
     snprintf(ExpectedEventString, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH,
              "Failed to set signature for Dwell Tbl#%%d. Update returned 0x%%08X");
 
-    CFE_EVS_SendEvent_context_t context_CFE_EVS_SendEvent;
-    UT_SetHookFunction(UT_KEY(CFE_EVS_SendEvent), UT_Utils_stub_reporter_hook, &context_CFE_EVS_SendEvent);
-
-    TestMsgId = MD_CMD_MID;
+    TestMsgId = CFE_SB_ValueToMsgId(MD_CMD_MID);
     UT_SetDataBuffer(UT_KEY(CFE_MSG_GetMsgId), &TestMsgId, sizeof(TestMsgId), false);
 
-    // CFE_SB_InitMsg (&CmdPacket, MD_CMD_MID, sizeof(MD_CmdSetSignature_t), true);
-
-    CmdPacket.TableId = 1;
-    strncpy(CmdPacket.Signature, "signature", MD_SIGNATURE_FIELD_LENGTH);
+    UT_CmdBuf.CmdSetSignature.TableId = 1;
+    strncpy(UT_CmdBuf.CmdSetSignature.Signature, "signature", MD_SIGNATURE_FIELD_LENGTH);
 
     /* Prevents segmentation fault in call to subfunction MD_UpdateTableSignature */
     UT_SetHookFunction(UT_KEY(CFE_TBL_GetAddress), &MD_CMDS_TEST_CFE_TBL_GetAddressHook, NULL);
@@ -1474,7 +1329,7 @@ void MD_ProcessSignatureCmd_Test_NoUpdateTableSignature(void)
     UT_SetDeferredRetcode(UT_KEY(MD_UpdateTableSignature), 1, true);
 
     /* Execute the function being tested */
-    MD_ProcessSignatureCmd((CFE_SB_Buffer_t *)(&CmdPacket));
+    MD_ProcessSignatureCmd(&UT_CmdBuf.Buf);
 
     /* Verify results */
     UtAssert_True(strncmp(MD_AppData.MD_DwellTables[0].Signature, "signature", MD_SIGNATURE_FIELD_LENGTH) == 0,
@@ -1482,12 +1337,12 @@ void MD_ProcessSignatureCmd_Test_NoUpdateTableSignature(void)
 
     UtAssert_True(MD_AppData.ErrCounter == 1, "MD_AppData.ErrCounter == 1");
 
-    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent.EventID, MD_SET_SIGNATURE_ERR_EID);
-    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent.EventType, CFE_EVS_EventType_ERROR);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, MD_SET_SIGNATURE_ERR_EID);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_ERROR);
 
-    strCmpResult = strncmp(ExpectedEventString, context_CFE_EVS_SendEvent.Spec, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH);
+    strCmpResult = strncmp(ExpectedEventString, context_CFE_EVS_SendEvent[0].Spec, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH);
 
-    UtAssert_True(strCmpResult == 0, "Event string matched expected result, '%s'", context_CFE_EVS_SendEvent.Spec);
+    UtAssert_True(strCmpResult == 0, "Event string matched expected result, '%s'", context_CFE_EVS_SendEvent[0].Spec);
 
     call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
 

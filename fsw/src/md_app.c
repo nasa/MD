@@ -1,28 +1,26 @@
-/*************************************************************************
-** File: md_app.c
-**
-** NASA Docket No. GSC-18,450-1, identified as “Core Flight Software System (CFS)
-** Memory Dwell Application Version 2.3.3”
-**
-** Copyright © 2019 United States Government as represented by the Administrator of
-** the National Aeronautics and Space Administration. All Rights Reserved.
-**
-** Licensed under the Apache License, Version 2.0 (the "License");
-** you may not use this file except in compliance with the License.
-** You may obtain a copy of the License at
-** http://www.apache.org/licenses/LICENSE-2.0
-**
-** Unless required by applicable law or agreed to in writing, software
-** distributed under the License is distributed on an "AS IS" BASIS,
-** WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-** See the License for the specific language governing permissions and
-** limitations under the License.
-*
-** Purpose:
-**   CFS Memory Dwell Application top-level procedures.
-**
-**
-*************************************************************************/
+/************************************************************************
+ * NASA Docket No. GSC-18,922-1, and identified as “Core Flight
+ * System (cFS) Memory Dwell Application Version 2.4.0”
+ *
+ * Copyright (c) 2021 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * @file
+ *   CFS Memory Dwell Application top-level procedures.
+ */
 
 #include "cfe.h"
 #include "md_app.h"
@@ -38,18 +36,17 @@
 #include "md_version.h"
 
 /* Constant Data */
-
 const MD_CmdHandlerTblRec_t MD_CmdHandlerTbl[] = {
     /*   Message ID,    Command Code,            Msg Size,     Msg/Cmd/Terminator */
-    {MD_CMD_MID, MD_NOOP_CC, sizeof(MD_NoArgsCmd_t), MD_CMD_MSGTYPE},
-    {MD_CMD_MID, MD_RESET_CNTRS_CC, sizeof(MD_NoArgsCmd_t), MD_CMD_MSGTYPE},
-    {MD_CMD_MID, MD_START_DWELL_CC, sizeof(MD_CmdStartStop_t), MD_CMD_MSGTYPE},
-    {MD_CMD_MID, MD_STOP_DWELL_CC, sizeof(MD_CmdStartStop_t), MD_CMD_MSGTYPE},
-    {MD_CMD_MID, MD_JAM_DWELL_CC, sizeof(MD_CmdJam_t), MD_CMD_MSGTYPE},
+    {CFE_SB_MSGID_WRAP_VALUE(MD_CMD_MID), MD_NOOP_CC, sizeof(MD_NoArgsCmd_t), MD_CMD_MSGTYPE},
+    {CFE_SB_MSGID_WRAP_VALUE(MD_CMD_MID), MD_RESET_CNTRS_CC, sizeof(MD_NoArgsCmd_t), MD_CMD_MSGTYPE},
+    {CFE_SB_MSGID_WRAP_VALUE(MD_CMD_MID), MD_START_DWELL_CC, sizeof(MD_CmdStartStop_t), MD_CMD_MSGTYPE},
+    {CFE_SB_MSGID_WRAP_VALUE(MD_CMD_MID), MD_STOP_DWELL_CC, sizeof(MD_CmdStartStop_t), MD_CMD_MSGTYPE},
+    {CFE_SB_MSGID_WRAP_VALUE(MD_CMD_MID), MD_JAM_DWELL_CC, sizeof(MD_CmdJam_t), MD_CMD_MSGTYPE},
 #if MD_SIGNATURE_OPTION == 1
-    {MD_CMD_MID, MD_SET_SIGNATURE_CC, sizeof(MD_CmdSetSignature_t), MD_CMD_MSGTYPE},
+    {CFE_SB_MSGID_WRAP_VALUE(MD_CMD_MID), MD_SET_SIGNATURE_CC, sizeof(MD_CmdSetSignature_t), MD_CMD_MSGTYPE},
 #endif
-    {0, 0, 0, MD_TERM_MSGTYPE}};
+    {CFE_SB_MSGID_RESERVED, 0, 0, MD_TERM_MSGTYPE}};
 
 MD_AppData_t MD_AppData;
 
@@ -113,14 +110,15 @@ void MD_AppMain(void)
 
             CFE_MSG_GetMsgId(&BufPtr->Msg, &MessageID);
 
-            switch (MessageID)
+            switch (CFE_SB_MsgIdToValue(MessageID))
             {
                 case MD_WAKEUP_MID:
                     CFE_MSG_GetSize(&BufPtr->Msg, &ActualLength);
                     if (ActualLength != sizeof(MD_NoArgsCmd_t))
                     {
                         CFE_EVS_SendEvent(MD_MSG_LEN_ERR_EID, CFE_EVS_EventType_ERROR,
-                                          "Msg with Bad length Rcvd: ID = 0x%08X, Exp Len = %u, Len = %d", MessageID,
+                                          "Msg with Bad length Rcvd: ID = 0x%08lX, Exp Len = %u, Len = %d",
+                                          (unsigned long)CFE_SB_MsgIdToValue(MessageID),
                                           (unsigned int)sizeof(MD_NoArgsCmd_t), (int)ActualLength);
                     }
                     else
@@ -139,7 +137,8 @@ void MD_AppMain(void)
                     if (ActualLength != sizeof(MD_NoArgsCmd_t))
                     {
                         CFE_EVS_SendEvent(MD_MSG_LEN_ERR_EID, CFE_EVS_EventType_ERROR,
-                                          "Msg with Bad length Rcvd: ID = 0x%08X, Exp Len = %u, Len = %d", MessageID,
+                                          "Msg with Bad length Rcvd: ID = 0x%08lX, Exp Len = %u, Len = %d",
+                                          (unsigned long)CFE_SB_MsgIdToValue(MessageID),
                                           (unsigned int)sizeof(MD_NoArgsCmd_t), (int)ActualLength);
                     }
                     else
@@ -150,7 +149,8 @@ void MD_AppMain(void)
 
                 default:
                     CFE_EVS_SendEvent(MD_MID_ERR_EID, CFE_EVS_EventType_ERROR,
-                                      "Msg with Invalid message ID Rcvd -- ID = 0x%08X", MessageID);
+                                      "Msg with Invalid message ID Rcvd -- ID = 0x%08lX",
+                                      (unsigned long)CFE_SB_MsgIdToValue(MessageID));
                     break;
             }
         }
@@ -255,13 +255,14 @@ int32 MD_InitSoftwareBusServices(void)
     /*
     ** Initialize housekeeping telemetry packet (clear user data area)
     */
-    CFE_MSG_Init(&MD_AppData.HkPkt.TlmHeader.Msg, MD_HK_TLM_MID, MD_HK_TLM_LNGTH);
+    CFE_MSG_Init(&MD_AppData.HkPkt.TlmHeader.Msg, CFE_SB_ValueToMsgId(MD_HK_TLM_MID), MD_HK_TLM_LNGTH);
     /*
     ** Initialize dwell packets (clear user data area)
     */
     for (TblIndex = 0; TblIndex < MD_NUM_DWELL_TABLES; TblIndex++)
     {
-        CFE_MSG_Init(&MD_AppData.MD_DwellPkt[TblIndex].TlmHeader.Msg, (CFE_SB_MsgId_t)MD_DWELL_PKT_MID_BASE + TblIndex,
+        CFE_MSG_Init(&MD_AppData.MD_DwellPkt[TblIndex].TlmHeader.Msg,
+                     CFE_SB_ValueToMsgId(MD_DWELL_PKT_MID_BASE + TblIndex),
                      MD_DWELL_PKT_LNGTH); /* this is max pkt size */
 
 #if MD_SIGNATURE_OPTION == 1
@@ -285,7 +286,7 @@ int32 MD_InitSoftwareBusServices(void)
     if (Status == CFE_SUCCESS)
     {
 
-        Status = CFE_SB_Subscribe(MD_SEND_HK_MID, MD_AppData.CmdPipe);
+        Status = CFE_SB_Subscribe(CFE_SB_ValueToMsgId(MD_SEND_HK_MID), MD_AppData.CmdPipe);
 
         if (Status != CFE_SUCCESS)
         {
@@ -301,7 +302,7 @@ int32 MD_InitSoftwareBusServices(void)
     if (Status == CFE_SUCCESS)
     {
 
-        Status = CFE_SB_Subscribe(MD_CMD_MID, MD_AppData.CmdPipe);
+        Status = CFE_SB_Subscribe(CFE_SB_ValueToMsgId(MD_CMD_MID), MD_AppData.CmdPipe);
 
         if (Status != CFE_SUCCESS)
         {
@@ -317,7 +318,7 @@ int32 MD_InitSoftwareBusServices(void)
     if (Status == CFE_SUCCESS)
     {
 
-        Status = CFE_SB_Subscribe(MD_WAKEUP_MID, MD_AppData.CmdPipe);
+        Status = CFE_SB_Subscribe(CFE_SB_ValueToMsgId(MD_WAKEUP_MID), MD_AppData.CmdPipe);
 
         if (Status != CFE_SUCCESS)
         {
@@ -615,8 +616,9 @@ void MD_ExecRequest(const CFE_SB_Buffer_t *BufPtr)
     if (ActualLength != MD_CmdHandlerTbl[CmdIndx].ExpectedLength)
     {
         CFE_EVS_SendEvent(MD_CMD_LEN_ERR_EID, CFE_EVS_EventType_ERROR,
-                          "Cmd Msg with Bad length Rcvd: ID = 0x%08X, CC = %d, Exp Len = %d, Len = %d", MessageID,
-                          CommandCode, (int)MD_CmdHandlerTbl[CmdIndx].ExpectedLength, (int)ActualLength);
+                          "Cmd Msg with Bad length Rcvd: ID = 0x%08lX, CC = %d, Exp Len = %d, Len = %d",
+                          (unsigned long)CFE_SB_MsgIdToValue(MessageID), CommandCode,
+                          (int)MD_CmdHandlerTbl[CmdIndx].ExpectedLength, (int)ActualLength);
 
         MD_AppData.ErrCounter++;
         return;
@@ -738,7 +740,8 @@ int16 MD_SearchCmdHndlrTbl(CFE_SB_MsgId_t MessageID, CFE_MSG_FcnCode_t CommandCo
         TblIndx++;
 
         /* Check to see if we found a matching Message ID */
-        if ((MD_CmdHandlerTbl[TblIndx].MsgId == MessageID) && (MD_CmdHandlerTbl[TblIndx].MsgTypes != MD_TERM_MSGTYPE))
+        if (CFE_SB_MsgId_Equal(MD_CmdHandlerTbl[TblIndx].MsgId, MessageID) &&
+            (MD_CmdHandlerTbl[TblIndx].MsgTypes != MD_TERM_MSGTYPE))
         { /* MessageID matches and this isn't last Table entry */
 
             /* Flag any found message IDs so that if there's an error, we can */

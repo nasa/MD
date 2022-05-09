@@ -1,28 +1,26 @@
-/*************************************************************************
-** File: md_cmds.c
-**
-** NASA Docket No. GSC-18,450-1, identified as “Core Flight Software System (CFS)
-** Memory Dwell Application Version 2.3.3”
-**
-** Copyright © 2019 United States Government as represented by the Administrator of
-** the National Aeronautics and Space Administration. All Rights Reserved.
-**
-** Licensed under the Apache License, Version 2.0 (the "License");
-** you may not use this file except in compliance with the License.
-** You may obtain a copy of the License at
-** http://www.apache.org/licenses/LICENSE-2.0
-**
-** Unless required by applicable law or agreed to in writing, software
-** distributed under the License is distributed on an "AS IS" BASIS,
-** WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-** See the License for the specific language governing permissions and
-** limitations under the License.
-*
-** Purpose:
-**   Functions for processing individual CFS Memory Dwell commands
-**
-**
-*************************************************************************/
+/************************************************************************
+ * NASA Docket No. GSC-18,922-1, and identified as “Core Flight
+ * System (cFS) Memory Dwell Application Version 2.4.0”
+ *
+ * Copyright (c) 2021 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * @file
+ *   Functions for processing individual CFS Memory Dwell commands
+ */
 
 /*************************************************************************
 ** Includes
@@ -35,7 +33,6 @@
 #include <string.h>
 #include "md_app.h"
 #include "md_events.h"
-#include "cfs_utils.h"
 #include "md_dwell_tbl.h"
 
 /* Global Data */
@@ -212,7 +209,7 @@ void MD_ProcessJamCmd(const CFE_SB_Buffer_t *BufPtr)
     MD_DwellControlEntry_t *DwellEntryPtr  = 0; /* points to local task data */
     uint16                  EntryIndex     = 0;
     uint8                   TableIndex     = 0;
-    CFS_SymAddr_t           NewDwellAddress;
+    MD_SymAddr_t            NewDwellAddress;
 
     /*
     **  Cast message to Jam Command.
@@ -299,7 +296,7 @@ void MD_ProcessJamCmd(const CFE_SB_Buffer_t *BufPtr)
             */
 
             /* Resolve and Validate Dwell Address */
-            if (CFS_ResolveSymAddr(&Jam->DwellAddress, &ResolvedAddr) == false)
+            if (MD_ResolveSymAddr(&Jam->DwellAddress, &ResolvedAddr) == false)
             {
                 /* If DwellAddress argument couldn't be resolved, issue error event */
                 CFE_EVS_SendEvent(MD_CANT_RESOLVE_JAM_ADDR_ERR_EID, CFE_EVS_EventType_ERROR,
@@ -323,14 +320,14 @@ void MD_ProcessJamCmd(const CFE_SB_Buffer_t *BufPtr)
                 AllInputsValid = false;
             }
 #if MD_ENFORCE_DWORD_ALIGN == 0
-            else if ((Jam->FieldLength == 4) && CFS_Verify16Aligned(ResolvedAddr, (uint32)Jam->FieldLength) != true)
+            else if ((Jam->FieldLength == 4) && MD_Verify16Aligned(ResolvedAddr, (uint32)Jam->FieldLength) != true)
             {
                 CFE_EVS_SendEvent(MD_JAM_ADDR_NOT_16BIT_ERR_EID, CFE_EVS_EventType_ERROR,
                                   "Jam Cmd rejected because address 0x%08X is not 16-bit aligned", ResolvedAddr);
                 AllInputsValid = false;
             }
 #else
-            else if ((Jam->FieldLength == 4) && CFS_Verify32Aligned(ResolvedAddr, (uint32)Jam->FieldLength) != true)
+            else if ((Jam->FieldLength == 4) && MD_Verify32Aligned(ResolvedAddr, (uint32)Jam->FieldLength) != true)
             {
                 CFE_EVS_SendEvent(MD_JAM_ADDR_NOT_32BIT_ERR_EID, CFE_EVS_EventType_ERROR,
                                   "Jam Cmd rejected because address 0x%08X is not 32-bit aligned",
@@ -338,7 +335,7 @@ void MD_ProcessJamCmd(const CFE_SB_Buffer_t *BufPtr)
                 AllInputsValid = false;
             }
 #endif
-            else if ((Jam->FieldLength == 2) && CFS_Verify16Aligned(ResolvedAddr, (uint32)Jam->FieldLength) != true)
+            else if ((Jam->FieldLength == 2) && MD_Verify16Aligned(ResolvedAddr, (uint32)Jam->FieldLength) != true)
             {
                 CFE_EVS_SendEvent(MD_JAM_ADDR_NOT_16BIT_ERR_EID, CFE_EVS_EventType_ERROR,
                                   "Jam Cmd rejected because address 0x%08X is not 16-bit aligned",

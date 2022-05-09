@@ -1,0 +1,89 @@
+Summary,Custom field (Requirement ID),Description,Custom field (Requirement Rationale)
+MD1000,MD1000,"Upon receipt of a No-Op command, MD shall increment the MD Valid Command Counter and generate an event message.",Debug command to verify application is alive.
+MD1001,MD1001,"Upon receipt of a Reset command,  MD shall reset the following housekeeping variables to a value of zero:
+a) MD Valid Command Counter
+b) MD Command Rejected Counter",Important for testing and on-orbit flight operations in order to start with a “clean slate”.
+MD1002,MD1002,"For all MD commands, if the length contained in the message header is not equal to the expected length, MD shall reject the command and issue an event message.",Basic command verification in the event of SEU or memory corruption
+MD1003,MD1003,"If Dwell Table ID specified in any MD command exceeds the <PLATFORM_DEFINED> maximum number of allowable memory dwells,  MD shall reject the command and issue an event message","Platform definition allows for scaling of memory dwell. 
+Heritage missions have supported between 1 and 4 dwell tables."
+MD1004,MD1004,"If MD accepts any command as valid, MD shall execute the command, increment the MD Valid Command Counter and issue an event message",
+MD1005,MD1005,"If MD rejects any command, MD shall abort the command execution, increment the MD Command Rejected Counter and issue an error event message",
+MD1006,MD1006,The MD application shall generate an error event message if symbol table operations are initiated but not supported in the current target environment.,Gracefully handle running without a system symbol table to query
+MD2000,MD2000,"Upon receipt of a Start Dwell command, MD shall identify the command-specified tables as ENABLED and start processing the command-specified memory dwell tables, starting with the first entry, until one of the following:
+a) an entry that has a zero value for the Number of Bytes field or
+b) until it has processed the last entry in a Dwell Table:",Provides individual control of each memory dwell. Note that more than one dwell table can be started in one command.
+MD2000.2,MD2000.2,"If the sum of all of the 'delay between samples' for any memory dwell table being commanded to start equals 0, MD shall send an event to notify user that no processing will occur in the dwell table's current state.","The dwell rate is calculated by the total number of delays between samples in the table. In this case, MD for this table is effectively disabled."
+MD2001,MD2001,"Upon receipt of a Stop Dwell command, MD shall identify the command-specified memory dwell tables as DISABLED and stop processing the command-specified memory dwell tables",Provides individual control of each memory dwell. Required in order to modify an individual memory dwell. Note that more than one dwell table can be stopped at a time.
+MD2001.1,MD2001.1,"The following items shall be set to zero for each Dwell:
+1) Current Dwell Packet Index
+2) Current Entry in the Dwell Table
+3) Current Countdown counter","Since the dwell is disabled, these values should be zero (otherwise could be
+misleading)."
+MD3000,MD3000,"During each memory dwell cycle, MD shall collect data specified in each enabled memory dwell table which contains the following:
+a) Table ID
+b) <OPTIONAL> signature
+c) For each desired sample up to <PLATFORM_DEFINED> entries:
+  1) address
+  2) number of bytes
+  3) delay between samples.",A memory dwell cycle is defined by the receipt of a wake-up message issued from the CFS Scheduler. Delay between samples’ supports supercommutation.  Note changing the total number of bytes collected will change the message size.
+MD3000.1,MD3000.1,<OPTIONAL>  Symbol Name and offset can be used in lieu of an absolute address,"If symbolic addressing is supported, symbolic names and offset can be used instead of an absolute address"
+MD3000.2,MD3000.2,"The collection shall be done for each entry in an active Memory Dwell Table, starting with the first entry, until one of the following :
+a) it reaches an entry that has a zero value for the Number of Bytes parameter or
+b) until it has processed the last entry in a Dwell Table",No need to process unused entries in the table
+MD3000.3,MD3000.3,Data collection occurs only when  a Dwell Table is both ENABLED and has a non-zero dwell rate.,
+MD3001,MD3001,"When MD collects all of the data specified in a memory dwell table (as defined in MD3000.2), MD shall issue a memory dwell message containing the following:
+a) Table ID
+b) <OPTIONAL> Signature
+c) Number of bytes sampled
+d) Data","Send a message containing all of the data after all of the data is collected.
+Note that a separate memory dwell message is sent for each enabled memory dwell table. Also note that the effective rate of each memory dwell
+message is the sum of all of the delays contained in the corresponding dwell
+table times the wake-up rate."
+MD3002,MD3002,"Upon receipt of a Table Load, MD shall verify the contents of the table and if the table is invalid, reject the table.",cFE Table Services provides an interface to modify dwell table. Need to validate the table
+MD3002.2,MD3002.2,"If any address fails validation, MD shall reject the table. Validation includes:
+a) If a symbolic address is specified, Symbol Table is present and symbolic address is contained in the Symbol Table,
+b) resolved address (numerical value of symbolic address if present + offset address) is within valid range
+c) if resolved address is specified for a 2-byte dwell, address is an even value,
+d) if resolved address is specified for a 4-byte dwell, address is an integral multiple of 4.",Protects against operator error.
+MD3002.4,MD3002.4,<OPTIONAL>  Symbol Name and offset can be used in lieu of an absolute address,"If symbolic addressing supported, symbolic names and offset can be used instead of an absolute address"
+MD3002.5,MD3002.5,"If the Number of Bytes is not 0, 1, 2 or 4, MD shall reject the table",Protects against operator error.
+MD4000,MD4000,"Upon receipt of a Jam Dwell command, MD shall update the command-specified memory dwell table with the command-specified information:
+a) Dwell Table Index
+b) Address
+c) Number of bytes (0,1,2 or 4)
+d) Delay Between Samples",Want to be able to send commands to modify dwell table fairly quickly without having to generate a new table. Also want to be able to put into an RTS to start a dwell. ISAT/GLAS experience relating to painful delivery of tables. OPS group uses OASIS ground system and FSW maintenance is using ASIST.
+MD4000.1,MD4000.1,If the Dwell Table Index is greater than <PLATFORM_DEFINED> maximum then MD shall reject the command,Cannot exceed the maximum number of memory dwell table entries configuration parameter
+MD4000.2,MD4000.2,"If the command-specified address fails validation, MD shall reject the command. Validation includes:
+a) If a symbolic address is specified, Symbol Table is present and symbolic address is contained in the Symbol Table,
+b) resolved address (numerical value of symbolic address if present + offset address) is within valid range
+c) if resolved address is specified for a 2-byte dwell, address is an even value,
+d) if resolved address is specified for a 4-byte dwell, address is an integral multiple of 4.",Protects against operator error.
+MD4000.3,MD4000.3,"If the Memory Dwell table being jammed is enabled and the sum of all of the  'delay between samples' for the memory dwell table equals 0, then MD shall issue an event message informing that the table will not be processing dwell packets in its current state.","Allowing a zero delay enables operators to zero out an entire table, and also to create a table that isn’t usable during its intermediate states"
+MD4000.4,MD4000.4,<OPTIONAL>  Symbol Name and offset can be used in lieu of an absolute address,"If symbolic addressing supported, symbolic names and offset can be used instead of an absolute address"
+MD4000.5,MD4000.5,"If the command-specified Number of Bytes is not 0, 1, 2 or 4, MD shall reject the command).",Protects against operator error.
+MD5000,MD5000,"<OPTIONAL>  Upon receipt of a Set Dwell Table Signature Command, the signature field for the specified Dwell Table shall be set to the command-specified string.",Provides traceability from dwell packets to source Dwell Table.
+MD5000.1,MD5000.1,If the command-specified signature exceeds the <PLATFORM_DEFINED> maximum length then the command shall be rejected. Note that the signature must be 32 bit aligned.,Need to limit the signature field. It must be 32 -bit aligned for padding issues.
+MD8000,MD8000,"MD shall generate a housekeeping message containing the following:
+a) Valid Command Counter
+b) Command Rejected Counter
+c) For each Dwell:
+  1. Enable/Disable Status
+  2. Number of Dwell Addresses
+  3. Dwell Rate
+  4. Number of Bytes
+  5. Current Dwell Packet Index
+  6. Current Entry in the Dwell Table 7. Current Countdown counter",Housekeeping telemetry to indicate basic MD status including information which indicates current position in dwell table processing
+MD9000,MD9000,"Upon any Initialization of the MD Application (cFE Power On, cFE Processor Reset or MD Application Reset),  MD shall initialize the following data to Zero:
+a) Valid Command Counter 
+b) Command Rejected Counter","No information is preserved across an MD initialization. If, for example, a
+memory load is interrupted by an App restart or Processor reset then want to abort the load to avoid partial/erroneous load."
+MD9001,MD9001,"Upon cFE Power-on Reset, MD shall initialize each Memory Dwell table status to DISABLED",Default is no dwell
+MD9002,MD9002,"Upon cFE Power-on Reset, MD shall initialize each Memory Dwell table to zero",Want to initialize to known values
+MD9003,MD9003,"MD shall store the following information whenever it changes (in support of a cFE Processor Reset or MD Application Reset):
+a) Enable/Disable Status for each Dwell
+b) <OPTIONAL> signature for each dwell
+c) Contents of each Dwell Table",Need to store the data in CDS in order to preserve the data across a cFE Processor Reset or MD Application Reset
+MD9004,MD9004,"On a cFE Processor Reset or a MD Application Reset, MD shall restore the information specified in MD9003",May want to dwell on memory across a reset in order to diagnose a reset
+MD9004.1,MD9004.1,"MD shall validate the data and if any data is invalid, MD shall:
+a) disable the invalid dwell table
+b) initialize table contents with default values",Don’t want to execute an invalid memory dwell table. Only the invalid dwell table will be considered invalid.

@@ -1,28 +1,26 @@
-/*************************************************************************
-** File: md_dwell_tbl.c
-**
-** NASA Docket No. GSC-18,450-1, identified as “Core Flight Software System (CFS)
-** Memory Dwell Application Version 2.3.3”
-**
-** Copyright © 2019 United States Government as represented by the Administrator of
-** the National Aeronautics and Space Administration. All Rights Reserved.
-**
-** Licensed under the Apache License, Version 2.0 (the "License");
-** you may not use this file except in compliance with the License.
-** You may obtain a copy of the License at
-** http://www.apache.org/licenses/LICENSE-2.0
-**
-** Unless required by applicable law or agreed to in writing, software
-** distributed under the License is distributed on an "AS IS" BASIS,
-** WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-** See the License for the specific language governing permissions and
-** limitations under the License.
-*
-** Purpose:
-**   Functions used for validating and copying CFS Memory Dwell Tables.
-**
-**
-*************************************************************************/
+/************************************************************************
+ * NASA Docket No. GSC-18,922-1, and identified as “Core Flight
+ * System (cFS) Memory Dwell Application Version 2.4.0”
+ *
+ * Copyright (c) 2021 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * @file
+ *   Functions used for validating and copying CFS Memory Dwell Tables.
+ */
 
 /*************************************************************************
 ** Includes
@@ -31,7 +29,6 @@
 #include "md_utils.h"
 /* Need md_app.h for MD_DwellTableLoad_t defn */
 #include "md_app.h"
-#include "cfs_utils.h"
 #include "md_events.h"
 #include <string.h>
 #include "md_tbldefs.h"
@@ -261,10 +258,10 @@ int32 MD_ValidTableEntry(MD_TableLoadEntry_t *TblEntryPtr)
     }
     else
     {
-        if (CFS_ResolveSymAddr(&TblEntryPtr->DwellAddress, &ResolvedAddr) != true)
+        if (MD_ResolveSymAddr(&TblEntryPtr->DwellAddress, &ResolvedAddr) != true)
         { /* Symbol was non-null AND was not in Symbol Table */
             Status = MD_RESOLVE_ERROR;
-        } /* end CFS_ResolveSymAddr */
+        } /* end MD_ResolveSymAddr */
 
         else if (MD_ValidAddrRange(ResolvedAddr, (uint32)DwellLength) != true)
         { /* Address is in invalid range  */
@@ -275,17 +272,17 @@ int32 MD_ValidTableEntry(MD_TableLoadEntry_t *TblEntryPtr)
             Status = MD_INVALID_LEN_ERROR;
         }
 #if MD_ENFORCE_DWORD_ALIGN == 0
-        else if ((DwellLength == 4) && CFS_Verify16Aligned(ResolvedAddr, (uint32)DwellLength) != true)
+        else if ((DwellLength == 4) && MD_Verify16Aligned(ResolvedAddr, (uint32)DwellLength) != true)
         {
             Status = MD_NOT_ALIGNED_ERROR;
         }
 #else
-        else if ((DwellLength == 4) && CFS_Verify32Aligned(ResolvedAddr, (uint32)DwellLength) != true)
+        else if ((DwellLength == 4) && MD_Verify32Aligned(ResolvedAddr, (uint32)DwellLength) != true)
         {
             Status = MD_NOT_ALIGNED_ERROR;
         }
 #endif
-        else if ((DwellLength == 2) && CFS_Verify16Aligned(ResolvedAddr, (uint32)DwellLength) != true)
+        else if ((DwellLength == 2) && MD_Verify16Aligned(ResolvedAddr, (uint32)DwellLength) != true)
         {
             Status = MD_NOT_ALIGNED_ERROR;
         }
@@ -333,7 +330,7 @@ void MD_CopyUpdatedTbl(MD_DwellTableLoad_t *MD_LoadTablePtr, uint8 TblIndex)
 
         ThisLoadEntry = &MD_LoadTablePtr->Entry[EntryIndex];
 
-        CFS_ResolveSymAddr(&ThisLoadEntry->DwellAddress, &ResolvedAddr);
+        MD_ResolveSymAddr(&ThisLoadEntry->DwellAddress, &ResolvedAddr);
         memcpy(&MD_AppData.MD_DwellTables[TblIndex].Entry[EntryIndex].ResolvedAddress, (void *)&ResolvedAddr,
                sizeof(MD_AppData.MD_DwellTables[TblIndex].Entry[EntryIndex].ResolvedAddress));
 
@@ -384,7 +381,7 @@ int32 MD_UpdateTableEnabledField(uint16 TableIndex, uint16 FieldValue)
 /******************************************************************************/
 
 int32 MD_UpdateTableDwellEntry(uint16 TableIndex, uint16 EntryIndex, uint16 NewLength, uint16 NewDelay,
-                               CFS_SymAddr_t NewDwellAddress)
+                               MD_SymAddr_t NewDwellAddress)
 {
     int32                Status           = CFE_SUCCESS;
     int32                GetAddressResult = 0;

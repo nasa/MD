@@ -1,3 +1,21 @@
+/************************************************************************
+ * NASA Docket No. GSC-18,922-1, and identified as “Core Flight
+ * System (cFS) Memory Dwell Application Version 2.4.0”
+ *
+ * Copyright (c) 2021 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
 
 /*
  * Includes
@@ -47,4 +65,25 @@ bool MD_ValidFieldLength(uint16 FieldLength)
 {
     UT_Stub_RegisterContextGenericArg(UT_KEY(MD_ValidFieldLength), FieldLength);
     return UT_DEFAULT_IMPL(MD_ValidFieldLength) != 0;
+}
+
+bool MD_Verify32Aligned(cpuaddr Address, uint32 Size)
+{
+    UT_Stub_RegisterContextGenericArg(UT_KEY(MD_Verify32Aligned), Address);
+    UT_Stub_RegisterContextGenericArg(UT_KEY(MD_Verify32Aligned), Size);
+    return UT_DEFAULT_IMPL(MD_Verify32Aligned) != 0;
+}
+
+bool MD_Verify16Aligned(cpuaddr Address, uint32 Size)
+{
+    UT_Stub_RegisterContextGenericArg(UT_KEY(MD_Verify16Aligned), Address);
+    UT_Stub_RegisterContextGenericArg(UT_KEY(MD_Verify16Aligned), Size);
+    return UT_DEFAULT_IMPL(MD_Verify16Aligned) != 0;
+}
+
+bool MD_ResolveSymAddr(MD_SymAddr_t *SymAddr, cpuaddr *ResolvedAddr)
+{
+    UT_Stub_RegisterContext(UT_KEY(MD_ResolveSymAddr), SymAddr);
+    UT_Stub_RegisterContext(UT_KEY(MD_ResolveSymAddr), ResolvedAddr);
+    return UT_DEFAULT_IMPL(MD_ResolveSymAddr) != 0;
 }
