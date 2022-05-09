@@ -1,0 +1,1259 @@
+21-225-14:21:07.239 00     SPR-I:OPRO         ****************** FSW Configuration ******************
+21-225-14:21:07.239 00     SPR-I:OPRO                 Checksum:    29237
+21-225-14:21:07.239 00     SPR-I:OPRO                 cFE Version: 6.7.99.0
+21-225-14:21:07.240 00     SPR-I:OPRO                 OS Version:  5.0.0.255
+21-225-14:21:07.240 00     SPR-I:OPRO          
+21-225-14:21:07.240 00     SPR-I:OPRO                 Connection Status
+21-225-14:21:07.240 00     SPR-I:OPRO                 -----------------
+21-225-14:21:07.240 00     SPR-I:OPRO                 CFDP: DOWN
+21-225-14:21:07.240 00     SPR-I:OPRO                 UDP:  UP 
+21-225-14:21:07.240 00     SPR-I:OPRO                 SWTS:  UNK
+21-225-14:21:07.240 00     SPR-I:OPRO         
+21-225-14:21:07.240 00     SPR-I:OPRO                 CMD / TLM Path
+21-225-14:21:07.240 00     SPR-I:OPRO                 --------------
+21-225-14:21:07.240 00     SPR-I:OPRO                 UDP
+21-225-14:21:07.240 00     SPR-I:OPRO                 
+21-225-14:21:07.240 00     SPR-I:OPRO         
+21-225-14:21:07.241 00     SPR-I:OPRO                 ASIST / GDS Configuration
+21-225-14:21:07.241 00     SPR-I:OPRO                 -------------------------
+21-225-14:21:07.247 00     SPR-I:OPRO                 Workstation: GS582CFSLAB4
+21-225-14:21:07.247 00     SPR-I:OPRO                 Account: cfs_test
+21-225-14:21:07.248 00     SPR-I:OPRO                 Version: 21.0.7
+21-225-14:21:07.248 00     SPR-I:OPRO                 Tlm DB:  Version: 1.983  Date: 07-13-21  Time: 10:22:58 AM.
+21-225-14:21:07.248 00     SPR-I:OPRO                 Cmd DB:  Version: 1.51  Date: 05-21-21  Time: 08:24:49 AM.EDT
+21-225-14:21:07.248 00     SPR-I:OPRO         
+21-225-14:21:07.248 00     SPR-I:OPRO                 Telemetry Info
+21-225-14:21:07.248 00     SPR-I:OPRO                 --------------
+21-225-14:21:07.248 00     SPR-I:OPRO                 Pkt Loss Count: N/A
+21-225-14:21:07.248 00     SPR-I:OPRO         ****************  End FSW Configuration ***************
+21-225-14:21:07.248 00     SPR-I:OPRO         Starting Procedure.... scx_cpu1_md_signatures
+21-225-14:21:07.369 00     SPR-I:OPRI     --> start scx_cpu1_md_signatures
+21-225-14:21:07.369 00     SPR-I:STS          Loading file /s/opr/accounts/cfs_test/prc/scx_cpu1_md_signatures.i
+21-225-14:21:07.374 00     SPR-I:STS          Procedure SCX_CPU1_MD_SIGNATURES started
+21-225-14:21:07.401 00     SPR-I:OPRO         ;*********************************************************************
+21-225-14:21:07.401 00     SPR-I:OPRO         ;  Step 1.0:  Initialize the CPU for this test. 
+21-225-14:21:07.401 00     SPR-I:OPRO         ;*********************************************************************
+21-225-14:21:07.401 00     SPR-I:OPRO         ;             Command a Power-On Reset on CPU1. 
+21-225-14:21:07.401 00     SPR-I:OPRO         ;********************************************************************
+21-225-14:21:07.413 00     SPR-I:STTE         Wait mode - waiting 10 seconds ...
+21-225-14:21:17.421 00     SPR-I:STS          Loading file /s/opr/accounts/cfs_test/prc/clear_spacecraft_status.i
+21-225-14:21:17.422 00     SPR-I:STS          Procedure CLEAR_SPACECRAFT_STATUS started
+21-225-14:21:17.429 00     SPR-I:STS          Procedure CLEAR_SPACECRAFT_STATUS completed
+21-225-14:21:17.457 00     SPR-I:STTE         Wait mode - waiting 60 seconds ...
+21-225-14:22:17.515 00     SPR-I:STTE         Wait mode - WAIT UNTIL ...
+21-225-14:22:27.527 00     SPR-I:STTE         WAIT UNTIL completed
+21-225-14:22:27.588 00     SPR-I:STS          Loading file /s/opr/accounts/cfs_test/prc/send_that_to_command.i
+21-225-14:22:27.588 00     SPR-I:STS          Procedure SEND_THAT_TO_COMMAND started
+21-225-14:22:27.589 00     SPR-I:OPRO         Sending: /SCX_CPU1_TO_OUTPUT_ENA gs582cfslab4
+21-225-14:22:27.631 00     SPR-I:STS          Procedure SEND_THAT_TO_COMMAND completed
+21-225-14:22:27.631 00     SPR-I:STTE         Wait mode - WAIT UNTIL ...
+21-225-14:22:28.510 00    TLMH-I:STS          58-012-14:03:48.900 INFO CPU=CPU1 APPNAME=TO_LAB_APP EVENT ID=3 TO telemetry output enabled for IP 192.168.1.101
+21-225-14:22:31.636 00     SPR-I:STTE         WAIT UNTIL completed
+21-225-14:22:31.637 00     SPR-I:STS          Loading file /s/opr/accounts/cfs_test/prc/fill_in_spacecraft_status.i
+21-225-14:22:31.639 00     SPR-I:STS          Procedure FILL_IN_SPACECRAFT_STATUS started
+21-225-14:22:31.642 00     SPR-I:STS          Procedure FILL_IN_SPACECRAFT_STATUS completed
+21-225-14:22:31.643 00     SPR-I:STTE         Wait mode - waiting 5 seconds ...
+21-225-14:22:36.647 00     SPR-I:OPRO         Opening MD HK Page.
+21-225-14:22:36.838 00     SPR-I:STS          Loading file /s/opr/accounts/cfs_test/prc/get_file_to_cvt.i
+21-225-14:22:36.841 00     SPR-I:STS          Procedure GET_FILE_TO_CVT started
+21-225-14:22:36.863 00     SPR-I:OPRO         Sending Command: /SCX_CPU1_TBL_WRITEREG2FILE DUMPFILENAME="/ram/cfe_tbl_reg.log"
+21-225-14:22:36.875 00     SPR-I:STTE         Wait mode - waiting 15 seconds ...
+21-225-14:22:51.886 00     SPR-I:OPRO         The APID is: P0F06
+21-225-14:22:51.886 00     SPR-I:OPRO         The CPU is: CPU3
+21-225-14:22:51.887 00     SPR-I:OPRO         The IP Address is: 192.168.1.8
+21-225-14:22:51.890 00     SPR-I:OPRO         The perl command is: perl /s/opr/accounts/global/tools/ftp.pl RAM:0 cfe_tbl_reg.log scx_cpu1_tbl_reg.log binary 192.168.1.8
+21-225-14:22:52.057 00     SPR-I:OPRO         Return code from ftp_file.pl: 0
+21-225-14:22:52.058 00     SPR-I:STTE         Wait mode - waiting 15 seconds ...
+21-225-14:23:07.068 00     SPR-I:OPRO         
+21-225-14:23:07.109 00     SPR-I:OPRO         The unix command is cvt -ws file_list[3846].file_write_time "`date +%y-%j-%T -r /s/opr/accounts/cfs_test/image/scx_cpu1_tbl_reg.log`"
+21-225-14:23:07.109 00     SPR-I:STTE         Wait mode - waiting 5 seconds ...
+21-225-14:23:12.113 00     SPR-I:STS          Procedure GET_FILE_TO_CVT completed
+21-225-14:23:12.115 00     SPR-I:STTE         Wait mode - waiting 10 seconds ...
+21-225-14:23:22.125 00     SPR-I:OPRO         Table #1 Name = TO_LAB_APP.TO_LAB_Subs
+21-225-14:23:22.127 00     SPR-I:OPRO         Table #2 Name = SCH_LAB_APP.SCH_LAB_SchTbl
+21-225-14:23:22.129 00     SPR-I:OPRO         Table #3 Name = CF_APP.config_table
+21-225-14:23:22.130 00     SPR-I:OPRO         Table #4 Name = MD.DWELL_TABLE1
+21-225-14:23:22.132 00     SPR-I:OPRO         Table #5 Name = MD.DWELL_TABLE2
+21-225-14:23:22.134 00     SPR-I:OPRO         Table #6 Name = MD.DWELL_TABLE3
+21-225-14:23:22.136 00     SPR-I:OPRO         Table #7 Name = MD.DWELL_TABLE4
+21-225-14:23:22.136 00     SPR-I:OPRO         Dwell Table #1 is at index #4
+21-225-14:23:22.137 00     SPR-I:OPRO         Dwell Table #2 is at index #5
+21-225-14:23:22.137 00     SPR-I:OPRO         Dwell Table #3 is at index #6
+21-225-14:23:22.137 00     SPR-I:OPRO         Dwell Table #4 is at index #7
+21-225-14:23:22.137 00     SPR-I:OPRO         ;*********************************************************************
+21-225-14:23:22.137 00     SPR-I:OPRO         ;  Step 1.3: Enable DEBUG Event Messages 
+21-225-14:23:22.137 00     SPR-I:OPRO         ;*********************************************************************
+21-225-14:23:22.153 00     SPR-I:STTE         Wait mode - waiting 2 seconds ...
+21-225-14:23:24.181 00     SPR-I:STTE         Wait mode - WAIT UNTIL ...
+21-225-14:23:28.185 00     SPR-I:STTE         WAIT UNTIL completed
+21-225-14:23:28.187 00     SPR-I:OPRO         <*> Passed - Enable Debug events command sent properly.
+21-225-14:23:28.187 00     SPR-I:OPRO         ;*********************************************************************
+21-225-14:23:28.187 00     SPR-I:OPRO         ;  Step 1.4: Verify that the MD Housekeeping packet is being generated
+21-225-14:23:28.187 00     SPR-I:OPRO         ;  and the telemetry items are initialized to zero (0). 
+21-225-14:23:28.187 00     SPR-I:OPRO         ;*********************************************************************
+21-225-14:23:28.199 00     SPR-I:STTE         Wait mode - WAIT UNTIL ...
+21-225-14:23:36.208 00     SPR-I:STTE         WAIT UNTIL completed
+21-225-14:23:36.209 00     SPR-I:OPRO         <*> Passed (8000) - Housekeeping packet is being generated.
+21-225-14:23:36.212 00     SPR-I:OPRO         <*> Passed (9000) - Housekeeping telemetry initialized properly.
+21-225-14:23:36.215 00     SPR-I:OPRO         ;*********************************************************************
+21-225-14:23:36.215 00     SPR-I:OPRO         ;  Step 1.5: Verify that each MD table is disabled. 
+21-225-14:23:36.215 00     SPR-I:OPRO         ;*********************************************************************
+21-225-14:23:36.216 00     SPR-I:OPRO         <*> Passed (9001) - Enable Mask initialized properly.
+21-225-14:23:36.218 00     SPR-I:STTE         Wait mode - waiting 5 seconds ...
+21-225-14:23:41.222 00     SPR-I:OPRO         ;*********************************************************************
+21-225-14:23:41.222 00     SPR-I:OPRO         ;  Step 1.6: Verify that each MD table is initialized to 0. 
+21-225-14:23:41.222 00     SPR-I:OPRO         ;*********************************************************************
+21-225-14:23:41.224 00     SPR-I:OPRO         <*> Passed (9002) - Memory Dwell tables initialized properly.
+21-225-14:23:41.225 00     SPR-I:STTE         Wait mode - waiting 5 seconds ...
+21-225-14:23:46.228 00     SPR-I:OPRO         ;*********************************************************************
+21-225-14:23:46.229 00     SPR-I:OPRO         ;  Step 1.7: Setup initial dwell tables 
+21-225-14:23:46.229 00     SPR-I:OPRO         ;*********************************************************************
+21-225-14:23:46.229 00     SPR-I:OPRO         ;  Setup initial dwell table 1
+21-225-14:23:46.229 00     SPR-I:OPRO         ;*********************************************************************
+21-225-14:23:46.237 00     SPR-I:OPRO         ;***********************************************************************
+21-225-14:23:46.237 00     SPR-I:OPRO         ; Setup event 1 with CFE_TBL INFO 14
+21-225-14:23:46.238 00     SPR-I:OPRO         ;***********************************************************************
+21-225-14:23:46.239 00     SPR-I:STS          Loading file /s/opr/accounts/cfs_test/prc/get_tbl_to_cvt.i
+21-225-14:23:46.242 00     SPR-I:STS          Procedure GET_TBL_TO_CVT started
+21-225-14:23:46.262 00     SPR-I:OPRO         Sending Command: /SCX_CPU1_TBL_DUMP ACTIVE DTABLENAME="MD.DWELL_TABLE1" DFILENAME="/ram/md_dwl_tbl1_a"
+21-225-14:23:46.277 00     SPR-I:STTE         Wait mode - waiting 15 seconds ...
+21-225-14:23:47.001 00    TLMH-I:STS          58-012-14:05:07.501 INFO CPU=CPU1 APPNAME=CFE_TBL EVENT ID=14 Successfully dumped Table 'MD.DWELL_TABLE1' to '/ram/md_dwl_tbl1_a'
+21-225-14:24:01.286 00     SPR-I:OPRO         
+21-225-14:24:01.286 00     SPR-I:OPRO            The TBLNAME is: MD.DWELL_TABLE1
+21-225-14:24:01.286 00     SPR-I:OPRO               The APID is: P0FA8
+21-225-14:24:01.286 00     SPR-I:OPRO                The CPU is: CPU3
+21-225-14:24:01.286 00     SPR-I:OPRO         The IP Address is: 192.168.1.8
+21-225-14:24:01.289 00     SPR-I:OPRO         The perl command is: perl /s/opr/accounts/global/tools/ftp.pl RAM:0 md_dwl_tbl1_a md_dwl_tbl1_a binary 192.168.1.8
+21-225-14:24:01.457 00     SPR-I:OPRO         Return code from ftp_file.pl: 0
+21-225-14:24:01.458 00     SPR-I:STTE         Wait mode - waiting 15 seconds ...
+21-225-14:24:16.470 00     SPR-I:OPRO         
+21-225-14:24:16.491 00     SPR-I:OPRO         The unix command is cvt -ws file_list[4008].file_write_time "`date +%y-%j-%T -r /s/opr/accounts/cfs_test/image/md_dwl_tbl1_a`"
+21-225-14:24:16.492 00     SPR-I:STTE         Wait mode - waiting 5 seconds ...
+21-225-14:24:21.496 00     SPR-I:STS          Procedure GET_TBL_TO_CVT completed
+21-225-14:24:21.503 00     SPR-I:STTE         WAIT UNTIL completed
+21-225-14:24:21.507 00     SPR-I:OPRO         ;***********************************************************************
+21-225-14:24:21.507 00     SPR-I:OPRO         ; Setup event 1 with CFE_TBL INFO 12
+21-225-14:24:21.507 00     SPR-I:OPRO         ;***********************************************************************
+21-225-14:24:21.507 00     SPR-I:STS          Loading file /s/opr/accounts/cfs_test/prc/create_tbl_file_from_cvt.i
+21-225-14:24:21.508 00     SPR-I:STS          Procedure CREATE_TBL_FILE_FROM_CVT started
+21-225-14:24:21.510 00     SPR-I:OPRO         **********  md_dwl_ld_sg_tbl1  **********
+21-225-14:24:21.510 00     SPR-I:OPRO         
+21-225-14:24:21.510 00     SPR-I:OPRO                Content Type: cFE1
+21-225-14:24:21.510 00     SPR-I:OPRO                    Sub Type: 8
+21-225-14:24:21.510 00     SPR-I:OPRO                      Length: 12
+21-225-14:24:21.510 00     SPR-I:OPRO               Spacecraft Id: SCX
+21-225-14:24:21.510 00     SPR-I:OPRO                Processor Id: CPU3
+21-225-14:24:21.510 00     SPR-I:OPRO              Application Id: 4008
+21-225-14:24:21.510 00     SPR-I:OPRO            Create Time Secs: 1628864661
+21-225-14:24:21.510 00     SPR-I:OPRO         Create Time Subsecs: 0
+21-225-14:24:21.510 00     SPR-I:OPRO            File Description: Dwell Table #1 Load
+21-225-14:24:21.510 00     SPR-I:OPRO         
+21-225-14:24:21.510 00     SPR-I:OPRO         **********  MD.DWELL_TABLE1  **********
+21-225-14:24:21.510 00     SPR-I:OPRO         
+21-225-14:24:21.510 00     SPR-I:OPRO              Start Mnemonic: SCX_CPU1_MD_Dwell_Load_Tbl1.MD_DTL_Enabled
+21-225-14:24:21.510 00     SPR-I:OPRO                 Byte Offset: 0
+21-225-14:24:21.510 00     SPR-I:OPRO                End Mnemonic: SCX_CPU1_MD_Dwell_Load_Tbl1.MD_DTL_Entry[3]
+21-225-14:24:21.510 00     SPR-I:OPRO             Number of Bytes: 252
+21-225-14:24:21.510 00     SPR-I:OPRO         
+21-225-14:24:21.517 00     SPR-I:STS          Loading file /s/opr/accounts/global/prc/partial_cvt_to_file_beta.i
+21-225-14:24:21.518 00     SPR-I:STS          Procedure PARTIAL_CVT_TO_FILE_BETA started
+21-225-14:24:21.519 00     SPR-I:OPRO         The unix command is cd /s/opr/accounts/cfs_test/image;cvt2file  -s 116 -e 367 P0FA8 md.dwell_table1
+21-225-14:24:21.527 00     SPR-I:STS          Procedure PARTIAL_CVT_TO_FILE_BETA completed
+21-225-14:24:21.527 00     SPR-I:OPRO         cd /s/opr/accounts/cfs_test/image;cat md_dwl_ld_sg_tbl1.tmp md.dwell_table1 > md_dwl_ld_sg_tbl1
+21-225-14:24:21.531 00     SPR-I:OPRO         cd /s/opr/accounts/cfs_test/image;rm md.dwell_table1 md_dwl_ld_sg_tbl1.tmp
+21-225-14:24:21.536 00     SPR-I:STS          Procedure CREATE_TBL_FILE_FROM_CVT completed
+21-225-14:24:21.537 00     SPR-I:STS          Loading file /s/opr/accounts/cfs_test/prc/load_table.i
+21-225-14:24:21.537 00     SPR-I:STS          Procedure LOAD_TABLE started
+21-225-14:24:21.539 00     SPR-I:OPRO         Table Filename: md_dwl_ld_sg_tbl1
+21-225-14:24:21.540 00     SPR-I:OPRO         The perl command is: perl /s/opr/accounts/global/tools/table_ftp.pl 192.168.1.8 md_dwl_ld_sg_tbl1 RAM:0 3
+21-225-14:24:21.540 00     SPR-I:OPRO         
+21-225-14:24:21.676 00     SPR-I:OPRO         Return code from ftp_file.pl: 0
+21-225-14:24:21.676 00     SPR-I:STTE         Wait mode - waiting 5 seconds ...
+21-225-14:24:26.680 00     SPR-I:OPRO         
+21-225-14:24:26.683 00     SPR-I:OPRO         Sending Command: /SCX_CPU1_TBL_LOAD LFILENAME="/ram/md_dwl_ld_sg_tbl1"
+21-225-14:24:26.701 00     SPR-I:STTE         Wait mode - WAIT UNTIL ...
+21-225-14:24:27.501 00    TLMH-I:STS          58-012-14:05:48.001 INFO CPU=CPU1 APPNAME=CFE_TBL EVENT ID=12 Successful load of '/ram/md_dwl_ld_sg_tbl1' into 'MD.DWELL_TABLE1' working buffer
+21-225-14:24:27.702 00     SPR-I:STTE         WAIT UNTIL completed
+21-225-14:24:27.703 00     SPR-I:STS          Procedure LOAD_TABLE completed
+21-225-14:24:27.716 00     SPR-I:STTE         WAIT UNTIL completed
+21-225-14:24:27.717 00     SPR-I:OPRO         <*> Passed (1004) - Table load command sent.
+21-225-14:24:27.721 00     SPR-I:OPRO         <*> Passed (1004) - Event message 12 received
+21-225-14:24:27.724 00     SPR-I:STTE         Wait mode - waiting 5 seconds ...
+21-225-14:24:32.731 00     SPR-I:OPRO         ;**********************************************************************
+21-225-14:24:32.731 00     SPR-I:OPRO         ; Validate the inactive buffer for Dwell Table #1.
+21-225-14:24:32.731 00     SPR-I:OPRO         ;**********************************************************************
+21-225-14:24:32.738 00     SPR-I:OPRO         ;***********************************************************************
+21-225-14:24:32.739 00     SPR-I:OPRO         ; Setup event 1 with CFE_TBL DEBUG 16
+21-225-14:24:32.739 00     SPR-I:OPRO         ;***********************************************************************
+21-225-14:24:32.756 00     SPR-I:OPRO         Sending command:  SCX_CPU1_TBL_VALIDATE INACTIVE VTABLENAME=MDTblName1
+21-225-14:24:32.769 00     SPR-I:OPRO          ; Telemetry update will wait a maximum of 24 seconds
+21-225-14:24:32.770 00     SPR-I:STTE         Wait mode - WAIT UNTIL ...
+21-225-14:24:33.506 00    TLMH-I:STS          58-012-14:05:54.001 DEBUG CPU=CPU1 APPNAME=CFE_TBL EVENT ID=16 Tbl Services issued validation request for 'MD.DWELL_TABLE1'
+21-225-14:24:33.507 00    TLMH-I:STS          58-012-14:05:54.002 INFO CPU=CPU1 APPNAME=MD EVENT ID=52 MD Dwell Tbl verify results: good = 2, bad = 0, unused = 23
+21-225-14:24:33.508 00    TLMH-I:STS          58-012-14:05:54.002 INFO CPU=CPU1 APPNAME=CFE_TBL EVENT ID=36 MD validation successful for Inactive 'MD.DWELL_TABLE1'
+21-225-14:24:35.773 00     SPR-I:STTE         WAIT UNTIL completed
+21-225-14:24:35.775 00     SPR-I:OPRO         <*> Passed - Inactive Table #1 validate command sent.
+21-225-14:24:35.775 00     SPR-I:OPRO         <*> Passed - Event Msg 16 Found!
+21-225-14:24:35.776 00     SPR-I:OPRO         <*> Passed (3002) - Inactive Dwell Table #1 validated. Event Msg 36 Found!
+21-225-14:24:35.777 00     SPR-I:STTE         Wait mode - waiting 5 seconds ...
+21-225-14:24:40.781 00     SPR-I:OPRO         ;**********************************************************************
+21-225-14:24:40.781 00     SPR-I:OPRO         ; Activate the load for Dwell Table #1. 
+21-225-14:24:40.782 00     SPR-I:OPRO         ;**********************************************************************
+21-225-14:24:40.786 00     SPR-I:OPRO         ;***********************************************************************
+21-225-14:24:40.786 00     SPR-I:OPRO         ; Setup event 1 with CFE_TBL DEBUG 17
+21-225-14:24:40.786 00     SPR-I:OPRO         ;***********************************************************************
+21-225-14:24:40.790 00     SPR-I:OPRO         ;***********************************************************************
+21-225-14:24:40.790 00     SPR-I:OPRO         ; Setup event 2 with CFE_TBL INFO 37
+21-225-14:24:40.790 00     SPR-I:OPRO         ;***********************************************************************
+21-225-14:24:40.794 00     SPR-I:OPRO         Sending command:  SCX_CPU1_TBL_ACTIVATE ATableName=MDTblName1
+21-225-14:24:40.809 00     SPR-I:OPRO          ; Telemetry update will wait a maximum of 24 seconds
+21-225-14:24:40.810 00     SPR-I:STTE         Wait mode - WAIT UNTIL ...
+21-225-14:24:41.502 00    TLMH-I:STS          58-012-14:06:02.001 DEBUG CPU=CPU1 APPNAME=CFE_TBL EVENT ID=17 Tbl Services notifying App that 'MD.DWELL_TABLE1' has a load pending
+21-225-14:24:41.504 00    TLMH-I:STS          58-012-14:06:02.002 INFO CPU=CPU1 APPNAME=CFE_TBL EVENT ID=37 MD Successfully Updated 'MD.DWELL_TABLE1'
+21-225-14:24:43.812 00     SPR-I:STTE         WAIT UNTIL completed
+21-225-14:24:43.813 00     SPR-I:STTE         Wait mode - waiting 5 seconds ...
+21-225-14:24:48.816 00     SPR-I:OPRO         <*> Passed - Dwell Table #1 Activated. Event Msg 37 Found!
+21-225-14:24:48.816 00     SPR-I:STTE         Wait mode - waiting 5 seconds ...
+21-225-14:24:53.820 00     SPR-I:OPRO         ;*********************************************************************
+21-225-14:24:53.820 00     SPR-I:OPRO         ;  Setup initial dwell table 2
+21-225-14:24:53.820 00     SPR-I:OPRO         ;*********************************************************************
+21-225-14:24:53.822 00     SPR-I:OPRO         ;***********************************************************************
+21-225-14:24:53.822 00     SPR-I:OPRO         ; Setup event 1 with CFE_TBL INFO 14
+21-225-14:24:53.822 00     SPR-I:OPRO         ;***********************************************************************
+21-225-14:24:53.822 00     SPR-I:STS          Loading file /s/opr/accounts/cfs_test/prc/get_tbl_to_cvt.i
+21-225-14:24:53.823 00     SPR-I:STS          Procedure GET_TBL_TO_CVT started
+21-225-14:24:53.827 00     SPR-I:OPRO         Sending Command: /SCX_CPU1_TBL_DUMP ACTIVE DTABLENAME="MD.DWELL_TABLE2" DFILENAME="/ram/md_dwl_tbl2_a"
+21-225-14:24:53.839 00     SPR-I:STTE         Wait mode - waiting 15 seconds ...
+21-225-14:24:54.505 00    TLMH-I:STS          58-012-14:06:15.002 INFO CPU=CPU1 APPNAME=CFE_TBL EVENT ID=14 Successfully dumped Table 'MD.DWELL_TABLE2' to '/ram/md_dwl_tbl2_a'
+21-225-14:25:08.849 00     SPR-I:OPRO         
+21-225-14:25:08.849 00     SPR-I:OPRO            The TBLNAME is: MD.DWELL_TABLE2
+21-225-14:25:08.849 00     SPR-I:OPRO               The APID is: P0FA9
+21-225-14:25:08.849 00     SPR-I:OPRO                The CPU is: CPU3
+21-225-14:25:08.849 00     SPR-I:OPRO         The IP Address is: 192.168.1.8
+21-225-14:25:08.850 00     SPR-I:OPRO         The perl command is: perl /s/opr/accounts/global/tools/ftp.pl RAM:0 md_dwl_tbl2_a md_dwl_tbl2_a binary 192.168.1.8
+21-225-14:25:08.986 00     SPR-I:OPRO         Return code from ftp_file.pl: 0
+21-225-14:25:08.986 00     SPR-I:STTE         Wait mode - waiting 15 seconds ...
+21-225-14:25:24.000 00     SPR-I:OPRO         
+21-225-14:25:24.022 00     SPR-I:OPRO         The unix command is cvt -ws file_list[4009].file_write_time "`date +%y-%j-%T -r /s/opr/accounts/cfs_test/image/md_dwl_tbl2_a`"
+21-225-14:25:24.022 00     SPR-I:STTE         Wait mode - waiting 5 seconds ...
+21-225-14:25:29.026 00     SPR-I:STS          Procedure GET_TBL_TO_CVT completed
+21-225-14:25:29.034 00     SPR-I:STTE         WAIT UNTIL completed
+21-225-14:25:29.037 00     SPR-I:OPRO         ;***********************************************************************
+21-225-14:25:29.037 00     SPR-I:OPRO         ; Setup event 1 with CFE_TBL INFO 12
+21-225-14:25:29.037 00     SPR-I:OPRO         ;***********************************************************************
+21-225-14:25:29.038 00     SPR-I:STS          Loading file /s/opr/accounts/cfs_test/prc/create_tbl_file_from_cvt.i
+21-225-14:25:29.038 00     SPR-I:STS          Procedure CREATE_TBL_FILE_FROM_CVT started
+21-225-14:25:29.040 00     SPR-I:OPRO         **********  md_dwl_ld_sg_tbl2  **********
+21-225-14:25:29.040 00     SPR-I:OPRO         
+21-225-14:25:29.040 00     SPR-I:OPRO                Content Type: cFE1
+21-225-14:25:29.040 00     SPR-I:OPRO                    Sub Type: 8
+21-225-14:25:29.040 00     SPR-I:OPRO                      Length: 12
+21-225-14:25:29.040 00     SPR-I:OPRO               Spacecraft Id: SCX
+21-225-14:25:29.040 00     SPR-I:OPRO                Processor Id: CPU3
+21-225-14:25:29.040 00     SPR-I:OPRO              Application Id: 4009
+21-225-14:25:29.040 00     SPR-I:OPRO            Create Time Secs: 1628864729
+21-225-14:25:29.041 00     SPR-I:OPRO         Create Time Subsecs: 0
+21-225-14:25:29.041 00     SPR-I:OPRO            File Description: Dwell Table #2 Load
+21-225-14:25:29.041 00     SPR-I:OPRO         
+21-225-14:25:29.041 00     SPR-I:OPRO         **********  MD.DWELL_TABLE2  **********
+21-225-14:25:29.041 00     SPR-I:OPRO         
+21-225-14:25:29.041 00     SPR-I:OPRO              Start Mnemonic: SCX_CPU1_MD_Dwell_Load_Tbl2.MD_DTL_Enabled
+21-225-14:25:29.041 00     SPR-I:OPRO                 Byte Offset: 0
+21-225-14:25:29.041 00     SPR-I:OPRO                End Mnemonic: SCX_CPU1_MD_Dwell_Load_Tbl2.MD_DTL_Entry[3]
+21-225-14:25:29.041 00     SPR-I:OPRO             Number of Bytes: 252
+21-225-14:25:29.041 00     SPR-I:OPRO         
+21-225-14:25:29.047 00     SPR-I:STS          Loading file /s/opr/accounts/global/prc/partial_cvt_to_file_beta.i
+21-225-14:25:29.048 00     SPR-I:STS          Procedure PARTIAL_CVT_TO_FILE_BETA started
+21-225-14:25:29.048 00     SPR-I:OPRO         The unix command is cd /s/opr/accounts/cfs_test/image;cvt2file  -s 116 -e 367 P0FA9 md.dwell_table2
+21-225-14:25:29.056 00     SPR-I:STS          Procedure PARTIAL_CVT_TO_FILE_BETA completed
+21-225-14:25:29.057 00     SPR-I:OPRO         cd /s/opr/accounts/cfs_test/image;cat md_dwl_ld_sg_tbl2.tmp md.dwell_table2 > md_dwl_ld_sg_tbl2
+21-225-14:25:29.062 00     SPR-I:OPRO         cd /s/opr/accounts/cfs_test/image;rm md.dwell_table2 md_dwl_ld_sg_tbl2.tmp
+21-225-14:25:29.066 00     SPR-I:STS          Procedure CREATE_TBL_FILE_FROM_CVT completed
+21-225-14:25:29.067 00     SPR-I:STS          Loading file /s/opr/accounts/cfs_test/prc/load_table.i
+21-225-14:25:29.068 00     SPR-I:STS          Procedure LOAD_TABLE started
+21-225-14:25:29.070 00     SPR-I:OPRO         Table Filename: md_dwl_ld_sg_tbl2
+21-225-14:25:29.072 00     SPR-I:OPRO         The perl command is: perl /s/opr/accounts/global/tools/table_ftp.pl 192.168.1.8 md_dwl_ld_sg_tbl2 RAM:0 3
+21-225-14:25:29.072 00     SPR-I:OPRO         
+21-225-14:25:29.207 00     SPR-I:OPRO         Return code from ftp_file.pl: 0
+21-225-14:25:29.207 00     SPR-I:STTE         Wait mode - waiting 5 seconds ...
+21-225-14:25:34.211 00     SPR-I:OPRO         
+21-225-14:25:34.214 00     SPR-I:OPRO         Sending Command: /SCX_CPU1_TBL_LOAD LFILENAME="/ram/md_dwl_ld_sg_tbl2"
+21-225-14:25:34.252 00     SPR-I:STTE         Wait mode - WAIT UNTIL ...
+21-225-14:25:35.002 00    TLMH-I:STS          58-012-14:06:55.500 INFO CPU=CPU1 APPNAME=CFE_TBL EVENT ID=12 Successful load of '/ram/md_dwl_ld_sg_tbl2' into 'MD.DWELL_TABLE2' working buffer
+21-225-14:25:36.254 00     SPR-I:STTE         WAIT UNTIL completed
+21-225-14:25:36.256 00     SPR-I:STS          Procedure LOAD_TABLE completed
+21-225-14:25:36.269 00     SPR-I:STTE         WAIT UNTIL completed
+21-225-14:25:36.270 00     SPR-I:OPRO         <*> Passed (1004) - Table load command sent.
+21-225-14:25:36.272 00     SPR-I:OPRO         <*> Passed (1004) - Event message 12 received
+21-225-14:25:36.275 00     SPR-I:STTE         Wait mode - waiting 5 seconds ...
+21-225-14:25:41.279 00     SPR-I:OPRO         ;**********************************************************************
+21-225-14:25:41.279 00     SPR-I:OPRO         ; Validate the inactive buffer for Dwell Table #2.
+21-225-14:25:41.280 00     SPR-I:OPRO         ;**********************************************************************
+21-225-14:25:41.285 00     SPR-I:OPRO         ;***********************************************************************
+21-225-14:25:41.287 00     SPR-I:OPRO         ; Setup event 1 with CFE_TBL DEBUG 16
+21-225-14:25:41.287 00     SPR-I:OPRO         ;***********************************************************************
+21-225-14:25:41.304 00     SPR-I:OPRO         Sending command:  SCX_CPU1_TBL_VALIDATE INACTIVE VTABLENAME=MDTblName2
+21-225-14:25:41.322 00     SPR-I:OPRO          ; Telemetry update will wait a maximum of 24 seconds
+21-225-14:25:41.323 00     SPR-I:STTE         Wait mode - WAIT UNTIL ...
+21-225-14:25:42.003 00    TLMH-I:STS          58-012-14:07:02.500 DEBUG CPU=CPU1 APPNAME=CFE_TBL EVENT ID=16 Tbl Services issued validation request for 'MD.DWELL_TABLE2'
+21-225-14:25:42.500 00    TLMH-I:STS          58-012-14:07:03.001 INFO CPU=CPU1 APPNAME=MD EVENT ID=52 MD Dwell Tbl verify results: good = 2, bad = 0, unused = 23
+21-225-14:25:42.501 00    TLMH-I:STS          58-012-14:07:03.001 INFO CPU=CPU1 APPNAME=CFE_TBL EVENT ID=36 MD validation successful for Inactive 'MD.DWELL_TABLE2'
+21-225-14:25:44.326 00     SPR-I:STTE         WAIT UNTIL completed
+21-225-14:25:44.329 00     SPR-I:OPRO         <*> Passed - Inactive Table #2 validate command sent.
+21-225-14:25:44.330 00     SPR-I:OPRO         <*> Passed - Event Msg 16 Found!
+21-225-14:25:44.331 00     SPR-I:OPRO         <*> Passed (3002) - Inactive Dwell Table #2 validated. Event Msg 36 Found!
+21-225-14:25:44.333 00     SPR-I:STTE         Wait mode - waiting 5 seconds ...
+21-225-14:25:49.337 00     SPR-I:OPRO         ;**********************************************************************
+21-225-14:25:49.338 00     SPR-I:OPRO         ; Activate the load for Dwell Table #2. 
+21-225-14:25:49.338 00     SPR-I:OPRO         ;**********************************************************************
+21-225-14:25:49.344 00     SPR-I:OPRO         ;***********************************************************************
+21-225-14:25:49.344 00     SPR-I:OPRO         ; Setup event 1 with CFE_TBL DEBUG 17
+21-225-14:25:49.344 00     SPR-I:OPRO         ;***********************************************************************
+21-225-14:25:49.353 00     SPR-I:OPRO         ;***********************************************************************
+21-225-14:25:49.353 00     SPR-I:OPRO         ; Setup event 2 with CFE_TBL INFO 37
+21-225-14:25:49.353 00     SPR-I:OPRO         ;***********************************************************************
+21-225-14:25:49.371 00     SPR-I:OPRO         Sending command:  SCX_CPU1_TBL_ACTIVATE ATableName=MDTblName2
+21-225-14:25:49.382 00     SPR-I:OPRO          ; Telemetry update will wait a maximum of 24 seconds
+21-225-14:25:49.384 00     SPR-I:STTE         Wait mode - WAIT UNTIL ...
+21-225-14:25:50.002 00    TLMH-I:STS          58-012-14:07:10.500 DEBUG CPU=CPU1 APPNAME=CFE_TBL EVENT ID=17 Tbl Services notifying App that 'MD.DWELL_TABLE2' has a load pending
+21-225-14:25:50.500 00    TLMH-I:STS          58-012-14:07:11.002 INFO CPU=CPU1 APPNAME=CFE_TBL EVENT ID=37 MD Successfully Updated 'MD.DWELL_TABLE2'
+21-225-14:25:52.388 00     SPR-I:STTE         WAIT UNTIL completed
+21-225-14:25:52.392 00     SPR-I:STTE         Wait mode - waiting 5 seconds ...
+21-225-14:25:57.396 00     SPR-I:OPRO         <*> Passed - Dwell Table #2 Activated. Event Msg 37 Found!
+21-225-14:25:57.397 00     SPR-I:STTE         Wait mode - waiting 5 seconds ...
+21-225-14:26:02.400 00     SPR-I:OPRO         ;*********************************************************************
+21-225-14:26:02.400 00     SPR-I:OPRO         ;  Setup initial dwell table 3
+21-225-14:26:02.400 00     SPR-I:OPRO         ;*********************************************************************
+21-225-14:26:02.406 00     SPR-I:OPRO         ;***********************************************************************
+21-225-14:26:02.407 00     SPR-I:OPRO         ; Setup event 1 with CFE_TBL INFO 14
+21-225-14:26:02.407 00     SPR-I:OPRO         ;***********************************************************************
+21-225-14:26:02.409 00     SPR-I:STS          Loading file /s/opr/accounts/cfs_test/prc/get_tbl_to_cvt.i
+21-225-14:26:02.411 00     SPR-I:STS          Procedure GET_TBL_TO_CVT started
+21-225-14:26:02.432 00     SPR-I:OPRO         Sending Command: /SCX_CPU1_TBL_DUMP ACTIVE DTABLENAME="MD.DWELL_TABLE3" DFILENAME="/ram/md_dwl_tbl3_a"
+21-225-14:26:02.446 00     SPR-I:STTE         Wait mode - waiting 15 seconds ...
+21-225-14:26:02.997 00    TLMH-I:STS          58-012-14:07:23.501 INFO CPU=CPU1 APPNAME=CFE_TBL EVENT ID=14 Successfully dumped Table 'MD.DWELL_TABLE3' to '/ram/md_dwl_tbl3_a'
+21-225-14:26:17.457 00     SPR-I:OPRO         
+21-225-14:26:17.457 00     SPR-I:OPRO            The TBLNAME is: MD.DWELL_TABLE3
+21-225-14:26:17.457 00     SPR-I:OPRO               The APID is: P0FAA
+21-225-14:26:17.458 00     SPR-I:OPRO                The CPU is: CPU3
+21-225-14:26:17.458 00     SPR-I:OPRO         The IP Address is: 192.168.1.8
+21-225-14:26:17.461 00     SPR-I:OPRO         The perl command is: perl /s/opr/accounts/global/tools/ftp.pl RAM:0 md_dwl_tbl3_a md_dwl_tbl3_a binary 192.168.1.8
+21-225-14:26:17.601 00     SPR-I:OPRO         Return code from ftp_file.pl: 0
+21-225-14:26:17.601 00     SPR-I:STTE         Wait mode - waiting 15 seconds ...
+21-225-14:26:32.612 00     SPR-I:OPRO         
+21-225-14:26:32.627 00     SPR-I:OPRO         The unix command is cvt -ws file_list[4010].file_write_time "`date +%y-%j-%T -r /s/opr/accounts/cfs_test/image/md_dwl_tbl3_a`"
+21-225-14:26:32.627 00     SPR-I:STTE         Wait mode - waiting 5 seconds ...
+21-225-14:26:37.630 00     SPR-I:STS          Procedure GET_TBL_TO_CVT completed
+21-225-14:26:37.637 00     SPR-I:STTE         WAIT UNTIL completed
+21-225-14:26:37.639 00     SPR-I:OPRO         ;***********************************************************************
+21-225-14:26:37.639 00     SPR-I:OPRO         ; Setup event 1 with CFE_TBL INFO 12
+21-225-14:26:37.639 00     SPR-I:OPRO         ;***********************************************************************
+21-225-14:26:37.639 00     SPR-I:STS          Loading file /s/opr/accounts/cfs_test/prc/create_tbl_file_from_cvt.i
+21-225-14:26:37.640 00     SPR-I:STS          Procedure CREATE_TBL_FILE_FROM_CVT started
+21-225-14:26:37.641 00     SPR-I:OPRO         **********  md_dwl_ld_sg_tbl3  **********
+21-225-14:26:37.641 00     SPR-I:OPRO         
+21-225-14:26:37.641 00     SPR-I:OPRO                Content Type: cFE1
+21-225-14:26:37.641 00     SPR-I:OPRO                    Sub Type: 8
+21-225-14:26:37.642 00     SPR-I:OPRO                      Length: 12
+21-225-14:26:37.642 00     SPR-I:OPRO               Spacecraft Id: SCX
+21-225-14:26:37.642 00     SPR-I:OPRO                Processor Id: CPU3
+21-225-14:26:37.642 00     SPR-I:OPRO              Application Id: 4010
+21-225-14:26:37.642 00     SPR-I:OPRO            Create Time Secs: 1628864797
+21-225-14:26:37.642 00     SPR-I:OPRO         Create Time Subsecs: 0
+21-225-14:26:37.642 00     SPR-I:OPRO            File Description: Dwell Table #3 Load
+21-225-14:26:37.642 00     SPR-I:OPRO         
+21-225-14:26:37.642 00     SPR-I:OPRO         **********  MD.DWELL_TABLE3  **********
+21-225-14:26:37.642 00     SPR-I:OPRO         
+21-225-14:26:37.642 00     SPR-I:OPRO              Start Mnemonic: SCX_CPU1_MD_Dwell_Load_Tbl3.MD_DTL_Enabled
+21-225-14:26:37.642 00     SPR-I:OPRO                 Byte Offset: 0
+21-225-14:26:37.642 00     SPR-I:OPRO                End Mnemonic: SCX_CPU1_MD_Dwell_Load_Tbl3.MD_DTL_Entry[3]
+21-225-14:26:37.642 00     SPR-I:OPRO             Number of Bytes: 252
+21-225-14:26:37.642 00     SPR-I:OPRO         
+21-225-14:26:37.647 00     SPR-I:STS          Loading file /s/opr/accounts/global/prc/partial_cvt_to_file_beta.i
+21-225-14:26:37.647 00     SPR-I:STS          Procedure PARTIAL_CVT_TO_FILE_BETA started
+21-225-14:26:37.648 00     SPR-I:OPRO         The unix command is cd /s/opr/accounts/cfs_test/image;cvt2file  -s 116 -e 367 P0FAA md.dwell_table3
+21-225-14:26:37.653 00     SPR-I:STS          Procedure PARTIAL_CVT_TO_FILE_BETA completed
+21-225-14:26:37.654 00     SPR-I:OPRO         cd /s/opr/accounts/cfs_test/image;cat md_dwl_ld_sg_tbl3.tmp md.dwell_table3 > md_dwl_ld_sg_tbl3
+21-225-14:26:37.659 00     SPR-I:OPRO         cd /s/opr/accounts/cfs_test/image;rm md.dwell_table3 md_dwl_ld_sg_tbl3.tmp
+21-225-14:26:37.662 00     SPR-I:STS          Procedure CREATE_TBL_FILE_FROM_CVT completed
+21-225-14:26:37.663 00     SPR-I:STS          Loading file /s/opr/accounts/cfs_test/prc/load_table.i
+21-225-14:26:37.663 00     SPR-I:STS          Procedure LOAD_TABLE started
+21-225-14:26:37.665 00     SPR-I:OPRO         Table Filename: md_dwl_ld_sg_tbl3
+21-225-14:26:37.666 00     SPR-I:OPRO         The perl command is: perl /s/opr/accounts/global/tools/table_ftp.pl 192.168.1.8 md_dwl_ld_sg_tbl3 RAM:0 3
+21-225-14:26:37.666 00     SPR-I:OPRO         
+21-225-14:26:37.808 00     SPR-I:OPRO         Return code from ftp_file.pl: 0
+21-225-14:26:37.808 00     SPR-I:STTE         Wait mode - waiting 5 seconds ...
+21-225-14:26:42.812 00     SPR-I:OPRO         
+21-225-14:26:42.815 00     SPR-I:OPRO         Sending Command: /SCX_CPU1_TBL_LOAD LFILENAME="/ram/md_dwl_ld_sg_tbl3"
+21-225-14:26:42.843 00     SPR-I:STTE         Wait mode - WAIT UNTIL ...
+21-225-14:26:43.506 00    TLMH-I:STS          58-012-14:08:04.001 INFO CPU=CPU1 APPNAME=CFE_TBL EVENT ID=12 Successful load of '/ram/md_dwl_ld_sg_tbl3' into 'MD.DWELL_TABLE3' working buffer
+21-225-14:26:43.846 00     SPR-I:STTE         WAIT UNTIL completed
+21-225-14:26:43.848 00     SPR-I:STS          Procedure LOAD_TABLE completed
+21-225-14:26:43.860 00     SPR-I:STTE         WAIT UNTIL completed
+21-225-14:26:43.861 00     SPR-I:OPRO         <*> Passed (1004) - Table load command sent.
+21-225-14:26:43.863 00     SPR-I:OPRO         <*> Passed (1004) - Event message 12 received
+21-225-14:26:43.865 00     SPR-I:STTE         Wait mode - waiting 5 seconds ...
+21-225-14:26:48.869 00     SPR-I:OPRO         ;**********************************************************************
+21-225-14:26:48.869 00     SPR-I:OPRO         ; Validate the inactive buffer for Dwell Table #3.
+21-225-14:26:48.869 00     SPR-I:OPRO         ;**********************************************************************
+21-225-14:26:48.872 00     SPR-I:OPRO         ;***********************************************************************
+21-225-14:26:48.872 00     SPR-I:OPRO         ; Setup event 1 with CFE_TBL DEBUG 16
+21-225-14:26:48.873 00     SPR-I:OPRO         ;***********************************************************************
+21-225-14:26:48.879 00     SPR-I:OPRO         Sending command:  SCX_CPU1_TBL_VALIDATE INACTIVE VTABLENAME=MDTblName3
+21-225-14:26:48.894 00     SPR-I:OPRO          ; Telemetry update will wait a maximum of 24 seconds
+21-225-14:26:48.894 00     SPR-I:STTE         Wait mode - WAIT UNTIL ...
+21-225-14:26:49.500 00    TLMH-I:STS          58-012-14:08:10.001 DEBUG CPU=CPU1 APPNAME=CFE_TBL EVENT ID=16 Tbl Services issued validation request for 'MD.DWELL_TABLE3'
+21-225-14:26:49.501 00    TLMH-I:STS          58-012-14:08:10.002 INFO CPU=CPU1 APPNAME=MD EVENT ID=52 MD Dwell Tbl verify results: good = 2, bad = 0, unused = 23
+21-225-14:26:49.502 00    TLMH-I:STS          58-012-14:08:10.002 INFO CPU=CPU1 APPNAME=CFE_TBL EVENT ID=36 MD validation successful for Inactive 'MD.DWELL_TABLE3'
+21-225-14:26:51.898 00     SPR-I:STTE         WAIT UNTIL completed
+21-225-14:26:51.899 00     SPR-I:OPRO         <*> Passed - Inactive Table #3 validate command sent.
+21-225-14:26:51.899 00     SPR-I:OPRO         <*> Passed - Event Msg 16 Found!
+21-225-14:26:51.899 00     SPR-I:OPRO         <*> Passed (3002) - Inactive Dwell Table #3 validated. Event Msg 36 Found!
+21-225-14:26:51.900 00     SPR-I:STTE         Wait mode - waiting 5 seconds ...
+21-225-14:26:56.903 00     SPR-I:OPRO         ;**********************************************************************
+21-225-14:26:56.903 00     SPR-I:OPRO         ; Activate the load for Dwell Table #3. 
+21-225-14:26:56.903 00     SPR-I:OPRO         ;**********************************************************************
+21-225-14:26:56.905 00     SPR-I:OPRO         ;***********************************************************************
+21-225-14:26:56.905 00     SPR-I:OPRO         ; Setup event 1 with CFE_TBL DEBUG 17
+21-225-14:26:56.905 00     SPR-I:OPRO         ;***********************************************************************
+21-225-14:26:56.907 00     SPR-I:OPRO         ;***********************************************************************
+21-225-14:26:56.907 00     SPR-I:OPRO         ; Setup event 2 with CFE_TBL INFO 37
+21-225-14:26:56.907 00     SPR-I:OPRO         ;***********************************************************************
+21-225-14:26:56.912 00     SPR-I:OPRO         Sending command:  SCX_CPU1_TBL_ACTIVATE ATableName=MDTblName3
+21-225-14:26:56.927 00     SPR-I:OPRO          ; Telemetry update will wait a maximum of 24 seconds
+21-225-14:26:56.927 00     SPR-I:STTE         Wait mode - WAIT UNTIL ...
+21-225-14:26:57.498 00    TLMH-I:STS          58-012-14:08:18.001 DEBUG CPU=CPU1 APPNAME=CFE_TBL EVENT ID=17 Tbl Services notifying App that 'MD.DWELL_TABLE3' has a load pending
+21-225-14:26:57.499 00    TLMH-I:STS          58-012-14:08:18.003 INFO CPU=CPU1 APPNAME=CFE_TBL EVENT ID=37 MD Successfully Updated 'MD.DWELL_TABLE3'
+21-225-14:26:59.929 00     SPR-I:STTE         WAIT UNTIL completed
+21-225-14:26:59.930 00     SPR-I:STTE         Wait mode - waiting 5 seconds ...
+21-225-14:27:04.933 00     SPR-I:OPRO         <*> Passed - Dwell Table #3 Activated. Event Msg 37 Found!
+21-225-14:27:04.933 00     SPR-I:STTE         Wait mode - waiting 5 seconds ...
+21-225-14:27:09.937 00     SPR-I:OPRO         ;*********************************************************************
+21-225-14:27:09.937 00     SPR-I:OPRO         ;  Setup initial dwell table 4
+21-225-14:27:09.937 00     SPR-I:OPRO         ;*********************************************************************
+21-225-14:27:09.938 00     SPR-I:OPRO         ;***********************************************************************
+21-225-14:27:09.938 00     SPR-I:OPRO         ; Setup event 1 with CFE_TBL INFO 14
+21-225-14:27:09.938 00     SPR-I:OPRO         ;***********************************************************************
+21-225-14:27:09.939 00     SPR-I:STS          Loading file /s/opr/accounts/cfs_test/prc/get_tbl_to_cvt.i
+21-225-14:27:09.939 00     SPR-I:STS          Procedure GET_TBL_TO_CVT started
+21-225-14:27:09.944 00     SPR-I:OPRO         Sending Command: /SCX_CPU1_TBL_DUMP ACTIVE DTABLENAME="MD.DWELL_TABLE4" DFILENAME="/ram/md_dwl_tbl4_a"
+21-225-14:27:09.955 00     SPR-I:STTE         Wait mode - waiting 15 seconds ...
+21-225-14:27:10.499 00    TLMH-I:STS          58-012-14:08:31.002 INFO CPU=CPU1 APPNAME=CFE_TBL EVENT ID=14 Successfully dumped Table 'MD.DWELL_TABLE4' to '/ram/md_dwl_tbl4_a'
+21-225-14:27:24.966 00     SPR-I:OPRO         
+21-225-14:27:24.966 00     SPR-I:OPRO            The TBLNAME is: MD.DWELL_TABLE4
+21-225-14:27:24.966 00     SPR-I:OPRO               The APID is: P0FAB
+21-225-14:27:24.966 00     SPR-I:OPRO                The CPU is: CPU3
+21-225-14:27:24.966 00     SPR-I:OPRO         The IP Address is: 192.168.1.8
+21-225-14:27:24.967 00     SPR-I:OPRO         The perl command is: perl /s/opr/accounts/global/tools/ftp.pl RAM:0 md_dwl_tbl4_a md_dwl_tbl4_a binary 192.168.1.8
+21-225-14:27:25.094 00     SPR-I:OPRO         Return code from ftp_file.pl: 0
+21-225-14:27:25.094 00     SPR-I:STTE         Wait mode - waiting 15 seconds ...
+21-225-14:27:40.105 00     SPR-I:OPRO         
+21-225-14:27:40.155 00     SPR-I:OPRO         The unix command is cvt -ws file_list[4011].file_write_time "`date +%y-%j-%T -r /s/opr/accounts/cfs_test/image/md_dwl_tbl4_a`"
+21-225-14:27:40.156 00     SPR-I:STTE         Wait mode - waiting 5 seconds ...
+21-225-14:27:45.160 00     SPR-I:STS          Procedure GET_TBL_TO_CVT completed
+21-225-14:27:45.167 00     SPR-I:STTE         WAIT UNTIL completed
+21-225-14:27:45.169 00     SPR-I:OPRO         ;***********************************************************************
+21-225-14:27:45.169 00     SPR-I:OPRO         ; Setup event 1 with CFE_TBL INFO 12
+21-225-14:27:45.169 00     SPR-I:OPRO         ;***********************************************************************
+21-225-14:27:45.170 00     SPR-I:STS          Loading file /s/opr/accounts/cfs_test/prc/create_tbl_file_from_cvt.i
+21-225-14:27:45.170 00     SPR-I:STS          Procedure CREATE_TBL_FILE_FROM_CVT started
+21-225-14:27:45.172 00     SPR-I:OPRO         **********  md_dwl_ld_sg_tbl4  **********
+21-225-14:27:45.172 00     SPR-I:OPRO         
+21-225-14:27:45.172 00     SPR-I:OPRO                Content Type: cFE1
+21-225-14:27:45.172 00     SPR-I:OPRO                    Sub Type: 8
+21-225-14:27:45.172 00     SPR-I:OPRO                      Length: 12
+21-225-14:27:45.172 00     SPR-I:OPRO               Spacecraft Id: SCX
+21-225-14:27:45.172 00     SPR-I:OPRO                Processor Id: CPU3
+21-225-14:27:45.172 00     SPR-I:OPRO              Application Id: 4011
+21-225-14:27:45.172 00     SPR-I:OPRO            Create Time Secs: 1628864865
+21-225-14:27:45.172 00     SPR-I:OPRO         Create Time Subsecs: 0
+21-225-14:27:45.172 00     SPR-I:OPRO            File Description: Dwell Table #4 Load
+21-225-14:27:45.172 00     SPR-I:OPRO         
+21-225-14:27:45.172 00     SPR-I:OPRO         **********  MD.DWELL_TABLE4  **********
+21-225-14:27:45.172 00     SPR-I:OPRO         
+21-225-14:27:45.172 00     SPR-I:OPRO              Start Mnemonic: SCX_CPU1_MD_Dwell_Load_Tbl4.MD_DTL_Enabled
+21-225-14:27:45.172 00     SPR-I:OPRO                 Byte Offset: 0
+21-225-14:27:45.172 00     SPR-I:OPRO                End Mnemonic: SCX_CPU1_MD_Dwell_Load_Tbl4.MD_DTL_Entry[3]
+21-225-14:27:45.173 00     SPR-I:OPRO             Number of Bytes: 252
+21-225-14:27:45.173 00     SPR-I:OPRO         
+21-225-14:27:45.178 00     SPR-I:STS          Loading file /s/opr/accounts/global/prc/partial_cvt_to_file_beta.i
+21-225-14:27:45.178 00     SPR-I:STS          Procedure PARTIAL_CVT_TO_FILE_BETA started
+21-225-14:27:45.178 00     SPR-I:OPRO         The unix command is cd /s/opr/accounts/cfs_test/image;cvt2file  -s 116 -e 367 P0FAB md.dwell_table4
+21-225-14:27:45.184 00     SPR-I:STS          Procedure PARTIAL_CVT_TO_FILE_BETA completed
+21-225-14:27:45.184 00     SPR-I:OPRO         cd /s/opr/accounts/cfs_test/image;cat md_dwl_ld_sg_tbl4.tmp md.dwell_table4 > md_dwl_ld_sg_tbl4
+21-225-14:27:45.189 00     SPR-I:OPRO         cd /s/opr/accounts/cfs_test/image;rm md.dwell_table4 md_dwl_ld_sg_tbl4.tmp
+21-225-14:27:45.194 00     SPR-I:STS          Procedure CREATE_TBL_FILE_FROM_CVT completed
+21-225-14:27:45.195 00     SPR-I:STS          Loading file /s/opr/accounts/cfs_test/prc/load_table.i
+21-225-14:27:45.195 00     SPR-I:STS          Procedure LOAD_TABLE started
+21-225-14:27:45.197 00     SPR-I:OPRO         Table Filename: md_dwl_ld_sg_tbl4
+21-225-14:27:45.197 00     SPR-I:OPRO         The perl command is: perl /s/opr/accounts/global/tools/table_ftp.pl 192.168.1.8 md_dwl_ld_sg_tbl4 RAM:0 3
+21-225-14:27:45.198 00     SPR-I:OPRO         
+21-225-14:27:45.336 00     SPR-I:OPRO         Return code from ftp_file.pl: 0
+21-225-14:27:45.336 00     SPR-I:STTE         Wait mode - waiting 5 seconds ...
+21-225-14:27:50.340 00     SPR-I:OPRO         
+21-225-14:27:50.342 00     SPR-I:OPRO         Sending Command: /SCX_CPU1_TBL_LOAD LFILENAME="/ram/md_dwl_ld_sg_tbl4"
+21-225-14:27:50.371 00     SPR-I:STTE         Wait mode - WAIT UNTIL ...
+21-225-14:27:50.997 00    TLMH-I:STS          58-012-14:09:11.501 INFO CPU=CPU1 APPNAME=CFE_TBL EVENT ID=12 Successful load of '/ram/md_dwl_ld_sg_tbl4' into 'MD.DWELL_TABLE4' working buffer
+21-225-14:27:52.374 00     SPR-I:STTE         WAIT UNTIL completed
+21-225-14:27:52.375 00     SPR-I:STS          Procedure LOAD_TABLE completed
+21-225-14:27:52.387 00     SPR-I:STTE         WAIT UNTIL completed
+21-225-14:27:52.388 00     SPR-I:OPRO         <*> Passed (1004) - Table load command sent.
+21-225-14:27:52.391 00     SPR-I:OPRO         <*> Passed (1004) - Event message 12 received
+21-225-14:27:52.393 00     SPR-I:STTE         Wait mode - waiting 5 seconds ...
+21-225-14:27:57.397 00     SPR-I:OPRO         ;**********************************************************************
+21-225-14:27:57.397 00     SPR-I:OPRO         ; Validate the inactive buffer for Dwell Table #4.
+21-225-14:27:57.397 00     SPR-I:OPRO         ;**********************************************************************
+21-225-14:27:57.404 00     SPR-I:OPRO         ;***********************************************************************
+21-225-14:27:57.405 00     SPR-I:OPRO         ; Setup event 1 with CFE_TBL DEBUG 16
+21-225-14:27:57.405 00     SPR-I:OPRO         ;***********************************************************************
+21-225-14:27:57.424 00     SPR-I:OPRO         Sending command:  SCX_CPU1_TBL_VALIDATE INACTIVE VTABLENAME=MDTblName4
+21-225-14:27:57.436 00     SPR-I:OPRO          ; Telemetry update will wait a maximum of 24 seconds
+21-225-14:27:57.438 00     SPR-I:STTE         Wait mode - WAIT UNTIL ...
+21-225-14:27:57.998 00    TLMH-I:STS          58-012-14:09:18.500 DEBUG CPU=CPU1 APPNAME=CFE_TBL EVENT ID=16 Tbl Services issued validation request for 'MD.DWELL_TABLE4'
+21-225-14:27:58.506 00    TLMH-I:STS          58-012-14:09:19.001 INFO CPU=CPU1 APPNAME=MD EVENT ID=52 MD Dwell Tbl verify results: good = 2, bad = 0, unused = 23
+21-225-14:27:58.507 00    TLMH-I:STS          58-012-14:09:19.001 INFO CPU=CPU1 APPNAME=CFE_TBL EVENT ID=36 MD validation successful for Inactive 'MD.DWELL_TABLE4'
+21-225-14:28:00.441 00     SPR-I:STTE         WAIT UNTIL completed
+21-225-14:28:00.444 00     SPR-I:OPRO         <*> Passed - Inactive Table #4 validate command sent.
+21-225-14:28:00.445 00     SPR-I:OPRO         <*> Passed - Event Msg 16 Found!
+21-225-14:28:00.445 00     SPR-I:OPRO         <*> Passed (3002) - Inactive Dwell Table #4 validated. Event Msg 36 Found!
+21-225-14:28:00.448 00     SPR-I:STTE         Wait mode - waiting 5 seconds ...
+21-225-14:28:05.451 00     SPR-I:OPRO         ;**********************************************************************
+21-225-14:28:05.451 00     SPR-I:OPRO         ; Activate the load for Dwell Table #4. 
+21-225-14:28:05.451 00     SPR-I:OPRO         ;**********************************************************************
+21-225-14:28:05.457 00     SPR-I:OPRO         ;***********************************************************************
+21-225-14:28:05.458 00     SPR-I:OPRO         ; Setup event 1 with CFE_TBL DEBUG 17
+21-225-14:28:05.458 00     SPR-I:OPRO         ;***********************************************************************
+21-225-14:28:05.465 00     SPR-I:OPRO         ;***********************************************************************
+21-225-14:28:05.466 00     SPR-I:OPRO         ; Setup event 2 with CFE_TBL INFO 37
+21-225-14:28:05.466 00     SPR-I:OPRO         ;***********************************************************************
+21-225-14:28:05.482 00     SPR-I:OPRO         Sending command:  SCX_CPU1_TBL_ACTIVATE ATableName=MDTblName4
+21-225-14:28:05.502 00     SPR-I:OPRO          ; Telemetry update will wait a maximum of 24 seconds
+21-225-14:28:05.502 00     SPR-I:STTE         Wait mode - WAIT UNTIL ...
+21-225-14:28:06.004 00    TLMH-I:STS          58-012-14:09:26.500 DEBUG CPU=CPU1 APPNAME=CFE_TBL EVENT ID=17 Tbl Services notifying App that 'MD.DWELL_TABLE4' has a load pending
+21-225-14:28:06.502 00    TLMH-I:STS          58-012-14:09:27.002 INFO CPU=CPU1 APPNAME=CFE_TBL EVENT ID=37 MD Successfully Updated 'MD.DWELL_TABLE4'
+21-225-14:28:07.505 00     SPR-I:STTE         WAIT UNTIL completed
+21-225-14:28:07.508 00     SPR-I:STTE         Wait mode - waiting 5 seconds ...
+21-225-14:28:12.512 00     SPR-I:OPRO         <*> Passed - Dwell Table #4 Activated. Event Msg 37 Found!
+21-225-14:28:12.513 00     SPR-I:STTE         Wait mode - waiting 10 seconds ...
+21-225-14:28:22.522 00     SPR-I:STS          Loading file /s/opr/accounts/cfs_test/prc/get_file_to_cvt.i
+21-225-14:28:22.529 00     SPR-I:STS          Procedure GET_FILE_TO_CVT started
+21-225-14:28:22.581 00     SPR-I:OPRO         Sending Command: /SCX_CPU1_TBL_WRITEREG2FILE DUMPFILENAME="/ram/cfe_tbl_reg.log"
+21-225-14:28:22.593 00     SPR-I:STTE         Wait mode - waiting 15 seconds ...
+21-225-14:28:22.999 00    TLMH-I:STS          58-012-14:09:43.504 DEBUG CPU=CPU1 APPNAME=CFE_TBL EVENT ID=15 Successfully overwrote '/ram/cfe_tbl_reg.log' with Table Registry:Size=1212,Entries=128
+21-225-14:28:37.604 00     SPR-I:OPRO         The APID is: P0F06
+21-225-14:28:37.604 00     SPR-I:OPRO         The CPU is: CPU3
+21-225-14:28:37.604 00     SPR-I:OPRO         The IP Address is: 192.168.1.8
+21-225-14:28:37.607 00     SPR-I:OPRO         The perl command is: perl /s/opr/accounts/global/tools/ftp.pl RAM:0 cfe_tbl_reg.log scx_cpu1_tbl_reg.log binary 192.168.1.8
+21-225-14:28:37.783 00     SPR-I:OPRO         Return code from ftp_file.pl: 0
+21-225-14:28:37.784 00     SPR-I:STTE         Wait mode - waiting 15 seconds ...
+21-225-14:28:52.795 00     SPR-I:OPRO         
+21-225-14:28:52.815 00     SPR-I:OPRO         The unix command is cvt -ws file_list[3846].file_write_time "`date +%y-%j-%T -r /s/opr/accounts/cfs_test/image/scx_cpu1_tbl_reg.log`"
+21-225-14:28:52.815 00     SPR-I:STTE         Wait mode - waiting 5 seconds ...
+21-225-14:28:57.819 00     SPR-I:STS          Procedure GET_FILE_TO_CVT completed
+21-225-14:28:57.820 00     SPR-I:STTE         Wait mode - waiting 10 seconds ...
+21-225-14:29:07.828 00     SPR-I:OPRO         ;*********************************************************************
+21-225-14:29:07.828 00     SPR-I:OPRO         ;  Step 2.0:  Set Signature Command - Valid Cases
+21-225-14:29:07.828 00     SPR-I:OPRO         ;*********************************************************************
+21-225-14:29:07.828 00     SPR-I:OPRO         ;  Step 2.1:  0 Character Signature  
+21-225-14:29:07.829 00     SPR-I:OPRO         ;********************************************************************
+21-225-14:29:07.834 00     SPR-I:OPRO         ;***********************************************************************
+21-225-14:29:07.834 00     SPR-I:OPRO         ; Setup event 1 with MD INFO 46
+21-225-14:29:07.834 00     SPR-I:OPRO         ;***********************************************************************
+21-225-14:29:07.839 00     SPR-I:OPRO         Sending command:  SCX_CPU1_MD_SetSignature TableId=1 Signature=""
+21-225-14:29:07.854 00     SPR-I:OPRO          ; Telemetry update will wait a maximum of 24 seconds
+21-225-14:29:07.856 00     SPR-I:STTE         Wait mode - WAIT UNTIL ...
+21-225-14:29:08.504 00    TLMH-I:STS          58-012-14:10:29.002 INFO CPU=CPU1 APPNAME=MD EVENT ID=46 Successfully set signature for Dwell Tbl#1 to ''
+21-225-14:29:11.860 00     SPR-I:STTE         WAIT UNTIL completed
+21-225-14:29:11.864 00     SPR-I:OPRO         <*> Passed (1004;5000) - Set Signature command sent properly.
+21-225-14:29:11.867 00     SPR-I:OPRO         <*> Passed (1004) - Event message 46 received
+21-225-14:29:11.869 00     SPR-I:OPRO         ;***********************************************************************
+21-225-14:29:11.869 00     SPR-I:OPRO         ; Setup event 1 with CFE_TBL INFO 14
+21-225-14:29:11.869 00     SPR-I:OPRO         ;***********************************************************************
+21-225-14:29:11.870 00     SPR-I:STS          Loading file /s/opr/accounts/cfs_test/prc/get_tbl_to_cvt.i
+21-225-14:29:11.871 00     SPR-I:STS          Procedure GET_TBL_TO_CVT started
+21-225-14:29:11.876 00     SPR-I:OPRO         Sending Command: /SCX_CPU1_TBL_DUMP ACTIVE DTABLENAME="MD.DWELL_TABLE1" DFILENAME="/ram/cpu1_tbl1_sig2.1"
+21-225-14:29:11.888 00     SPR-I:STTE         Wait mode - waiting 15 seconds ...
+21-225-14:29:12.498 00    TLMH-I:STS          58-012-14:10:33.002 INFO CPU=CPU1 APPNAME=CFE_TBL EVENT ID=14 Successfully dumped Table 'MD.DWELL_TABLE1' to '/ram/cpu1_tbl1_sig2.1'
+21-225-14:29:26.899 00     SPR-I:OPRO         
+21-225-14:29:26.900 00     SPR-I:OPRO            The TBLNAME is: MD.DWELL_TABLE1
+21-225-14:29:26.900 00     SPR-I:OPRO               The APID is: P0FA8
+21-225-14:29:26.900 00     SPR-I:OPRO                The CPU is: CPU3
+21-225-14:29:26.900 00     SPR-I:OPRO         The IP Address is: 192.168.1.8
+21-225-14:29:26.904 00     SPR-I:OPRO         The perl command is: perl /s/opr/accounts/global/tools/ftp.pl RAM:0 cpu1_tbl1_sig2.1 cpu1_tbl1_sig2.1 binary 192.168.1.8
+21-225-14:29:27.030 00     SPR-I:OPRO         Return code from ftp_file.pl: 0
+21-225-14:29:27.030 00     SPR-I:STTE         Wait mode - waiting 15 seconds ...
+21-225-14:29:42.041 00     SPR-I:OPRO         
+21-225-14:29:42.050 00     SPR-I:OPRO         The unix command is cvt -ws file_list[4008].file_write_time "`date +%y-%j-%T -r /s/opr/accounts/cfs_test/image/cpu1_tbl1_sig2.1`"
+21-225-14:29:42.050 00     SPR-I:STTE         Wait mode - waiting 5 seconds ...
+21-225-14:29:47.053 00     SPR-I:STS          Procedure GET_TBL_TO_CVT completed
+21-225-14:29:47.056 00     SPR-I:STTE         WAIT UNTIL completed
+21-225-14:29:47.057 00     SPR-I:OPRO         <*> Passed (5000) - Signature was found in the table #1 dump.
+21-225-14:29:47.059 00     SPR-I:OPRO         ;***********************************************************************
+21-225-14:29:47.059 00     SPR-I:OPRO         ; Setup event 1 with MD INFO 12
+21-225-14:29:47.059 00     SPR-I:OPRO         ;***********************************************************************
+21-225-14:29:47.063 00     SPR-I:OPRO         Sending command:  SCX_CPU1_MD_StartDwell TableMask=b'0001'
+21-225-14:29:47.068 00     SPR-I:OPRO          ; Telemetry update will wait a maximum of 24 seconds
+21-225-14:29:47.068 00     SPR-I:STTE         Wait mode - WAIT UNTIL ...
+21-225-14:29:47.502 00    TLMH-I:STS          58-012-14:11:08.005 INFO CPU=CPU1 APPNAME=MD EVENT ID=12 Start Dwell Table command processed successfully for table mask 0x0001
+21-225-14:29:48.069 00     SPR-I:STTE         WAIT UNTIL completed
+21-225-14:29:48.070 00     SPR-I:OPRO         <*> Passed (1004;2000) - Start Dwell command sent properly.
+21-225-14:29:48.071 00     SPR-I:OPRO         <*> Passed (1004) - Event message 12 received
+21-225-14:29:48.072 00     SPR-I:OPRO         <*> Passed (2000) - First Dwell Table was started.
+21-225-14:29:48.165 00     SPR-I:STTE         Wait mode - waiting 5 seconds ...
+21-225-14:29:53.178 00     SPR-I:STTE         WAIT UNTIL completed
+21-225-14:29:53.179 00     SPR-I:OPRO         <*> Passed (3001) - Signature appears in the dwell packet.
+21-225-14:29:53.181 00     SPR-I:OPRO         ;*********************************************************************
+21-225-14:29:53.182 00     SPR-I:OPRO         ;  Step 2.2:  1 Character Signature  
+21-225-14:29:53.182 00     SPR-I:OPRO         ;********************************************************************
+21-225-14:29:53.184 00     SPR-I:OPRO         ;***********************************************************************
+21-225-14:29:53.185 00     SPR-I:OPRO         ; Setup event 1 with MD INFO 46
+21-225-14:29:53.185 00     SPR-I:OPRO         ;***********************************************************************
+21-225-14:29:53.188 00     SPR-I:OPRO         Sending command:  SCX_CPU1_MD_SetSignature TableId=2 Signature="1"
+21-225-14:29:53.204 00     SPR-I:OPRO          ; Telemetry update will wait a maximum of 24 seconds
+21-225-14:29:53.204 00     SPR-I:STTE         Wait mode - WAIT UNTIL ...
+21-225-14:29:54.003 00    TLMH-I:STS          58-012-14:11:14.501 INFO CPU=CPU1 APPNAME=MD EVENT ID=46 Successfully set signature for Dwell Tbl#2 to '1'
+21-225-14:29:56.207 00     SPR-I:STTE         WAIT UNTIL completed
+21-225-14:29:56.211 00     SPR-I:OPRO         <*> Passed (1004;5000) - Set Signature command sent properly.
+21-225-14:29:56.213 00     SPR-I:OPRO         <*> Passed (1004) - Event message 46 received
+21-225-14:29:56.215 00     SPR-I:OPRO         ;***********************************************************************
+21-225-14:29:56.215 00     SPR-I:OPRO         ; Setup event 1 with CFE_TBL INFO 14
+21-225-14:29:56.215 00     SPR-I:OPRO         ;***********************************************************************
+21-225-14:29:56.215 00     SPR-I:STS          Loading file /s/opr/accounts/cfs_test/prc/get_tbl_to_cvt.i
+21-225-14:29:56.216 00     SPR-I:STS          Procedure GET_TBL_TO_CVT started
+21-225-14:29:56.220 00     SPR-I:OPRO         Sending Command: /SCX_CPU1_TBL_DUMP ACTIVE DTABLENAME="MD.DWELL_TABLE2" DFILENAME="/ram/cpu1_tbl2_sig22"
+21-225-14:29:56.232 00     SPR-I:STTE         Wait mode - waiting 15 seconds ...
+21-225-14:29:57.004 00    TLMH-I:STS          58-012-14:11:17.502 INFO CPU=CPU1 APPNAME=CFE_TBL EVENT ID=14 Successfully dumped Table 'MD.DWELL_TABLE2' to '/ram/cpu1_tbl2_sig22'
+21-225-14:30:11.243 00     SPR-I:OPRO         
+21-225-14:30:11.244 00     SPR-I:OPRO            The TBLNAME is: MD.DWELL_TABLE2
+21-225-14:30:11.244 00     SPR-I:OPRO               The APID is: P0FA9
+21-225-14:30:11.244 00     SPR-I:OPRO                The CPU is: CPU3
+21-225-14:30:11.244 00     SPR-I:OPRO         The IP Address is: 192.168.1.8
+21-225-14:30:11.248 00     SPR-I:OPRO         The perl command is: perl /s/opr/accounts/global/tools/ftp.pl RAM:0 cpu1_tbl2_sig22 cpu1_tbl2_sig22 binary 192.168.1.8
+21-225-14:30:11.397 00     SPR-I:OPRO         Return code from ftp_file.pl: 0
+21-225-14:30:11.397 00     SPR-I:STTE         Wait mode - waiting 15 seconds ...
+21-225-14:30:26.408 00     SPR-I:OPRO         
+21-225-14:30:26.422 00     SPR-I:OPRO         The unix command is cvt -ws file_list[4009].file_write_time "`date +%y-%j-%T -r /s/opr/accounts/cfs_test/image/cpu1_tbl2_sig22`"
+21-225-14:30:26.422 00     SPR-I:STTE         Wait mode - waiting 5 seconds ...
+21-225-14:30:31.426 00     SPR-I:STS          Procedure GET_TBL_TO_CVT completed
+21-225-14:30:31.438 00     SPR-I:STTE         WAIT UNTIL completed
+21-225-14:30:31.440 00     SPR-I:OPRO         <*> Passed (5000) - Signature was found in the table #2 dump.
+21-225-14:30:31.447 00     SPR-I:OPRO         ;***********************************************************************
+21-225-14:30:31.448 00     SPR-I:OPRO         ; Setup event 1 with MD INFO 12
+21-225-14:30:31.448 00     SPR-I:OPRO         ;***********************************************************************
+21-225-14:30:31.458 00     SPR-I:OPRO         Sending command:  SCX_CPU1_MD_StartDwell TableMask=b'0010'
+21-225-14:30:31.474 00     SPR-I:OPRO          ; Telemetry update will wait a maximum of 24 seconds
+21-225-14:30:31.475 00     SPR-I:STTE         Wait mode - WAIT UNTIL ...
+21-225-14:30:31.997 00    TLMH-I:STS          58-012-14:11:52.501 INFO CPU=CPU1 APPNAME=MD EVENT ID=12 Start Dwell Table command processed successfully for table mask 0x0002
+21-225-14:30:32.476 00     SPR-I:STTE         WAIT UNTIL completed
+21-225-14:30:32.478 00     SPR-I:STTE         Wait mode - waiting 1 seconds ...
+21-225-14:30:33.480 00     SPR-I:STTE         Wait mode - waiting 1 seconds ...
+21-225-14:30:34.482 00     SPR-I:STTE         Wait mode - waiting 1 seconds ...
+21-225-14:30:35.485 00     SPR-I:STTE         Wait mode - waiting 1 seconds ...
+21-225-14:30:36.488 00     SPR-I:OPRO         <*> Passed (1004;2000) - Start Dwell command sent properly.
+21-225-14:30:36.494 00     SPR-I:OPRO         <*> Passed (1004) - Event message 12 received
+21-225-14:30:36.497 00     SPR-I:OPRO         <*> Passed (2000) - Second Dwell Table was started, first dwell table still running.
+21-225-14:30:36.624 00     SPR-I:STTE         Wait mode - waiting 5 seconds ...
+21-225-14:30:41.631 00     SPR-I:STTE         WAIT UNTIL completed
+21-225-14:30:41.631 00     SPR-I:OPRO         <*> Passed (3001) - Signature appears in the dwell packet.
+21-225-14:30:41.632 00     SPR-I:OPRO         ;*********************************************************************
+21-225-14:30:41.632 00     SPR-I:OPRO         ;  Step 2.3:  Half Maximum Length Signature  
+21-225-14:30:41.632 00     SPR-I:OPRO         ;********************************************************************
+21-225-14:30:41.635 00     SPR-I:OPRO         ;***********************************************************************
+21-225-14:30:41.635 00     SPR-I:OPRO         ; Setup event 1 with MD INFO 46
+21-225-14:30:41.635 00     SPR-I:OPRO         ;***********************************************************************
+21-225-14:30:41.642 00     SPR-I:OPRO         Sending command:  SCX_CPU1_MD_SetSignature TableId=3 Signature="1234567890123456"
+21-225-14:30:41.658 00     SPR-I:OPRO          ; Telemetry update will wait a maximum of 24 seconds
+21-225-14:30:41.659 00     SPR-I:STTE         Wait mode - WAIT UNTIL ...
+21-225-14:30:42.498 00    TLMH-I:STS          58-012-14:12:03.002 INFO CPU=CPU1 APPNAME=MD EVENT ID=46 Successfully set signature for Dwell Tbl#3 to '1234567890123456'
+21-225-14:30:43.660 00     SPR-I:STTE         WAIT UNTIL completed
+21-225-14:30:43.662 00     SPR-I:OPRO         <*> Passed (1004;5000) - Set Signature command sent properly.
+21-225-14:30:43.666 00     SPR-I:OPRO         <*> Passed (1004) - Event message 46 received
+21-225-14:30:43.672 00     SPR-I:OPRO         ;***********************************************************************
+21-225-14:30:43.673 00     SPR-I:OPRO         ; Setup event 1 with CFE_TBL INFO 14
+21-225-14:30:43.673 00     SPR-I:OPRO         ;***********************************************************************
+21-225-14:30:43.674 00     SPR-I:STS          Loading file /s/opr/accounts/cfs_test/prc/get_tbl_to_cvt.i
+21-225-14:30:43.676 00     SPR-I:STS          Procedure GET_TBL_TO_CVT started
+21-225-14:30:43.691 00     SPR-I:OPRO         Sending Command: /SCX_CPU1_TBL_DUMP ACTIVE DTABLENAME="MD.DWELL_TABLE3" DFILENAME="/ram/cpu1_tbl3_sig23"
+21-225-14:30:43.707 00     SPR-I:STTE         Wait mode - waiting 15 seconds ...
+21-225-14:30:44.501 00    TLMH-I:STS          58-012-14:12:05.002 INFO CPU=CPU1 APPNAME=CFE_TBL EVENT ID=14 Successfully dumped Table 'MD.DWELL_TABLE3' to '/ram/cpu1_tbl3_sig23'
+21-225-14:30:58.718 00     SPR-I:OPRO         
+21-225-14:30:58.718 00     SPR-I:OPRO            The TBLNAME is: MD.DWELL_TABLE3
+21-225-14:30:58.719 00     SPR-I:OPRO               The APID is: P0FAA
+21-225-14:30:58.719 00     SPR-I:OPRO                The CPU is: CPU3
+21-225-14:30:58.719 00     SPR-I:OPRO         The IP Address is: 192.168.1.8
+21-225-14:30:58.719 00     SPR-I:OPRO         The perl command is: perl /s/opr/accounts/global/tools/ftp.pl RAM:0 cpu1_tbl3_sig23 cpu1_tbl3_sig23 binary 192.168.1.8
+21-225-14:30:58.857 00     SPR-I:OPRO         Return code from ftp_file.pl: 0
+21-225-14:30:58.858 00     SPR-I:STTE         Wait mode - waiting 15 seconds ...
+21-225-14:31:13.868 00     SPR-I:OPRO         
+21-225-14:31:13.906 00     SPR-I:OPRO         The unix command is cvt -ws file_list[4010].file_write_time "`date +%y-%j-%T -r /s/opr/accounts/cfs_test/image/cpu1_tbl3_sig23`"
+21-225-14:31:13.906 00     SPR-I:STTE         Wait mode - waiting 5 seconds ...
+21-225-14:31:18.910 00     SPR-I:STS          Procedure GET_TBL_TO_CVT completed
+21-225-14:31:18.913 00     SPR-I:STTE         WAIT UNTIL completed
+21-225-14:31:18.913 00     SPR-I:OPRO         <*> Passed (5000) - Signature was found in the table #3 dump.
+21-225-14:31:18.915 00     SPR-I:OPRO         ;***********************************************************************
+21-225-14:31:18.915 00     SPR-I:OPRO         ; Setup event 1 with MD INFO 12
+21-225-14:31:18.915 00     SPR-I:OPRO         ;***********************************************************************
+21-225-14:31:18.919 00     SPR-I:OPRO         Sending command:  SCX_CPU1_MD_StartDwell TableMask=b'0100'
+21-225-14:31:18.933 00     SPR-I:OPRO          ; Telemetry update will wait a maximum of 24 seconds
+21-225-14:31:18.934 00     SPR-I:STTE         Wait mode - WAIT UNTIL ...
+21-225-14:31:19.504 00    TLMH-I:STS          58-012-14:12:40.005 INFO CPU=CPU1 APPNAME=MD EVENT ID=12 Start Dwell Table command processed successfully for table mask 0x0004
+21-225-14:31:19.935 00     SPR-I:STTE         WAIT UNTIL completed
+21-225-14:31:19.938 00     SPR-I:OPRO         <*> Passed (1004;2000) - Start Dwell command sent properly.
+21-225-14:31:19.943 00     SPR-I:OPRO         <*> Passed (1004) - Event message 12 received
+21-225-14:31:19.947 00     SPR-I:OPRO         <*> Passed (2000) - Third Dwell Table was started, first & second dwell tables still running.
+21-225-14:31:20.075 00     SPR-I:STTE         Wait mode - waiting 5 seconds ...
+21-225-14:31:25.080 00     SPR-I:STTE         WAIT UNTIL completed
+21-225-14:31:25.080 00     SPR-I:OPRO         <*> Passed (3001) - Signature appears in the dwell packet.
+21-225-14:31:25.081 00     SPR-I:OPRO         ;*********************************************************************
+21-225-14:31:25.081 00     SPR-I:OPRO         ;  Step 2.4:  Maximum Length Signature  
+21-225-14:31:25.081 00     SPR-I:OPRO         ;********************************************************************
+21-225-14:31:25.083 00     SPR-I:OPRO         ;***********************************************************************
+21-225-14:31:25.083 00     SPR-I:OPRO         ; Setup event 1 with MD INFO 46
+21-225-14:31:25.083 00     SPR-I:OPRO         ;***********************************************************************
+21-225-14:31:25.087 00     SPR-I:OPRO         Sending command:  SCX_CPU1_MD_SetSignature TableId=4 Signature="1234567890123456789012345678901"
+21-225-14:31:25.091 00     SPR-I:OPRO          ; Telemetry update will wait a maximum of 24 seconds
+21-225-14:31:25.092 00     SPR-I:STTE         Wait mode - WAIT UNTIL ...
+21-225-14:31:25.496 00    TLMH-I:STS          58-012-14:12:46.002 INFO CPU=CPU1 APPNAME=MD EVENT ID=46 Successfully set signature for Dwell Tbl#4 to '1234567890123456789012345678901'
+21-225-14:31:28.094 00     SPR-I:STTE         WAIT UNTIL completed
+21-225-14:31:28.095 00     SPR-I:OPRO         <*> Passed (1004;5000) - Set Signature command sent properly.
+21-225-14:31:28.096 00     SPR-I:OPRO         <*> Passed (1004) - Event message 46 received
+21-225-14:31:28.099 00     SPR-I:OPRO         ;***********************************************************************
+21-225-14:31:28.099 00     SPR-I:OPRO         ; Setup event 1 with CFE_TBL INFO 14
+21-225-14:31:28.099 00     SPR-I:OPRO         ;***********************************************************************
+21-225-14:31:28.099 00     SPR-I:STS          Loading file /s/opr/accounts/cfs_test/prc/get_tbl_to_cvt.i
+21-225-14:31:28.100 00     SPR-I:STS          Procedure GET_TBL_TO_CVT started
+21-225-14:31:28.105 00     SPR-I:OPRO         Sending Command: /SCX_CPU1_TBL_DUMP ACTIVE DTABLENAME="MD.DWELL_TABLE4" DFILENAME="/ram/cpu1_tbl4_sig24"
+21-225-14:31:28.117 00     SPR-I:STTE         Wait mode - waiting 15 seconds ...
+21-225-14:31:28.495 00    TLMH-I:STS          58-012-14:12:49.002 INFO CPU=CPU1 APPNAME=CFE_TBL EVENT ID=14 Successfully dumped Table 'MD.DWELL_TABLE4' to '/ram/cpu1_tbl4_sig24'
+21-225-14:31:43.126 00     SPR-I:OPRO         
+21-225-14:31:43.126 00     SPR-I:OPRO            The TBLNAME is: MD.DWELL_TABLE4
+21-225-14:31:43.126 00     SPR-I:OPRO               The APID is: P0FAB
+21-225-14:31:43.126 00     SPR-I:OPRO                The CPU is: CPU3
+21-225-14:31:43.126 00     SPR-I:OPRO         The IP Address is: 192.168.1.8
+21-225-14:31:43.127 00     SPR-I:OPRO         The perl command is: perl /s/opr/accounts/global/tools/ftp.pl RAM:0 cpu1_tbl4_sig24 cpu1_tbl4_sig24 binary 192.168.1.8
+21-225-14:31:43.261 00     SPR-I:OPRO         Return code from ftp_file.pl: 0
+21-225-14:31:43.261 00     SPR-I:STTE         Wait mode - waiting 15 seconds ...
+21-225-14:31:58.271 00     SPR-I:OPRO         
+21-225-14:31:58.286 00     SPR-I:OPRO         The unix command is cvt -ws file_list[4011].file_write_time "`date +%y-%j-%T -r /s/opr/accounts/cfs_test/image/cpu1_tbl4_sig24`"
+21-225-14:31:58.286 00     SPR-I:STTE         Wait mode - waiting 5 seconds ...
+21-225-14:32:03.289 00     SPR-I:STS          Procedure GET_TBL_TO_CVT completed
+21-225-14:32:03.293 00     SPR-I:STTE         WAIT UNTIL completed
+21-225-14:32:03.294 00     SPR-I:OPRO         <*> Passed (5000) - Signature was found in the table #4 dump.
+21-225-14:32:03.296 00     SPR-I:OPRO         ;***********************************************************************
+21-225-14:32:03.296 00     SPR-I:OPRO         ; Setup event 1 with MD INFO 12
+21-225-14:32:03.296 00     SPR-I:OPRO         ;***********************************************************************
+21-225-14:32:03.301 00     SPR-I:OPRO         Sending command:  SCX_CPU1_MD_StartDwell TableMask=b'1000'
+21-225-14:32:03.316 00     SPR-I:OPRO          ; Telemetry update will wait a maximum of 24 seconds
+21-225-14:32:03.316 00     SPR-I:STTE         Wait mode - WAIT UNTIL ...
+21-225-14:32:04.003 00    TLMH-I:STS          58-012-14:13:24.501 INFO CPU=CPU1 APPNAME=MD EVENT ID=12 Start Dwell Table command processed successfully for table mask 0x0008
+21-225-14:32:04.317 00     SPR-I:STTE         WAIT UNTIL completed
+21-225-14:32:04.319 00     SPR-I:STTE         Wait mode - waiting 1 seconds ...
+21-225-14:32:05.321 00     SPR-I:STTE         Wait mode - waiting 1 seconds ...
+21-225-14:32:06.323 00     SPR-I:STTE         Wait mode - waiting 1 seconds ...
+21-225-14:32:07.325 00     SPR-I:STTE         Wait mode - waiting 1 seconds ...
+21-225-14:32:08.328 00     SPR-I:OPRO         <*> Passed (1004;2000) - Start Dwell command sent properly.
+21-225-14:32:08.334 00     SPR-I:OPRO         <*> Passed (1004) - Event message 12 received
+21-225-14:32:08.338 00     SPR-I:OPRO         <*> Passed (2000) - Fourth Dwell Table was started, other dwell tables still running.
+21-225-14:32:08.447 00     SPR-I:STTE         Wait mode - waiting 5 seconds ...
+21-225-14:32:13.453 00     SPR-I:STTE         WAIT UNTIL completed
+21-225-14:32:13.454 00     SPR-I:OPRO         <*> Passed (3001) - Signature appears in the dwell packet.
+21-225-14:32:13.454 00     SPR-I:OPRO         ;*********************************************************************
+21-225-14:32:13.454 00     SPR-I:OPRO         ;  Step 3.0:  Set Signature Command - Reset Cases
+21-225-14:32:13.454 00     SPR-I:OPRO         ;*********************************************************************
+21-225-14:32:13.454 00     SPR-I:OPRO         ;  Step 3.1:  cFE Processor Reset  
+21-225-14:32:13.454 00     SPR-I:OPRO         ;*********************************************************************
+21-225-14:32:13.454 00     SPR-I:OPRO         ;  Step 3.1.1: Perform a processor reset  
+21-225-14:32:13.454 00     SPR-I:OPRO         ;********************************************************************
+21-225-14:32:13.466 00     SPR-I:STTE         Wait mode - waiting 10 seconds ...
+21-225-14:32:23.478 00     SPR-I:STS          Loading file /s/opr/accounts/cfs_test/prc/clear_spacecraft_status.i
+21-225-14:32:23.480 00     SPR-I:STS          Procedure CLEAR_SPACECRAFT_STATUS started
+21-225-14:32:23.494 00     SPR-I:STS          Procedure CLEAR_SPACECRAFT_STATUS completed
+21-225-14:32:23.550 00     SPR-I:STTE         Wait mode - waiting 60 seconds ...
+21-225-14:33:23.608 00     SPR-I:STTE         Wait mode - WAIT UNTIL ...
+21-225-14:33:33.619 00     SPR-I:STTE         WAIT UNTIL completed
+21-225-14:33:33.688 00     SPR-I:STS          Loading file /s/opr/accounts/cfs_test/prc/send_that_to_command.i
+21-225-14:33:33.688 00     SPR-I:STS          Procedure SEND_THAT_TO_COMMAND started
+21-225-14:33:33.689 00     SPR-I:OPRO         Sending: /SCX_CPU1_TO_OUTPUT_ENA gs582cfslab4
+21-225-14:33:33.740 00     SPR-I:STS          Procedure SEND_THAT_TO_COMMAND completed
+21-225-14:33:33.740 00     SPR-I:STTE         Wait mode - WAIT UNTIL ...
+21-225-14:33:34.491 00    TLMH-I:STS          58-012-14:14:01.517 INFO CPU=CPU1 APPNAME=TO_LAB_APP EVENT ID=3 TO telemetry output enabled for IP 192.168.1.101
+21-225-14:33:36.745 00     SPR-I:STTE         WAIT UNTIL completed
+21-225-14:33:36.745 00     SPR-I:STS          Loading file /s/opr/accounts/cfs_test/prc/fill_in_spacecraft_status.i
+21-225-14:33:36.747 00     SPR-I:STS          Procedure FILL_IN_SPACECRAFT_STATUS started
+21-225-14:33:36.756 00     SPR-I:STS          Procedure FILL_IN_SPACECRAFT_STATUS completed
+21-225-14:33:36.757 00     SPR-I:STTE         Wait mode - waiting 5 seconds ...
+21-225-14:33:41.761 00     SPR-I:OPRO         ;*********************************************************************
+21-225-14:33:41.762 00     SPR-I:OPRO         ;  Step 3.1.4: Enable DEBUG Event Messages 
+21-225-14:33:41.762 00     SPR-I:OPRO         ;*********************************************************************
+21-225-14:33:41.777 00     SPR-I:STTE         Wait mode - waiting 2 seconds ...
+21-225-14:33:43.805 00     SPR-I:STTE         Wait mode - WAIT UNTIL ...
+21-225-14:33:44.806 00     SPR-I:STTE         WAIT UNTIL completed
+21-225-14:33:44.808 00     SPR-I:OPRO         <*> Passed - Enable Debug events command sent properly.
+21-225-14:33:44.808 00     SPR-I:OPRO         ;*********************************************************************
+21-225-14:33:44.808 00     SPR-I:OPRO         ;  Step 3.1.5: Verify that enabled state was restored for each dwell 
+21-225-14:33:44.808 00     SPR-I:OPRO         ;*********************************************************************
+21-225-14:33:44.808 00     SPR-I:OPRO         <*> Passed (9003,9004) - Dwell Tables were restarted.
+21-225-14:33:44.814 00     SPR-I:STTE         Wait mode - waiting 5 seconds ...
+21-225-14:33:49.818 00     SPR-I:OPRO         ;*********************************************************************
+21-225-14:33:49.818 00     SPR-I:OPRO         ;  Step 3.1.6: Verify that the signatures are in the dwell packets 
+21-225-14:33:49.818 00     SPR-I:OPRO         ;*********************************************************************
+21-225-14:33:49.831 00     SPR-I:STTE         WAIT UNTIL completed
+21-225-14:33:49.832 00     SPR-I:OPRO         <*> Passed (9003,9004) - Signature appears in dwell packet 1.
+21-225-14:33:49.851 00     SPR-I:STTE         WAIT UNTIL completed
+21-225-14:33:49.854 00     SPR-I:OPRO         <*> Passed (9003,9004) - Signature appears in dwell packet 2.
+21-225-14:33:49.863 00     SPR-I:STTE         WAIT UNTIL completed
+21-225-14:33:49.864 00     SPR-I:OPRO         <*> Passed (9003,9004) - Signature appears in dwell packet 3.
+21-225-14:33:49.869 00     SPR-I:STTE         WAIT UNTIL completed
+21-225-14:33:49.870 00     SPR-I:OPRO         <*> Passed (9003,9004) - Signature appears in dwell packet 4.
+21-225-14:33:49.872 00     SPR-I:STTE         Wait mode - waiting 5 seconds ...
+21-225-14:33:54.876 00     SPR-I:OPRO         ;*********************************************************************
+21-225-14:33:54.876 00     SPR-I:OPRO         ;  Step 3.2:  Application Reset  
+21-225-14:33:54.876 00     SPR-I:OPRO         ;*********************************************************************
+21-225-14:33:54.876 00     SPR-I:OPRO         ;  Step 3.2.1: Perform an application reset  
+21-225-14:33:54.876 00     SPR-I:OPRO         ;*********************************************************************
+21-225-14:33:54.881 00     SPR-I:OPRO         ;***********************************************************************
+21-225-14:33:54.881 00     SPR-I:OPRO         ; Setup event 1 with MD INFO 1
+21-225-14:33:54.881 00     SPR-I:OPRO         ;***********************************************************************
+21-225-14:33:54.892 00     SPR-I:STTE         Wait mode - waiting 5 seconds ...
+21-225-14:33:59.896 00     SPR-I:STTE         Wait mode - waiting 5 seconds ...
+21-225-14:34:00.491 00    TLMH-I:STS          58-012-14:14:28.004 ERROR CPU=CPU1 APPNAME=CFE_SB EVENT ID=17 Msg Limit Err,MsgId 0x1892,pipe MD_CMD_PIPE,sender TST_MD
+21-225-14:34:01.490 00    TLMH-I:STS          58-012-14:14:28.833 INFO CPU=CPU1 APPNAME=CFE_ES EVENT ID=10 Restart Application MD Completed, AppID=1114124
+21-225-14:34:01.490 00    TLMH-I:STS          58-012-14:14:28.884 INFO CPU=CPU1 APPNAME=MD EVENT ID=52 MD Dwell Tbl verify results: good = 2, bad = 0, unused = 23
+21-225-14:34:01.491 00    TLMH-I:STS          58-012-14:14:28.885 INFO CPU=CPU1 APPNAME=MD EVENT ID=3 Recovered Dwell Table #1 is valid and has been copied to the MD App
+21-225-14:34:01.491 00    TLMH-I:STS          58-012-14:14:28.886 INFO CPU=CPU1 APPNAME=MD EVENT ID=52 MD Dwell Tbl verify results: good = 2, bad = 0, unused = 23
+21-225-14:34:01.491 00    TLMH-I:STS          58-012-14:14:28.886 INFO CPU=CPU1 APPNAME=MD EVENT ID=3 Recovered Dwell Table #2 is valid and has been copied to the MD App
+21-225-14:34:01.492 00    TLMH-I:STS          58-012-14:14:28.887 INFO CPU=CPU1 APPNAME=MD EVENT ID=52 MD Dwell Tbl verify results: good = 2, bad = 0, unused = 23
+21-225-14:34:01.492 00    TLMH-I:STS          58-012-14:14:28.887 INFO CPU=CPU1 APPNAME=MD EVENT ID=3 Recovered Dwell Table #3 is valid and has been copied to the MD App
+21-225-14:34:01.492 00    TLMH-I:STS          58-012-14:14:28.888 INFO CPU=CPU1 APPNAME=MD EVENT ID=52 MD Dwell Tbl verify results: good = 2, bad = 0, unused = 23
+21-225-14:34:01.493 00    TLMH-I:STS          58-012-14:14:28.888 INFO CPU=CPU1 APPNAME=MD EVENT ID=3 Recovered Dwell Table #4 is valid and has been copied to the MD App
+21-225-14:34:01.493 00    TLMH-I:STS          58-012-14:14:28.889 INFO CPU=CPU1 APPNAME=MD EVENT ID=7 Dwell Tables Recovered: 4, Dwell Tables Initialized: 0
+21-225-14:34:01.494 00    TLMH-I:STS          58-012-14:14:28.889 INFO CPU=CPU1 APPNAME=MD EVENT ID=1 MD Initialized.  Version 2.4.0.0
+21-225-14:34:04.899 00     SPR-I:OPRO         ;*********************************************************************
+21-225-14:34:04.899 00     SPR-I:OPRO         ;  Step 3.2.2: Verify that the MD Housekeeping telemetry items are 
+21-225-14:34:04.899 00     SPR-I:OPRO         ;  initialized to zero (0). 
+21-225-14:34:04.899 00     SPR-I:OPRO         ;*********************************************************************
+21-225-14:34:04.900 00     SPR-I:STTE         Wait mode - waiting 5 seconds ...
+21-225-14:34:09.903 00     SPR-I:OPRO         ;*********************************************************************
+21-225-14:34:09.903 00     SPR-I:OPRO         ;  Step 3.2.3: Enable DEBUG Event Messages 
+21-225-14:34:09.903 00     SPR-I:OPRO         ;*********************************************************************
+21-225-14:34:09.917 00     SPR-I:STTE         Wait mode - waiting 2 seconds ...
+21-225-14:34:11.932 00     SPR-I:STTE         Wait mode - WAIT UNTIL ...
+21-225-14:34:12.933 00     SPR-I:STTE         WAIT UNTIL completed
+21-225-14:34:12.933 00     SPR-I:OPRO         <*> Passed - Enable Debug events command sent properly.
+21-225-14:34:12.933 00     SPR-I:OPRO         ;*********************************************************************
+21-225-14:34:12.933 00     SPR-I:OPRO         ;  Step 3.2.4: Verify that enabled state was restored for each dwell 
+21-225-14:34:12.933 00     SPR-I:OPRO         ;*********************************************************************
+21-225-14:34:12.933 00     SPR-I:OPRO         <*> Passed (9003,9004) - Dwell Tables were restarted.
+21-225-14:34:12.934 00     SPR-I:STTE         Wait mode - waiting 5 seconds ...
+21-225-14:34:17.938 00     SPR-I:OPRO         ;*********************************************************************
+21-225-14:34:17.938 00     SPR-I:OPRO         ;  Step 3.2.5: Verify that the signatures are in the dwell packets 
+21-225-14:34:17.938 00     SPR-I:OPRO         ;*********************************************************************
+21-225-14:34:17.940 00     SPR-I:STTE         WAIT UNTIL completed
+21-225-14:34:17.941 00     SPR-I:OPRO         <*> Passed (9003,9004) - Signature appears in dwell packet 1.
+21-225-14:34:17.944 00     SPR-I:STTE         WAIT UNTIL completed
+21-225-14:34:17.945 00     SPR-I:OPRO         <*> Passed (9003,9004) - Signature appears in dwell packet 2.
+21-225-14:34:17.949 00     SPR-I:STTE         WAIT UNTIL completed
+21-225-14:34:17.950 00     SPR-I:OPRO         <*> Passed (9003,9004) - Signature appears in dwell packet 3.
+21-225-14:34:17.954 00     SPR-I:STTE         WAIT UNTIL completed
+21-225-14:34:17.955 00     SPR-I:OPRO         <*> Passed (9003,9004) - Signature appears in dwell packet 4.
+21-225-14:34:17.956 00     SPR-I:STTE         Wait mode - waiting 5 seconds ...
+21-225-14:34:22.959 00     SPR-I:OPRO         ;*********************************************************************
+21-225-14:34:22.959 00     SPR-I:OPRO         ;  Step 3.3:  Power On Reset  
+21-225-14:34:22.959 00     SPR-I:OPRO         ;*********************************************************************
+21-225-14:34:22.959 00     SPR-I:OPRO         ;  Step 3.3.1: Command a Power-On Reset on CPU1. 
+21-225-14:34:22.959 00     SPR-I:OPRO         ;********************************************************************
+21-225-14:34:22.973 00     SPR-I:STTE         Wait mode - waiting 10 seconds ...
+21-225-14:34:32.981 00     SPR-I:STS          Loading file /s/opr/accounts/cfs_test/prc/clear_spacecraft_status.i
+21-225-14:34:32.982 00     SPR-I:STS          Procedure CLEAR_SPACECRAFT_STATUS started
+21-225-14:34:32.995 00     SPR-I:STS          Procedure CLEAR_SPACECRAFT_STATUS completed
+21-225-14:34:33.071 00     SPR-I:STTE         Wait mode - waiting 60 seconds ...
+21-225-14:35:33.130 00     SPR-I:STTE         Wait mode - WAIT UNTIL ...
+21-225-14:35:43.141 00     SPR-I:STTE         WAIT UNTIL completed
+21-225-14:35:43.210 00     SPR-I:STS          Loading file /s/opr/accounts/cfs_test/prc/send_that_to_command.i
+21-225-14:35:43.210 00     SPR-I:STS          Procedure SEND_THAT_TO_COMMAND started
+21-225-14:35:43.211 00     SPR-I:OPRO         Sending: /SCX_CPU1_TO_OUTPUT_ENA gs582cfslab4
+21-225-14:35:43.262 00     SPR-I:STS          Procedure SEND_THAT_TO_COMMAND completed
+21-225-14:35:43.262 00     SPR-I:STTE         Wait mode - WAIT UNTIL ...
+21-225-14:35:44.447 00    TLMH-I:STS          58-012-14:03:49.450 INFO CPU=CPU1 APPNAME=TO_LAB_APP EVENT ID=3 TO telemetry output enabled for IP 192.168.1.101
+21-225-14:35:47.265 00     SPR-I:STTE         WAIT UNTIL completed
+21-225-14:35:47.265 00     SPR-I:STS          Loading file /s/opr/accounts/cfs_test/prc/fill_in_spacecraft_status.i
+21-225-14:35:47.265 00     SPR-I:STS          Procedure FILL_IN_SPACECRAFT_STATUS started
+21-225-14:35:47.268 00     SPR-I:STS          Procedure FILL_IN_SPACECRAFT_STATUS completed
+21-225-14:35:47.268 00     SPR-I:STTE         Wait mode - waiting 5 seconds ...
+21-225-14:35:52.271 00     SPR-I:OPRO         ;*********************************************************************
+21-225-14:35:52.271 00     SPR-I:OPRO         ;  Step 3.3.4: Enable DEBUG Event Messages 
+21-225-14:35:52.271 00     SPR-I:OPRO         ;*********************************************************************
+21-225-14:35:52.282 00     SPR-I:STTE         Wait mode - waiting 2 seconds ...
+21-225-14:35:54.297 00     SPR-I:STTE         Wait mode - WAIT UNTIL ...
+21-225-14:35:55.298 00     SPR-I:STTE         WAIT UNTIL completed
+21-225-14:35:55.298 00     SPR-I:OPRO         <*> Passed - Enable Debug events command sent properly.
+21-225-14:35:55.298 00     SPR-I:OPRO         ;*********************************************************************
+21-225-14:35:55.298 00     SPR-I:OPRO         ;  Step 3.3.5: Verify that the MD Housekeeping telemetry items are 
+21-225-14:35:55.298 00     SPR-I:OPRO         ;  initialized to zero (0). 
+21-225-14:35:55.298 00     SPR-I:OPRO         ;*********************************************************************
+21-225-14:35:55.298 00     SPR-I:OPRO         <*> Passed (9000) - Housekeeping telemetry initialized properly.
+21-225-14:35:55.299 00     SPR-I:OPRO         ;*********************************************************************
+21-225-14:35:55.299 00     SPR-I:OPRO         ;  Step 3.3.6: Verify that each MD table is disabled. 
+21-225-14:35:55.299 00     SPR-I:OPRO         ;*********************************************************************
+21-225-14:35:55.299 00     SPR-I:OPRO         <*> Passed (9001) - Enable Mask initialized properly.
+21-225-14:35:55.299 00     SPR-I:STTE         Wait mode - waiting 5 seconds ...
+21-225-14:36:00.302 00     SPR-I:OPRO         ;*********************************************************************
+21-225-14:36:00.302 00     SPR-I:OPRO         ;  Step 3.3.7: Verify that each MD table is initialized to 0. 
+21-225-14:36:00.302 00     SPR-I:OPRO         ;*********************************************************************
+21-225-14:36:00.303 00     SPR-I:OPRO         <*> Passed (9002) - Memory Dwell tables initialized properly.
+21-225-14:36:00.304 00     SPR-I:STTE         Wait mode - waiting 5 seconds ...
+21-225-14:36:05.306 00     SPR-I:OPRO         ;*********************************************************************
+21-225-14:36:05.306 00     SPR-I:OPRO         ;  Step 3.3.8: Verify that each MD table has been returned to
+21-225-14:36:05.306 00     SPR-I:OPRO         ;  its initialized state including signatures. 
+21-225-14:36:05.306 00     SPR-I:OPRO         ;*********************************************************************
+21-225-14:36:05.308 00     SPR-I:OPRO         ;***********************************************************************
+21-225-14:36:05.308 00     SPR-I:OPRO         ; Setup event 1 with CFE_TBL INFO 14
+21-225-14:36:05.308 00     SPR-I:OPRO         ;***********************************************************************
+21-225-14:36:05.309 00     SPR-I:STS          Loading file /s/opr/accounts/cfs_test/prc/get_tbl_to_cvt.i
+21-225-14:36:05.310 00     SPR-I:STS          Procedure GET_TBL_TO_CVT started
+21-225-14:36:05.314 00     SPR-I:OPRO         Sending Command: /SCX_CPU1_TBL_DUMP ACTIVE DTABLENAME="MD.DWELL_TABLE1" DFILENAME="/ram/cpu1_tbl1_md_sig338"
+21-225-14:36:05.316 00     SPR-I:STTE         Wait mode - waiting 15 seconds ...
+21-225-14:36:05.940 00    TLMH-I:STS          58-012-14:04:11.002 INFO CPU=CPU1 APPNAME=CFE_TBL EVENT ID=14 Successfully dumped Table 'MD.DWELL_TABLE1' to '/ram/cpu1_tbl1_md_sig338'
+21-225-14:36:20.326 00     SPR-I:OPRO         
+21-225-14:36:20.326 00     SPR-I:OPRO            The TBLNAME is: MD.DWELL_TABLE1
+21-225-14:36:20.326 00     SPR-I:OPRO               The APID is: P0FA8
+21-225-14:36:20.326 00     SPR-I:OPRO                The CPU is: CPU3
+21-225-14:36:20.326 00     SPR-I:OPRO         The IP Address is: 192.168.1.8
+21-225-14:36:20.327 00     SPR-I:OPRO         The perl command is: perl /s/opr/accounts/global/tools/ftp.pl RAM:0 cpu1_tbl1_md_sig338 cpu1_tbl1_md_sig338 binary 192.168.1.8
+21-225-14:36:20.484 00     SPR-I:OPRO         Return code from ftp_file.pl: 0
+21-225-14:36:20.484 00     SPR-I:STTE         Wait mode - waiting 15 seconds ...
+21-225-14:36:35.495 00     SPR-I:OPRO         
+21-225-14:36:35.540 00     SPR-I:OPRO         The unix command is cvt -ws file_list[4008].file_write_time "`date +%y-%j-%T -r /s/opr/accounts/cfs_test/image/cpu1_tbl1_md_sig338`"
+21-225-14:36:35.540 00     SPR-I:STTE         Wait mode - waiting 5 seconds ...
+21-225-14:36:40.543 00     SPR-I:STS          Procedure GET_TBL_TO_CVT completed
+21-225-14:36:40.556 00     SPR-I:STTE         WAIT UNTIL completed
+21-225-14:36:40.590 00     SPR-I:OPRO         ;***********************************************************************
+21-225-14:36:40.590 00     SPR-I:OPRO         ; Setup event 1 with CFE_TBL INFO 14
+21-225-14:36:40.590 00     SPR-I:OPRO         ;***********************************************************************
+21-225-14:36:40.591 00     SPR-I:STS          Loading file /s/opr/accounts/cfs_test/prc/get_tbl_to_cvt.i
+21-225-14:36:40.592 00     SPR-I:STS          Procedure GET_TBL_TO_CVT started
+21-225-14:36:40.596 00     SPR-I:OPRO         Sending Command: /SCX_CPU1_TBL_DUMP ACTIVE DTABLENAME="MD.DWELL_TABLE2" DFILENAME="/ram/cpu1_tbl2_md_sig338"
+21-225-14:36:40.609 00     SPR-I:STTE         Wait mode - waiting 15 seconds ...
+21-225-14:36:41.445 00    TLMH-I:STS          58-012-14:04:46.501 INFO CPU=CPU1 APPNAME=CFE_TBL EVENT ID=14 Successfully dumped Table 'MD.DWELL_TABLE2' to '/ram/cpu1_tbl2_md_sig338'
+21-225-14:36:55.617 00     SPR-I:OPRO         
+21-225-14:36:55.617 00     SPR-I:OPRO            The TBLNAME is: MD.DWELL_TABLE2
+21-225-14:36:55.618 00     SPR-I:OPRO               The APID is: P0FA9
+21-225-14:36:55.618 00     SPR-I:OPRO                The CPU is: CPU3
+21-225-14:36:55.618 00     SPR-I:OPRO         The IP Address is: 192.168.1.8
+21-225-14:36:55.618 00     SPR-I:OPRO         The perl command is: perl /s/opr/accounts/global/tools/ftp.pl RAM:0 cpu1_tbl2_md_sig338 cpu1_tbl2_md_sig338 binary 192.168.1.8
+21-225-14:36:55.751 00     SPR-I:OPRO         Return code from ftp_file.pl: 0
+21-225-14:36:55.751 00     SPR-I:STTE         Wait mode - waiting 15 seconds ...
+21-225-14:37:10.762 00     SPR-I:OPRO         
+21-225-14:37:10.774 00     SPR-I:OPRO         The unix command is cvt -ws file_list[4009].file_write_time "`date +%y-%j-%T -r /s/opr/accounts/cfs_test/image/cpu1_tbl2_md_sig338`"
+21-225-14:37:10.774 00     SPR-I:STTE         Wait mode - waiting 5 seconds ...
+21-225-14:37:15.778 00     SPR-I:STS          Procedure GET_TBL_TO_CVT completed
+21-225-14:37:15.786 00     SPR-I:STTE         WAIT UNTIL completed
+21-225-14:37:15.803 00     SPR-I:OPRO         ;***********************************************************************
+21-225-14:37:15.803 00     SPR-I:OPRO         ; Setup event 1 with CFE_TBL INFO 14
+21-225-14:37:15.803 00     SPR-I:OPRO         ;***********************************************************************
+21-225-14:37:15.803 00     SPR-I:STS          Loading file /s/opr/accounts/cfs_test/prc/get_tbl_to_cvt.i
+21-225-14:37:15.804 00     SPR-I:STS          Procedure GET_TBL_TO_CVT started
+21-225-14:37:15.809 00     SPR-I:OPRO         Sending Command: /SCX_CPU1_TBL_DUMP ACTIVE DTABLENAME="MD.DWELL_TABLE3" DFILENAME="/ram/cpu1_tbl3_md_sig338"
+21-225-14:37:15.820 00     SPR-I:STTE         Wait mode - waiting 15 seconds ...
+21-225-14:37:16.440 00    TLMH-I:STS          58-012-14:05:21.501 INFO CPU=CPU1 APPNAME=CFE_TBL EVENT ID=14 Successfully dumped Table 'MD.DWELL_TABLE3' to '/ram/cpu1_tbl3_md_sig338'
+21-225-14:37:30.829 00     SPR-I:OPRO         
+21-225-14:37:30.829 00     SPR-I:OPRO            The TBLNAME is: MD.DWELL_TABLE3
+21-225-14:37:30.829 00     SPR-I:OPRO               The APID is: P0FAA
+21-225-14:37:30.830 00     SPR-I:OPRO                The CPU is: CPU3
+21-225-14:37:30.830 00     SPR-I:OPRO         The IP Address is: 192.168.1.8
+21-225-14:37:30.834 00     SPR-I:OPRO         The perl command is: perl /s/opr/accounts/global/tools/ftp.pl RAM:0 cpu1_tbl3_md_sig338 cpu1_tbl3_md_sig338 binary 192.168.1.8
+21-225-14:37:30.998 00     SPR-I:OPRO         Return code from ftp_file.pl: 0
+21-225-14:37:30.998 00     SPR-I:STTE         Wait mode - waiting 15 seconds ...
+21-225-14:37:46.010 00     SPR-I:OPRO         
+21-225-14:37:46.056 00     SPR-I:OPRO         The unix command is cvt -ws file_list[4010].file_write_time "`date +%y-%j-%T -r /s/opr/accounts/cfs_test/image/cpu1_tbl3_md_sig338`"
+21-225-14:37:46.056 00     SPR-I:STTE         Wait mode - waiting 5 seconds ...
+21-225-14:37:51.060 00     SPR-I:STS          Procedure GET_TBL_TO_CVT completed
+21-225-14:37:51.068 00     SPR-I:STTE         WAIT UNTIL completed
+21-225-14:37:51.094 00     SPR-I:OPRO         ;***********************************************************************
+21-225-14:37:51.094 00     SPR-I:OPRO         ; Setup event 1 with CFE_TBL INFO 14
+21-225-14:37:51.094 00     SPR-I:OPRO         ;***********************************************************************
+21-225-14:37:51.095 00     SPR-I:STS          Loading file /s/opr/accounts/cfs_test/prc/get_tbl_to_cvt.i
+21-225-14:37:51.096 00     SPR-I:STS          Procedure GET_TBL_TO_CVT started
+21-225-14:37:51.100 00     SPR-I:OPRO         Sending Command: /SCX_CPU1_TBL_DUMP ACTIVE DTABLENAME="MD.DWELL_TABLE4" DFILENAME="/ram/cpu1_tbl4_md_sig338"
+21-225-14:37:51.102 00     SPR-I:STTE         Wait mode - waiting 15 seconds ...
+21-225-14:37:51.943 00    TLMH-I:STS          58-012-14:05:57.002 INFO CPU=CPU1 APPNAME=CFE_TBL EVENT ID=14 Successfully dumped Table 'MD.DWELL_TABLE4' to '/ram/cpu1_tbl4_md_sig338'
+21-225-14:38:06.111 00     SPR-I:OPRO         
+21-225-14:38:06.111 00     SPR-I:OPRO            The TBLNAME is: MD.DWELL_TABLE4
+21-225-14:38:06.111 00     SPR-I:OPRO               The APID is: P0FAB
+21-225-14:38:06.111 00     SPR-I:OPRO                The CPU is: CPU3
+21-225-14:38:06.111 00     SPR-I:OPRO         The IP Address is: 192.168.1.8
+21-225-14:38:06.112 00     SPR-I:OPRO         The perl command is: perl /s/opr/accounts/global/tools/ftp.pl RAM:0 cpu1_tbl4_md_sig338 cpu1_tbl4_md_sig338 binary 192.168.1.8
+21-225-14:38:06.267 00     SPR-I:OPRO         Return code from ftp_file.pl: 0
+21-225-14:38:06.268 00     SPR-I:STTE         Wait mode - waiting 15 seconds ...
+21-225-14:38:21.280 00     SPR-I:OPRO         
+21-225-14:38:21.296 00     SPR-I:OPRO         The unix command is cvt -ws file_list[4011].file_write_time "`date +%y-%j-%T -r /s/opr/accounts/cfs_test/image/cpu1_tbl4_md_sig338`"
+21-225-14:38:21.297 00     SPR-I:STTE         Wait mode - waiting 5 seconds ...
+21-225-14:38:26.300 00     SPR-I:STS          Procedure GET_TBL_TO_CVT completed
+21-225-14:38:26.303 00     SPR-I:STTE         WAIT UNTIL completed
+21-225-14:38:26.315 00     SPR-I:STTE         Wait mode - waiting 5 seconds ...
+21-225-14:38:31.318 00     SPR-I:OPRO         ;*********************************************************************
+21-225-14:38:31.318 00     SPR-I:OPRO         ;  Step 4.0:  Set Signature Command - Invalid Cases
+21-225-14:38:31.318 00     SPR-I:OPRO         ;*********************************************************************
+21-225-14:38:31.318 00     SPR-I:OPRO         ;  Step 4.1:  Greater Than Maximum Length Signature  
+21-225-14:38:31.319 00     SPR-I:OPRO         ;********************************************************************
+21-225-14:38:31.320 00     SPR-I:OPRO         ;***********************************************************************
+21-225-14:38:31.320 00     SPR-I:OPRO         ; Setup event 1 with MD ERROR 49
+21-225-14:38:31.320 00     SPR-I:OPRO         ;***********************************************************************
+21-225-14:38:31.338 00     SPR-I:STTE         Wait mode - WAIT UNTIL ...
+21-225-14:38:31.936 00    TLMH-I:STS          58-012-14:06:37.001 ERROR CPU=CPU1 APPNAME=MD EVENT ID=49 Set Signature cmd rejected due to invalid Signature length
+21-225-14:38:35.343 00     SPR-I:STTE         WAIT UNTIL completed
+21-225-14:38:35.343 00     SPR-I:OPRO         <*> Passed (1005;5000.1) - Command Rejected Counter incremented.
+21-225-14:38:35.346 00     SPR-I:OPRO         <*> Passed (1005;5000.1) - Event message 49 received.
+21-225-14:38:35.350 00     SPR-I:OPRO         ;***********************************************************************
+21-225-14:38:35.352 00     SPR-I:OPRO         ; Setup event 1 with CFE_TBL INFO 14
+21-225-14:38:35.352 00     SPR-I:OPRO         ;***********************************************************************
+21-225-14:38:35.352 00     SPR-I:STS          Loading file /s/opr/accounts/cfs_test/prc/get_tbl_to_cvt.i
+21-225-14:38:35.353 00     SPR-I:STS          Procedure GET_TBL_TO_CVT started
+21-225-14:38:35.360 00     SPR-I:OPRO         Sending Command: /SCX_CPU1_TBL_DUMP ACTIVE DTABLENAME="MD.DWELL_TABLE3" DFILENAME="/ram/cpu1_tbl3_sig41"
+21-225-14:38:35.372 00     SPR-I:STTE         Wait mode - waiting 15 seconds ...
+21-225-14:38:35.936 00    TLMH-I:STS          58-012-14:06:41.002 INFO CPU=CPU1 APPNAME=CFE_TBL EVENT ID=14 Successfully dumped Table 'MD.DWELL_TABLE3' to '/ram/cpu1_tbl3_sig41'
+21-225-14:38:50.380 00     SPR-I:OPRO         
+21-225-14:38:50.380 00     SPR-I:OPRO            The TBLNAME is: MD.DWELL_TABLE3
+21-225-14:38:50.380 00     SPR-I:OPRO               The APID is: P0FAA
+21-225-14:38:50.380 00     SPR-I:OPRO                The CPU is: CPU3
+21-225-14:38:50.380 00     SPR-I:OPRO         The IP Address is: 192.168.1.8
+21-225-14:38:50.381 00     SPR-I:OPRO         The perl command is: perl /s/opr/accounts/global/tools/ftp.pl RAM:0 cpu1_tbl3_sig41 cpu1_tbl3_sig41 binary 192.168.1.8
+21-225-14:38:50.501 00     SPR-I:OPRO         Return code from ftp_file.pl: 0
+21-225-14:38:50.501 00     SPR-I:STTE         Wait mode - waiting 15 seconds ...
+21-225-14:39:05.509 00     SPR-I:OPRO         
+21-225-14:39:05.524 00     SPR-I:OPRO         The unix command is cvt -ws file_list[4010].file_write_time "`date +%y-%j-%T -r /s/opr/accounts/cfs_test/image/cpu1_tbl3_sig41`"
+21-225-14:39:05.524 00     SPR-I:STTE         Wait mode - waiting 5 seconds ...
+21-225-14:39:10.528 00     SPR-I:STS          Procedure GET_TBL_TO_CVT completed
+21-225-14:39:10.530 00     SPR-I:STTE         WAIT UNTIL completed
+21-225-14:39:10.531 00     SPR-I:OPRO         <*> Passed (5000) - 32-char Signature was not found in table #3 dump.
+21-225-14:39:10.531 00     SPR-I:OPRO         ;*********************************************************************
+21-225-14:39:10.531 00     SPR-I:OPRO         ;  Step 4.2:  Invalid Command Length  
+21-225-14:39:10.531 00     SPR-I:OPRO         ;********************************************************************
+21-225-14:39:10.533 00     SPR-I:OPRO         ;***********************************************************************
+21-225-14:39:10.533 00     SPR-I:OPRO         ; Setup event 1 with MD ERROR 21
+21-225-14:39:10.533 00     SPR-I:OPRO         ;***********************************************************************
+21-225-14:39:10.536 00     SPR-I:OPRO         Sending:  1890C000006F05A8000000000000000000000000000000000000000000000000000000000000000000000000
+21-225-14:39:10.550 00     SPR-I:OPRO          ; Telemetry update will wait a maximum of 24 seconds
+21-225-14:39:10.550 00     SPR-I:STTE         Wait mode - WAIT UNTIL ...
+21-225-14:39:11.442 00    TLMH-I:STS          58-012-14:07:16.500 ERROR CPU=CPU1 APPNAME=MD EVENT ID=21 Cmd Msg with Bad length Rcvd: ID = 0x00001890, CC = 5, Exp Len = 44, Len = 118
+21-225-14:39:11.552 00     SPR-I:STTE         WAIT UNTIL completed
+21-225-14:39:11.554 00     SPR-I:STTE         Wait mode - waiting 1 seconds ...
+21-225-14:39:12.557 00     SPR-I:STTE         Wait mode - waiting 1 seconds ...
+21-225-14:39:13.559 00     SPR-I:STTE         Wait mode - waiting 1 seconds ...
+21-225-14:39:14.562 00     SPR-I:STTE         Wait mode - waiting 1 seconds ...
+21-225-14:39:15.569 00     SPR-I:STTE         WAIT UNTIL completed
+21-225-14:39:15.569 00     SPR-I:OPRO         <*> Passed (1002;1005) - Command Rejected Counter incremented.
+21-225-14:39:15.571 00     SPR-I:OPRO         <*> Passed (1002;1005) - Event message 21 received
+21-225-14:39:15.572 00     SPR-I:STTE         Wait mode - waiting 5 seconds ...
+21-225-14:39:20.577 00     SPR-I:OPRO         ;*********************************************************************
+21-225-14:39:20.577 00     SPR-I:OPRO         ;  Step 5.0:  Table Load
+21-225-14:39:20.577 00     SPR-I:OPRO         ;*********************************************************************
+21-225-14:39:20.577 00     SPR-I:OPRO         ;  Step 5.1:  Load Table With Signatures  
+21-225-14:39:20.577 00     SPR-I:OPRO         ;********************************************************************
+21-225-14:39:20.580 00     SPR-I:OPRO         ;***********************************************************************
+21-225-14:39:20.580 00     SPR-I:OPRO         ; Setup event 1 with CFE_TBL INFO 14
+21-225-14:39:20.580 00     SPR-I:OPRO         ;***********************************************************************
+21-225-14:39:20.581 00     SPR-I:STS          Loading file /s/opr/accounts/cfs_test/prc/get_tbl_to_cvt.i
+21-225-14:39:20.583 00     SPR-I:STS          Procedure GET_TBL_TO_CVT started
+21-225-14:39:20.593 00     SPR-I:OPRO         Sending Command: /SCX_CPU1_TBL_DUMP ACTIVE DTABLENAME="MD.DWELL_TABLE2" DFILENAME="/ram/md_dwl_tbl2_a"
+21-225-14:39:20.606 00     SPR-I:STTE         Wait mode - waiting 15 seconds ...
+21-225-14:39:21.435 00    TLMH-I:STS          58-012-14:07:26.501 INFO CPU=CPU1 APPNAME=CFE_TBL EVENT ID=14 Successfully dumped Table 'MD.DWELL_TABLE2' to '/ram/md_dwl_tbl2_a'
+21-225-14:39:35.617 00     SPR-I:OPRO         
+21-225-14:39:35.617 00     SPR-I:OPRO            The TBLNAME is: MD.DWELL_TABLE2
+21-225-14:39:35.617 00     SPR-I:OPRO               The APID is: P0FA9
+21-225-14:39:35.618 00     SPR-I:OPRO                The CPU is: CPU3
+21-225-14:39:35.618 00     SPR-I:OPRO         The IP Address is: 192.168.1.8
+21-225-14:39:35.621 00     SPR-I:OPRO         The perl command is: perl /s/opr/accounts/global/tools/ftp.pl RAM:0 md_dwl_tbl2_a md_dwl_tbl2_a binary 192.168.1.8
+21-225-14:39:35.802 00     SPR-I:OPRO         Return code from ftp_file.pl: 0
+21-225-14:39:35.802 00     SPR-I:STTE         Wait mode - waiting 15 seconds ...
+21-225-14:39:50.814 00     SPR-I:OPRO         
+21-225-14:39:50.853 00     SPR-I:OPRO         The unix command is cvt -ws file_list[4009].file_write_time "`date +%y-%j-%T -r /s/opr/accounts/cfs_test/image/md_dwl_tbl2_a`"
+21-225-14:39:50.853 00     SPR-I:STTE         Wait mode - waiting 5 seconds ...
+21-225-14:39:55.857 00     SPR-I:STS          Procedure GET_TBL_TO_CVT completed
+21-225-14:39:55.870 00     SPR-I:STTE         WAIT UNTIL completed
+21-225-14:39:55.882 00     SPR-I:OPRO         ;***********************************************************************
+21-225-14:39:55.882 00     SPR-I:OPRO         ; Setup event 1 with CFE_TBL INFO 12
+21-225-14:39:55.883 00     SPR-I:OPRO         ;***********************************************************************
+21-225-14:39:55.883 00     SPR-I:STS          Loading file /s/opr/accounts/cfs_test/prc/create_tbl_file_from_cvt.i
+21-225-14:39:55.885 00     SPR-I:STS          Procedure CREATE_TBL_FILE_FROM_CVT started
+21-225-14:39:55.893 00     SPR-I:OPRO         **********  md_dwl_ld_sg_tbl2  **********
+21-225-14:39:55.893 00     SPR-I:OPRO         
+21-225-14:39:55.893 00     SPR-I:OPRO                Content Type: cFE1
+21-225-14:39:55.893 00     SPR-I:OPRO                    Sub Type: 8
+21-225-14:39:55.894 00     SPR-I:OPRO                      Length: 12
+21-225-14:39:55.894 00     SPR-I:OPRO               Spacecraft Id: SCX
+21-225-14:39:55.894 00     SPR-I:OPRO                Processor Id: CPU3
+21-225-14:39:55.894 00     SPR-I:OPRO              Application Id: 4009
+21-225-14:39:55.894 00     SPR-I:OPRO            Create Time Secs: 1628865595
+21-225-14:39:55.895 00     SPR-I:OPRO         Create Time Subsecs: 0
+21-225-14:39:55.895 00     SPR-I:OPRO            File Description: Dwell Table #2 Load
+21-225-14:39:55.895 00     SPR-I:OPRO         
+21-225-14:39:55.895 00     SPR-I:OPRO         **********  MD.DWELL_TABLE2  **********
+21-225-14:39:55.895 00     SPR-I:OPRO         
+21-225-14:39:55.895 00     SPR-I:OPRO              Start Mnemonic: SCX_CPU1_MD_Dwell_Load_Tbl2.MD_DTL_Enabled
+21-225-14:39:55.895 00     SPR-I:OPRO                 Byte Offset: 0
+21-225-14:39:55.896 00     SPR-I:OPRO                End Mnemonic: SCX_CPU1_MD_Dwell_Load_Tbl2.MD_DTL_Entry[4]
+21-225-14:39:55.896 00     SPR-I:OPRO             Number of Bytes: 324
+21-225-14:39:55.896 00     SPR-I:OPRO         
+21-225-14:39:55.907 00     SPR-I:STS          Loading file /s/opr/accounts/global/prc/partial_cvt_to_file_beta.i
+21-225-14:39:55.907 00     SPR-I:STS          Procedure PARTIAL_CVT_TO_FILE_BETA started
+21-225-14:39:55.909 00     SPR-I:OPRO         The unix command is cd /s/opr/accounts/cfs_test/image;cvt2file  -s 116 -e 439 P0FA9 md.dwell_table2
+21-225-14:39:55.915 00     SPR-I:STS          Procedure PARTIAL_CVT_TO_FILE_BETA completed
+21-225-14:39:55.916 00     SPR-I:OPRO         cd /s/opr/accounts/cfs_test/image;cat md_dwl_ld_sg_tbl2.tmp md.dwell_table2 > md_dwl_ld_sg_tbl2
+21-225-14:39:55.923 00     SPR-I:OPRO         cd /s/opr/accounts/cfs_test/image;rm md.dwell_table2 md_dwl_ld_sg_tbl2.tmp
+21-225-14:39:55.928 00     SPR-I:STS          Procedure CREATE_TBL_FILE_FROM_CVT completed
+21-225-14:39:55.928 00     SPR-I:STS          Loading file /s/opr/accounts/cfs_test/prc/load_table.i
+21-225-14:39:55.929 00     SPR-I:STS          Procedure LOAD_TABLE started
+21-225-14:39:55.930 00     SPR-I:OPRO         Table Filename: md_dwl_ld_sg_tbl2
+21-225-14:39:55.931 00     SPR-I:OPRO         The perl command is: perl /s/opr/accounts/global/tools/table_ftp.pl 192.168.1.8 md_dwl_ld_sg_tbl2 RAM:0 3
+21-225-14:39:55.931 00     SPR-I:OPRO         
+21-225-14:39:56.069 00     SPR-I:OPRO         Return code from ftp_file.pl: 0
+21-225-14:39:56.069 00     SPR-I:STTE         Wait mode - waiting 5 seconds ...
+21-225-14:40:01.073 00     SPR-I:OPRO         
+21-225-14:40:01.076 00     SPR-I:OPRO         Sending Command: /SCX_CPU1_TBL_LOAD LFILENAME="/ram/md_dwl_ld_sg_tbl2"
+21-225-14:40:01.106 00     SPR-I:STTE         Wait mode - WAIT UNTIL ...
+21-225-14:40:01.940 00    TLMH-I:STS          58-012-14:08:07.001 INFO CPU=CPU1 APPNAME=CFE_TBL EVENT ID=12 Successful load of '/ram/md_dwl_ld_sg_tbl2' into 'MD.DWELL_TABLE2' working buffer
+21-225-14:40:03.111 00     SPR-I:STTE         WAIT UNTIL completed
+21-225-14:40:03.112 00     SPR-I:STS          Procedure LOAD_TABLE completed
+21-225-14:40:03.125 00     SPR-I:STTE         WAIT UNTIL completed
+21-225-14:40:03.126 00     SPR-I:OPRO         <*> Passed (1004) - Table load command sent.
+21-225-14:40:03.128 00     SPR-I:OPRO         <*> Passed (1004) - Event message 12 received
+21-225-14:40:03.132 00     SPR-I:STTE         Wait mode - waiting 5 seconds ...
+21-225-14:40:08.138 00     SPR-I:STS          Loading file /s/opr/accounts/cfs_test/prc/get_file_to_cvt.i
+21-225-14:40:08.139 00     SPR-I:STS          Procedure GET_FILE_TO_CVT started
+21-225-14:40:08.167 00     SPR-I:OPRO         Sending Command: /SCX_CPU1_TBL_WRITEREG2FILE DUMPFILENAME="/ram/cfe_tbl_reg.log"
+21-225-14:40:08.178 00     SPR-I:STTE         Wait mode - waiting 15 seconds ...
+21-225-14:40:08.936 00    TLMH-I:STS          58-012-14:08:14.005 DEBUG CPU=CPU1 APPNAME=CFE_TBL EVENT ID=22 Successfully dumped Table Registry to '/ram/cfe_tbl_reg.log':Size=1212,Entries=128
+21-225-14:40:23.187 00     SPR-I:OPRO         The APID is: P0F06
+21-225-14:40:23.187 00     SPR-I:OPRO         The CPU is: CPU3
+21-225-14:40:23.187 00     SPR-I:OPRO         The IP Address is: 192.168.1.8
+21-225-14:40:23.189 00     SPR-I:OPRO         The perl command is: perl /s/opr/accounts/global/tools/ftp.pl RAM:0 cfe_tbl_reg.log scx_cpu1_tbl_reg.log binary 192.168.1.8
+21-225-14:40:23.336 00     SPR-I:OPRO         Return code from ftp_file.pl: 0
+21-225-14:40:23.336 00     SPR-I:STTE         Wait mode - waiting 15 seconds ...
+21-225-14:40:38.349 00     SPR-I:OPRO         
+21-225-14:40:38.396 00     SPR-I:OPRO         The unix command is cvt -ws file_list[3846].file_write_time "`date +%y-%j-%T -r /s/opr/accounts/cfs_test/image/scx_cpu1_tbl_reg.log`"
+21-225-14:40:38.399 00     SPR-I:STTE         Wait mode - waiting 5 seconds ...
+21-225-14:40:43.403 00     SPR-I:STS          Procedure GET_FILE_TO_CVT completed
+21-225-14:40:43.405 00     SPR-I:STTE         Wait mode - waiting 5 seconds ...
+21-225-14:40:48.408 00     SPR-I:OPRO         Waiting for LoadInProgress flag to change for dwell table #2......
+21-225-14:40:48.409 00     SPR-I:STTE         WAIT UNTIL completed
+21-225-14:40:48.409 00     SPR-I:OPRO         <*> Passed - LoadInProgress flag indicates a load is pending.
+21-225-14:40:48.409 00     SPR-I:STTE         Wait mode - waiting 5 seconds ...
+21-225-14:40:53.413 00     SPR-I:OPRO         ;**********************************************************************
+21-225-14:40:53.413 00     SPR-I:OPRO         ; Validate the inactive buffer for Dwell Table #2.
+21-225-14:40:53.413 00     SPR-I:OPRO         ;**********************************************************************
+21-225-14:40:53.414 00     SPR-I:OPRO         ;***********************************************************************
+21-225-14:40:53.414 00     SPR-I:OPRO         ; Setup event 1 with CFE_TBL DEBUG 16
+21-225-14:40:53.414 00     SPR-I:OPRO         ;***********************************************************************
+21-225-14:40:53.419 00     SPR-I:OPRO         Sending command:  SCX_CPU1_TBL_VALIDATE INACTIVE VTABLENAME=MDTblName2
+21-225-14:40:53.435 00     SPR-I:OPRO          ; Telemetry update will wait a maximum of 24 seconds
+21-225-14:40:53.436 00     SPR-I:STTE         Wait mode - WAIT UNTIL ...
+21-225-14:40:53.941 00    TLMH-I:STS          58-012-14:08:59.001 DEBUG CPU=CPU1 APPNAME=CFE_TBL EVENT ID=16 Tbl Services issued validation request for 'MD.DWELL_TABLE2'
+21-225-14:40:53.942 00    TLMH-I:STS          58-012-14:08:59.002 INFO CPU=CPU1 APPNAME=MD EVENT ID=52 MD Dwell Tbl verify results: good = 3, bad = 0, unused = 22
+21-225-14:40:53.943 00    TLMH-I:STS          58-012-14:08:59.002 INFO CPU=CPU1 APPNAME=CFE_TBL EVENT ID=36 MD validation successful for Inactive 'MD.DWELL_TABLE2'
+21-225-14:40:55.437 00     SPR-I:STTE         WAIT UNTIL completed
+21-225-14:40:55.438 00     SPR-I:OPRO         <*> Passed - Inactive Table #2 validate command sent.
+21-225-14:40:55.438 00     SPR-I:OPRO         <*> Passed - Event Msg 16 Found!
+21-225-14:40:55.438 00     SPR-I:OPRO         <*> Passed (3002) - Dwell Table #2 validated. Event Msg 36 Found!
+21-225-14:40:55.439 00     SPR-I:OPRO         ;**********************************************************************
+21-225-14:40:55.439 00     SPR-I:OPRO         ; Activate the load for Dwell Table #2. 
+21-225-14:40:55.439 00     SPR-I:OPRO         ;**********************************************************************
+21-225-14:40:55.441 00     SPR-I:OPRO         ;***********************************************************************
+21-225-14:40:55.441 00     SPR-I:OPRO         ; Setup event 1 with CFE_TBL DEBUG 17
+21-225-14:40:55.441 00     SPR-I:OPRO         ;***********************************************************************
+21-225-14:40:55.442 00     SPR-I:OPRO         ;***********************************************************************
+21-225-14:40:55.442 00     SPR-I:OPRO         ; Setup event 2 with CFE_TBL INFO 37
+21-225-14:40:55.443 00     SPR-I:OPRO         ;***********************************************************************
+21-225-14:40:55.447 00     SPR-I:OPRO         Sending command:  SCX_CPU1_TBL_ACTIVATE ATableName=MDTblName2
+21-225-14:40:55.462 00     SPR-I:OPRO          ; Telemetry update will wait a maximum of 24 seconds
+21-225-14:40:55.462 00     SPR-I:STTE         Wait mode - WAIT UNTIL ...
+21-225-14:40:55.940 00    TLMH-I:STS          58-012-14:09:01.001 DEBUG CPU=CPU1 APPNAME=CFE_TBL EVENT ID=17 Tbl Services notifying App that 'MD.DWELL_TABLE2' has a load pending
+21-225-14:40:55.941 00    TLMH-I:STS          58-012-14:09:01.003 INFO CPU=CPU1 APPNAME=CFE_TBL EVENT ID=37 MD Successfully Updated 'MD.DWELL_TABLE2'
+21-225-14:40:59.465 00     SPR-I:STTE         WAIT UNTIL completed
+21-225-14:40:59.466 00     SPR-I:STTE         Wait mode - waiting 5 seconds ...
+21-225-14:41:04.468 00     SPR-I:OPRO         <*> Passed - Dwell Table #2 Activated. Event Msg 37 Found!
+21-225-14:41:04.469 00     SPR-I:STTE         Wait mode - waiting 5 seconds ...
+21-225-14:41:09.472 00     SPR-I:STS          Loading file /s/opr/accounts/cfs_test/prc/get_file_to_cvt.i
+21-225-14:41:09.474 00     SPR-I:STS          Procedure GET_FILE_TO_CVT started
+21-225-14:41:09.501 00     SPR-I:OPRO         Sending Command: /SCX_CPU1_TBL_WRITEREG2FILE DUMPFILENAME="/ram/cfe_tbl_reg.log"
+21-225-14:41:09.512 00     SPR-I:STTE         Wait mode - waiting 15 seconds ...
+21-225-14:41:10.437 00    TLMH-I:STS          58-012-14:09:15.504 DEBUG CPU=CPU1 APPNAME=CFE_TBL EVENT ID=15 Successfully overwrote '/ram/cfe_tbl_reg.log' with Table Registry:Size=1212,Entries=128
+21-225-14:41:24.520 00     SPR-I:OPRO         The APID is: P0F06
+21-225-14:41:24.520 00     SPR-I:OPRO         The CPU is: CPU3
+21-225-14:41:24.520 00     SPR-I:OPRO         The IP Address is: 192.168.1.8
+21-225-14:41:24.521 00     SPR-I:OPRO         The perl command is: perl /s/opr/accounts/global/tools/ftp.pl RAM:0 cfe_tbl_reg.log scx_cpu1_tbl_reg.log binary 192.168.1.8
+21-225-14:41:24.670 00     SPR-I:OPRO         Return code from ftp_file.pl: 0
+21-225-14:41:24.671 00     SPR-I:STTE         Wait mode - waiting 15 seconds ...
+21-225-14:41:39.682 00     SPR-I:OPRO         
+21-225-14:41:39.726 00     SPR-I:OPRO         The unix command is cvt -ws file_list[3846].file_write_time "`date +%y-%j-%T -r /s/opr/accounts/cfs_test/image/scx_cpu1_tbl_reg.log`"
+21-225-14:41:39.726 00     SPR-I:STTE         Wait mode - waiting 5 seconds ...
+21-225-14:41:44.730 00     SPR-I:STS          Procedure GET_FILE_TO_CVT completed
+21-225-14:41:44.732 00     SPR-I:STTE         Wait mode - waiting 5 seconds ...
+21-225-14:41:49.876 00     SPR-I:STTE         Wait mode - waiting 5 seconds ...
+21-225-14:41:50.436 00    TLMH-I:STS          58-012-14:09:55.501 INFO CPU=CPU1 APPNAME=MD EVENT ID=12 Start Dwell Table command processed successfully for table mask 0x0002
+21-225-14:41:54.884 00     SPR-I:STTE         WAIT UNTIL completed
+21-225-14:41:54.885 00     SPR-I:OPRO         <*> Passed (3001) - Signature appears in the dwell packet for Tbl #2.
+21-225-14:41:54.886 00     SPR-I:STTE         Wait mode - waiting 5 seconds ...
+21-225-14:41:59.890 00     SPR-I:OPRO         ;*********************************************************************
+21-225-14:41:59.890 00     SPR-I:OPRO         ;  Step 6.0:  Perform a Power-on Reset to clean-up from this test.
+21-225-14:41:59.890 00     SPR-I:OPRO         ;*********************************************************************
+21-225-14:41:59.905 00     SPR-I:STTE         Wait mode - waiting 10 seconds ...
+21-225-14:42:09.912 00     SPR-I:STS          Loading file /s/opr/accounts/cfs_test/prc/clear_spacecraft_status.i
+21-225-14:42:09.914 00     SPR-I:STS          Procedure CLEAR_SPACECRAFT_STATUS started
+21-225-14:42:09.926 00     SPR-I:STS          Procedure CLEAR_SPACECRAFT_STATUS completed
+21-225-14:42:09.953 00     SPR-I:STTE         Wait mode - waiting 60 seconds ...
+21-225-14:43:10.015 00     SPR-I:STTE         Wait mode - WAIT UNTIL ...
+21-225-14:43:20.026 00     SPR-I:STTE         WAIT UNTIL completed
+21-225-14:43:20.095 00     SPR-I:STS          Loading file /s/opr/accounts/cfs_test/prc/send_that_to_command.i
+21-225-14:43:20.095 00     SPR-I:STS          Procedure SEND_THAT_TO_COMMAND started
+21-225-14:43:20.096 00     SPR-I:OPRO         Sending: /SCX_CPU1_TO_OUTPUT_ENA gs582cfslab4
+21-225-14:43:20.148 00     SPR-I:STS          Procedure SEND_THAT_TO_COMMAND completed
+21-225-14:43:20.148 00     SPR-I:STTE         Wait mode - WAIT UNTIL ...
+21-225-14:43:21.417 00    TLMH-I:STS          58-012-14:03:49.450 INFO CPU=CPU1 APPNAME=TO_LAB_APP EVENT ID=3 TO telemetry output enabled for IP 192.168.1.101
+21-225-14:43:24.152 00     SPR-I:STTE         WAIT UNTIL completed
+21-225-14:43:24.152 00     SPR-I:STS          Loading file /s/opr/accounts/cfs_test/prc/fill_in_spacecraft_status.i
+21-225-14:43:24.154 00     SPR-I:STS          Procedure FILL_IN_SPACECRAFT_STATUS started
+21-225-14:43:24.158 00     SPR-I:STS          Procedure FILL_IN_SPACECRAFT_STATUS completed
+21-225-14:43:24.159 00     SPR-I:STTE         Wait mode - waiting 5 seconds ...
+21-225-14:43:29.163 00     SPR-I:OPRO         **** Requirements Status Reporting
+21-225-14:43:29.163 00     SPR-I:OPRO         --------------------------
+21-225-14:43:29.163 00     SPR-I:OPRO            Requirement(s) Report
+21-225-14:43:29.163 00     SPR-I:OPRO         --------------------------
+21-225-14:43:29.164 00     SPR-I:OPRO         FSW Requirement: MD_1002                          P/F: P
+21-225-14:43:29.166 00     SPR-I:OPRO         FSW Requirement: MD_1004                          P/F: P
+21-225-14:43:29.167 00     SPR-I:OPRO         FSW Requirement: MD_1005                          P/F: P
+21-225-14:43:29.169 00     SPR-I:OPRO         FSW Requirement: MD_2000                          P/F: P
+21-225-14:43:29.169 00     SPR-I:OPRO         FSW Requirement: MD_3001                          P/F: P
+21-225-14:43:29.170 00     SPR-I:OPRO         FSW Requirement: MD_3002                          P/F: P
+21-225-14:43:29.170 00     SPR-I:OPRO         FSW Requirement: MD_5000                          P/F: P
+21-225-14:43:29.170 00     SPR-I:OPRO         FSW Requirement: MD_5000_1                        P/F: P
+21-225-14:43:29.171 00     SPR-I:OPRO         FSW Requirement: MD_8000                          P/F: P
+21-225-14:43:29.171 00     SPR-I:OPRO         FSW Requirement: MD_9000                          P/F: P
+21-225-14:43:29.172 00     SPR-I:OPRO         FSW Requirement: MD_9001                          P/F: P
+21-225-14:43:29.172 00     SPR-I:OPRO         FSW Requirement: MD_9002                          P/F: P
+21-225-14:43:29.172 00     SPR-I:OPRO         FSW Requirement: MD_9003                          P/F: P
+21-225-14:43:29.173 00     SPR-I:OPRO         FSW Requirement: MD_9004                          P/F: P
+21-225-14:43:29.173 00     SPR-I:STS          Variable "UT_REQUIREMENT" deleted
+21-225-14:43:29.173 00     SPR-I:STS          Variable "UT_REQ_ARRAY_SIZE" deleted
+21-225-14:43:29.173 00     SPR-I:OPRO         Closing MD HK Page.
+21-225-14:43:29.237 00     SPR-I:OPRO         Closing TST MD HK Page.
+21-225-14:43:29.275 00     SPR-I:OPRO         Closing Dwell Packet Pages.
+21-225-14:43:29.375 00     SPR-I:OPRO         ;*********************************************************************
+21-225-14:43:29.375 00     SPR-I:OPRO         ;  End procedure SCX_CPU1_md_Signatures                               
+21-225-14:43:29.375 00     SPR-I:OPRO         ;*********************************************************************
+21-225-14:43:29.375 00     SPR-I:STS          Procedure SCX_CPU1_MD_SIGNATURES completed
+21-225-14:43:29.376 00     SPR-I:OPRO         *** Telemetry Info ***
+21-225-14:43:29.376 00     SPR-I:OPRO         
+21-225-14:43:29.376 00     SPR-I:OPRO         Pkt Loss Count: N/A
+21-225-14:43:29.376 00     SPR-I:OPRO         
+21-225-14:43:29.376 00     SPR-I:OPRO         ******************
+21-225-14:43:29.376 00     SPR-I:OPRO         
+21-225-14:43:29.376 00     SPR-I:OPRO         Elapsed time:  1342.13 seconds
+21-225-14:43:29.376 00     SPR-I:OPRO         Elapsed time:  22.3688 minutes
+21-225-14:43:29.376 00     SPR-I:STTE         Wait mode - waiting 10 seconds ...
+21-225-14:43:39.385 00     SPR-I:OPRO         Creating filtered log at /s/opr/accounts/cfs_test/test_logs/MD2.4.0/scx_cpu1_md_signatures-2021-225-14h21m07s.logf
+21-225-14:43:39.386 00     SPR-I:OPRO         Creating filtered output log at /s/opr/accounts/cfs_test/test_logs/MD2.4.0/scx_cpu1_md_signatures-2021-225-14h21m07s.logp
+21-225-14:43:39.386 00     SPR-I:OPRO         Creating filtered output log (without SFDUs) at /s/opr/accounts/cfs_test/test_logs/MD2.4.0/scx_cpu1_md_signatures-2021-225-14h21m07s.logs
+21-225-14:43:39.387 00     SPR-I:OPRO         Creating filtered event log at /s/opr/accounts/cfs_test/test_logs/MD2.4.0/scx_cpu1_md_signatures-2021-225-14h21m07s.loge
+21-225-14:43:39.387 00     SPR-I:OPRO         Creating filtered requirements log at /s/opr/accounts/cfs_test/test_logs/MD2.4.0/scx_cpu1_md_signatures-2021-225-14h21m07s.logr
+21-225-14:43:39.472 00     SPR-I:OPRI     --> newlog scx_cpu1_md_signatures-2021-225-14h21m07s.log

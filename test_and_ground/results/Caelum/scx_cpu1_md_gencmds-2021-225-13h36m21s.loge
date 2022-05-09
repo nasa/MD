@@ -1,0 +1,13 @@
+21-225-13:37:42.419 00    TLMH-I:STS          58-012-14:03:48.950 INFO CPU=CPU1 APPNAME=TO_LAB_APP EVENT ID=3 TO telemetry output enabled for IP 192.168.1.101
+21-225-13:38:12.907 00    TLMH-I:STS          58-012-14:04:19.500 INFO CPU=CPU1 APPNAME=MD EVENT ID=10 No-op command, Version 2.4.0.0
+21-225-13:38:19.908 00    TLMH-I:STS          58-012-14:04:26.500 ERROR CPU=CPU1 APPNAME=MD EVENT ID=21 Cmd Msg with Bad length Rcvd: ID = 0x00001890, CC = 0, Exp Len = 8, Len = 9
+21-225-13:38:27.910 00    TLMH-I:STS          58-012-14:04:34.500 ERROR CPU=CPU1 APPNAME=MD EVENT ID=21 Cmd Msg with Bad length Rcvd: ID = 0x00001890, CC = 2, Exp Len = 12, Len = 11
+21-225-13:38:35.912 00    TLMH-I:STS          58-012-14:04:42.500 ERROR CPU=CPU1 APPNAME=MD EVENT ID=21 Cmd Msg with Bad length Rcvd: ID = 0x00001890, CC = 3, Exp Len = 12, Len = 11
+21-225-13:38:43.907 00    TLMH-I:STS          58-012-14:04:50.500 ERROR CPU=CPU1 APPNAME=MD EVENT ID=21 Cmd Msg with Bad length Rcvd: ID = 0x00001890, CC = 4, Exp Len = 84, Len = 102
+21-225-13:38:51.914 00    TLMH-I:STS          58-012-14:04:58.500 DEBUG CPU=CPU1 APPNAME=MD EVENT ID=11 Reset Counters Cmd Received
+21-225-13:39:02.410 00    TLMH-I:STS          58-012-14:05:09.001 ERROR CPU=CPU1 APPNAME=MD EVENT ID=21 Cmd Msg with Bad length Rcvd: ID = 0x00001890, CC = 1, Exp Len = 8, Len = 11
+21-225-13:39:11.414 00    TLMH-I:STS          58-012-14:05:18.001 ERROR CPU=CPU1 APPNAME=MD EVENT ID=16 Command Code 42 not found in MD_CmdHandlerTbl structure
+21-225-13:39:19.411 00    TLMH-I:STS          58-012-14:05:26.001 ERROR CPU=CPU1 APPNAME=MD EVENT ID=14 Start Dwell command rejected because no tables were specified in table mask (0x1000)
+21-225-13:39:27.411 00    TLMH-I:STS          58-012-14:05:34.001 ERROR CPU=CPU1 APPNAME=MD EVENT ID=14 Stop Dwell command rejected because no tables were specified in table mask (0x1000)
+21-225-13:39:35.409 00    TLMH-I:STS          58-012-14:05:42.001 ERROR CPU=CPU1 APPNAME=MD EVENT ID=35 Jam Cmd rejected because symbolic address 'BogusSymbolMDGC' couldn't be resolved
+21-225-13:41:04.440 00    TLMH-I:STS          58-012-14:03:49.450 INFO CPU=CPU1 APPNAME=TO_LAB_APP EVENT ID=3 TO telemetry output enabled for IP 192.168.1.101

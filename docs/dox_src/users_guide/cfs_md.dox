@@ -49,7 +49,7 @@
   with the CFS Memory Dwell (MD) application software.  The document is intended primarily 
   for users of the software (operations personal, test engineers, and maintenance personal).  
   The deployment guide section, is intended for mission developers when deploying and 
-  configuring the FM application software for a mission flight software build environment. 
+  configuring the MD application software for a mission flight software build environment. 
 
   <H1> Applicable Documents </H1>
 

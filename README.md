@@ -4,10 +4,10 @@ core Flight System (cFS) Memory Dwell Application (MD)
 Open Source Release Readme
 ==========================
 
-MD Release 2.3.3
+MD Release 2.4.0
 
 Date:
-10/7/2020
+8/30/2021
 
 Introduction
 -------------
@@ -19,30 +19,27 @@ Introduction
   not been previously defined in the system prior to deployment.
 
   The MD application is written in C and depends on the cFS Operating System
-  Abstraction Layer (OSAL) and cFE components. There is additional MD application
-  specific configuration information contained in the application's Doxygen
-  user's guide available in https://github.com/nasa/MD/tree/master/docs.
+  Abstraction Layer (OSAL) and cFE components. 
+
+  Developer's guide information can be generated using Doxygen:
+  doxygen md_doxygen_config.txt
+
 
   This software is licensed under the Apache 2.0 license.
 
 
 Software Included
 ------------------
-  Memory Dwell application (MD) 2.3.3
+  Memory Dwell application (MD) 2.4.0
 
 
 Software Required
 ------------------
 
- Operating System Abstraction Layer 5.0.0 or higher can be
- obtained at https://github.com/nasa/osal
-
- core Flight Executive 6.8.0 or higher can be obtained at
- https://github.com/nasa/cfe
+ cFS Caelum
 
  Note: An integrated bundle including the cFE, OSAL, and PSP can
  be obtained at https://github.com/nasa/cfs
-
 
 About cFS
 -----------

@@ -1,0 +1,62 @@
+!==============================================================================
+!
+!                Originator: S. Jonke
+!                Responsible SC:  
+!                Responsible CSE: 
+!                Rev:  Last Change: Jun 18 2008
+
+!
+!                    Telemetry Packet #4007  (dec)
+!                 =================================
+!
+!       Packet Application ID: 4007 (Hex '0FA7')
+!       Packet Title:  SCX CPU1 MD Dwell Tables
+!       Packet Length:  ?? Bytes (Including ?? Bytes Of Header)
+!   Collect             Frequency:         SEC
+!  
+!       REFERENCES:
+!
+!       NOTES:
+!
+!       HISTORY: 
+!
+!   2008/06/16:  S. Jonke  initial release
+!	2008/06/18	: Created from template 'template_table_MD_DWELL_PKT_CTRL_TBL.rdl'
+!	with parameters spacecraft='SCX' and processor='CPU1'.
+!==============================================================================
+!
+#include "cfe_mission_cfg.h"
+#include "md_platform_cfg.h"
+
+TYPES
+   RECORD SCX_CPU1_MD_DwellControlEntry  DESC="SCX CPU1 MD Dwell Control Entry Type"
+      UI      MD_DwlCtrlEntry_Length   DESC="Length of dwell field in bytes. 0 indicates null entry"
+      UI      MD_DwlCtrlEntry_Delay    DESC="Delay before following dwell sample in terms of number of task wakeup calls"
+      ULI     MD_DwlCtrlEntry_Offset   DESC="Dwell address in numerical form"
+   END
+   
+   RECORD SCX_CPU1_MD_DwellPacketControl  DESC="SCX CPU1 MD Dwell Packet Control Type"
+      UI   MD_DwlPktCtrl_Enabled        DESC="Dwell table enabled flag"
+      UI   MD_DwlPktCtrl_AddrCount      DESC="Number of dwell addresses to telemeter"
+      ULI  MD_DwlPktCtrl_Rate           DESC="Packet issuance interval in terms of number of task wakeup calls"
+      ULI  MD_DwlPktCtrl_Countdown      DESC="Counts down from Rate to 0, then read next address"
+      UI   MD_DwlPktCtrl_PktOffset      DESC="Tracks where to write next data in dwell pkt"
+      UI   MD_DwlPktCtrl_CurrentEntry   DESC="Current entry in dwell table"
+      UI   MD_DwlPktCtrl_DataSize       DESC="Total number of data bytes specified in dwell table"
+      UB   MD_DwlPktCtrl_Filler[2]      DESC="Preserves alignment"
+      SCX_CPU1_MD_DwellControlEntry MD_DwlPktCtrl_Entry[MD_DWELL_TABLE_SIZE]  DESC="SCX CPU1 MD Dwell Control Structure"
+   END
+END_TYPES
+
+
+
+! MD DwellTables Table
+PACKET P0FA7 APID=4007, DESC="SCX CPU1 MD Dwell Tables Structure", VARYING
+!
+#include "cfe_file_header.rdl"
+#include "cfe_tbl_header.rdl" 
+!
+  SCX_CPU1_MD_DwellPacketControl SCX_CPU1_MD_DwellTables[MD_NUM_DWELL_TABLES]  DESC="SCX CPU1 MD Dwell Tables"
+!
+END
+

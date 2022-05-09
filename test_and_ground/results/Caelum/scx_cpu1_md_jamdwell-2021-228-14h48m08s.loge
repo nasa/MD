@@ -1,0 +1,57 @@
+21-228-14:49:30.392 00    TLMH-I:STS          58-012-14:03:48.950 INFO CPU=CPU1 APPNAME=TO_LAB_APP EVENT ID=3 TO telemetry output enabled for IP 192.168.1.101
+21-228-14:50:53.893 00    TLMH-I:STS          58-012-14:05:12.500 INFO CPU=CPU1 APPNAME=CFE_TBL EVENT ID=12 Successful load of '/ram/md_dwl_ld_sg_tbl1' into 'MD.DWELL_TABLE1' working buffer
+21-228-14:51:03.889 00    TLMH-I:STS          58-012-14:05:22.500 DEBUG CPU=CPU1 APPNAME=CFE_TBL EVENT ID=16 Tbl Services issued validation request for 'MD.DWELL_TABLE1'
+21-228-14:51:04.397 00    TLMH-I:STS          58-012-14:05:23.001 INFO CPU=CPU1 APPNAME=MD EVENT ID=52 MD Dwell Tbl verify results: good = 2, bad = 0, unused = 23
+21-228-14:51:04.398 00    TLMH-I:STS          58-012-14:05:23.001 INFO CPU=CPU1 APPNAME=CFE_TBL EVENT ID=36 MD validation successful for Inactive 'MD.DWELL_TABLE1'
+21-228-14:51:11.896 00    TLMH-I:STS          58-012-14:05:30.500 DEBUG CPU=CPU1 APPNAME=CFE_TBL EVENT ID=17 Tbl Services notifying App that 'MD.DWELL_TABLE1' has a load pending
+21-228-14:51:12.394 00    TLMH-I:STS          58-012-14:05:31.002 INFO CPU=CPU1 APPNAME=CFE_TBL EVENT ID=37 MD Successfully Updated 'MD.DWELL_TABLE1'
+21-228-14:51:30.391 00    TLMH-I:STS          58-012-14:05:49.001 INFO CPU=CPU1 APPNAME=CFE_TBL EVENT ID=12 Successful load of '/ram/md_dwl_ld_sg_tbl2' into 'MD.DWELL_TABLE2' working buffer
+21-228-14:51:39.395 00    TLMH-I:STS          58-012-14:05:58.001 DEBUG CPU=CPU1 APPNAME=CFE_TBL EVENT ID=16 Tbl Services issued validation request for 'MD.DWELL_TABLE2'
+21-228-14:51:39.396 00    TLMH-I:STS          58-012-14:05:58.002 INFO CPU=CPU1 APPNAME=MD EVENT ID=52 MD Dwell Tbl verify results: good = 15, bad = 0, unused = 10
+21-228-14:51:39.397 00    TLMH-I:STS          58-012-14:05:58.002 INFO CPU=CPU1 APPNAME=CFE_TBL EVENT ID=36 MD validation successful for Inactive 'MD.DWELL_TABLE2'
+21-228-14:51:47.395 00    TLMH-I:STS          58-012-14:06:06.000 DEBUG CPU=CPU1 APPNAME=CFE_TBL EVENT ID=17 Tbl Services notifying App that 'MD.DWELL_TABLE2' has a load pending
+21-228-14:51:47.396 00    TLMH-I:STS          58-012-14:06:06.002 INFO CPU=CPU1 APPNAME=CFE_TBL EVENT ID=37 MD Successfully Updated 'MD.DWELL_TABLE2'
+21-228-14:52:05.391 00    TLMH-I:STS          58-012-14:06:24.001 INFO CPU=CPU1 APPNAME=CFE_TBL EVENT ID=12 Successful load of '/ram/md_dwl_ld_sg_tbl3' into 'MD.DWELL_TABLE3' working buffer
+21-228-14:52:11.895 00    TLMH-I:STS          58-012-14:06:30.500 DEBUG CPU=CPU1 APPNAME=CFE_TBL EVENT ID=16 Tbl Services issued validation request for 'MD.DWELL_TABLE3'
+21-228-14:52:12.393 00    TLMH-I:STS          58-012-14:06:31.001 INFO CPU=CPU1 APPNAME=MD EVENT ID=52 MD Dwell Tbl verify results: good = 2, bad = 0, unused = 23
+21-228-14:52:12.394 00    TLMH-I:STS          58-012-14:06:31.001 INFO CPU=CPU1 APPNAME=CFE_TBL EVENT ID=36 MD validation successful for Inactive 'MD.DWELL_TABLE3'
+21-228-14:52:19.891 00    TLMH-I:STS          58-012-14:06:38.500 DEBUG CPU=CPU1 APPNAME=CFE_TBL EVENT ID=17 Tbl Services notifying App that 'MD.DWELL_TABLE3' has a load pending
+21-228-14:52:20.388 00    TLMH-I:STS          58-012-14:06:39.002 INFO CPU=CPU1 APPNAME=CFE_TBL EVENT ID=37 MD Successfully Updated 'MD.DWELL_TABLE3'
+21-228-14:52:37.889 00    TLMH-I:STS          58-012-14:06:56.501 INFO CPU=CPU1 APPNAME=CFE_TBL EVENT ID=12 Successful load of '/ram/md_dwl_ld_sg_tbl4' into 'MD.DWELL_TABLE4' working buffer
+21-228-14:52:47.895 00    TLMH-I:STS          58-012-14:07:06.500 DEBUG CPU=CPU1 APPNAME=CFE_TBL EVENT ID=16 Tbl Services issued validation request for 'MD.DWELL_TABLE4'
+21-228-14:52:48.392 00    TLMH-I:STS          58-012-14:07:07.002 INFO CPU=CPU1 APPNAME=MD EVENT ID=52 MD Dwell Tbl verify results: good = 25, bad = 0, unused = 0
+21-228-14:52:48.393 00    TLMH-I:STS          58-012-14:07:07.002 INFO CPU=CPU1 APPNAME=CFE_TBL EVENT ID=36 MD validation successful for Inactive 'MD.DWELL_TABLE4'
+21-228-14:52:55.896 00    TLMH-I:STS          58-012-14:07:14.500 DEBUG CPU=CPU1 APPNAME=CFE_TBL EVENT ID=17 Tbl Services notifying App that 'MD.DWELL_TABLE4' has a load pending
+21-228-14:52:56.393 00    TLMH-I:STS          58-012-14:07:15.002 INFO CPU=CPU1 APPNAME=CFE_TBL EVENT ID=37 MD Successfully Updated 'MD.DWELL_TABLE4'
+21-228-14:53:13.394 00    TLMH-I:STS          58-012-14:07:32.008 DEBUG CPU=CPU1 APPNAME=CFE_TBL EVENT ID=15 Successfully overwrote '/ram/cfe_tbl_reg.log' with Table Registry:Size=1212,Entries=128
+21-228-14:53:58.387 00    TLMH-I:STS          58-012-14:08:17.002 INFO CPU=CPU1 APPNAME=MD EVENT ID=30 Successful Jam to Dwell Tbl#1 Entry #1
+21-228-14:54:02.394 00    TLMH-I:STS          58-012-14:08:21.002 INFO CPU=CPU1 APPNAME=CFE_TBL EVENT ID=14 Successfully dumped Table 'MD.DWELL_TABLE1' to '/ram/cpu1_tbl1_jam212'
+21-228-14:54:42.890 00    TLMH-I:STS          58-012-14:09:01.502 INFO CPU=CPU1 APPNAME=MD EVENT ID=30 Successful Jam to Dwell Tbl#2 Entry #12
+21-228-14:54:46.891 00    TLMH-I:STS          58-012-14:09:05.502 INFO CPU=CPU1 APPNAME=CFE_TBL EVENT ID=14 Successfully dumped Table 'MD.DWELL_TABLE2' to '/ram/cpu1_tbl1_jam222'
+21-228-14:55:27.389 00    TLMH-I:STS          58-012-14:09:46.002 INFO CPU=CPU1 APPNAME=MD EVENT ID=30 Successful Jam to Dwell Tbl#4 Entry #25
+21-228-14:55:30.392 00    TLMH-I:STS          58-012-14:09:49.002 INFO CPU=CPU1 APPNAME=CFE_TBL EVENT ID=14 Successfully dumped Table 'MD.DWELL_TABLE4' to '/ram/cpu1_tbl1_jam232'
+21-228-14:56:10.893 00    TLMH-I:STS          58-012-14:10:29.502 INFO CPU=CPU1 APPNAME=MD EVENT ID=30 Successful Jam to Dwell Tbl#1 Entry #4
+21-228-14:56:14.887 00    TLMH-I:STS          58-012-14:10:33.502 INFO CPU=CPU1 APPNAME=CFE_TBL EVENT ID=14 Successfully dumped Table 'MD.DWELL_TABLE1' to '/ram/cpu1_tbl1_jam242'
+21-228-14:56:54.891 00    TLMH-I:STS          58-012-14:11:13.500 ERROR CPU=CPU1 APPNAME=MD EVENT ID=32 Jam Cmd rejected due to invalid Tbl Id arg = 5 (Expect 1.. 4)
+21-228-14:57:03.885 00    TLMH-I:STS          58-012-14:11:22.502 INFO CPU=CPU1 APPNAME=MD EVENT ID=30 Successful Jam to Dwell Tbl#1 Entry #2
+21-228-14:57:28.393 00    TLMH-I:STS          58-012-14:11:47.002 INFO CPU=CPU1 APPNAME=MD EVENT ID=30 Successful Jam to Dwell Tbl#1 Entry #2
+21-228-14:57:33.391 00    TLMH-I:STS          58-012-14:11:52.003 ERROR CPU=CPU1 APPNAME=MD EVENT ID=34 Jam Cmd rejected due to invalid Field Length arg = 3 (Expect 0,1,2,or 4)
+21-228-14:57:39.390 00    TLMH-I:STS          58-012-14:11:58.001 ERROR CPU=CPU1 APPNAME=MD EVENT ID=38 Jam Cmd rejected because address 0x00000021 is not 16-bit aligned
+21-228-14:57:47.390 00    TLMH-I:STS          58-012-14:12:06.001 ERROR CPU=CPU1 APPNAME=MD EVENT ID=37 Jam Cmd rejected because address 0x00000022 is not 32-bit aligned
+21-228-14:57:55.386 00    TLMH-I:STS          58-012-14:12:14.001 ERROR CPU=CPU1 APPNAME=MD EVENT ID=35 Jam Cmd rejected because symbolic address 'InvalidSymbolName' couldn't be resolved
+21-228-14:58:03.890 00    TLMH-I:STS          58-012-14:12:22.506 INFO CPU=CPU1 APPNAME=MD EVENT ID=12 Start Dwell Table command processed successfully for table mask 0x000F
+21-228-14:58:06.885 00    TLMH-I:STS          58-012-14:12:25.502 INFO CPU=CPU1 APPNAME=MD EVENT ID=30 Successful Jam to Dwell Tbl#1 Entry #1
+21-228-14:58:10.886 00    TLMH-I:STS          58-012-14:12:29.502 INFO CPU=CPU1 APPNAME=CFE_TBL EVENT ID=14 Successfully dumped Table 'MD.DWELL_TABLE1' to '/ram/cpu1_tbl1_jam413'
+21-228-14:58:51.387 00    TLMH-I:STS          58-012-14:13:10.002 INFO CPU=CPU1 APPNAME=MD EVENT ID=30 Successful Jam to Dwell Tbl#2 Entry #14
+21-228-14:58:54.388 00    TLMH-I:STS          58-012-14:13:13.002 INFO CPU=CPU1 APPNAME=CFE_TBL EVENT ID=14 Successfully dumped Table 'MD.DWELL_TABLE2' to '/ram/cpu1_tbl2_jam422'
+21-228-14:59:34.389 00    TLMH-I:STS          58-012-14:13:53.002 INFO CPU=CPU1 APPNAME=MD EVENT ID=30 Successful Jam to Dwell Tbl#4 Entry #25
+21-228-14:59:38.387 00    TLMH-I:STS          58-012-14:13:57.002 INFO CPU=CPU1 APPNAME=CFE_TBL EVENT ID=14 Successfully dumped Table 'MD.DWELL_TABLE4' to '/ram/cpu1_tbl4_jam432'
+21-228-15:00:18.890 00    TLMH-I:STS          58-012-14:14:37.502 INFO CPU=CPU1 APPNAME=MD EVENT ID=30 Successful Jam to Dwell Tbl#3 Entry #1
+21-228-15:00:18.892 00    TLMH-I:STS          58-012-14:14:37.502 INFO CPU=CPU1 APPNAME=MD EVENT ID=51 Dwell Table 3 is enabled with a delay of zero so no processing will occur
+21-228-15:00:22.886 00    TLMH-I:STS          58-012-14:14:41.502 INFO CPU=CPU1 APPNAME=CFE_TBL EVENT ID=14 Successfully dumped Table 'MD.DWELL_TABLE3' to '/ram/cpu1_tbl3_jam442'
+21-228-15:01:03.385 00    TLMH-I:STS          58-012-14:15:22.001 ERROR CPU=CPU1 APPNAME=MD EVENT ID=32 Jam Cmd rejected due to invalid Tbl Id arg = 5 (Expect 1.. 4)
+21-228-15:01:11.386 00    TLMH-I:STS          58-012-14:15:30.001 ERROR CPU=CPU1 APPNAME=MD EVENT ID=34 Jam Cmd rejected due to invalid Field Length arg = 3 (Expect 0,1,2,or 4)
+21-228-15:01:19.382 00    TLMH-I:STS          58-012-14:15:38.001 ERROR CPU=CPU1 APPNAME=MD EVENT ID=38 Jam Cmd rejected because address 0x00000021 is not 16-bit aligned
+21-228-15:01:27.388 00    TLMH-I:STS          58-012-14:15:46.001 ERROR CPU=CPU1 APPNAME=MD EVENT ID=37 Jam Cmd rejected because address 0x00000022 is not 32-bit aligned
+21-228-15:01:35.391 00    TLMH-I:STS          58-012-14:15:54.001 ERROR CPU=CPU1 APPNAME=MD EVENT ID=35 Jam Cmd rejected because symbolic address 'InvalidSymbolName' couldn't be resolved
+21-228-15:03:04.487 00    TLMH-I:STS          58-012-14:03:48.950 INFO CPU=CPU1 APPNAME=TO_LAB_APP EVENT ID=3 TO telemetry output enabled for IP 192.168.1.101

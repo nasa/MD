@@ -1,0 +1,49 @@
+!==============================================================================
+!
+!                Originator: S. Jonke
+!                Responsible SC:  
+!                Responsible CSE: 
+!
+!                    Telemetry Packet # 0147 (dec)
+!                 =================================
+!
+!       Packet Application ID: 0147 (Hex '0093')
+!       Packet Title:  SCX CPU1 MD Dwell Packet 3
+!       Packet Length:  ?? Bytes (Including 12 Bytes Of Header)
+!   Collect             Frequency:         SEC
+!
+!       REFERENCES:
+!
+!       NOTES:
+!
+!       HISTORY: 
+!
+!  2008/05/01  SJJ  : Initial
+!
+!	2017/10/25	: Created from template 'template_tlm_MD_PKT3_TLM.rdl'
+!	with parameters spacecraft='SCX' and processor='CPU1'.
+!==============================================================================
+!
+#include "md_platform_cfg.h"
+
+PACKET P0093 APID=0147, DESC="SCX CPU1 MD Dwell Packet 3",
+                        STALE = 36, VARYING
+#include "ccsds_header.rdl"
+!
+  UB   SCX_CPU1_MD_DwlPkt3TableId DESC="SCX CPU1 MD dwell packet 3 table id"
+!
+  UB   SCX_CPU1_MD_DwlPkt3NumAddresses DESC="SCX CPU1 MD dwell packet 3 number of dwell addresses"
+!
+  UI   SCX_CPU1_MD_DwlPkt3PktDataSize DESC="SCX CPU1 MD dwell packet 3 number of bytes of dwell data"
+!
+  ULI  SCX_CPU1_MD_DwlPkt3Rate DESC="SCX CPU1 MD dwell packet 3 counts between sends"
+!
+#if MD_SIGNATURE_OPTION == 1   
+  char SCX_CPU1_MD_DwlPkt3Signature[MD_SIGNATURE_FIELD_LENGTH] DESC="SCX CPU1 MD dwell packet 3 signature"
+#endif
+!
+  UB   SCX_CPU1_MD_DwlPkt3DwellData[MD_DWELL_TABLE_SIZE*4] DESC="SCX CPU1 MD dwell packet 3 dwell data"
+!
+!  END                !END APPEND RECORD FUNCTION
+!
+END
