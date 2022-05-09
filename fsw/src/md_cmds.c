@@ -47,13 +47,8 @@ void MD_ProcessStartCmd(const CFE_SB_Buffer_t *BufPtr)
     int32              NumTblInMask    = 0; /* Purely as info for event message */
     uint16             TableId         = 0;
     uint16             TableIndex      = 0;
-    MD_CmdStartStop_t *Start           = NULL;
+    MD_CmdStartStop_t *Start           = (MD_CmdStartStop_t *)BufPtr;
     bool               AnyTablesInMask = false;
-
-    /*
-    **  Cast message to StartStop Command.
-    */
-    Start = (MD_CmdStartStop_t *)BufPtr;
 
     /*  Preview tables specified by command:                   */
     /*  Check that there's at least one valid table specified. */
@@ -138,15 +133,10 @@ void MD_ProcessStopCmd(const CFE_SB_Buffer_t *BufPtr)
     int32              ErrorCount      = 0;
     int32              Status          = CFE_SUCCESS;
     int32              NumTblInMask    = 0; /* Purely as info for event message */
-    MD_CmdStartStop_t *Stop            = NULL;
+    MD_CmdStartStop_t *Stop            = (MD_CmdStartStop_t *)BufPtr;
     uint16             TableId         = 0;
     uint16             TableIndex      = 0;
     bool               AnyTablesInMask = false;
-
-    /*
-    **  Cast message to StartStop Command.
-    */
-    Stop = (MD_CmdStartStop_t *)BufPtr;
 
     for (TableId = 1; TableId <= MD_NUM_DWELL_TABLES; TableId++)
     {
@@ -418,14 +408,9 @@ void MD_ProcessJamCmd(const CFE_SB_Buffer_t *BufPtr)
 void MD_ProcessSignatureCmd(const CFE_SB_Buffer_t *BufPtr)
 {
     int32                 Status       = CFE_SUCCESS;
-    MD_CmdSetSignature_t *SignatureCmd = NULL;
+    MD_CmdSetSignature_t *SignatureCmd = (MD_CmdSetSignature_t *)BufPtr;
     uint16                TblId        = 0;
     uint16                StringLength;
-
-    /*
-    **  Cast message to Signature Command.
-    */
-    SignatureCmd = (MD_CmdSetSignature_t *)BufPtr;
 
     TblId = SignatureCmd->TableId;
 

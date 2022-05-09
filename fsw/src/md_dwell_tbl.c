@@ -303,12 +303,9 @@ void MD_CopyUpdatedTbl(MD_DwellTableLoad_t *MD_LoadTablePtr, uint8 TblIndex)
     uint8                    EntryIndex;
     cpuaddr                  ResolvedAddr       = 0;
     MD_TableLoadEntry_t *    ThisLoadEntry      = NULL;
-    MD_DwellPacketControl_t *LocalControlStruct = NULL;
+    MD_DwellPacketControl_t *LocalControlStruct = &MD_AppData.MD_DwellTables[TblIndex];
 
     /* Null check on MD_LoadTablePtr not necessary - table passed validation */
-
-    /* Assign pointer to internal control structure. */
-    LocalControlStruct = &MD_AppData.MD_DwellTables[TblIndex];
 
     /* Copy 'Enabled' field from load structure to internal control structure. */
     LocalControlStruct->Enabled = MD_LoadTablePtr->Enabled;
@@ -351,9 +348,9 @@ void MD_CopyUpdatedTbl(MD_DwellTableLoad_t *MD_LoadTablePtr, uint8 TblIndex)
 /******************************************************************************/
 int32 MD_UpdateTableEnabledField(uint16 TableIndex, uint16 FieldValue)
 {
-    int32                Status           = CFE_SUCCESS;
-    int32                GetAddressResult = CFE_SUCCESS;
-    MD_DwellTableLoad_t *MD_LoadTablePtr  = NULL;
+    int32                Status          = CFE_SUCCESS;
+    MD_DwellTableLoad_t *MD_LoadTablePtr = NULL;
+    int32                GetAddressResult;
 
     GetAddressResult = CFE_TBL_GetAddress((void *)&MD_LoadTablePtr, MD_AppData.MD_TableHandle[TableIndex]);
 
@@ -431,9 +428,9 @@ int32 MD_UpdateTableDwellEntry(uint16 TableIndex, uint16 EntryIndex, uint16 NewL
 
 int32 MD_UpdateTableSignature(uint16 TableIndex, char NewSignature[MD_SIGNATURE_FIELD_LENGTH])
 {
-    int32                Status           = CFE_SUCCESS;
-    int32                GetAddressResult = CFE_SUCCESS;
-    MD_DwellTableLoad_t *MD_LoadTablePtr  = NULL;
+    int32                Status          = CFE_SUCCESS;
+    MD_DwellTableLoad_t *MD_LoadTablePtr = NULL;
+    int32                GetAddressResult;
 
     /* Get pointer to Table */
     GetAddressResult = CFE_TBL_GetAddress((void *)&MD_LoadTablePtr, MD_AppData.MD_TableHandle[TableIndex]);
