@@ -148,14 +148,11 @@ void MD_DwellLoop(void)
 
 int32 MD_GetDwellData(uint16 TblIndex, uint16 EntryIndex)
 {
-    uint8                    NumBytes   = 0;    /* Num of bytes to read */
-    uint32                   MemReadVal = 0;    /* 1-, 2-, or 4-byte value */
-    MD_DwellPacketControl_t *TblPtr     = NULL; /* Points to table struct */
-    cpuaddr                  DwellAddress;      /* dwell address */
-    int32                    Status = CFE_SUCCESS;
-
-    /* Initialize pointer to current table */
-    TblPtr = (MD_DwellPacketControl_t *)&MD_AppData.MD_DwellTables[TblIndex];
+    uint8                    NumBytes   = 0; /* Num of bytes to read */
+    uint32                   MemReadVal = 0; /* 1-, 2-, or 4-byte value */
+    MD_DwellPacketControl_t *TblPtr     = &MD_AppData.MD_DwellTables[TblIndex];
+    int32                    Status     = CFE_SUCCESS;
+    cpuaddr                  DwellAddress; /* dwell address */
 
     /* How many bytes to read?*/
     NumBytes = TblPtr->Entry[EntryIndex].Length;
