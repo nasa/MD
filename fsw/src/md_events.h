@@ -686,7 +686,7 @@
  *  This event message is issued when the table pointer passed to
  *  #MD_TableValidationFunc is null.
  */
-#define MD_TBL_VAL_NULL_PTR_ERR_EID 55
+#define MD_TBL_VAL_NULL_PTR_ERR_EID 63
 
 /**
  * \brief MD Dwell Table Address Read Failed Event ID
