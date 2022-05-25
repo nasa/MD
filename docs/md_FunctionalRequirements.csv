@@ -6,8 +6,8 @@ b) MD Command Rejected Counter",Important for testing and on-orbit flight operat
 MD1002,MD1002,"For all MD commands, if the length contained in the message header is not equal to the expected length, MD shall reject the command and issue an event message.",Basic command verification in the event of SEU or memory corruption
 MD1003,MD1003,"If Dwell Table ID specified in any MD command exceeds the <PLATFORM_DEFINED> maximum number of allowable memory dwells,  MD shall reject the command and issue an event message","Platform definition allows for scaling of memory dwell. 
 Heritage missions have supported between 1 and 4 dwell tables."
-MD1004,MD1004,"If MD accepts any command as valid, MD shall execute the command, increment the MD Valid Command Counter and issue an event message",
-MD1005,MD1005,"If MD rejects any command, MD shall abort the command execution, increment the MD Command Rejected Counter and issue an error event message",
+MD1004,MD1004,"If MD accepts any command as valid, MD shall execute the command, increment the MD Valid Command Counter and issue an event message",Operation response to command acceptance
+MD1005,MD1005,"If MD rejects any command, MD shall abort the command execution, increment the MD Command Rejected Counter and issue an error event message",Operational response to command rejection
 MD1006,MD1006,The MD application shall generate an error event message if symbol table operations are initiated but not supported in the current target environment.,Gracefully handle running without a system symbol table to query
 MD2000,MD2000,"Upon receipt of a Start Dwell command, MD shall identify the command-specified tables as ENABLED and start processing the command-specified memory dwell tables, starting with the first entry, until one of the following:
 a) an entry that has a zero value for the Number of Bytes field or
@@ -30,7 +30,7 @@ MD3000.1,MD3000.1,<OPTIONAL>  Symbol Name and offset can be used in lieu of an a
 MD3000.2,MD3000.2,"The collection shall be done for each entry in an active Memory Dwell Table, starting with the first entry, until one of the following :
 a) it reaches an entry that has a zero value for the Number of Bytes parameter or
 b) until it has processed the last entry in a Dwell Table",No need to process unused entries in the table
-MD3000.3,MD3000.3,Data collection occurs only when  a Dwell Table is both ENABLED and has a non-zero dwell rate.,
+MD3000.3,MD3000.3,Data collection occurs only when a Dwell Table is both ENABLED and has a non-zero dwell rate.,Operational data collection control
 MD3001,MD3001,"When MD collects all of the data specified in a memory dwell table (as defined in MD3000.2), MD shall issue a memory dwell message containing the following:
 a) Table ID
 b) <OPTIONAL> Signature
