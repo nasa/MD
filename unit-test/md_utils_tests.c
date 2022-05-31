@@ -465,7 +465,7 @@ void MD_Verify16Aligned_Test(void)
 void MD_ResolveSymAddr_Test(void)
 {
     MD_SymAddr_t SymAddr;
-    cpuaddr      ResolvedAddr;
+    cpuaddr      ResolvedAddr = 0;
     bool         Result;
 
     memset(&SymAddr, 0, sizeof(MD_SymAddr_t));

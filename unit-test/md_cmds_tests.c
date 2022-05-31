@@ -662,7 +662,7 @@ void MD_ProcessJamCmd_Test_CantResolveJamAddr(void)
     UT_CmdBuf.CmdJam.EntryId     = 2;
     UT_CmdBuf.CmdJam.FieldLength = 1;
 
-    strncpy(UT_CmdBuf.CmdJam.DwellAddress.SymName, "address", 10);
+    strncpy(UT_CmdBuf.CmdJam.DwellAddress.SymName, "address", sizeof(UT_CmdBuf.CmdJam.DwellAddress.SymName) - 1);
 
     /* Set to satisfy condition "MD_ResolveSymAddr(&Jam->DwellAddress,&ResolvedAddr) == FALSE" */
     UT_SetDeferredRetcode(UT_KEY(MD_ResolveSymAddr), 1, false);
@@ -1199,7 +1199,7 @@ void MD_ProcessSignatureCmd_Test_InvalidSignatureLength(void)
     TestMsgId = CFE_SB_ValueToMsgId(MD_CMD_MID);
     UT_SetDataBuffer(UT_KEY(CFE_MSG_GetMsgId), &TestMsgId, sizeof(TestMsgId), false);
 
-    for (i = 0; i < MD_SIGNATURE_FIELD_LENGTH; i++)
+    for (i = 0; i < sizeof(UT_CmdBuf.CmdSetSignature.Signature); i++)
     {
         UT_CmdBuf.CmdSetSignature.Signature[i] = 'x';
     }
@@ -1275,7 +1275,7 @@ void MD_ProcessSignatureCmd_Test_Success(void)
     UT_SetDataBuffer(UT_KEY(CFE_MSG_GetMsgId), &TestMsgId, sizeof(TestMsgId), false);
 
     UT_CmdBuf.CmdSetSignature.TableId = 1;
-    strncpy(UT_CmdBuf.CmdSetSignature.Signature, "signature", MD_SIGNATURE_FIELD_LENGTH);
+    strncpy(UT_CmdBuf.CmdSetSignature.Signature, "signature", sizeof(UT_CmdBuf.CmdSetSignature.Signature) - 1);
 
     /* Prevents segmentation fault in call to subfunction MD_UpdateTableSignature */
     UT_SetHookFunction(UT_KEY(CFE_TBL_GetAddress), &MD_CMDS_TEST_CFE_TBL_GetAddressHook, NULL);
@@ -1320,7 +1320,7 @@ void MD_ProcessSignatureCmd_Test_NoUpdateTableSignature(void)
     UT_SetDataBuffer(UT_KEY(CFE_MSG_GetMsgId), &TestMsgId, sizeof(TestMsgId), false);
 
     UT_CmdBuf.CmdSetSignature.TableId = 1;
-    strncpy(UT_CmdBuf.CmdSetSignature.Signature, "signature", MD_SIGNATURE_FIELD_LENGTH);
+    strncpy(UT_CmdBuf.CmdSetSignature.Signature, "signature", sizeof(UT_CmdBuf.CmdSetSignature.Signature) - 1);
 
     /* Prevents segmentation fault in call to subfunction MD_UpdateTableSignature */
     UT_SetHookFunction(UT_KEY(CFE_TBL_GetAddress), &MD_CMDS_TEST_CFE_TBL_GetAddressHook, NULL);
