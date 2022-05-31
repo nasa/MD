@@ -234,7 +234,7 @@ void MD_InitControlStructures(void)
     {
         DwellControlPtr = &MD_AppData.MD_DwellTables[TblIndex];
 
-        memset(DwellControlPtr, 0, sizeof(MD_DwellPacketControl_t));
+        memset(DwellControlPtr, 0, sizeof(*DwellControlPtr));
 
         /* Countdown must be set to 1 since it's decremented at the top of */
         /* the dwell loop. */
@@ -349,7 +349,7 @@ int32 MD_InitTableServices(void)
 
     /*  Prepare Data Structure used for loading Initial Table Data    */
 
-    memset(&InitMemDwellTable, 0, sizeof(MD_DwellTableLoad_t));
+    memset(&InitMemDwellTable, 0, sizeof(InitMemDwellTable));
 
     /*
     ** For each table, load recovered data if available and valid.

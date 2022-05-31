@@ -192,7 +192,7 @@ int32 MD_GetDwellData(uint16 TblIndex, uint16 EntryIndex)
     /* didn't read. */
     if (Status == CFE_SUCCESS)
     {
-        memcpy((void *)&MD_AppData.MD_DwellPkt[TblIndex].Data[TblPtr->PktOffset], (void *)&MemReadVal, NumBytes);
+        memcpy(&MD_AppData.MD_DwellPkt[TblIndex].Data[TblPtr->PktOffset], &MemReadVal, NumBytes);
     }
 
     /* Update write location in dwell packet */
