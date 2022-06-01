@@ -82,7 +82,7 @@ void MD_Test_Setup(void)
     /* initialize test environment to default state for every test */
     UT_ResetState(0);
 
-    memset(&MD_AppData, 0, sizeof(MD_AppData_t));
+    memset(&MD_AppData, 0, sizeof(MD_AppData));
     memset(context_CFE_EVS_SendEvent, 0, sizeof(context_CFE_EVS_SendEvent));
     memset(&context_CFE_ES_WriteToSysLog, 0, sizeof(context_CFE_ES_WriteToSysLog));
     memset(&UT_CmdBuf, 0, sizeof(UT_CmdBuf));

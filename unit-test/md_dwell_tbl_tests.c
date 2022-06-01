@@ -950,7 +950,6 @@ void MD_UpdateTableEnabledField_Test_DwellStreamEnabled(void)
     /* Set MD_LoadTablePtr = &MD_DWELL_TBL_TEST_GlobalLoadTable */
     // UT_SetHookFunction(UT_KEY(CFE_TBL_GetAddress), &MD_DWELL_TBL_TEST_CFE_TBL_GetAddressHook2, NULL);
     UT_SetDefaultReturnValue(UT_KEY(CFE_TBL_GetAddress), CFE_TBL_INFO_UPDATED);
-    CFE_PSP_MemSet(&MD_AppData, 0, sizeof(MD_AppData_t));
     LoadTblPtr->Enabled = MD_DWELL_STREAM_DISABLED;
 
     UT_SetDataBuffer(UT_KEY(CFE_TBL_GetAddress), &LoadTblPtr, sizeof(LoadTblPtr), false);
@@ -976,7 +975,6 @@ void MD_UpdateTableEnabledField_Test_DwellStreamDisabled(void)
     MD_DwellTableLoad_t *LoadTblPtr = &LoadTbl;
 
     UT_SetDefaultReturnValue(UT_KEY(CFE_TBL_GetAddress), CFE_SUCCESS);
-    CFE_PSP_MemSet(&MD_AppData, 0, sizeof(MD_AppData_t));
     LoadTblPtr->Enabled = MD_DWELL_STREAM_ENABLED;
 
     UT_SetDataBuffer(UT_KEY(CFE_TBL_GetAddress), &LoadTblPtr, sizeof(LoadTblPtr), false);
@@ -1039,7 +1037,7 @@ void MD_UpdateTableDwellEntry_Test(void)
 
     MD_DwellTableLoad_t  LoadTbl;
     MD_DwellTableLoad_t *LoadTblPtr = &LoadTbl;
-    CFE_PSP_MemSet(&MD_AppData, 0, sizeof(MD_AppData_t));
+
     UT_SetDataBuffer(UT_KEY(CFE_TBL_GetAddress), &LoadTblPtr, sizeof(LoadTblPtr), false);
 
     /* Execute the function being tested */
@@ -1079,7 +1077,7 @@ void MD_UpdateTableDwellEntry_Test_Updated(void)
     /* Set MD_LoadTablePtr = &MD_DWELL_TBL_TEST_GlobalLoadTable */
     MD_DwellTableLoad_t  LoadTbl;
     MD_DwellTableLoad_t *LoadTblPtr = &LoadTbl;
-    CFE_PSP_MemSet(&MD_AppData, 0, sizeof(MD_AppData_t));
+
     UT_SetDefaultReturnValue(UT_KEY(CFE_TBL_GetAddress), CFE_TBL_INFO_UPDATED);
     UT_SetDataBuffer(UT_KEY(CFE_TBL_GetAddress), &LoadTblPtr, sizeof(LoadTblPtr), false);
 
@@ -1151,7 +1149,7 @@ void MD_UpdateTableSignature_Test(void)
 
     MD_DwellTableLoad_t  LoadTbl;
     MD_DwellTableLoad_t *LoadTblPtr = &LoadTbl;
-    CFE_PSP_MemSet(&MD_AppData, 0, sizeof(MD_AppData_t));
+
     UT_SetDataBuffer(UT_KEY(CFE_TBL_GetAddress), &LoadTblPtr, sizeof(LoadTblPtr), false);
 
     /* Execute the function being tested */
@@ -1176,7 +1174,7 @@ void MD_UpdateTableSignature_Test_Updated(void)
     /* Set MD_LoadTablePtr = &MD_DWELL_TBL_TEST_GlobalLoadTable */
     MD_DwellTableLoad_t  LoadTbl;
     MD_DwellTableLoad_t *LoadTblPtr = &LoadTbl;
-    CFE_PSP_MemSet(&MD_AppData, 0, sizeof(MD_AppData_t));
+
     UT_SetDefaultReturnValue(UT_KEY(CFE_TBL_GetAddress), CFE_TBL_INFO_UPDATED);
     UT_SetDataBuffer(UT_KEY(CFE_TBL_GetAddress), &LoadTblPtr, sizeof(LoadTblPtr), false);
 

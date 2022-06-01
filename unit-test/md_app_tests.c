@@ -40,39 +40,11 @@
 #include "utstubs.h"
 
 /* md_app_tests globals */
-uint8 call_count_CFE_EVS_SendEvent;
-
-int32 MD_APP_TEST_CFE_TBL_GetAddressHook1(void *UserObj, int32 StubRetcode, uint32 CallCount,
-                                          const UT_StubContext_t *Context)
-{
-    void **TblPtr = (void **)Context->ArgPtr[0];
-
-    *TblPtr = &MD_AppData.MD_DwellTables[0];
-
-    CFE_PSP_MemSet(&MD_AppData, 0, sizeof(MD_AppData_t));
-
-    MD_AppData.MD_DwellTables[0].Enabled = MD_DWELL_STREAM_ENABLED;
-
-    return CFE_TBL_INFO_UPDATED;
-}
-
-int32 MD_APP_TEST_CFE_TBL_GetAddressHook2(void *UserObj, int32 StubRetcode, uint32 CallCount,
-                                          const UT_StubContext_t *Context)
-{
-    void **TblPtr = (void **)Context->ArgPtr[0];
-
-    *TblPtr = &MD_AppData.MD_DwellTables[0];
-
-    CFE_PSP_MemSet(&MD_AppData, 0, sizeof(MD_AppData_t));
-
-    MD_AppData.MD_DwellTables[0].Enabled = MD_DWELL_STREAM_DISABLED;
-
-    return CFE_TBL_INFO_UPDATED;
-}
-
+uint8               call_count_CFE_EVS_SendEvent;
 MD_DwellTableLoad_t MD_DWELL_TBL_TEST_GlobalLoadTable;
-int32               MD_DWELL_TBL_TEST_CFE_TBL_GetAddressHook(void *UserObj, int32 StubRetcode, uint32 CallCount,
-                                                             const UT_StubContext_t *Context)
+
+int32 MD_DWELL_TBL_TEST_CFE_TBL_GetAddressHook(void *UserObj, int32 StubRetcode, uint32 CallCount,
+                                               const UT_StubContext_t *Context)
 {
     void **TblPtr                             = (void **)Context->ArgPtr[0];
     MD_DWELL_TBL_TEST_GlobalLoadTable.Enabled = MD_DWELL_STREAM_ENABLED;
@@ -968,7 +940,6 @@ void MD_InitTableServices_Test_TblRecoveredNotValid(void)
        prevent a core dump by assigning MD_LoadTablePtr, and to make MD_TableValidateionFunc() return non-success */
     UT_SetDefaultReturnValue(UT_KEY(CFE_TBL_GetAddress), CFE_TBL_INFO_UPDATED);
 
-    CFE_PSP_MemSet(&MD_AppData, 0, sizeof(MD_AppData_t));
     MD_AppData.MD_DwellTables[0].Enabled = MD_DWELL_STREAM_DISABLED;
 
     UT_SetDataBuffer(UT_KEY(CFE_TBL_GetAddress), &LoadTblPtr, sizeof(LoadTblPtr), false);
@@ -1033,7 +1004,7 @@ void MD_InitTableServices_Test_DwellStreamEnabled(void)
     /* Set to fail condition "GetAddressResult != CFE_TBL_INFO_UPDATED", to
        prevent a core dump by assigning MD_LoadTablePtr, and to make MD_TableValidateionFunc() return non-success */
     UT_SetDefaultReturnValue(UT_KEY(CFE_TBL_GetAddress), CFE_TBL_INFO_UPDATED);
-    CFE_PSP_MemSet(&MD_AppData, 0, sizeof(MD_AppData_t));
+
     LoadTblPtr->Enabled = MD_DWELL_STREAM_ENABLED;
 
     UT_SetDataBuffer(UT_KEY(CFE_TBL_GetAddress), &LoadTblPtr, sizeof(LoadTblPtr), false);
@@ -1098,7 +1069,7 @@ void MD_InitTableServices_Test_TblNotRecovered(void)
     /* Set to fail condition "GetAddressResult != CFE_TBL_INFO_UPDATED", to
        prevent a core dump by assigning MD_LoadTablePtr, and to make MD_TableValidateionFunc() return non-success */
     UT_SetDefaultReturnValue(UT_KEY(CFE_TBL_GetAddress), CFE_TBL_INFO_UPDATED);
-    CFE_PSP_MemSet(&MD_AppData, 0, sizeof(MD_AppData_t));
+
     LoadTblPtr->Enabled = MD_DWELL_STREAM_ENABLED;
 
     UT_SetDataBuffer(UT_KEY(CFE_TBL_GetAddress), &LoadTblPtr, sizeof(LoadTblPtr), false);
@@ -1381,7 +1352,7 @@ void MD_ManageDwellTable_Test_UpdatePendingDwellStreamEnabled(void)
     UT_SetDefaultReturnValue(UT_KEY(CFE_TBL_ReleaseAddress), CFE_SUCCESS);
 
     UT_SetDefaultReturnValue(UT_KEY(CFE_TBL_GetAddress), CFE_TBL_INFO_UPDATED);
-    CFE_PSP_MemSet(&MD_AppData, 0, sizeof(MD_AppData_t));
+
     LoadTblPtr->Enabled = MD_DWELL_STREAM_ENABLED;
 
     UT_SetDataBuffer(UT_KEY(CFE_TBL_GetAddress), &LoadTblPtr, sizeof(LoadTblPtr), false);
@@ -1416,7 +1387,7 @@ void MD_ManageDwellTable_Test_UpdatePendingDwellStreamDisabled(void)
     /* Set to satisfy condition "MD_LoadTablePtr->Enabled == MD_DWELL_STREAM_DISABLED" and to prevent a core dump by
      * assigning MD_LoadTablePtr */
     UT_SetDefaultReturnValue(UT_KEY(CFE_TBL_GetAddress), CFE_TBL_INFO_UPDATED);
-    CFE_PSP_MemSet(&MD_AppData, 0, sizeof(MD_AppData_t));
+
     LoadTblPtr->Enabled = MD_DWELL_STREAM_DISABLED;
 
     UT_SetDataBuffer(UT_KEY(CFE_TBL_GetAddress), &LoadTblPtr, sizeof(LoadTblPtr), false);
@@ -1447,8 +1418,6 @@ void MD_ManageDwellTable_Test_TblNotUpdated(void)
 
     /* Set to satisfy condition "MD_LoadTablePtr->Enabled == MD_DWELL_STREAM_ENABLED" and to prevent a core dump by
      * assigning MD_LoadTablePtr */
-    //    UT_SetHookFunction(UT_KEY(CFE_TBL_GetAddress), MD_APP_TEST_CFE_TBL_GetAddressHook1, NULL);
-    CFE_PSP_MemSet(&MD_AppData, 0, sizeof(MD_AppData_t));
     MD_AppData.MD_DwellTables[0].Enabled = MD_DWELL_STREAM_ENABLED;
     UT_SetDataBuffer(UT_KEY(CFE_TBL_GetAddress), &MD_AppData.MD_DwellTables[0], sizeof(MD_AppData.MD_DwellTables[0]),
                      false);

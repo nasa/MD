@@ -328,16 +328,10 @@ void MD_CopyUpdatedTbl(MD_DwellTableLoad_t *MD_LoadTablePtr, uint8 TblIndex)
         ThisLoadEntry = &MD_LoadTablePtr->Entry[EntryIndex];
 
         MD_ResolveSymAddr(&ThisLoadEntry->DwellAddress, &ResolvedAddr);
-        memcpy(&MD_AppData.MD_DwellTables[TblIndex].Entry[EntryIndex].ResolvedAddress, (void *)&ResolvedAddr,
-               sizeof(MD_AppData.MD_DwellTables[TblIndex].Entry[EntryIndex].ResolvedAddress));
 
-        /* Copy length */
-        memcpy(&MD_AppData.MD_DwellTables[TblIndex].Entry[EntryIndex].Length, (void *)&ThisLoadEntry->Length,
-               sizeof(MD_AppData.MD_DwellTables[TblIndex].Entry[EntryIndex].Length));
-
-        /* Copy delay */
-        memcpy(&MD_AppData.MD_DwellTables[TblIndex].Entry[EntryIndex].Delay, (void *)&ThisLoadEntry->Delay,
-               sizeof(MD_AppData.MD_DwellTables[TblIndex].Entry[EntryIndex].Delay));
+        MD_AppData.MD_DwellTables[TblIndex].Entry[EntryIndex].ResolvedAddress = ResolvedAddr;
+        MD_AppData.MD_DwellTables[TblIndex].Entry[EntryIndex].Length          = ThisLoadEntry->Length;
+        MD_AppData.MD_DwellTables[TblIndex].Entry[EntryIndex].Delay           = ThisLoadEntry->Delay;
 
     } /* end for loop */
 

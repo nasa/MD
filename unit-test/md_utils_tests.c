@@ -468,7 +468,7 @@ void MD_ResolveSymAddr_Test(void)
     cpuaddr      ResolvedAddr = 0;
     bool         Result;
 
-    memset(&SymAddr, 0, sizeof(MD_SymAddr_t));
+    memset(&SymAddr, 0, sizeof(SymAddr));
 
     SymAddr.Offset = 99;
 
