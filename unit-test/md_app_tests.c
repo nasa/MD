@@ -1209,7 +1209,6 @@ void MD_InitTableServices_Test_TblRegisterCriticalError(void)
 
 void MD_InitTableServices_Test_TblNameError(void)
 {
-    int32 Result;
     int32 strCmpResult;
     char  ExpectedEventString[2][CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
 
@@ -1219,24 +1218,12 @@ void MD_InitTableServices_Test_TblNameError(void)
     snprintf(ExpectedEventString[1], CFE_MISSION_EVS_MAX_MESSAGE_LENGTH,
              "Dwell Tables Recovered: %%d, Dwell Tables Initialized: %%d");
 
-    /* Set to satisfy condition "Status == CFE_TBL_INFO_RECOVERED_TBL" */
-    UT_SetDeferredRetcode(UT_KEY(CFE_TBL_Register), 1, CFE_TBL_INFO_RECOVERED_TBL);
-
-    UT_SetDefaultReturnValue(UT_KEY(CFE_TBL_GetAddress), CFE_TBL_INFO_UPDATED);
-
-    UT_SetDeferredRetcode(UT_KEY(CFE_TBL_Load), 1, CFE_SUCCESS);
-
-    /* Set MD_LoadTablePtr = &MD_DWELL_TBL_TEST_GlobalLoadTable */
-    UT_SetHookFunction(UT_KEY(CFE_TBL_GetAddress), &MD_DWELL_TBL_TEST_CFE_TBL_GetAddressHook, NULL);
-
     /* Set to generate snprintf error MD_INIT_TBL_NAME_ERR_EID */
     UT_SetDeferredRetcode(UT_KEY(stub_snprintf), 1, -1);
 
     /* Execute the function being tested */
-    Result = MD_InitTableServices();
-
     /* Verify results */
-    UtAssert_True(Result == -1, "Result == -1");
+    UtAssert_UINT32_EQ(MD_InitTableServices(), -1);
 
     UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, MD_INIT_TBL_NAME_ERR_EID);
     UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_ERROR);
@@ -1254,16 +1241,12 @@ void MD_InitTableServices_Test_TblNameError(void)
 
     UtAssert_True(strCmpResult == 0, "Event string matched expected result, '%s'", context_CFE_EVS_SendEvent[1].Spec);
 
-    call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
-
-    UtAssert_True(call_count_CFE_EVS_SendEvent == 2, "CFE_EVS_SendEvent was called %u time(s), expected 2",
-                  call_count_CFE_EVS_SendEvent);
+    UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 2);
 
 } /* end MD_InitTableServices_Test_TblNameError */
 
 void MD_InitTableServices_Test_TblFileNameError(void)
 {
-    int32 Result;
     int32 strCmpResult;
     char  ExpectedEventString[2][CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
 
@@ -1273,24 +1256,12 @@ void MD_InitTableServices_Test_TblFileNameError(void)
     snprintf(ExpectedEventString[1], CFE_MISSION_EVS_MAX_MESSAGE_LENGTH,
              "Dwell Tables Recovered: %%d, Dwell Tables Initialized: %%d");
 
-    /* Set to satisfy condition "Status == CFE_TBL_INFO_RECOVERED_TBL" */
-    UT_SetDeferredRetcode(UT_KEY(CFE_TBL_Register), 1, CFE_TBL_INFO_RECOVERED_TBL);
-
-    UT_SetDefaultReturnValue(UT_KEY(CFE_TBL_GetAddress), CFE_TBL_INFO_UPDATED);
-
-    UT_SetDeferredRetcode(UT_KEY(CFE_TBL_Load), 1, CFE_SUCCESS);
-
-    /* Set MD_LoadTablePtr = &MD_DWELL_TBL_TEST_GlobalLoadTable */
-    UT_SetHookFunction(UT_KEY(CFE_TBL_GetAddress), &MD_DWELL_TBL_TEST_CFE_TBL_GetAddressHook, NULL);
-
     /* Set to generate snprintf MD_INIT_TBL_FILENAME_ERR_EID error */
     UT_SetDeferredRetcode(UT_KEY(stub_snprintf), 2, -1);
 
     /* Execute the function being tested */
-    Result = MD_InitTableServices();
-
     /* Verify results */
-    UtAssert_True(Result == -1, "Result == -1");
+    UtAssert_UINT32_EQ(MD_InitTableServices(), -1);
 
     UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, MD_INIT_TBL_FILENAME_ERR_EID);
     UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_ERROR);
@@ -1308,10 +1279,7 @@ void MD_InitTableServices_Test_TblFileNameError(void)
 
     UtAssert_True(strCmpResult == 0, "Event string matched expected result, '%s'", context_CFE_EVS_SendEvent[1].Spec);
 
-    call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
-
-    UtAssert_True(call_count_CFE_EVS_SendEvent == 2, "CFE_EVS_SendEvent was called %u time(s), expected 2",
-                  call_count_CFE_EVS_SendEvent);
+    UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 2);
 
 } /* end MD_InitTableServices_Test_TblFileNameError */
 
@@ -1887,29 +1855,37 @@ void MD_SearchCmdHndlrTbl_Test_BadCmdCode(void)
 
 } /* end MD_SearchCmdHndlrTbl_Test_BadCmdCode */
 
-void MD_SearchCmdHndlrTbl_Test_BasMsgID(void)
+void MD_SearchCmdHndlrTbl_Test_BadMsgID(void)
 {
-    int16          Result;
     CFE_SB_MsgId_t MessageID   = MD_UT_MID_1;
     uint16         CommandCode = MD_RESET_CNTRS_CC;
 
     /* Execute the function being tested */
-    Result = MD_SearchCmdHndlrTbl(MessageID, CommandCode);
-
     /* Verify results */
-    UtAssert_True(Result == MD_BAD_MSG_ID, "Result == MD_BAD_MSG_ID");
+    UtAssert_INT32_EQ(MD_SearchCmdHndlrTbl(MessageID, CommandCode), MD_BAD_MSG_ID);
 
-    call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
+    UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 0);
 
-    UtAssert_True(call_count_CFE_EVS_SendEvent == 0, "CFE_EVS_SendEvent was called %u time(s), expected 0",
-                  call_count_CFE_EVS_SendEvent);
+} /* end MD_SearchCmdHndlrTbl_Test_BadMsgID */
 
-} /* end MD_SearchCmdHndlrTbl_Test_BasMsgID */
+void MD_SearchCmdHndlrTbl_Test_LastTableEntry(void)
+{
+    CFE_SB_MsgId_t MessageID   = CFE_SB_MSGID_RESERVED;
+    uint16         CommandCode = MD_RESET_CNTRS_CC;
+
+    /* Execute the function being tested */
+    /* Verify results */
+    UtAssert_INT32_EQ(MD_SearchCmdHndlrTbl(MessageID, CommandCode), MD_BAD_MSG_ID);
+
+    UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 0);
+
+} /* end MD_SearchCmdHndlrTbl_Test_LastTableEntry */
 
 void UtTest_Setup(void)
 {
     UtTest_Add(MD_AppMain_Test_AppInitError, MD_Test_Setup, MD_Test_TearDown, "MD_AppMain_Test_AppInitError");
     UtTest_Add(MD_AppMain_Test_RcvMsgError, MD_Test_Setup, MD_Test_TearDown, "MD_AppMain_Test_RcvMsgError");
+    UtTest_Add(MD_AppMain_Test_RcvMsgTimeout, MD_Test_Setup, MD_Test_TearDown, "MD_AppMain_Test_RcvMsgTimeout");
     UtTest_Add(MD_AppMain_Test_RcvMsgNullBuffer, MD_Test_Setup, MD_Test_TearDown, "MD_AppMain_Test_RcvMsgNullBuffer");
     UtTest_Add(MD_AppMain_Test_WakeupNominal, MD_Test_Setup, MD_Test_TearDown, "MD_AppMain_Test_WakeupNominal");
     UtTest_Add(MD_AppMain_Test_WakeupLengthError, MD_Test_Setup, MD_Test_TearDown, "MD_AppMain_Test_WakeupLengthError");
@@ -1953,13 +1929,10 @@ void UtTest_Setup(void)
                "MD_InitTableServices_Test_TblTooLarge");
     UtTest_Add(MD_InitTableServices_Test_TblRegisterCriticalError, MD_Test_Setup, MD_Test_TearDown,
                "MD_InitTableServices_Test_TblRegisterCriticalError");
-
-    /* TODO uncomment when snprintf can successfully be stubbed */
-    /*
-     * UtTest_Add(MD_InitTableServices_Test_TblNameError, MD_Test_Setup, MD_Test_TearDown,
-     * "MD_InitTableServices_Test_TblNameError"); UtTest_Add(MD_InitTableServices_Test_TblFileNameError, MD_Test_Setup,
-     * MD_Test_TearDown, "MD_InitTableServices_Test_TblFileNameError");
-     */
+    UtTest_Add(MD_InitTableServices_Test_TblNameError, MD_Test_Setup, MD_Test_TearDown,
+               "MD_InitTableServices_Test_TblNameError");
+    UtTest_Add(MD_InitTableServices_Test_TblFileNameError, MD_Test_Setup, MD_Test_TearDown,
+               "MD_InitTableServices_Test_TblFileNameError");
 
     UtTest_Add(MD_ManageDwellTable_Test_ValidationPendingSucceedThenFail, MD_Test_Setup, MD_Test_TearDown,
                "MD_ManageDwellTable_Test_ValidationPendingSucceedThenFail");
@@ -1989,6 +1962,7 @@ void UtTest_Setup(void)
 #if MD_SIGNATURE_OPTION == 1
     UtTest_Add(MD_ExecRequest_Test_SetSignature, MD_Test_Setup, MD_Test_TearDown, "MD_ExecRequest_Test_SetSignature");
 #endif
+
     /* Note: Cannot test default case in ExecRequest, because that would require the pre-defined constant structure
        MD_CmdHandlerTbl to have an entry
        with a command code other than the handled cases.  It does not, except for the last entry, which does not work
@@ -2003,8 +1977,10 @@ void UtTest_Setup(void)
 
     UtTest_Add(MD_SearchCmdHndlrTbl_Test_BadCmdCode, MD_Test_Setup, MD_Test_TearDown,
                "MD_SearchCmdHndlrTbl_Test_BadCmdCode");
-    UtTest_Add(MD_SearchCmdHndlrTbl_Test_BasMsgID, MD_Test_Setup, MD_Test_TearDown,
-               "MD_SearchCmdHndlrTbl_Test_BasMsgID");
+    UtTest_Add(MD_SearchCmdHndlrTbl_Test_BadMsgID, MD_Test_Setup, MD_Test_TearDown,
+               "MD_SearchCmdHndlrTbl_Test_BadMsgID");
+    UtTest_Add(MD_SearchCmdHndlrTbl_Test_LastTableEntry, MD_Test_Setup, MD_Test_TearDown,
+               "MD_SearchCmdHndlrTbl_Test_LastTableEntry");
 
 } /* end UtTest_Setup */
 
