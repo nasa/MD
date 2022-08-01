@@ -133,7 +133,7 @@ int32 MD_TableValidationFunc(void *TblPtr)
                               "Dwell Table rejected because length (%d) in entry #%d was invalid",
                               LocalTblPtr->Entry[TblErrorEntryIndex].Length, TblErrorEntryIndex + 1);
         }
-        else if (Status == MD_NOT_ALIGNED_ERROR)
+        else /* Status == MD_NOT_ALIGNED_ERROR is only remaining option */
         {
             CFE_EVS_SendEvent(MD_TBL_ALIGN_ERR_EID, CFE_EVS_EventType_ERROR,
                               "Dwell Table rejected because address (sym='%s'/offset=0x%08X) in entry #%d not properly "
@@ -141,11 +141,6 @@ int32 MD_TableValidationFunc(void *TblPtr)
                               LocalTblPtr->Entry[TblErrorEntryIndex].DwellAddress.SymName,
                               (unsigned int)LocalTblPtr->Entry[TblErrorEntryIndex].DwellAddress.Offset,
                               TblErrorEntryIndex + 1, LocalTblPtr->Entry[TblErrorEntryIndex].Length);
-        }
-        else
-        {
-            /* Should not get here, MD_ValidTableEntry only returns the above values */
-            Status = -1;
         }
 
     } /* end else MD_ReadDwellTable */

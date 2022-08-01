@@ -135,24 +135,13 @@ typedef struct
  * \{
  */
 #define MD_BAD_CMD_CODE (-1) /**< \brief Bad command code */
-#define MD_BAD_MSG_ID   (-2) /**< \brief Bad message iD */
 /**\}*/
-
-/** \brief Message type */
-typedef enum
-{
-    MD_TERM_MSGTYPE = 0, /**< \brief Command Handler Table Terminator Type */
-    MD_MSG_MSGTYPE,      /**< \brief Message Type (requires Message ID match) */
-    MD_CMD_MSGTYPE       /**< \brief Command Type (requires Message ID and Command Code match) */
-} MD_MsgType_t;
 
 /** \brief Command handler table record */
 typedef struct
 {
-    CFE_SB_MsgId_t MsgId;          /**< \brief Acceptable Message ID */
-    uint32         CmdCode;        /**< \brief Acceptable Command Code (if necessary) */
-    uint32         ExpectedLength; /**< \brief Expected Message Length (in bytes) including message header */
-    MD_MsgType_t   MsgTypes;       /**< \brief Message Type (i.e. - with/without Cmd Code)   */
+    uint32 CmdCode;        /**< \brief Acceptable Command Code (if necessary) */
+    uint32 ExpectedLength; /**< \brief Expected Message Length (in bytes) including message header */
 } MD_CmdHandlerTblRec_t;
 
 /** \brief Memory Dwell Task Global */
@@ -301,13 +290,11 @@ void MD_HkStatus(void);
  * \par Assumptions, External Events, and Notes:
  *          None
  *
- * \param[in] MessageID message ID of command message received on command pipe
  * \param[in] CommandCode command code from command message received on command pipe
  *
  * \return Search command handler table response, non-negative table index upon success
  * \retval #MD_BAD_CMD_CODE \copydoc MD_BAD_CMD_CODE
- * \retval #MD_BAD_MSG_ID   \copydoc MD_BAD_MSG_ID
  */
-int16 MD_SearchCmdHndlrTbl(CFE_SB_MsgId_t MessageID, CFE_MSG_FcnCode_t CommandCode);
+int16 MD_SearchCmdHndlrTbl(CFE_MSG_FcnCode_t CommandCode);
 
 #endif

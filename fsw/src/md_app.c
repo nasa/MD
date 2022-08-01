@@ -37,16 +37,16 @@
 
 /* Constant Data */
 const MD_CmdHandlerTblRec_t MD_CmdHandlerTbl[] = {
-    /*   Message ID,    Command Code,            Msg Size,     Msg/Cmd/Terminator */
-    {CFE_SB_MSGID_WRAP_VALUE(MD_CMD_MID), MD_NOOP_CC, sizeof(MD_NoArgsCmd_t), MD_CMD_MSGTYPE},
-    {CFE_SB_MSGID_WRAP_VALUE(MD_CMD_MID), MD_RESET_CNTRS_CC, sizeof(MD_NoArgsCmd_t), MD_CMD_MSGTYPE},
-    {CFE_SB_MSGID_WRAP_VALUE(MD_CMD_MID), MD_START_DWELL_CC, sizeof(MD_CmdStartStop_t), MD_CMD_MSGTYPE},
-    {CFE_SB_MSGID_WRAP_VALUE(MD_CMD_MID), MD_STOP_DWELL_CC, sizeof(MD_CmdStartStop_t), MD_CMD_MSGTYPE},
-    {CFE_SB_MSGID_WRAP_VALUE(MD_CMD_MID), MD_JAM_DWELL_CC, sizeof(MD_CmdJam_t), MD_CMD_MSGTYPE},
+    /* Message ID, Command Code, Msg Size */
+    {MD_NOOP_CC, sizeof(MD_NoArgsCmd_t)},
+    {MD_RESET_CNTRS_CC, sizeof(MD_NoArgsCmd_t)},
+    {MD_START_DWELL_CC, sizeof(MD_CmdStartStop_t)},
+    {MD_STOP_DWELL_CC, sizeof(MD_CmdStartStop_t)},
+    {MD_JAM_DWELL_CC, sizeof(MD_CmdJam_t)},
 #if MD_SIGNATURE_OPTION == 1
-    {CFE_SB_MSGID_WRAP_VALUE(MD_CMD_MID), MD_SET_SIGNATURE_CC, sizeof(MD_CmdSetSignature_t), MD_CMD_MSGTYPE},
+    {MD_SET_SIGNATURE_CC, sizeof(MD_CmdSetSignature_t)},
 #endif
-    {CFE_SB_MSGID_RESERVED, 0, 0, MD_TERM_MSGTYPE}};
+};
 
 MD_AppData_t MD_AppData;
 
@@ -590,87 +590,81 @@ void MD_ExecRequest(const CFE_SB_Buffer_t *BufPtr)
     int16             CmdIndx      = 0;
     size_t            ActualLength = 0;
 
-    /* Extract Command Code and Message Id */
+    /* Extract message info */
     CFE_MSG_GetMsgId(&BufPtr->Msg, &MessageID);
     CFE_MSG_GetFcnCode(&BufPtr->Msg, &CommandCode);
+    CFE_MSG_GetSize(&BufPtr->Msg, &ActualLength);
 
     /* Find index which will be used to access ExpectedLength data */
-    CmdIndx = MD_SearchCmdHndlrTbl(MessageID, CommandCode);
+    CmdIndx = MD_SearchCmdHndlrTbl(CommandCode);
 
     if (CmdIndx < 0)
     {
-
-        /* If match wasn't found in command info structure,            */
-        /* issue an error event, increment error counter, and return.  */
+        /*
+         * If match wasn't found in command info structure,
+         * issue an error event, increment error counter.
+         */
         CFE_EVS_SendEvent(MD_CC_NOT_IN_TBL_ERR_EID, CFE_EVS_EventType_ERROR,
                           "Command Code %d not found in MD_CmdHandlerTbl structure", CommandCode);
         MD_AppData.ErrCounter++;
-        return;
     }
-
-    /* Get Command Length */
-    CFE_MSG_GetSize(&BufPtr->Msg, &ActualLength);
-
-    /* If Command  Length is inconsistent with command type, */
-    /* send error event, increment error count, and return.  */
-    if (ActualLength != MD_CmdHandlerTbl[CmdIndx].ExpectedLength)
+    else if (ActualLength != MD_CmdHandlerTbl[CmdIndx].ExpectedLength)
     {
+        /*
+         * If Command  Length is inconsistent with command type,
+         * send error event, increment error count.
+         */
         CFE_EVS_SendEvent(MD_CMD_LEN_ERR_EID, CFE_EVS_EventType_ERROR,
                           "Cmd Msg with Bad length Rcvd: ID = 0x%08lX, CC = %d, Exp Len = %d, Len = %d",
                           (unsigned long)CFE_SB_MsgIdToValue(MessageID), CommandCode,
                           (int)MD_CmdHandlerTbl[CmdIndx].ExpectedLength, (int)ActualLength);
 
         MD_AppData.ErrCounter++;
-        return;
     }
-
-    /* Process command */
-    switch (CommandCode)
+    else
     {
-        case MD_NOOP_CC:
 
-            CFE_EVS_SendEvent(MD_NOOP_INF_EID, CFE_EVS_EventType_INFORMATION, "No-op command, Version %d.%d.%d.%d",
-                              MD_MAJOR_VERSION, MD_MINOR_VERSION, MD_REVISION, MD_MISSION_REV);
+        /* Process command */
+        switch (CommandCode)
+        {
+            case MD_NOOP_CC:
+            default: /* For coverage, invalid already checked by MD_SearchCmdHndlrTbl */
 
-            MD_AppData.CmdCounter++;
-            break;
+                CFE_EVS_SendEvent(MD_NOOP_INF_EID, CFE_EVS_EventType_INFORMATION, "No-op command, Version %d.%d.%d.%d",
+                                  MD_MAJOR_VERSION, MD_MINOR_VERSION, MD_REVISION, MD_MISSION_REV);
 
-        case MD_RESET_CNTRS_CC:
+                MD_AppData.CmdCounter++;
+                break;
 
-            CFE_EVS_SendEvent(MD_RESET_CNTRS_DBG_EID, CFE_EVS_EventType_DEBUG, "Reset Counters Cmd Received");
-            MD_AppData.CmdCounter = 0;
-            MD_AppData.ErrCounter = 0;
-            break;
+            case MD_RESET_CNTRS_CC:
 
-        case MD_START_DWELL_CC:
+                CFE_EVS_SendEvent(MD_RESET_CNTRS_DBG_EID, CFE_EVS_EventType_DEBUG, "Reset Counters Cmd Received");
+                MD_AppData.CmdCounter = 0;
+                MD_AppData.ErrCounter = 0;
+                break;
 
-            MD_ProcessStartCmd(BufPtr);
-            break;
+            case MD_START_DWELL_CC:
 
-        case MD_STOP_DWELL_CC: /* Params: byte:table_ID */
+                MD_ProcessStartCmd(BufPtr);
+                break;
 
-            MD_ProcessStopCmd(BufPtr);
-            break;
+            case MD_STOP_DWELL_CC: /* Params: byte:table_ID */
 
-        case MD_JAM_DWELL_CC: /* Params: table_ID, AddrIndex, address, */
-                              /* FieldLength, DwellDelay */
-            MD_ProcessJamCmd(BufPtr);
-            break;
+                MD_ProcessStopCmd(BufPtr);
+                break;
+
+            case MD_JAM_DWELL_CC: /* Params: table_ID, AddrIndex, address, */
+                                  /* FieldLength, DwellDelay */
+                MD_ProcessJamCmd(BufPtr);
+                break;
 
 #if MD_SIGNATURE_OPTION == 1
-        case MD_SET_SIGNATURE_CC:
-            MD_ProcessSignatureCmd(BufPtr);
-            break;
+            case MD_SET_SIGNATURE_CC:
+                MD_ProcessSignatureCmd(BufPtr);
+                break;
 #endif
-
-        default:
-            /* unknown function code specified - send error event message */
-            CFE_EVS_SendEvent(MD_CC_NOT_IN_LOOP_ERR_EID, CFE_EVS_EventType_ERROR,
-                              "Command Code %d not found in command processing loop", CommandCode);
-            MD_AppData.ErrCounter++;
-            break;
-
-    } /* End Switch */
+        } /* End Switch */
+    }
 
 } /* End of MD_ExecRequest */
 
@@ -728,59 +722,18 @@ void MD_HkStatus()
 
 /******************************************************************************/
 
-int16 MD_SearchCmdHndlrTbl(CFE_SB_MsgId_t MessageID, CFE_MSG_FcnCode_t CommandCode)
+int16 MD_SearchCmdHndlrTbl(CFE_MSG_FcnCode_t CommandCode)
 {
-    int16 TblIndx      = -1; /* need index to be 0 after it is incremented for 1st time */
-    bool  MatchedMsgId = false;
-    bool  FoundMatch   = false;
+    int16 TblIndx = MD_BAD_CMD_CODE;
+    int16 i       = 0;
 
-    do
+    while (TblIndx == MD_BAD_CMD_CODE && i < sizeof(MD_CmdHandlerTbl) / sizeof(MD_CmdHandlerTbl[0]))
     {
-        /* Point to next entry in Command Handler Table */
-        TblIndx++;
-
-        /* Check to see if we found a matching Message ID */
-        if (CFE_SB_MsgId_Equal(MD_CmdHandlerTbl[TblIndx].MsgId, MessageID) &&
-            (MD_CmdHandlerTbl[TblIndx].MsgTypes != MD_TERM_MSGTYPE))
-        { /* MessageID matches and this isn't last Table entry */
-
-            /* Flag any found message IDs so that if there's an error, we can */
-            /* determine if it was a bad message ID or bad command code */
-            MatchedMsgId = true;
-
-            /* If entry in the Command Handler Table is a command entry, */
-            /* then check for a matching command code                    */
-            if (MD_CmdHandlerTbl[TblIndx].MsgTypes == MD_CMD_MSGTYPE)
-            {
-                if (MD_CmdHandlerTbl[TblIndx].CmdCode == CommandCode)
-                {
-                    /* Found matching message ID and Command Code */
-                    FoundMatch = true;
-                }
-            }
-            else
-            /* Message is not a command message with specific command code */
-            {
-                /* Matching Message ID is all that is required      */
-                FoundMatch = true;
-            }
-        }
-
-    } while ((!FoundMatch) && (MD_CmdHandlerTbl[TblIndx].MsgTypes != MD_TERM_MSGTYPE));
-
-    /* If we failed to find a match, return a negative index */
-    if (!FoundMatch)
-    {
-        /* Determine if the message ID was bad or the command code */
-        if (MatchedMsgId)
+        if (MD_CmdHandlerTbl[i].CmdCode == CommandCode)
         {
-            /* A matching message ID was found, so command code must be bad */
-            TblIndx = MD_BAD_CMD_CODE;
+            TblIndx = i;
         }
-        else /* No matching message ID was found */
-        {
-            TblIndx = MD_BAD_MSG_ID;
-        }
+        i++;
     }
 
     return TblIndx;

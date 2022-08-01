@@ -192,19 +192,6 @@
 #define MD_CC_NOT_IN_TBL_ERR_EID 16
 
 /**
- * \brief MD Command Code Not In Command Processing Loop Event ID
- *
- *  \par Type: ERROR
- *
- *  \par Cause:
- *
- *  This event is issued when a command for the Memory Dwell task is
- *  received with a function code which is not included in the task's
- *  command code processing loop.
- */
-#define MD_CC_NOT_IN_LOOP_ERR_EID 17
-
-/**
  * \brief MD Dwell Table Get Status Failed Event ID
  *
  *  \par Type: ERROR
