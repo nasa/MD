@@ -1498,33 +1498,22 @@ void MD_ManageDwellTable_Test_OtherStatus(void)
 void MD_ExecRequest_Test_SearchCmdHndlrTblError(void)
 {
     CFE_SB_MsgId_t    TestMsgId = MD_UT_MID_1;
-    CFE_MSG_FcnCode_t FcnCode   = 0;
-    int32             strCmpResult;
-    char              ExpectedEventString[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
-
-    snprintf(ExpectedEventString, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH,
-             "Command Code %%d not found in MD_CmdHandlerTbl structure");
+    CFE_MSG_FcnCode_t FcnCode   = -1;
+    size_t            MsgSize   = 0;
 
     UT_SetDataBuffer(UT_KEY(CFE_MSG_GetMsgId), &TestMsgId, sizeof(TestMsgId), false);
     UT_SetDataBuffer(UT_KEY(CFE_MSG_GetFcnCode), &FcnCode, sizeof(FcnCode), false);
+    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetSize), &MsgSize, sizeof(MsgSize), false);
 
     /* Execute the function being tested */
     MD_ExecRequest(&UT_CmdBuf.Buf);
 
     /* Verify results */
-    UtAssert_True(MD_AppData.ErrCounter == 1, "MD_AppData.ErrCounter == 1");
+    UtAssert_UINT32_EQ(MD_AppData.ErrCounter, 1);
 
+    UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 1);
     UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, MD_CC_NOT_IN_TBL_ERR_EID);
     UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_ERROR);
-
-    strCmpResult = strncmp(ExpectedEventString, context_CFE_EVS_SendEvent[0].Spec, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH);
-
-    UtAssert_True(strCmpResult == 0, "Event string matched expected result, '%s'", context_CFE_EVS_SendEvent[0].Spec);
-
-    call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
-
-    UtAssert_True(call_count_CFE_EVS_SendEvent == 1, "CFE_EVS_SendEvent was called %u time(s), expected 1",
-                  call_count_CFE_EVS_SendEvent);
 
 } /* end MD_ExecRequest_Test_SearchCmdHndlrTblError */
 
@@ -1817,70 +1806,6 @@ void MD_HkStatus_Test(void)
 
 } /* end MD_HkStatus_Test */
 
-void MD_SearchCmdHndlrTbl_Test_FoundMatch1(void)
-{
-    int16          Result;
-    CFE_SB_MsgId_t MessageID   = CFE_SB_ValueToMsgId(MD_CMD_MID);
-    uint16         CommandCode = MD_RESET_CNTRS_CC;
-
-    /* Execute the function being tested */
-    Result = MD_SearchCmdHndlrTbl(MessageID, CommandCode);
-
-    /* Verify results */
-    UtAssert_True(Result == 1, "Result == 1");
-
-    call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
-
-    UtAssert_True(call_count_CFE_EVS_SendEvent == 0, "CFE_EVS_SendEvent was called %u time(s), expected 0",
-                  call_count_CFE_EVS_SendEvent);
-
-} /* end MD_SearchCmdHndlrTbl_Test_FoundMatch1 */
-
-void MD_SearchCmdHndlrTbl_Test_BadCmdCode(void)
-{
-    int16          Result;
-    CFE_SB_MsgId_t MessageID   = CFE_SB_ValueToMsgId(MD_CMD_MID);
-    uint16         CommandCode = 99;
-
-    /* Execute the function being tested */
-    Result = MD_SearchCmdHndlrTbl(MessageID, CommandCode);
-
-    /* Verify results */
-    UtAssert_True(Result == MD_BAD_CMD_CODE, "Result == MD_BAD_CMD_CODE");
-
-    call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
-
-    UtAssert_True(call_count_CFE_EVS_SendEvent == 0, "CFE_EVS_SendEvent was called %u time(s), expected 0",
-                  call_count_CFE_EVS_SendEvent);
-
-} /* end MD_SearchCmdHndlrTbl_Test_BadCmdCode */
-
-void MD_SearchCmdHndlrTbl_Test_BadMsgID(void)
-{
-    CFE_SB_MsgId_t MessageID   = MD_UT_MID_1;
-    uint16         CommandCode = MD_RESET_CNTRS_CC;
-
-    /* Execute the function being tested */
-    /* Verify results */
-    UtAssert_INT32_EQ(MD_SearchCmdHndlrTbl(MessageID, CommandCode), MD_BAD_MSG_ID);
-
-    UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 0);
-
-} /* end MD_SearchCmdHndlrTbl_Test_BadMsgID */
-
-void MD_SearchCmdHndlrTbl_Test_LastTableEntry(void)
-{
-    CFE_SB_MsgId_t MessageID   = CFE_SB_MSGID_RESERVED;
-    uint16         CommandCode = MD_RESET_CNTRS_CC;
-
-    /* Execute the function being tested */
-    /* Verify results */
-    UtAssert_INT32_EQ(MD_SearchCmdHndlrTbl(MessageID, CommandCode), MD_BAD_MSG_ID);
-
-    UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 0);
-
-} /* end MD_SearchCmdHndlrTbl_Test_LastTableEntry */
-
 void UtTest_Setup(void)
 {
     UtTest_Add(MD_AppMain_Test_AppInitError, MD_Test_Setup, MD_Test_TearDown, "MD_AppMain_Test_AppInitError");
@@ -1963,24 +1888,7 @@ void UtTest_Setup(void)
     UtTest_Add(MD_ExecRequest_Test_SetSignature, MD_Test_Setup, MD_Test_TearDown, "MD_ExecRequest_Test_SetSignature");
 #endif
 
-    /* Note: Cannot test default case in ExecRequest, because that would require the pre-defined constant structure
-       MD_CmdHandlerTbl to have an entry
-       with a command code other than the handled cases.  It does not, except for the last entry, which does not work
-       because it's of type MD_TERM_MSGTYPE */
-
     UtTest_Add(MD_HkStatus_Test, MD_Test_Setup, MD_Test_TearDown, "MD_HkStatus_Test");
-
-    UtTest_Add(MD_SearchCmdHndlrTbl_Test_FoundMatch1, MD_Test_Setup, MD_Test_TearDown,
-               "MD_SearchCmdHndlrTbl_Test_FoundMatch1");
-    /* Note: Cannot test 2nd case of "FoundMatch = TRUE" in MD_SearchCmdHndlrTbl, because that would require an entry in
-       MD_CmdHandlerTbl other than MD_CMD_MSGTYPE and MD_TERM_MSGTYPE, which it does not have. */
-
-    UtTest_Add(MD_SearchCmdHndlrTbl_Test_BadCmdCode, MD_Test_Setup, MD_Test_TearDown,
-               "MD_SearchCmdHndlrTbl_Test_BadCmdCode");
-    UtTest_Add(MD_SearchCmdHndlrTbl_Test_BadMsgID, MD_Test_Setup, MD_Test_TearDown,
-               "MD_SearchCmdHndlrTbl_Test_BadMsgID");
-    UtTest_Add(MD_SearchCmdHndlrTbl_Test_LastTableEntry, MD_Test_Setup, MD_Test_TearDown,
-               "MD_SearchCmdHndlrTbl_Test_LastTableEntry");
 
 } /* end UtTest_Setup */
 

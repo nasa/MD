@@ -77,9 +77,8 @@ void MD_HkStatus(void)
     UT_DEFAULT_IMPL(MD_HkStatus);
 }
 
-int16 MD_SearchCmdHndlrTbl(CFE_SB_MsgId_t MessageID, CFE_MSG_FcnCode_t CommandCode)
+int16 MD_SearchCmdHndlrTbl(CFE_MSG_FcnCode_t CommandCode)
 {
-    UT_Stub_RegisterContextGenericArg(UT_KEY(MD_SearchCmdHndlrTbl), MessageID);
     UT_Stub_RegisterContextGenericArg(UT_KEY(MD_SearchCmdHndlrTbl), CommandCode);
     return UT_DEFAULT_IMPL(MD_SearchCmdHndlrTbl);
 }
