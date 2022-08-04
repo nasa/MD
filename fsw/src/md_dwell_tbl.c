@@ -448,7 +448,6 @@ int32 MD_UpdateTableSignature(uint16 TableIndex, char NewSignature[MD_SIGNATURE_
     }
 
     return Status;
-    ;
 }
 
 #endif
