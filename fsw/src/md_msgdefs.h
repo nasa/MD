@@ -23,13 +23,8 @@
  *   message constant definitions.
  *
  * @note
- *   These Macro definitions have been put in this file (instead of
- *   md_msg.h) so this file can be included directly into ASIST build
- *   test scripts. ASIST RDL files can accept C language \#defines but
- *   can't handle type definitions. As a result: DO NOT PUT ANY
- *   TYPEDEFS OR STRUCTURE DEFINITIONS IN THIS FILE!
- *   ADD THEM TO md_msg.h IF NEEDED!
- */
+ *   DO NOT PUT ANY TYPEDEFS OR STRUCTURE DEFINITIONS IN THIS FILE!
+ *   ADD THEM TO md_msg.h IF NEEDED! */
 #ifndef MD_MSGDEFS_H
 #define MD_MSGDEFS_H
 
