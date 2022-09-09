@@ -193,9 +193,7 @@ bool MD_Verify16Aligned(cpuaddr Address, uint32 Size);
  *
  *  \param [in]   SymAddr          A #MD_SymAddr_t pointer that holds
  *                                 the symbol name and optional offset
- *  \param [in]   ResolvedAddr     A pointer to the location to store
- *                                 the resolved address in
- *  \param [out]  *ResolvedAddr    The fully resolved address. Only valid
+ *  \param [out]  ResolvedAddr     The fully resolved address. Only valid
  *                                 if the return value is TRUE
  *
  *  \return Boolean symbolic address resolved result
