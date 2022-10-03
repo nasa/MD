@@ -220,7 +220,7 @@ int32 MD_AppInit(void)
 
     } /* end if */
 
-    return (Status);
+    return Status;
 
 } /* End of MD_AppInit */
 
@@ -328,7 +328,7 @@ int32 MD_InitSoftwareBusServices(void)
 
     } /* end if */
 
-    return (Status);
+    return Status;
 
 } /* End of MD_InitSoftwareBusServices */
 

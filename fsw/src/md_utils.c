@@ -160,7 +160,7 @@ bool MD_Verify32Aligned(cpuaddr Address, uint32 Size)
         IsAligned = true;
     }
 
-    return (IsAligned);
+    return IsAligned;
 }
 
 /******************************************************************************/
@@ -182,7 +182,7 @@ bool MD_Verify16Aligned(cpuaddr Address, uint32 Size)
         IsAligned = true;
     }
 
-    return (IsAligned);
+    return IsAligned;
 }
 
 /******************************************************************************/
@@ -222,7 +222,7 @@ bool MD_ResolveSymAddr(MD_SymAddr_t *SymAddr, cpuaddr *ResolvedAddr)
         else
             Valid = false;
     }
-    return (Valid);
+    return Valid;
 }
 
 /************************/
