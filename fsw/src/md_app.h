@@ -105,7 +105,6 @@ typedef struct
 #if MD_SIGNATURE_OPTION == 1
     char Signature[MD_SIGNATURE_FIELD_LENGTH]; /**< \brief Signature string used for dwell table to dwell pkt */
 #endif
-
 } MD_DwellPacketControl_t;
 
 /**

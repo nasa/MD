@@ -78,7 +78,6 @@ void MD_AppMain(void)
         /* Copy any newly loaded tables */
         for (TblIndex = 0; TblIndex < MD_NUM_DWELL_TABLES; TblIndex++)
         {
-
             MD_ManageDwellTable(TblIndex);
 
         } /* end for each table loop */
@@ -107,7 +106,6 @@ void MD_AppMain(void)
         /* Process Executive Request */
         if ((Status == CFE_SUCCESS) && (BufPtr != NULL))
         {
-
             CFE_MSG_GetMsgId(&BufPtr->Msg, &MessageID);
 
             switch (CFE_SB_MsgIdToValue(MessageID))
@@ -166,8 +164,7 @@ void MD_AppMain(void)
     ** Exit the Application
     */
     CFE_ES_ExitApp(MD_AppData.RunStatus);
-
-} /* End of MD_AppMain */
+}
 
 /******************************************************************************/
 
@@ -190,7 +187,7 @@ int32 MD_AppInit(void)
     if (Status != CFE_SUCCESS)
     {
         CFE_ES_WriteToSysLog("MD_APP:Call to CFE_EVS_Register Failed:RC=%d\n", Status);
-    } /* end if */
+    }
 
     /*
     ** Set up for Software Bus Services
@@ -206,8 +203,7 @@ int32 MD_AppInit(void)
     if (Status == CFE_SUCCESS)
     {
         Status = MD_InitTableServices();
-
-    } /* end if */
+    }
 
     /*
     ** Issue Event Message
@@ -217,12 +213,10 @@ int32 MD_AppInit(void)
         Status =
             CFE_EVS_SendEvent(MD_INIT_INF_EID, CFE_EVS_EventType_INFORMATION, "MD Initialized.  Version %d.%d.%d.%d",
                               MD_MAJOR_VERSION, MD_MINOR_VERSION, MD_REVISION, MD_MISSION_REV);
-
-    } /* end if */
+    }
 
     return Status;
-
-} /* End of MD_AppInit */
+}
 
 /******************************************************************************/
 void MD_InitControlStructures(void)
@@ -246,6 +240,7 @@ void MD_InitControlStructures(void)
 
     } /* end for TblIndex loop */
 }
+
 /******************************************************************************/
 int32 MD_InitSoftwareBusServices(void)
 {
@@ -278,59 +273,52 @@ int32 MD_InitSoftwareBusServices(void)
     if (Status != CFE_SUCCESS)
     {
         CFE_EVS_SendEvent(MD_CREATE_PIPE_ERR_EID, CFE_EVS_EventType_ERROR, "Failed to create pipe.  RC = %d", Status);
-    } /* end if */
+    }
 
     /*
     ** Subscribe to Housekeeping request commands
     */
     if (Status == CFE_SUCCESS)
     {
-
         Status = CFE_SB_Subscribe(CFE_SB_ValueToMsgId(MD_SEND_HK_MID), MD_AppData.CmdPipe);
 
         if (Status != CFE_SUCCESS)
         {
             CFE_EVS_SendEvent(MD_SUB_HK_ERR_EID, CFE_EVS_EventType_ERROR, "Failed to subscribe to HK requests  RC = %d",
                               Status);
-        } /* end if */
-
-    } /* end if */
+        }
+    }
 
     /*
     ** Subscribe to MD ground command packets
     */
     if (Status == CFE_SUCCESS)
     {
-
         Status = CFE_SB_Subscribe(CFE_SB_ValueToMsgId(MD_CMD_MID), MD_AppData.CmdPipe);
 
         if (Status != CFE_SUCCESS)
         {
             CFE_EVS_SendEvent(MD_SUB_CMD_ERR_EID, CFE_EVS_EventType_ERROR, "Failed to subscribe to commands.  RC = %d",
                               Status);
-        } /* end if */
-
-    } /* end if */
+        }
+    }
 
     /*
     ** Subscribe to MD wakeup packets
     */
     if (Status == CFE_SUCCESS)
     {
-
         Status = CFE_SB_Subscribe(CFE_SB_ValueToMsgId(MD_WAKEUP_MID), MD_AppData.CmdPipe);
 
         if (Status != CFE_SUCCESS)
         {
             CFE_EVS_SendEvent(MD_SUB_WAKEUP_ERR_EID, CFE_EVS_EventType_ERROR,
                               "Failed to subscribe to wakeup messages.  RC = %d", Status);
-        } /* end if */
-
-    } /* end if */
+        }
+    }
 
     return Status;
-
-} /* End of MD_InitSoftwareBusServices */
+}
 
 /******************************************************************************/
 
@@ -446,14 +434,14 @@ int32 MD_InitTableServices(void)
                               "Dwell Table(s) are too large to register: %u bytes, %d entries",
                               (unsigned int)MD_TBL_LOAD_LNGTH, MD_DWELL_TABLE_SIZE);
             TableInitValidFlag = false;
-        } /* end if */
+        }
 
         else if (Status != CFE_SUCCESS)
         {
             CFE_EVS_SendEvent(MD_TBL_REGISTER_CRIT_EID, CFE_EVS_EventType_CRITICAL,
                               "CFE_TBL_Register error %d received for tbl#%d", Status, TblIndex + 1);
             TableInitValidFlag = false;
-        } /* end if */
+        }
         else
         {
             /* Table is registered and valid */
@@ -476,7 +464,7 @@ int32 MD_InitTableServices(void)
                 CFE_ES_WriteToSysLog("MD_APP: Error 0x%08X received loading tbl#%d\n", (unsigned int)Status,
                                      TblIndex + 1);
                 TableInitValidFlag = false;
-            } /* end if */
+            }
             else
             {
                 TblInits++;
@@ -503,8 +491,7 @@ int32 MD_InitTableServices(void)
     {
         return Status;
     }
-
-} /* End of MD_InitTableServices */
+}
 
 /******************************************************************************/
 int32 MD_ManageDwellTable(uint8 TblIndex)
@@ -578,8 +565,7 @@ int32 MD_ManageDwellTable(uint8 TblIndex)
     }
 
     return Status;
-
-} /* End of MD_ManageDwellTable */
+}
 
 /******************************************************************************/
 
@@ -623,7 +609,6 @@ void MD_ExecRequest(const CFE_SB_Buffer_t *BufPtr)
     }
     else
     {
-
         /* Process command */
         switch (CommandCode)
         {
@@ -665,8 +650,7 @@ void MD_ExecRequest(const CFE_SB_Buffer_t *BufPtr)
 #endif
         } /* End Switch */
     }
-
-} /* End of MD_ExecRequest */
+}
 
 /******************************************************************************/
 void MD_HkStatus()
@@ -718,7 +702,7 @@ void MD_HkStatus()
     */
     CFE_SB_TimeStampMsg(&HkPktPtr->TlmHeader.Msg);
     CFE_SB_TransmitMsg(&HkPktPtr->TlmHeader.Msg, true);
-} /* End of MD_HkStatus */
+}
 
 /******************************************************************************/
 
@@ -737,8 +721,4 @@ int16 MD_SearchCmdHndlrTbl(CFE_MSG_FcnCode_t CommandCode)
     }
 
     return TblIndx;
-} /* End of MD_SearchCmdHndlrTbl() */
-
-/************************/
-/*  End of File Comment */
-/************************/
+}

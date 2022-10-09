@@ -124,7 +124,7 @@ void MD_ProcessStartCmd(const CFE_SB_Buffer_t *BufPtr)
                           "%s command rejected because no tables were specified in table mask (0x%04X)", "Start Dwell",
                           Start->TableMask);
     }
-} /* End of MD_ProcessStartCmd */
+}
 
 /******************************************************************************/
 
@@ -185,7 +185,7 @@ void MD_ProcessStopCmd(const CFE_SB_Buffer_t *BufPtr)
                           Stop->TableMask);
         MD_AppData.ErrCounter++;
     }
-} /* End of MD_ProcessStopCmd */
+}
 
 /******************************************************************************/
 
@@ -400,7 +400,7 @@ void MD_ProcessJamCmd(const CFE_SB_Buffer_t *BufPtr)
     {
         MD_AppData.ErrCounter++;
     }
-} /* End of MD_ProcessJamCmd */
+}
 
 /******************************************************************************/
 #if MD_SIGNATURE_OPTION == 1
@@ -473,7 +473,3 @@ void MD_ProcessSignatureCmd(const CFE_SB_Buffer_t *BufPtr)
 }
 
 #endif
-
-/************************/
-/*  End of File Comment */
-/************************/

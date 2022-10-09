@@ -46,14 +46,12 @@ void MD_DwellLoop(void)
     /* Check each dwell table */
     for (TblIndex = 0; TblIndex < MD_NUM_DWELL_TABLES; TblIndex++)
     {
-
         TblPtr            = &MD_AppData.MD_DwellTables[TblIndex];
         NumDwellAddresses = TblPtr->AddrCount;
 
         /* Process enabled dwell tables */
         if ((TblPtr->Enabled == MD_DWELL_STREAM_ENABLED) && (TblPtr->Rate > 0))
         {
-
             /*
             ** Handle special case that dwell pkt is already full because
             ** pkt size was shortened after data had been written to the pkt.
@@ -61,7 +59,6 @@ void MD_DwellLoop(void)
 
             if (TblPtr->CurrentEntry >= NumDwellAddresses)
             {
-
                 MD_SendDwellPkt(TblIndex);
 
                 /* Initialize CurrentEntry index */
@@ -99,7 +96,6 @@ void MD_DwellLoop(void)
 
                     /* Case:  Just filled last active entry of dwell table */
                     {
-
                         /*
                         ** Send dwell packet
                         */
@@ -141,8 +137,7 @@ void MD_DwellLoop(void)
         } /* end if current dwell stream enabled */
 
     } /* end for each dwell table */
-
-} /* End of MD_DwellLoop */
+}
 
 /******************************************************************************/
 
@@ -199,8 +194,7 @@ int32 MD_GetDwellData(uint16 TblIndex, uint16 EntryIndex)
     TblPtr->PktOffset += NumBytes;
 
     return Status;
-
-} /* End of MD_GetDwellData */
+}
 
 /******************************************************************************/
 
@@ -238,8 +232,7 @@ void MD_SendDwellPkt(uint16 TableIndex)
     */
     CFE_SB_TimeStampMsg(&PktPtr->TlmHeader.Msg);
     CFE_SB_TransmitMsg(&PktPtr->TlmHeader.Msg, true);
-
-} /* End of MD_SendDwellPkt */
+}
 
 /******************************************************************************/
 
@@ -248,9 +241,4 @@ void MD_StartDwellStream(uint16 TableIndex)
     MD_AppData.MD_DwellTables[TableIndex].Countdown    = 1;
     MD_AppData.MD_DwellTables[TableIndex].CurrentEntry = 0;
     MD_AppData.MD_DwellTables[TableIndex].PktOffset    = 0;
-
-} /* End of MD_StartDwellStream */
-
-/************************/
-/*  End of File Comment */
-/************************/
+}

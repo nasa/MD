@@ -67,7 +67,3 @@ MD_DwellTableLoad_t MD_Default_Dwell2_Tbl = {
     }};
 
 CFE_TBL_FILEDEF(MD_Default_Dwell2_Tbl, MD.DWELL_TABLE2, MD Dwell Table 2, md_dw02.tbl)
-
-/************************/
-/*  End of File Comment */
-/************************/
