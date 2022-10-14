@@ -90,8 +90,7 @@ void MD_DwellLoop_Test_PacketAlreadyFull(void)
 
     UtAssert_True(call_count_CFE_EVS_SendEvent == 0, "CFE_EVS_SendEvent was called %u time(s), expected 0",
                   call_count_CFE_EVS_SendEvent);
-
-} /* end MD_DwellLoop_Test_PacketAlreadyFull */
+}
 
 void MD_DwellLoop_Test_SendDwellPacket(void)
 {
@@ -156,8 +155,7 @@ void MD_DwellLoop_Test_SendDwellPacket(void)
 
     UtAssert_True(call_count_CFE_EVS_SendEvent == 0, "CFE_EVS_SendEvent was called %u time(s), expected 0",
                   call_count_CFE_EVS_SendEvent);
-
-} /* end MD_DwellLoop_Test_SendDwellPacket */
+}
 
 void MD_DwellLoop_Test_MoreAddressesToRead(void)
 {
@@ -216,8 +214,7 @@ void MD_DwellLoop_Test_MoreAddressesToRead(void)
 
     UtAssert_True(call_count_CFE_EVS_SendEvent == 0, "CFE_EVS_SendEvent was called %u time(s), expected 0",
                   call_count_CFE_EVS_SendEvent);
-
-} /* end MD_DwellLoop_Test_MoreAddressesToRead */
+}
 
 void MD_DwellLoop_Test_ZeroRate(void)
 {
@@ -282,8 +279,7 @@ void MD_DwellLoop_Test_ZeroRate(void)
 
     UtAssert_True(call_count_CFE_EVS_SendEvent == 0, "CFE_EVS_SendEvent was called %u time(s), expected 0",
                   call_count_CFE_EVS_SendEvent);
-
-} /* end MD_DwellLoop_Test_ZeroRate */
+}
 
 void MD_DwellLoop_Test_DataError(void)
 {
@@ -366,8 +362,7 @@ void MD_DwellLoop_Test_DataError(void)
 
     UtAssert_True(call_count_CFE_EVS_SendEvent == 1, "CFE_EVS_SendEvent was called %u time(s), expected 1",
                   call_count_CFE_EVS_SendEvent);
-
-} /* end MD_DwellLoop_Test_DataError */
+}
 
 void MD_GetDwellData_Test_MemRead8Error(void)
 {
@@ -394,8 +389,7 @@ void MD_GetDwellData_Test_MemRead8Error(void)
 
     UtAssert_True(call_count_CFE_EVS_SendEvent == 0, "CFE_EVS_SendEvent was called %u time(s), expected 0",
                   call_count_CFE_EVS_SendEvent);
-
-} /* end MD_GetDwellData_Test_MemRead8Error */
+}
 
 void MD_GetDwellData_Test_MemRead16Error(void)
 {
@@ -422,8 +416,7 @@ void MD_GetDwellData_Test_MemRead16Error(void)
 
     UtAssert_True(call_count_CFE_EVS_SendEvent == 0, "CFE_EVS_SendEvent was called %u time(s), expected 0",
                   call_count_CFE_EVS_SendEvent);
-
-} /* end MD_GetDwellData_Test_MemRead16Error */
+}
 
 void MD_GetDwellData_Test_MemRead32Error(void)
 {
@@ -450,8 +443,7 @@ void MD_GetDwellData_Test_MemRead32Error(void)
 
     UtAssert_True(call_count_CFE_EVS_SendEvent == 0, "CFE_EVS_SendEvent was called %u time(s), expected 0",
                   call_count_CFE_EVS_SendEvent);
-
-} /* end MD_GetDwellData_Test_MemRead32Error */
+}
 
 void MD_GetDwellData_Test_InvalidDwellLength(void)
 {
@@ -475,8 +467,7 @@ void MD_GetDwellData_Test_InvalidDwellLength(void)
 
     UtAssert_True(call_count_CFE_EVS_SendEvent == 0, "CFE_EVS_SendEvent was called %u time(s), expected 0",
                   call_count_CFE_EVS_SendEvent);
-
-} /* end MD_GetDwellData_Test_InvalidDwellLength */
+}
 
 void MD_GetDwellData_Test_Success(void)
 {
@@ -500,8 +491,7 @@ void MD_GetDwellData_Test_Success(void)
 
     UtAssert_True(call_count_CFE_EVS_SendEvent == 0, "CFE_EVS_SendEvent was called %u time(s), expected 0",
                   call_count_CFE_EVS_SendEvent);
-
-} /* end MD_GetDwellData_Test_Success */
+}
 
 void MD_SendDwellPkt_Test(void)
 {
@@ -539,8 +529,7 @@ void MD_SendDwellPkt_Test(void)
 
     UtAssert_True(call_count_CFE_EVS_SendEvent == 0, "CFE_EVS_SendEvent was called %u time(s), expected 0",
                   call_count_CFE_EVS_SendEvent);
-
-} /* end MD_SendDwellPkt_Test */
+}
 
 void MD_NoDwellRate_Test(void)
 {
@@ -578,8 +567,7 @@ void MD_NoDwellRate_Test(void)
 
     UtAssert_True(call_count_CFE_EVS_SendEvent == 0, "CFE_EVS_SendEvent was called %u time(s), expected 0",
                   call_count_CFE_EVS_SendEvent);
-
-} /* end MD_NoDwellRate_Test */
+}
 
 void MD_StartDwellStream_Test(void)
 {
@@ -600,8 +588,7 @@ void MD_StartDwellStream_Test(void)
 
     UtAssert_True(call_count_CFE_EVS_SendEvent == 0, "CFE_EVS_SendEvent was called %u time(s), expected 0",
                   call_count_CFE_EVS_SendEvent);
-
-} /* end MD_StartDwellStream_Test */
+}
 
 void UtTest_Setup(void)
 {
@@ -627,9 +614,4 @@ void UtTest_Setup(void)
     UtTest_Add(MD_SendDwellPkt_Test, MD_Test_Setup, MD_Test_TearDown, "MD_SendDwellPkt_Test");
     UtTest_Add(MD_NoDwellRate_Test, MD_Test_Setup, MD_Test_TearDown, "MD_NoDwellRate_Test");
     UtTest_Add(MD_StartDwellStream_Test, MD_Test_Setup, MD_Test_TearDown, "MD_StartDwellStream_Test");
-
-} /* end UtTest_Setup */
-
-/************************/
-/*  End of File Comment */
-/************************/
+}

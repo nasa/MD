@@ -61,7 +61,6 @@ typedef struct
 typedef struct
 {
     CFE_MSG_CommandHeader_t CmdHeader; /**< Command Header */
-
 } MD_NoArgsCmd_t;
 
 /**

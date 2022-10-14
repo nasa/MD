@@ -50,8 +50,7 @@ bool MD_TableIsInMask(int16 TableId, uint16 TableMask)
         Status = true;
 
     return Status;
-
-} /* End MD_TableIsInMask */
+}
 
 /******************************************************************************/
 
@@ -79,7 +78,7 @@ void MD_UpdateDwellControlInfo(uint16 TableIndex)
     TblPtr->AddrCount = NumDwellAddresses;
     TblPtr->DataSize  = NumDwellDataBytes;
     TblPtr->Rate      = NumDwellDelayCounts;
-} /* MD_UpdateDwellControlInfo */
+}
 
 /******************************************************************************/
 
@@ -113,6 +112,7 @@ bool MD_ValidAddrRange(cpuaddr Addr, uint32 Size)
 
     return IsValid;
 }
+
 /******************************************************************************/
 bool MD_ValidTableId(uint16 TableId)
 {
@@ -130,7 +130,6 @@ bool MD_ValidTableId(uint16 TableId)
 
 bool MD_ValidFieldLength(uint16 FieldLength)
 {
-
     bool IsValid = false;
 
     if ((FieldLength == 0) || (FieldLength == 1) || (FieldLength == 2) || (FieldLength == 4))
@@ -224,7 +223,3 @@ bool MD_ResolveSymAddr(MD_SymAddr_t *SymAddr, cpuaddr *ResolvedAddr)
     }
     return Valid;
 }
-
-/************************/
-/*  End of File Comment */
-/************************/

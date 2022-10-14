@@ -146,8 +146,7 @@ int32 MD_TableValidationFunc(void *TblPtr)
     } /* end else MD_ReadDwellTable */
 
     return Status;
-
-} /* End of MD_TableValidationFunc */
+}
 
 /******************************************************************************/
 int32 MD_ReadDwellTable(const MD_DwellTableLoad_t *TblPtr, uint16 *ActiveAddrCountPtr, uint16 *SizePtr, uint32 *RatePtr)
@@ -168,7 +167,7 @@ int32 MD_ReadDwellTable(const MD_DwellTableLoad_t *TblPtr, uint16 *ActiveAddrCou
     } /* end while */
 
     return CFE_SUCCESS;
-} /* End of MD_ReadDwellTable */
+}
 /******************************************************************************/
 int32 MD_CheckTableEntries(MD_DwellTableLoad_t *TblPtr, uint16 *ErrorEntryArg)
 {
@@ -190,7 +189,6 @@ int32 MD_CheckTableEntries(MD_DwellTableLoad_t *TblPtr, uint16 *ErrorEntryArg)
     */
     for (EntryIndex = 0; EntryIndex < MD_DWELL_TABLE_SIZE; EntryIndex++)
     {
-
         Status = MD_ValidTableEntry(&TblPtr->Entry[EntryIndex]);
 
         if (Status == CFE_SUCCESS)
@@ -235,8 +233,7 @@ int32 MD_CheckTableEntries(MD_DwellTableLoad_t *TblPtr, uint16 *ErrorEntryArg)
                       (int)UnusedCount);
 
     return FirstErrorCode;
-
-} /* End of MD_CheckTableEntries */
+}
 
 /******************************************************************************/
 int32 MD_ValidTableEntry(MD_TableLoadEntry_t *TblEntryPtr)
@@ -256,7 +253,7 @@ int32 MD_ValidTableEntry(MD_TableLoadEntry_t *TblEntryPtr)
         if (MD_ResolveSymAddr(&TblEntryPtr->DwellAddress, &ResolvedAddr) != true)
         { /* Symbol was non-null AND was not in Symbol Table */
             Status = MD_RESOLVE_ERROR;
-        } /* end MD_ResolveSymAddr */
+        }
 
         else if (MD_ValidAddrRange(ResolvedAddr, (uint32)DwellLength) != true)
         { /* Address is in invalid range  */
@@ -289,8 +286,7 @@ int32 MD_ValidTableEntry(MD_TableLoadEntry_t *TblEntryPtr)
     } /* end else */
 
     return Status;
-
-} /* End of MD_ValidTableEntry */
+}
 
 /******************************************************************************/
 void MD_CopyUpdatedTbl(MD_DwellTableLoad_t *MD_LoadTablePtr, uint8 TblIndex)
@@ -332,7 +328,7 @@ void MD_CopyUpdatedTbl(MD_DwellTableLoad_t *MD_LoadTablePtr, uint8 TblIndex)
 
     /* Update Dwell Table Control Info, used to process dwell packets */
     MD_UpdateDwellControlInfo((uint16)TblIndex);
-} /* End of MD_CopyUpdatedTbl */
+}
 
 /******************************************************************************/
 int32 MD_UpdateTableEnabledField(uint16 TableIndex, uint16 FieldValue)
@@ -362,7 +358,7 @@ int32 MD_UpdateTableEnabledField(uint16 TableIndex, uint16 FieldValue)
     }
 
     return Status;
-} /* End of MD_UpdateTableEnabledField */
+}
 
 /******************************************************************************/
 
@@ -410,7 +406,7 @@ int32 MD_UpdateTableDwellEntry(uint16 TableIndex, uint16 EntryIndex, uint16 NewL
     }
 
     return Status;
-} /* End of MD_UpdateTableDwellEntry */
+}
 
 /******************************************************************************/
 #if MD_SIGNATURE_OPTION == 1
@@ -451,6 +447,3 @@ int32 MD_UpdateTableSignature(uint16 TableIndex, char NewSignature[MD_SIGNATURE_
 }
 
 #endif
-/************************/
-/*  End of File Comment */
-/************************/
