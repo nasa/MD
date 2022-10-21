@@ -127,7 +127,7 @@
  *
  *  Issued upon receipt of a Memory Dwell Reset Counters command.
  */
-#define MD_RESET_CNTRS_DBG_EID 11
+#define MD_RESET_INF_EID 11
 
 /**
  * \brief MD Start Command Event ID
@@ -696,7 +696,7 @@
  *
  *  This event message is issued when MD cannot create the software bus pipe.
  */
-#define MD_CREATE_PIPE_ERR_EID 71
+#define MD_CR_PIPE_ERR_EID 71
 
 /**
  * \brief MD Housekeeping Subscribe Failed Event ID

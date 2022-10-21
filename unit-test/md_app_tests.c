@@ -632,7 +632,7 @@ void MD_InitSoftwareBusServices_Test_CreatePipeError(void)
 
     UtAssert_True(Result == -1, "Result == -1");
 
-    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, MD_CREATE_PIPE_ERR_EID);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, MD_CR_PIPE_ERR_EID);
     UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_ERROR);
 
     strCmpResult = strncmp(ExpectedEventString, context_CFE_EVS_SendEvent[0].Spec, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH);
@@ -1438,7 +1438,7 @@ void MD_ExecRequest_Test_ResetCounters(void)
     UtAssert_True(MD_AppData.CmdCounter == 0, "MD_AppData.CmdCounter == 0");
     UtAssert_True(MD_AppData.ErrCounter == 0, "MD_AppData.ErrCounter == 0");
 
-    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, MD_RESET_CNTRS_DBG_EID);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, MD_RESET_INF_EID);
     UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_DEBUG);
 
     strCmpResult = strncmp(ExpectedEventString, context_CFE_EVS_SendEvent[0].Spec, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH);
