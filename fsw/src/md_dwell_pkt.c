@@ -37,11 +37,11 @@ extern MD_AppData_t MD_AppData;
 
 void MD_DwellLoop(void)
 {
-    int32                    Result = 0;
+    int32                    Result;
     uint16                   TblIndex;
-    uint16                   EntryIndex        = 0;
-    uint16                   NumDwellAddresses = 0;
-    MD_DwellPacketControl_t *TblPtr            = NULL;
+    uint16                   EntryIndex;
+    uint16                   NumDwellAddresses;
+    MD_DwellPacketControl_t *TblPtr = NULL;
 
     /* Check each dwell table */
     for (TblIndex = 0; TblIndex < MD_NUM_DWELL_TABLES; TblIndex++)

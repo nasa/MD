@@ -171,7 +171,7 @@ int32 MD_ReadDwellTable(const MD_DwellTableLoad_t *TblPtr, uint16 *ActiveAddrCou
 /******************************************************************************/
 int32 MD_CheckTableEntries(MD_DwellTableLoad_t *TblPtr, uint16 *ErrorEntryArg)
 {
-    int32  Status         = CFE_SUCCESS;
+    int32  Status;
     int32  FirstErrorCode = CFE_SUCCESS;
     uint16 EntryIndex;
     int32  FirstBadIndex = -1;

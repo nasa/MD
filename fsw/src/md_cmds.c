@@ -42,11 +42,11 @@ extern MD_AppData_t MD_AppData;
 
 void MD_ProcessStartCmd(const CFE_SB_Buffer_t *BufPtr)
 {
-    int32              ErrorCount      = 0;
-    int32              Status          = CFE_SUCCESS;
-    int32              NumTblInMask    = 0; /* Purely as info for event message */
-    uint16             TableId         = 0;
-    uint16             TableIndex      = 0;
+    int32              ErrorCount = 0;
+    int32              Status;
+    int32              NumTblInMask = 0; /* Purely as info for event message */
+    uint16             TableId      = 0;
+    uint16             TableIndex;
     MD_CmdStartStop_t *Start           = (MD_CmdStartStop_t *)BufPtr;
     bool               AnyTablesInMask = false;
 
@@ -130,12 +130,12 @@ void MD_ProcessStartCmd(const CFE_SB_Buffer_t *BufPtr)
 
 void MD_ProcessStopCmd(const CFE_SB_Buffer_t *BufPtr)
 {
-    int32              ErrorCount      = 0;
-    int32              Status          = CFE_SUCCESS;
-    int32              NumTblInMask    = 0; /* Purely as info for event message */
-    MD_CmdStartStop_t *Stop            = (MD_CmdStartStop_t *)BufPtr;
-    uint16             TableId         = 0;
-    uint16             TableIndex      = 0;
+    int32              ErrorCount = 0;
+    int32              Status;
+    int32              NumTblInMask = 0; /* Purely as info for event message */
+    MD_CmdStartStop_t *Stop         = (MD_CmdStartStop_t *)BufPtr;
+    uint16             TableId      = 0;
+    uint16             TableIndex;
     bool               AnyTablesInMask = false;
 
     for (TableId = 1; TableId <= MD_NUM_DWELL_TABLES; TableId++)
@@ -192,13 +192,13 @@ void MD_ProcessStopCmd(const CFE_SB_Buffer_t *BufPtr)
 void MD_ProcessJamCmd(const CFE_SB_Buffer_t *BufPtr)
 {
     /* Local variables */
-    int32                   Status         = CFE_SUCCESS;
+    int32                   Status;
     MD_CmdJam_t *           Jam            = 0;
     bool                    AllInputsValid = true;
     cpuaddr                 ResolvedAddr   = 0;
-    MD_DwellControlEntry_t *DwellEntryPtr  = 0; /* points to local task data */
-    uint16                  EntryIndex     = 0;
-    uint8                   TableIndex     = 0;
+    MD_DwellControlEntry_t *DwellEntryPtr; /* points to local task data */
+    uint16                  EntryIndex;
+    uint8                   TableIndex = 0;
     MD_SymAddr_t            NewDwellAddress;
 
     /*
@@ -407,7 +407,7 @@ void MD_ProcessJamCmd(const CFE_SB_Buffer_t *BufPtr)
 
 void MD_ProcessSignatureCmd(const CFE_SB_Buffer_t *BufPtr)
 {
-    int32                 Status       = CFE_SUCCESS;
+    int32                 Status;
     MD_CmdSetSignature_t *SignatureCmd = (MD_CmdSetSignature_t *)BufPtr;
     uint16                TblId        = 0;
     uint16                StringLength;
