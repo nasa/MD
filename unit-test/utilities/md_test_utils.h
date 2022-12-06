@@ -29,6 +29,7 @@
 #include "md_platform_cfg.h"
 #include "utstubs.h"
 #include "cfe_msgids.h"
+#include "md_extern_typedefs.h"
 
 extern MD_AppData_t MD_AppData;
 

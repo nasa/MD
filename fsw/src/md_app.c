@@ -34,6 +34,7 @@
 #include "md_utils.h"
 #include "md_perfids.h"
 #include "md_version.h"
+#include "md_extern_typedefs.h"
 
 /* Constant Data */
 const MD_CmdHandlerTblRec_t MD_CmdHandlerTbl[] = {
