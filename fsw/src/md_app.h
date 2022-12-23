@@ -68,15 +68,6 @@
  ************************************************************************/
 
 /**
- *  \brief  MD enum used for representing values for enable state
- */
-enum MD_Dwell_States
-{
-    MD_DWELL_STREAM_DISABLED, /**< \brief MD Dwell Stream Disabled */
-    MD_DWELL_STREAM_ENABLED   /**< \brief MD Dwell Stream Enabled */
-};
-
-/**
  *  \brief MD structure for specifying individual memory dwell
  */
 typedef struct

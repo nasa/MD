@@ -32,6 +32,7 @@
 #include "md_events.h"
 #include <string.h>
 #include "md_tbldefs.h"
+#include "md_extern_typedefs.h"
 
 extern MD_AppData_t MD_AppData;
 

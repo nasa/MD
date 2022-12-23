@@ -1,9 +1,5 @@
 project(CFS_MD C)
 
-include_directories(fsw/src)
-include_directories(fsw/mission_inc)
-include_directories(fsw/platform_inc)
-
 set(APP_SRC_FILES
   fsw/src/md_dwell_tbl.c
   fsw/src/md_utils.c
@@ -14,6 +10,9 @@ set(APP_SRC_FILES
 
 # Create the app module
 add_cfe_app(md ${APP_SRC_FILES})
+
+# This permits direct access to public headers in the fsw/inc directory
+target_include_directories(md PUBLIC fsw/inc)
 
 set(APP_TABLE_FILES
   fsw/tables/md_dw02.c

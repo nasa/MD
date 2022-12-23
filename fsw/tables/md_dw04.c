@@ -27,7 +27,7 @@
 *************************************************************************/
 #include "cfe.h"
 #include "md_tbldefs.h"
-#include "md_app.h"
+#include "md_extern_typedefs.h"
 #include "cfe_tbl_filedef.h"
 #include "md_platform_cfg.h"
 

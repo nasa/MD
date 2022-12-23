@@ -28,6 +28,8 @@
 #ifndef MD_MSGDEFS_H
 #define MD_MSGDEFS_H
 
+#include "md_platform_cfg.h"
+
 /**
  * \defgroup cfsmdcmdcodes CFS Memory Dwell Command Codes
  * \{
@@ -285,7 +287,6 @@
  *  \par Error Conditions
  *       This command may fail for the following reason(s):
  *       - Unexpected command length.                    (Event message #MD_CMD_LEN_ERR_EID is issued)
- *       - Signature string argument is not terminated.  (Event message #MD_SIGNATURE_TOO_LONG_ERR_EID is issued)
  *       - Dwell Table ID is invalid.                    (Event message #MD_INVALID_SIGNATURE_TABLE_ERR_EID is issued)
  *
  *       Any time the command fails, #MD_HkTlm_t.InvalidCmdCntr increments.

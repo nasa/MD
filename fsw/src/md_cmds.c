@@ -34,6 +34,7 @@
 #include "md_app.h"
 #include "md_events.h"
 #include "md_dwell_tbl.h"
+#include "md_extern_typedefs.h"
 
 /* Global Data */
 extern MD_AppData_t MD_AppData;
