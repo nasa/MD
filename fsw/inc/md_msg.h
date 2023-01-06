@@ -25,9 +25,9 @@
 #ifndef MD_MSG_H
 #define MD_MSG_H
 
-#include "md_platform_cfg.h"
-#include "cfe.h"
-#include "md_msgdefs.h"
+#include <md_platform_cfg.h>
+#include <cfe.h>
+#include <md_msgdefs.h>
 
 /************************************************************************
  * Type Definitions

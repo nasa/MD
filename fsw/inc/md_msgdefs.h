@@ -28,7 +28,7 @@
 #ifndef MD_MSGDEFS_H
 #define MD_MSGDEFS_H
 
-#include "md_platform_cfg.h"
+#include <md_platform_cfg.h>
 
 /**
  * \defgroup cfsmdcmdcodes CFS Memory Dwell Command Codes
