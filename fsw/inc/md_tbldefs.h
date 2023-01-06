@@ -24,9 +24,9 @@
 #ifndef MD_TBLDEFS_H
 #define MD_TBLDEFS_H
 
-#include "md_platform_cfg.h"
-#include "cfe.h"
-#include "md_msg.h" /* For MD_SymAddr_t */
+#include <md_platform_cfg.h>
+#include <cfe.h>
+#include <md_msg.h> /* For MD_SymAddr_t */
 
 /************************************************************************
  * Type Definitions
