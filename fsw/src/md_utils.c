@@ -189,7 +189,7 @@ bool MD_Verify16Aligned(cpuaddr Address, uint32 Size)
 bool MD_ResolveSymAddr(MD_SymAddr_t *SymAddr, cpuaddr *ResolvedAddr)
 {
     bool  Valid;
-    int32 OS_Status = OS_SUCCESS;
+    int32 OS_Status;
 
     /*
     ** NUL terminate the very end of the symbol name string array as a
