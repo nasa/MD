@@ -108,7 +108,7 @@ int32 CFE_PSP_MemWrite8(cpuaddr MemoryAddress, uint8 ByteValue)
 int32 CFE_PSP_MemRead16(cpuaddr MemoryAddress, uint16 *uint16Value)
 {
     if (!MemoryAddress)
-        return -1;
+        return -2;
     else
         return CFE_PSP_SUCCESS;
 }
@@ -124,7 +124,7 @@ int32 CFE_PSP_MemWrite16(cpuaddr MemoryAddress, uint16 uint16Value)
 int32 CFE_PSP_MemRead32(cpuaddr MemoryAddress, uint32 *uint32Value)
 {
     if (!MemoryAddress)
-        return -1;
+        return -3;
     else
         return CFE_PSP_SUCCESS;
 }

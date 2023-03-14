@@ -321,8 +321,8 @@ void MD_DwellLoop_Test_DataError(void)
     MD_AppData.MD_DwellTables[MD_NUM_DWELL_TABLES - 1].Entry[0].ResolvedAddress = 4;
 
     UT_SetDeferredRetcode(UT_KEY(CFE_PSP_MemRead8), 1, -1);
-    UT_SetDeferredRetcode(UT_KEY(CFE_PSP_MemRead16), 1, -1);
-    UT_SetDeferredRetcode(UT_KEY(CFE_PSP_MemRead32), 1, -1);
+    UT_SetDeferredRetcode(UT_KEY(CFE_PSP_MemRead16), 1, -2);
+    UT_SetDeferredRetcode(UT_KEY(CFE_PSP_MemRead32), 1, -3);
 
     /* Execute the function being tested */
     MD_DwellLoop();
@@ -401,7 +401,7 @@ void MD_GetDwellData_Test_MemRead16Error(void)
     MD_AppData.MD_DwellTables[TblIndex].PktOffset                = 0;
 
     /* Cause Status to be set to -1 */
-    UT_SetDeferredRetcode(UT_KEY(CFE_PSP_MemRead16), 1, -1);
+    UT_SetDeferredRetcode(UT_KEY(CFE_PSP_MemRead16), 1, -2);
 
     /* Execute the function being tested */
     Result = MD_GetDwellData(TblIndex, EntryIndex);
@@ -410,7 +410,7 @@ void MD_GetDwellData_Test_MemRead16Error(void)
     UtAssert_True(MD_AppData.MD_DwellTables[TblIndex].PktOffset == 2,
                   "MD_AppData.MD_DwellTables[TblIndex].PktOffset == 2");
 
-    UtAssert_True(Result == -1, "Result == -1");
+    UtAssert_True(Result == -2, "Result == -2");
 
     call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
 
@@ -428,7 +428,7 @@ void MD_GetDwellData_Test_MemRead32Error(void)
     MD_AppData.MD_DwellTables[TblIndex].PktOffset                = 0;
 
     /* Cause Status to be set to -1 */
-    UT_SetDeferredRetcode(UT_KEY(CFE_PSP_MemRead32), 1, -1);
+    UT_SetDeferredRetcode(UT_KEY(CFE_PSP_MemRead32), 1, -3);
 
     /* Execute the function being tested */
     Result = MD_GetDwellData(TblIndex, EntryIndex);
@@ -437,7 +437,7 @@ void MD_GetDwellData_Test_MemRead32Error(void)
     UtAssert_True(MD_AppData.MD_DwellTables[TblIndex].PktOffset == 4,
                   "MD_AppData.MD_DwellTables[TblIndex].PktOffset == 4");
 
-    UtAssert_True(Result == -1, "Result == -1");
+    UtAssert_True(Result == -3, "Result == -3");
 
     call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
 
@@ -461,7 +461,7 @@ void MD_GetDwellData_Test_InvalidDwellLength(void)
     UtAssert_True(MD_AppData.MD_DwellTables[TblIndex].PktOffset == 5,
                   "MD_AppData.MD_DwellTables[TblIndex].PktOffset == 5");
 
-    UtAssert_True(Result == -1, "Result == -1");
+    UtAssert_True(Result == -4, "Result == -4");
 
     call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
 

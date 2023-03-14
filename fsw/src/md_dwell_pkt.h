@@ -24,7 +24,45 @@
 #ifndef MD_DWELL_PKT_H
 #define MD_DWELL_PKT_H
 
+/************************************************************************
+ * Includes
+ ************************************************************************/
+
 #include "common_types.h"
+
+/************************************************************************
+ * Type Definitions
+ ************************************************************************/
+
+/**
+ *  \brief  MD enum used for representing error types of dwell address read
+ */
+enum MD_DwellAddrReadError
+{
+    /**
+     * @brief CFE_PSP_MemRead8 error
+     */
+    ONE_BYTE_MEM_ADDR_READ_ERR = -1,
+
+    /**
+     * @brief CFE_PSP_MemRead16 error
+     */
+    TWO_BYTE_MEM_ADDR_READ_ERR = -2,
+
+    /**
+     * @brief CFE_PSP_MemRead32 error
+     */
+    FOUR_BYTE_MEM_ADDR_READ_ERR = -3,
+
+    /**
+     * @brief Default case - Invalid Dwell Address length
+     */
+    INVALID_DWELL_ADDR_LEN = -4
+};
+
+/************************************************************************
+ * Exported Functions
+ ************************************************************************/
 
 /**
  * \brief Process Dwell Packets

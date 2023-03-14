@@ -84,7 +84,7 @@ void MD_DwellLoop(void)
                     /* Read data for next address and write it to dwell pkt */
                     Result = MD_GetDwellData(TblIndex, EntryIndex);
 
-                    if (Result == -1)
+                    if (Result != CFE_SUCCESS)
                     {
                         /* Send error event message */
                         CFE_EVS_SendEvent(MD_DWELL_LOOP_GET_DWELL_DATA_ERR_EID, CFE_EVS_EventType_ERROR,
@@ -159,27 +159,27 @@ int32 MD_GetDwellData(uint16 TblIndex, uint16 EntryIndex)
     switch (NumBytes)
     {
         case 1:
-            if (CFE_PSP_MemRead8(DwellAddress, (uint8 *)&MemReadVal) != CFE_SUCCESS)
+            if (CFE_PSP_MemRead8(DwellAddress, (uint8 *)&MemReadVal) != CFE_PSP_SUCCESS)
             {
-                Status = -1;
+                Status = ONE_BYTE_MEM_ADDR_READ_ERR;
             }
             break;
         case 2:
-            if (CFE_PSP_MemRead16(DwellAddress, (uint16 *)&MemReadVal) != CFE_SUCCESS)
+            if (CFE_PSP_MemRead16(DwellAddress, (uint16 *)&MemReadVal) != CFE_PSP_SUCCESS)
             {
-                Status = -1;
+                Status = TWO_BYTE_MEM_ADDR_READ_ERR;
             }
             break;
         case 4:
-            if (CFE_PSP_MemRead32(DwellAddress, &MemReadVal) != CFE_SUCCESS)
+            if (CFE_PSP_MemRead32(DwellAddress, &MemReadVal) != CFE_PSP_SUCCESS)
             {
-                Status = -1;
+                Status = FOUR_BYTE_MEM_ADDR_READ_ERR;
             }
             break;
         default:
             /* Invalid dwell length */
             /* Shouldn't ever get here unless length value was corrupted. */
-            Status = -1;
+            Status = INVALID_DWELL_ADDR_LEN;
             break;
     }
 
