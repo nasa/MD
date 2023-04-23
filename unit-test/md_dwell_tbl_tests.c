@@ -477,7 +477,7 @@ void MD_TableValidationFunc_Test_Success(void)
 
 void MD_ReadDwellTable_Test(void)
 {
-    int32               Result;
+    CFE_Status_t        Result;
     MD_DwellTableLoad_t Table;
     uint16              i;
     uint16              ActiveAddrCount = 0;

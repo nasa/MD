@@ -54,7 +54,7 @@
 
   This document provides a complete specification for the commands and telemetry associated
   with the CFS Memory Dwell (MD) application software.  The document is intended primarily 
-  for users of the software (operations personal, test engineers, and maintenance personal).  
+  for users of the software (operations personnel, test engineers, and maintenance personnel).  
   The deployment guide section, is intended for mission developers when deploying and 
   configuring the MD application software for a mission flight software build environment. 
 
@@ -117,7 +117,7 @@
     
     \section MD Design Overview 
 
-    MD is a command driven, single threaded application. It will pend indefinitely 
+    MD is a command-driven, single-threaded application. It will pend indefinitely 
     on the software bus message queue until messages arrive and then processes them sequentially.  
     Memory Dwell utilizes OSAL routines to:
 
@@ -304,7 +304,7 @@
          </B> <BR> <BR> <I>
             The first dwell always takes place when the first wakeup message is received following a 
             #MD_START_DWELL_CC command.  Dwelling proceeds until the first entry 
-            with a non-zero delay is reached. Thus, anytime a start command is sent for a dwell table 
+            with a non-zero delay is reached. Thus, any time a start command is sent for a dwell table 
             that does not have non-zero delays for intermediate entries, a dwell packet will be issued 
             immediately.  So, for example, a dwell table that is set up to sample several addresses 
             every 10 cycles, will actually issue dwell packets following the 1st, 11th, and 21st wakeup 

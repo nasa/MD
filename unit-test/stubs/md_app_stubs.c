@@ -40,7 +40,7 @@ void MD_AppMain(void)
     UT_DEFAULT_IMPL(MD_AppMain);
 }
 
-int32 MD_AppInit(void)
+CFE_Status_t MD_AppInit(void)
 {
     return UT_DEFAULT_IMPL(MD_AppInit);
 }
@@ -50,17 +50,17 @@ void MD_InitControlStructures(void)
     UT_DEFAULT_IMPL(MD_InitControlStructures);
 }
 
-int32 MD_InitSoftwareBusServices(void)
+CFE_Status_t MD_InitSoftwareBusServices(void)
 {
     return UT_DEFAULT_IMPL(MD_InitSoftwareBusServices);
 }
 
-int32 MD_InitTableServices(void)
+CFE_Status_t MD_InitTableServices(void)
 {
     return UT_DEFAULT_IMPL(MD_InitTableServices);
 }
 
-int32 MD_ManageDwellTable(uint8 TblIndex)
+CFE_Status_t MD_ManageDwellTable(uint8 TblIndex)
 {
     UT_Stub_RegisterContextGenericArg(UT_KEY(MD_ManageDwellTable), TblIndex);
     return UT_DEFAULT_IMPL(MD_ManageDwellTable);
