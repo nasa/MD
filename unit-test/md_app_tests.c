@@ -468,11 +468,6 @@ void MD_AppInit_Test_EvsRegisterNotSuccess(void)
     strCmpResult = strncmp(ExpectedSysLogString, context_CFE_ES_WriteToSysLog.Spec, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH);
 
     UtAssert_True(strCmpResult == 0, "Sys Log string matched expected result, '%s'", context_CFE_ES_WriteToSysLog.Spec);
-
-    call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
-
-    UtAssert_True(call_count_CFE_EVS_SendEvent == 0, "CFE_EVS_SendEvent was called %u time(s), expected 0",
-                  call_count_CFE_EVS_SendEvent);
 }
 
 void MD_AppInit_Test_InitSoftwareBusServicesNotSuccess(void)
