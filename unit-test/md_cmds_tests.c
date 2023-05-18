@@ -45,8 +45,8 @@ uint8 call_count_CFE_EVS_SendEvent;
  * Function Definitions
  */
 
-int32 MD_CMDS_TEST_CFE_TBL_GetAddressHook(void *UserObj, int32 StubRetcode, uint32 CallCount,
-                                          const UT_StubContext_t *Context)
+CFE_Status_t MD_CMDS_TEST_CFE_TBL_GetAddressHook(void *UserObj, int32 StubRetcode, uint32 CallCount,
+                                                 const UT_StubContext_t *Context)
 {
     void **TblPtr = (void **)Context->ArgPtr[0];
 

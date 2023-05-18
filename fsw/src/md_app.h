@@ -170,7 +170,7 @@ void MD_AppMain(void);
  *  \return Execution status, see \ref CFEReturnCodes
  *  \retval #CFE_SUCCESS \copybrief CFE_SUCCESS
  */
-int32 MD_AppInit(void);
+CFE_Status_t MD_AppInit(void);
 
 /**
  * \brief Initialize local control structures
@@ -196,7 +196,7 @@ void MD_InitControlStructures(void);
  *  \return Execution status, see \ref CFEReturnCodes
  *  \retval #CFE_SUCCESS \copybrief CFE_SUCCESS
  */
-int32 MD_InitSoftwareBusServices(void);
+CFE_Status_t MD_InitSoftwareBusServices(void);
 
 /**
  * \brief Initialize Table Services for the Memory Dwell Task
@@ -220,7 +220,7 @@ int32 MD_InitSoftwareBusServices(void);
  *  \return Execution status, see \ref CFEReturnCodes
  *  \retval #CFE_SUCCESS \copybrief CFE_SUCCESS
  */
-int32 MD_InitTableServices(void);
+CFE_Status_t MD_InitTableServices(void);
 
 /**
  * \brief Check Table Status and take appropriate actions.
@@ -238,7 +238,7 @@ int32 MD_InitTableServices(void);
  *  \return Execution status, see \ref CFEReturnCodes
  *  \retval #CFE_SUCCESS \copybrief CFE_SUCCESS
  */
-int32 MD_ManageDwellTable(uint8 TblIndex);
+CFE_Status_t MD_ManageDwellTable(uint8 TblIndex);
 
 /**
  * \brief Execute requested Memory Dwell commands

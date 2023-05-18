@@ -43,8 +43,8 @@
 uint8               call_count_CFE_EVS_SendEvent;
 MD_DwellTableLoad_t MD_DWELL_TBL_TEST_GlobalLoadTable;
 
-int32 MD_DWELL_TBL_TEST_CFE_TBL_GetAddressHook(void *UserObj, int32 StubRetcode, uint32 CallCount,
-                                               const UT_StubContext_t *Context)
+CFE_Status_t MD_DWELL_TBL_TEST_CFE_TBL_GetAddressHook(void *UserObj, int32 StubRetcode, uint32 CallCount,
+                                                      const UT_StubContext_t *Context)
 {
     void **TblPtr                             = (void **)Context->ArgPtr[0];
     MD_DWELL_TBL_TEST_GlobalLoadTable.Enabled = MD_DWELL_STREAM_ENABLED;
@@ -411,9 +411,9 @@ void MD_AppMain_Test_InvalidMessageID(void)
 
 void MD_AppInit_Test_Nominal(void)
 {
-    int32 Result;
-    int32 strCmpResult;
-    char  ExpectedEventString[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
+    CFE_Status_t Result;
+    int32        strCmpResult;
+    char         ExpectedEventString[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
 
     snprintf(ExpectedEventString, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH, "MD Initialized.  Version %%d.%%d.%%d.%%d");
 
@@ -445,9 +445,9 @@ void MD_AppInit_Test_Nominal(void)
 
 void MD_AppInit_Test_EvsRegisterNotSuccess(void)
 {
-    int32 Result;
-    int32 strCmpResult;
-    char  ExpectedSysLogString[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
+    CFE_Status_t Result;
+    int32        strCmpResult;
+    char         ExpectedSysLogString[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
     snprintf(ExpectedSysLogString, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH,
              "MD_APP:Call to CFE_EVS_Register Failed:RC=%%d\n");
 
@@ -472,7 +472,7 @@ void MD_AppInit_Test_EvsRegisterNotSuccess(void)
 
 void MD_AppInit_Test_InitSoftwareBusServicesNotSuccess(void)
 {
-    int32 Result;
+    CFE_Status_t Result;
 
     /* Set to make MD_InitSoftwareBusServices return -1 */
     UT_SetDeferredRetcode(UT_KEY(CFE_SB_CreatePipe), 1, -1);
@@ -493,7 +493,7 @@ void MD_AppInit_Test_InitSoftwareBusServicesNotSuccess(void)
 
 void MD_AppInit_Test_InitTableServicesNotSuccess(void)
 {
-    int32 Result;
+    CFE_Status_t Result;
 
     /* Set to make MD_InitTableServices return -1 */
     UT_SetDeferredRetcode(UT_KEY(CFE_TBL_Register), 1, -1);
@@ -602,7 +602,7 @@ void MD_InitControlStructures_Test(void)
 
 void MD_InitSoftwareBusServices_Test_Nominal(void)
 {
-    int32 Result;
+    CFE_Status_t Result;
 
     /* Execute the function being tested */
     Result = MD_InitSoftwareBusServices();
@@ -626,9 +626,9 @@ void MD_InitSoftwareBusServices_Test_Nominal(void)
 
 void MD_InitSoftwareBusServices_Test_CreatePipeError(void)
 {
-    int32 Result;
-    int32 strCmpResult;
-    char  ExpectedEventString[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
+    CFE_Status_t Result;
+    int32        strCmpResult;
+    char         ExpectedEventString[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
 
     snprintf(ExpectedEventString, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH, "Failed to create pipe.  RC = %%d");
 
@@ -664,9 +664,9 @@ void MD_InitSoftwareBusServices_Test_CreatePipeError(void)
 
 void MD_InitSoftwareBusServices_Test_SubscribeHkError(void)
 {
-    int32 Result;
-    int32 strCmpResult;
-    char  ExpectedEventString[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
+    CFE_Status_t Result;
+    int32        strCmpResult;
+    char         ExpectedEventString[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
 
     snprintf(ExpectedEventString, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH, "Failed to subscribe to HK requests  RC = %%d");
 
@@ -702,9 +702,9 @@ void MD_InitSoftwareBusServices_Test_SubscribeHkError(void)
 
 void MD_InitSoftwareBusServices_Test_SubscribeCmdError(void)
 {
-    int32 Result;
-    int32 strCmpResult;
-    char  ExpectedEventString[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
+    CFE_Status_t Result;
+    int32        strCmpResult;
+    char         ExpectedEventString[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
 
     snprintf(ExpectedEventString, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH, "Failed to subscribe to commands.  RC = %%d");
 
@@ -740,9 +740,9 @@ void MD_InitSoftwareBusServices_Test_SubscribeCmdError(void)
 
 void MD_InitSoftwareBusServices_Test_SubscribeWakeupError(void)
 {
-    int32 Result;
-    int32 strCmpResult;
-    char  ExpectedEventString[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
+    CFE_Status_t Result;
+    int32        strCmpResult;
+    char         ExpectedEventString[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
 
     snprintf(ExpectedEventString, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH,
              "Failed to subscribe to wakeup messages.  RC = %%d");
@@ -779,10 +779,10 @@ void MD_InitSoftwareBusServices_Test_SubscribeWakeupError(void)
 
 void MD_InitTableServices_Test_GetAddressErrorAndLoadError(void)
 {
-    int32 Result;
-    int32 strCmpResult;
-    char  ExpectedEventString[2][CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
-    char  ExpectedSysLogString[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
+    CFE_Status_t Result;
+    int32        strCmpResult;
+    char         ExpectedEventString[2][CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
+    char         ExpectedSysLogString[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
 
     snprintf(ExpectedEventString[0], CFE_MISSION_EVS_MAX_MESSAGE_LENGTH,
              "Didn't update MD tbl #%%d due to unexpected CFE_TBL_GetAddress return: 0x%%08X");
@@ -847,9 +847,9 @@ void MD_InitTableServices_Test_GetAddressErrorAndLoadError(void)
 
 void MD_InitTableServices_Test_TblRecoveredValidThenTblInits(void)
 {
-    int32 Result;
-    int32 strCmpResult;
-    char  ExpectedEventString[4][CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
+    CFE_Status_t Result;
+    int32        strCmpResult;
+    char         ExpectedEventString[4][CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
 
     snprintf(ExpectedEventString[1], CFE_MISSION_EVS_MAX_MESSAGE_LENGTH,
              "Dwell Tables Recovered: %%d, Dwell Tables Initialized: %%d");
@@ -892,7 +892,7 @@ void MD_InitTableServices_Test_TblRecoveredValidThenTblInits(void)
 
 void MD_InitTableServices_Test_TblRecoveredNotValid(void)
 {
-    int32                Result;
+    CFE_Status_t         Result;
     int32                strCmpResult;
     char                 ExpectedEventString[4][CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
     MD_DwellTableLoad_t  LoadTbl;
@@ -958,7 +958,7 @@ void MD_InitTableServices_Test_TblRecoveredNotValid(void)
 
 void MD_InitTableServices_Test_DwellStreamEnabled(void)
 {
-    int32                Result;
+    CFE_Status_t         Result;
     int32                strCmpResult;
     char                 ExpectedEventString[4][CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
     MD_DwellTableLoad_t  LoadTbl;
@@ -1022,7 +1022,7 @@ void MD_InitTableServices_Test_DwellStreamEnabled(void)
 
 void MD_InitTableServices_Test_TblNotRecovered(void)
 {
-    int32                Result;
+    CFE_Status_t         Result;
     int32                strCmpResult;
     char                 ExpectedEventString[4][CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
     MD_DwellTableLoad_t  LoadTbl;
@@ -1084,9 +1084,9 @@ void MD_InitTableServices_Test_TblNotRecovered(void)
 
 void MD_InitTableServices_Test_TblTooLarge(void)
 {
-    int32 Result;
-    int32 strCmpResult;
-    char  ExpectedEventString[2][CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
+    CFE_Status_t Result;
+    int32        strCmpResult;
+    char         ExpectedEventString[2][CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
 
     snprintf(ExpectedEventString[0], CFE_MISSION_EVS_MAX_MESSAGE_LENGTH,
              "Dwell Table(s) are too large to register: %%u bytes, %%d entries");
@@ -1130,9 +1130,9 @@ void MD_InitTableServices_Test_TblTooLarge(void)
 
 void MD_InitTableServices_Test_TblRegisterCriticalError(void)
 {
-    int32 Result;
-    int32 strCmpResult;
-    char  ExpectedEventString[2][CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
+    CFE_Status_t Result;
+    int32        strCmpResult;
+    char         ExpectedEventString[2][CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
 
     snprintf(ExpectedEventString[0], CFE_MISSION_EVS_MAX_MESSAGE_LENGTH,
              "CFE_TBL_Register error %%d received for tbl#%%d");
@@ -1251,8 +1251,8 @@ void MD_InitTableServices_Test_TblFileNameError(void)
 
 void MD_ManageDwellTable_Test_ValidationPendingSucceedThenFail(void)
 {
-    int32 Result;
-    uint8 TblIndex = 0;
+    CFE_Status_t Result;
+    uint8        TblIndex = 0;
 
     /* Set to satisfy condition "Status == CFE_TBL_INFO_VALIDATION_PENDING" */
     UT_SetDefaultReturnValue(UT_KEY(CFE_TBL_GetStatus), CFE_TBL_INFO_VALIDATION_PENDING);
@@ -1274,7 +1274,7 @@ void MD_ManageDwellTable_Test_ValidationPendingSucceedThenFail(void)
 
 void MD_ManageDwellTable_Test_UpdatePendingDwellStreamEnabled(void)
 {
-    int32                Result;
+    CFE_Status_t         Result;
     uint8                TblIndex = 0;
     MD_DwellTableLoad_t  LoadTbl;
     MD_DwellTableLoad_t *LoadTblPtr = &LoadTbl;
@@ -1307,7 +1307,7 @@ void MD_ManageDwellTable_Test_UpdatePendingDwellStreamEnabled(void)
 
 void MD_ManageDwellTable_Test_UpdatePendingDwellStreamDisabled(void)
 {
-    int32                Result;
+    CFE_Status_t         Result;
     uint8                TblIndex = 0;
     MD_DwellTableLoad_t  LoadTbl;
     MD_DwellTableLoad_t *LoadTblPtr = &LoadTbl;
@@ -1342,8 +1342,8 @@ void MD_ManageDwellTable_Test_UpdatePendingDwellStreamDisabled(void)
 
 void MD_ManageDwellTable_Test_TblNotUpdated(void)
 {
-    int32 Result;
-    uint8 TblIndex = 0;
+    CFE_Status_t Result;
+    uint8        TblIndex = 0;
 
     /* Set to satisfy condition "Status == CFE_TBL_INFO_UPDATE_PENDING" */
     UT_SetDeferredRetcode(UT_KEY(CFE_TBL_GetStatus), 1, CFE_TBL_INFO_UPDATE_PENDING);
@@ -1370,10 +1370,10 @@ void MD_ManageDwellTable_Test_TblNotUpdated(void)
 
 void MD_ManageDwellTable_Test_UpdatePendingTblCopyError(void)
 {
-    int32 Result;
-    uint8 TblIndex = 0;
-    int32 strCmpResult;
-    char  ExpectedEventString[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
+    CFE_Status_t Result;
+    uint8        TblIndex = 0;
+    int32        strCmpResult;
+    char         ExpectedEventString[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
 
     snprintf(ExpectedEventString, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH,
              "Didn't update MD tbl #%%d due to unexpected CFE_TBL_GetAddress return: %%d");
@@ -1405,10 +1405,10 @@ void MD_ManageDwellTable_Test_UpdatePendingTblCopyError(void)
 
 void MD_ManageDwellTable_Test_TblStatusErr(void)
 {
-    int32 Result;
-    uint8 TblIndex = 0;
-    int32 strCmpResult;
-    char  ExpectedEventString[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
+    CFE_Status_t Result;
+    uint8        TblIndex = 0;
+    int32        strCmpResult;
+    char         ExpectedEventString[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
 
     snprintf(ExpectedEventString, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH,
              "Received unexpected error %%d from CFE_TBL_GetStatus for tbl #%%d");
@@ -1437,8 +1437,8 @@ void MD_ManageDwellTable_Test_TblStatusErr(void)
 
 void MD_ManageDwellTable_Test_OtherStatus(void)
 {
-    int32 Result;
-    uint8 TblIndex = 0;
+    CFE_Status_t Result;
+    uint8        TblIndex = 0;
 
     /* Set to reach final else-case */
     UT_SetDeferredRetcode(UT_KEY(CFE_TBL_GetStatus), 1, 99);

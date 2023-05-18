@@ -44,7 +44,7 @@ extern MD_AppData_t MD_AppData;
 void MD_ProcessStartCmd(const CFE_SB_Buffer_t *BufPtr)
 {
     int32              ErrorCount = 0;
-    int32              Status;
+    CFE_Status_t       Status;
     int32              NumTblInMask = 0; /* Purely as info for event message */
     uint16             TableId      = 0;
     uint16             TableIndex;
@@ -132,7 +132,7 @@ void MD_ProcessStartCmd(const CFE_SB_Buffer_t *BufPtr)
 void MD_ProcessStopCmd(const CFE_SB_Buffer_t *BufPtr)
 {
     int32              ErrorCount = 0;
-    int32              Status;
+    CFE_Status_t       Status;
     int32              NumTblInMask = 0; /* Purely as info for event message */
     MD_CmdStartStop_t *Stop         = (MD_CmdStartStop_t *)BufPtr;
     uint16             TableId      = 0;
@@ -193,7 +193,7 @@ void MD_ProcessStopCmd(const CFE_SB_Buffer_t *BufPtr)
 void MD_ProcessJamCmd(const CFE_SB_Buffer_t *BufPtr)
 {
     /* Local variables */
-    int32                   Status;
+    CFE_Status_t            Status;
     MD_CmdJam_t *           Jam            = 0;
     bool                    AllInputsValid = true;
     cpuaddr                 ResolvedAddr   = 0;
@@ -408,7 +408,7 @@ void MD_ProcessJamCmd(const CFE_SB_Buffer_t *BufPtr)
 
 void MD_ProcessSignatureCmd(const CFE_SB_Buffer_t *BufPtr)
 {
-    int32                 Status;
+    CFE_Status_t          Status;
     MD_CmdSetSignature_t *SignatureCmd = (MD_CmdSetSignature_t *)BufPtr;
     uint16                TblId        = 0;
     uint16                StringLength;

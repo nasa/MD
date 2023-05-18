@@ -96,7 +96,7 @@ void MD_CopyUpdatedTbl(MD_DwellTableLoad_t *MD_LoadTablePtr, uint8 TblIndex);
  *  \return Execution status, see \ref CFEReturnCodes
  *  \retval #CFE_SUCCESS \copybrief CFE_SUCCESS
  */
-int32 MD_UpdateTableEnabledField(uint16 TableIndex, uint16 FieldValue);
+CFE_Status_t MD_UpdateTableEnabledField(uint16 TableIndex, uint16 FieldValue);
 
 /**
  * \brief Update Values for a Dwell Table Entry.
@@ -121,8 +121,8 @@ int32 MD_UpdateTableEnabledField(uint16 TableIndex, uint16 FieldValue);
  *  \return Execution status, see \ref CFEReturnCodes
  *  \retval #CFE_SUCCESS \copybrief CFE_SUCCESS
  */
-int32 MD_UpdateTableDwellEntry(uint16 TableIndex, uint16 EntryIndex, uint16 NewLength, uint16 NewDelay,
-                               MD_SymAddr_t NewDwellAddress);
+CFE_Status_t MD_UpdateTableDwellEntry(uint16 TableIndex, uint16 EntryIndex, uint16 NewLength, uint16 NewDelay,
+                                      MD_SymAddr_t NewDwellAddress);
 
 #if MD_SIGNATURE_OPTION == 1
 
@@ -142,7 +142,7 @@ int32 MD_UpdateTableDwellEntry(uint16 TableIndex, uint16 EntryIndex, uint16 NewL
  *  \return Execution status, see \ref CFEReturnCodes
  *  \retval #CFE_SUCCESS \copybrief CFE_SUCCESS
  */
-int32 MD_UpdateTableSignature(uint16 TableIndex, char NewSignature[MD_SIGNATURE_FIELD_LENGTH]);
+CFE_Status_t MD_UpdateTableSignature(uint16 TableIndex, char NewSignature[MD_SIGNATURE_FIELD_LENGTH]);
 
 #endif
 
@@ -165,8 +165,8 @@ int32 MD_UpdateTableSignature(uint16 TableIndex, char NewSignature[MD_SIGNATURE_
  *  \return Execution status, see \ref CFEReturnCodes
  *  \retval #CFE_SUCCESS \copybrief CFE_SUCCESS
  */
-int32 MD_ReadDwellTable(const MD_DwellTableLoad_t *TblPtr, uint16 *ActiveAddrCountPtr, uint16 *SizePtr,
-                        uint32 *RatePtr);
+CFE_Status_t MD_ReadDwellTable(const MD_DwellTableLoad_t *TblPtr, uint16 *ActiveAddrCountPtr, uint16 *SizePtr,
+                               uint32 *RatePtr);
 
 /**
  * \brief Validate dwell table entry.

@@ -54,7 +54,7 @@ MD_AppData_t MD_AppData;
 void MD_AppMain(void)
 {
     CFE_SB_MsgId_t   MessageID    = CFE_SB_INVALID_MSG_ID;
-    int32            Status       = CFE_SUCCESS;
+    CFE_Status_t     Status       = CFE_SUCCESS;
     uint8            TblIndex     = 0;
     CFE_SB_Buffer_t *BufPtr       = NULL;
     size_t           ActualLength = 0;
@@ -169,12 +169,12 @@ void MD_AppMain(void)
 
 /******************************************************************************/
 
-int32 MD_AppInit(void)
+CFE_Status_t MD_AppInit(void)
 {
     /*
     ** Locals
     */
-    int32 Status = CFE_SUCCESS;
+    CFE_Status_t Status = CFE_SUCCESS;
 
     MD_AppData.CmdCounter = 0;
     MD_AppData.ErrCounter = 0;
@@ -242,10 +242,10 @@ void MD_InitControlStructures(void)
 }
 
 /******************************************************************************/
-int32 MD_InitSoftwareBusServices(void)
+CFE_Status_t MD_InitSoftwareBusServices(void)
 {
-    int32  Status = CFE_SUCCESS;
-    uint16 TblIndex;
+    CFE_Status_t Status = CFE_SUCCESS;
+    uint16       TblIndex;
 
     /*
     ** Initialize housekeeping telemetry packet (clear user data area)
@@ -321,9 +321,9 @@ int32 MD_InitSoftwareBusServices(void)
 
 /******************************************************************************/
 
-int32 MD_InitTableServices(void)
+CFE_Status_t MD_InitTableServices(void)
 {
-    int32                Status           = CFE_SUCCESS;
+    CFE_Status_t         Status           = CFE_SUCCESS;
     int32                GetAddressResult = 0;
     uint8                TblIndex;
     bool                 RecoveredValidTable = true; /* for current table */
@@ -493,9 +493,9 @@ int32 MD_InitTableServices(void)
 }
 
 /******************************************************************************/
-int32 MD_ManageDwellTable(uint8 TblIndex)
+CFE_Status_t MD_ManageDwellTable(uint8 TblIndex)
 {
-    int32                Status           = CFE_SUCCESS;
+    CFE_Status_t         Status           = CFE_SUCCESS;
     int32                GetAddressResult = 0;
     bool                 FinishedManaging = false;
     MD_DwellTableLoad_t *MD_LoadTablePtr  = 0;

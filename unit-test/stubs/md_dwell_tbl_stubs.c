@@ -42,15 +42,15 @@ void MD_CopyUpdatedTbl(MD_DwellTableLoad_t *MD_LoadTablePtr, uint8 TblIndex)
     UT_DEFAULT_IMPL(MD_CopyUpdatedTbl);
 }
 
-int32 MD_UpdateTableEnabledField(uint16 TableIndex, uint16 FieldValue)
+CFE_Status_t MD_UpdateTableEnabledField(uint16 TableIndex, uint16 FieldValue)
 {
     UT_Stub_RegisterContextGenericArg(UT_KEY(MD_UpdateTableEnabledField), TableIndex);
     UT_Stub_RegisterContextGenericArg(UT_KEY(MD_UpdateTableEnabledField), FieldValue);
     return UT_DEFAULT_IMPL(MD_UpdateTableEnabledField);
 }
 
-int32 MD_UpdateTableDwellEntry(uint16 TableIndex, uint16 EntryIndex, uint16 NewLength, uint16 NewDelay,
-                               MD_SymAddr_t NewDwellAddress)
+CFE_Status_t MD_UpdateTableDwellEntry(uint16 TableIndex, uint16 EntryIndex, uint16 NewLength, uint16 NewDelay,
+                                      MD_SymAddr_t NewDwellAddress)
 {
     UT_Stub_RegisterContextGenericArg(UT_KEY(MD_UpdateTableDwellEntry), TableIndex);
     UT_Stub_RegisterContextGenericArg(UT_KEY(MD_UpdateTableDwellEntry), EntryIndex);
@@ -60,14 +60,15 @@ int32 MD_UpdateTableDwellEntry(uint16 TableIndex, uint16 EntryIndex, uint16 NewL
     return UT_DEFAULT_IMPL(MD_UpdateTableDwellEntry);
 }
 
-int32 MD_UpdateTableSignature(uint16 TableIndex, char NewSignature[MD_SIGNATURE_FIELD_LENGTH])
+CFE_Status_t MD_UpdateTableSignature(uint16 TableIndex, char NewSignature[MD_SIGNATURE_FIELD_LENGTH])
 {
     UT_Stub_RegisterContextGenericArg(UT_KEY(MD_UpdateTableSignature), TableIndex);
     UT_Stub_RegisterContext(UT_KEY(MD_UpdateTableSignature), NewSignature);
     return UT_DEFAULT_IMPL(MD_UpdateTableSignature);
 }
 
-int32 MD_ReadDwellTable(MD_DwellTableLoad_t *TblPtr, uint16 *ActiveAddrCountPtr, uint16 *SizePtr, uint32 *RatePtr)
+CFE_Status_t MD_ReadDwellTable(MD_DwellTableLoad_t *TblPtr, uint16 *ActiveAddrCountPtr, uint16 *SizePtr,
+                               uint32 *RatePtr)
 {
     UT_Stub_RegisterContext(UT_KEY(MD_ReadDwellTable), TblPtr);
     UT_Stub_RegisterContext(UT_KEY(MD_ReadDwellTable), ActiveAddrCountPtr);
