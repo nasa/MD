@@ -1113,8 +1113,8 @@ void MD_UpdateTableDwellEntry_Test_Error(void)
 #if MD_SIGNATURE_OPTION == 1
 void MD_UpdateTableSignature_Test(void)
 {
-    uint16 TableIndex     = 0;
-    char   newsignature[] = "newsignature";
+    uint16 TableIndex                              = 0;
+    char   newsignature[MD_SIGNATURE_FIELD_LENGTH] = "newsignature";
 
     MD_DwellTableLoad_t  LoadTbl;
     MD_DwellTableLoad_t *LoadTblPtr = &LoadTbl;
@@ -1136,8 +1136,8 @@ void MD_UpdateTableSignature_Test(void)
 
 void MD_UpdateTableSignature_Test_Updated(void)
 {
-    uint16 TableIndex     = 0;
-    char   newsignature[] = "newsignature";
+    uint16 TableIndex                              = 0;
+    char   newsignature[MD_SIGNATURE_FIELD_LENGTH] = "newsignature";
 
     /* Set MD_LoadTablePtr = &MD_DWELL_TBL_TEST_GlobalLoadTable */
     MD_DwellTableLoad_t  LoadTbl;
@@ -1161,8 +1161,8 @@ void MD_UpdateTableSignature_Test_Updated(void)
 
 void MD_UpdateTableSignature_Test_Error(void)
 {
-    uint16 TableIndex     = 0;
-    char   newsignature[] = "newsignature";
+    uint16 TableIndex                              = 0;
+    char   newsignature[MD_SIGNATURE_FIELD_LENGTH] = "newsignature";
     int32  strCmpResult;
     char   ExpectedEventString[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
 
