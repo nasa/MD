@@ -508,18 +508,18 @@ void MD_SendDwellPkt_Test(void)
     MD_SendDwellPkt(TableIndex);
 
     /* Verify results */
-    UtAssert_True(MD_AppData.MD_DwellPkt[TableIndex].TableId == 2, "MD_AppData.MD_DwellPkt[TableIndex].TableId == 2");
-    UtAssert_True(MD_AppData.MD_DwellPkt[TableIndex].AddrCount == 3,
-                  "MD_AppData.MD_DwellPkt[TableIndex].AddrCount == 3");
-    UtAssert_True(MD_AppData.MD_DwellPkt[TableIndex].Rate == 4, "MD_AppData.MD_DwellPkt[TableIndex].Rate == 4");
+    UtAssert_True(MD_AppData.MD_DwellPkt[TableIndex].Payload.TableId == 2, "MD_AppData.MD_DwellPkt[TableIndex].Payload.TableId == 2");
+    UtAssert_True(MD_AppData.MD_DwellPkt[TableIndex].Payload.AddrCount == 3,
+                  "MD_AppData.MD_DwellPkt[TableIndex].Payload.AddrCount == 3");
+    UtAssert_True(MD_AppData.MD_DwellPkt[TableIndex].Payload.Rate == 4, "MD_AppData.MD_DwellPkt[TableIndex].Payload.Rate == 4");
 
 #if MD_SIGNATURE_OPTION == 1
     UtAssert_True(
         strncmp(MD_AppData.MD_DwellTables[TableIndex].Signature, "signature", MD_SIGNATURE_FIELD_LENGTH - 1) == 0,
-        "MD_AppData.MD_DwellTables[TableIndex].Signature, 'signature', MD_SIGNATURE_FIELD_LENGTH - 1) == 0");
+        "MD_AppData.MD_DwellTables[TableIndex].Payload.Signature, 'signature', MD_SIGNATURE_FIELD_LENGTH - 1) == 0");
 
     UtAssert_True(MD_AppData.MD_DwellTables[TableIndex].Signature[MD_SIGNATURE_FIELD_LENGTH - 1] == '\0',
-                  "MD_AppData.MD_DwellTables[TableIndex].Signature[MD_SIGNATURE_FIELD_LENGTH - 1] == ''");
+                  "MD_AppData.MD_DwellTables[TableIndex].Payload.Signature[MD_SIGNATURE_FIELD_LENGTH - 1] == ''");
 #endif
 
     UtAssert_True(MD_AppData.MD_DwellTables[TableIndex].DataSize == 5,
@@ -546,18 +546,18 @@ void MD_NoDwellRate_Test(void)
     MD_SendDwellPkt(TableIndex);
 
     /* Verify results */
-    UtAssert_True(MD_AppData.MD_DwellPkt[TableIndex].TableId == 2, "MD_AppData.MD_DwellPkt[TableIndex].TableId == 2");
-    UtAssert_True(MD_AppData.MD_DwellPkt[TableIndex].AddrCount == 3,
-                  "MD_AppData.MD_DwellPkt[TableIndex].AddrCount == 3");
-    UtAssert_True(MD_AppData.MD_DwellPkt[TableIndex].Rate == 0, "MD_AppData.MD_DwellPkt[TableIndex].Rate == 0");
+    UtAssert_True(MD_AppData.MD_DwellPkt[TableIndex].Payload.TableId == 2, "MD_AppData.MD_DwellPkt[TableIndex].Payload.TableId == 2");
+    UtAssert_True(MD_AppData.MD_DwellPkt[TableIndex].Payload.AddrCount == 3,
+                  "MD_AppData.MD_DwellPkt[TableIndex].Payload.AddrCount == 3");
+    UtAssert_True(MD_AppData.MD_DwellPkt[TableIndex].Payload.Rate == 0, "MD_AppData.MD_DwellPkt[TableIndex].Payload.Rate == 0");
 
 #if MD_SIGNATURE_OPTION == 1
     UtAssert_True(
         strncmp(MD_AppData.MD_DwellTables[TableIndex].Signature, "signature", MD_SIGNATURE_FIELD_LENGTH - 1) == 0,
-        "MD_AppData.MD_DwellTables[TableIndex].Signature, 'signature', MD_SIGNATURE_FIELD_LENGTH - 1) == 0");
+        "MD_AppData.MD_DwellTables[TableIndex].Payload.Signature, 'signature', MD_SIGNATURE_FIELD_LENGTH - 1) == 0");
 
     UtAssert_True(MD_AppData.MD_DwellTables[TableIndex].Signature[MD_SIGNATURE_FIELD_LENGTH - 1] == '\0',
-                  "MD_AppData.MD_DwellTables[TableIndex].Signature[MD_SIGNATURE_FIELD_LENGTH - 1] == ''");
+                  "MD_AppData.MD_DwellTables[TableIndex].Payload.Signature[MD_SIGNATURE_FIELD_LENGTH - 1] == ''");
 #endif
 
     UtAssert_True(MD_AppData.MD_DwellTables[TableIndex].DataSize == 5,

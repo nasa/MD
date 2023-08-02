@@ -95,7 +95,7 @@ void MD_ProcessStartCmd_Test_ZeroRate(void)
     TestMsgId = CFE_SB_ValueToMsgId(MD_CMD_MID);
     UT_SetDataBuffer(UT_KEY(CFE_MSG_GetMsgId), &TestMsgId, sizeof(TestMsgId), false);
 
-    UT_CmdBuf.CmdStartStop.TableMask = 1;
+    UT_CmdBuf.CmdStartStop.Payload.TableMask = 1;
 
     MD_AppData.MD_DwellTables[0].Rate = 0;
 
@@ -154,7 +154,7 @@ void MD_ProcessStartCmd_Test_Success(void)
     TestMsgId = CFE_SB_ValueToMsgId(MD_CMD_MID);
     UT_SetDataBuffer(UT_KEY(CFE_MSG_GetMsgId), &TestMsgId, sizeof(TestMsgId), false);
 
-    UT_CmdBuf.CmdStartStop.TableMask = 1;
+    UT_CmdBuf.CmdStartStop.Payload.TableMask = 1;
 
     MD_AppData.MD_DwellTables[0].Rate = 1;
 
@@ -204,7 +204,7 @@ void MD_ProcessStartCmd_Test_EmptyTableMask(void)
     TestMsgId = CFE_SB_ValueToMsgId(MD_CMD_MID);
     UT_SetDataBuffer(UT_KEY(CFE_MSG_GetMsgId), &TestMsgId, sizeof(TestMsgId), false);
 
-    UT_CmdBuf.CmdStartStop.TableMask = 0;
+    UT_CmdBuf.CmdStartStop.Payload.TableMask = 0;
 
     /* Execute the function being tested */
     MD_ProcessStartCmd(&UT_CmdBuf.Buf);
@@ -237,7 +237,7 @@ void MD_ProcessStartCmd_Test_NoUpdateTableEnabledField(void)
     TestMsgId = CFE_SB_ValueToMsgId(MD_CMD_MID);
     UT_SetDataBuffer(UT_KEY(CFE_MSG_GetMsgId), &TestMsgId, sizeof(TestMsgId), false);
 
-    UT_CmdBuf.CmdStartStop.TableMask  = 1;
+    UT_CmdBuf.CmdStartStop.Payload.TableMask  = 1;
     MD_AppData.MD_DwellTables[0].Rate = 1;
 
     /* Prevents segmentation fault in call to subfunction MD_UpdateTableEnabledField */
@@ -281,7 +281,7 @@ void MD_ProcessStopCmd_Test_Success(void)
     TestMsgId = CFE_SB_ValueToMsgId(MD_CMD_MID);
     UT_SetDataBuffer(UT_KEY(CFE_MSG_GetMsgId), &TestMsgId, sizeof(TestMsgId), false);
 
-    UT_CmdBuf.CmdStartStop.TableMask = 1;
+    UT_CmdBuf.CmdStartStop.Payload.TableMask = 1;
 
     /* Prevents segmentation fault in call to subfunction MD_UpdateTableEnabledField */
     UT_SetHookFunction(UT_KEY(CFE_TBL_GetAddress), &MD_CMDS_TEST_CFE_TBL_GetAddressHook, NULL);
@@ -329,7 +329,7 @@ void MD_ProcessStopCmd_Test_EmptyTableMask(void)
     TestMsgId = CFE_SB_ValueToMsgId(MD_CMD_MID);
     UT_SetDataBuffer(UT_KEY(CFE_MSG_GetMsgId), &TestMsgId, sizeof(TestMsgId), false);
 
-    UT_CmdBuf.CmdStartStop.TableMask = 0;
+    UT_CmdBuf.CmdStartStop.Payload.TableMask = 0;
 
     /* Execute the function being tested */
     MD_ProcessStopCmd(&UT_CmdBuf.Buf);
@@ -362,7 +362,7 @@ void MD_ProcessStopCmd_Test_NoUpdateTableEnabledField(void)
     TestMsgId = CFE_SB_ValueToMsgId(MD_CMD_MID);
     UT_SetDataBuffer(UT_KEY(CFE_MSG_GetMsgId), &TestMsgId, sizeof(TestMsgId), false);
 
-    UT_CmdBuf.CmdStartStop.TableMask = 1;
+    UT_CmdBuf.CmdStartStop.Payload.TableMask = 1;
 
     /* Prevents segmentation fault in call to subfunction MD_UpdateTableEnabledField */
     UT_SetHookFunction(UT_KEY(CFE_TBL_GetAddress), &MD_CMDS_TEST_CFE_TBL_GetAddressHook, NULL);
@@ -411,8 +411,8 @@ void MD_ProcessJamCmd_Test_InvalidJamTable(void)
     TestMsgId = CFE_SB_ValueToMsgId(MD_CMD_MID);
     UT_SetDataBuffer(UT_KEY(CFE_MSG_GetMsgId), &TestMsgId, sizeof(TestMsgId), false);
 
-    UT_CmdBuf.CmdJam.TableId = 99;
-    UT_CmdBuf.CmdJam.EntryId = 2;
+    UT_CmdBuf.CmdJam.Payload.TableId = 99;
+    UT_CmdBuf.CmdJam.Payload.EntryId = 2;
 
     /* Execute the function being tested */
     MD_ProcessJamCmd(&UT_CmdBuf.Buf);
@@ -445,8 +445,8 @@ void MD_ProcessJamCmd_Test_InvalidEntryArg(void)
     TestMsgId = CFE_SB_ValueToMsgId(MD_CMD_MID);
     UT_SetDataBuffer(UT_KEY(CFE_MSG_GetMsgId), &TestMsgId, sizeof(TestMsgId), false);
 
-    UT_CmdBuf.CmdJam.TableId = 1;
-    UT_CmdBuf.CmdJam.EntryId = 99;
+    UT_CmdBuf.CmdJam.Payload.TableId = 1;
+    UT_CmdBuf.CmdJam.Payload.EntryId = 99;
 
     UT_SetDeferredRetcode(UT_KEY(MD_ValidTableId), 1, true);
 
@@ -484,9 +484,9 @@ void MD_ProcessJamCmd_Test_SuccessNullZeroRate(void)
     TestMsgId = CFE_SB_ValueToMsgId(MD_CMD_MID);
     UT_SetDataBuffer(UT_KEY(CFE_MSG_GetMsgId), &TestMsgId, sizeof(TestMsgId), false);
 
-    UT_CmdBuf.CmdJam.TableId     = 1;
-    UT_CmdBuf.CmdJam.EntryId     = 2;
-    UT_CmdBuf.CmdJam.FieldLength = 0;
+    UT_CmdBuf.CmdJam.Payload.TableId     = 1;
+    UT_CmdBuf.CmdJam.Payload.EntryId     = 2;
+    UT_CmdBuf.CmdJam.Payload.FieldLength = 0;
 
     MD_AppData.MD_DwellTables[0].Rate    = 1;
     MD_AppData.MD_DwellTables[0].Enabled = MD_DWELL_STREAM_ENABLED;
@@ -547,9 +547,9 @@ void MD_ProcessJamCmd_Test_NullTableDwell(void)
     TestMsgId = CFE_SB_ValueToMsgId(MD_CMD_MID);
     UT_SetDataBuffer(UT_KEY(CFE_MSG_GetMsgId), &TestMsgId, sizeof(TestMsgId), false);
 
-    UT_CmdBuf.CmdJam.TableId     = 1;
-    UT_CmdBuf.CmdJam.EntryId     = 2;
-    UT_CmdBuf.CmdJam.FieldLength = 0;
+    UT_CmdBuf.CmdJam.Payload.TableId     = 1;
+    UT_CmdBuf.CmdJam.Payload.EntryId     = 2;
+    UT_CmdBuf.CmdJam.Payload.FieldLength = 0;
 
     /* Set to satisfy condition "MD_ResolveSymAddr(&Jam->DwellAddress,&ResolvedAddr) == true" */
     UT_SetDeferredRetcode(UT_KEY(MD_ResolveSymAddr), 1, true);
@@ -595,9 +595,9 @@ void MD_ProcessJamCmd_Test_NoUpdateTableDwell(void)
     TestMsgId = CFE_SB_ValueToMsgId(MD_CMD_MID);
     UT_SetDataBuffer(UT_KEY(CFE_MSG_GetMsgId), &TestMsgId, sizeof(TestMsgId), false);
 
-    UT_CmdBuf.CmdJam.TableId     = 1;
-    UT_CmdBuf.CmdJam.EntryId     = 2;
-    UT_CmdBuf.CmdJam.FieldLength = 1;
+    UT_CmdBuf.CmdJam.Payload.TableId     = 1;
+    UT_CmdBuf.CmdJam.Payload.EntryId     = 2;
+    UT_CmdBuf.CmdJam.Payload.FieldLength = 1;
 
     /* Set to satisfy condition "MD_ResolveSymAddr(&Jam->DwellAddress,&ResolvedAddr) == true" */
     UT_SetDeferredRetcode(UT_KEY(MD_ResolveSymAddr), 1, true);
@@ -644,11 +644,11 @@ void MD_ProcessJamCmd_Test_CantResolveJamAddr(void)
     TestMsgId = CFE_SB_ValueToMsgId(MD_CMD_MID);
     UT_SetDataBuffer(UT_KEY(CFE_MSG_GetMsgId), &TestMsgId, sizeof(TestMsgId), false);
 
-    UT_CmdBuf.CmdJam.TableId     = 1;
-    UT_CmdBuf.CmdJam.EntryId     = 2;
-    UT_CmdBuf.CmdJam.FieldLength = 1;
+    UT_CmdBuf.CmdJam.Payload.TableId     = 1;
+    UT_CmdBuf.CmdJam.Payload.EntryId     = 2;
+    UT_CmdBuf.CmdJam.Payload.FieldLength = 1;
 
-    strncpy(UT_CmdBuf.CmdJam.DwellAddress.SymName, "address", sizeof(UT_CmdBuf.CmdJam.DwellAddress.SymName) - 1);
+    strncpy(UT_CmdBuf.CmdJam.Payload.DwellAddress.SymName, "address", sizeof(UT_CmdBuf.CmdJam.Payload.DwellAddress.SymName) - 1);
 
     /* Set to satisfy condition "MD_ResolveSymAddr(&Jam->DwellAddress,&ResolvedAddr) == FALSE" */
     UT_SetDeferredRetcode(UT_KEY(MD_ResolveSymAddr), 1, false);
@@ -687,9 +687,9 @@ void MD_ProcessJamCmd_Test_InvalidLenArg(void)
     TestMsgId = CFE_SB_ValueToMsgId(MD_CMD_MID);
     UT_SetDataBuffer(UT_KEY(CFE_MSG_GetMsgId), &TestMsgId, sizeof(TestMsgId), false);
 
-    UT_CmdBuf.CmdJam.TableId     = 1;
-    UT_CmdBuf.CmdJam.EntryId     = 2;
-    UT_CmdBuf.CmdJam.FieldLength = 1;
+    UT_CmdBuf.CmdJam.Payload.TableId     = 1;
+    UT_CmdBuf.CmdJam.Payload.EntryId     = 2;
+    UT_CmdBuf.CmdJam.Payload.FieldLength = 1;
 
     /* Set to satisfy condition "MD_ResolveSymAddr(&Jam->DwellAddress,&ResolvedAddr) == TRUE" */
     UT_SetDeferredRetcode(UT_KEY(MD_ResolveSymAddr), 1, true);
@@ -729,9 +729,9 @@ void MD_ProcessJamCmd_Test_InvalidJamAddr(void)
     TestMsgId = CFE_SB_ValueToMsgId(MD_CMD_MID);
     UT_SetDataBuffer(UT_KEY(CFE_MSG_GetMsgId), &TestMsgId, sizeof(TestMsgId), false);
 
-    UT_CmdBuf.CmdJam.TableId     = 1;
-    UT_CmdBuf.CmdJam.EntryId     = 2;
-    UT_CmdBuf.CmdJam.FieldLength = 1;
+    UT_CmdBuf.CmdJam.Payload.TableId     = 1;
+    UT_CmdBuf.CmdJam.Payload.EntryId     = 2;
+    UT_CmdBuf.CmdJam.Payload.FieldLength = 1;
 
     /* Set to satisfy condition "MD_ResolveSymAddr(&Jam->DwellAddress,&ResolvedAddr) == TRUE" */
     UT_SetDeferredRetcode(UT_KEY(MD_ResolveSymAddr), 1, true);
@@ -773,10 +773,10 @@ void MD_ProcessJamCmd_Test_JamAddrNot16BitFieldLength4(void)
     TestMsgId = CFE_SB_ValueToMsgId(MD_CMD_MID);
     UT_SetDataBuffer(UT_KEY(CFE_MSG_GetMsgId), &TestMsgId, sizeof(TestMsgId), false);
 
-    UT_CmdBuf.CmdJam.TableId             = 1;
-    UT_CmdBuf.CmdJam.EntryId             = 2;
-    UT_CmdBuf.CmdJam.FieldLength         = 4;
-    UT_CmdBuf.CmdJam.DwellAddress.Offset = 1;
+    UT_CmdBuf.CmdJam.Payload.TableId             = 1;
+    UT_CmdBuf.CmdJam.Payload.EntryId             = 2;
+    UT_CmdBuf.CmdJam.Payload.FieldLength         = 4;
+    UT_CmdBuf.CmdJam.Payload.DwellAddress.Offset = 1;
 
     /* Set to satisfy condition "MD_ResolveSymAddr(&Jam->DwellAddress,&ResolvedAddr) == TRUE" */
     UT_SetDeferredRetcode(UT_KEY(MD_ResolveSymAddr), 1, true);
@@ -819,10 +819,10 @@ void MD_ProcessJamCmd_Test_JamAddrNot32Bit(void)
     TestMsgId = CFE_SB_ValueToMsgId(MD_CMD_MID);
     UT_SetDataBuffer(UT_KEY(CFE_MSG_GetMsgId), &TestMsgId, sizeof(TestMsgId), false);
 
-    UT_CmdBuf.CmdJam.TableId             = 1;
-    UT_CmdBuf.CmdJam.EntryId             = 2;
-    UT_CmdBuf.CmdJam.FieldLength         = 4;
-    UT_CmdBuf.CmdJam.DwellAddress.Offset = 1;
+    UT_CmdBuf.CmdJam.Payload.TableId             = 1;
+    UT_CmdBuf.CmdJam.Payload.EntryId             = 2;
+    UT_CmdBuf.CmdJam.Payload.FieldLength         = 4;
+    UT_CmdBuf.CmdJam.Payload.DwellAddress.Offset = 1;
 
     /* Set to satisfy condition "MD_ResolveSymAddr(&Jam->DwellAddress,&ResolvedAddr) == TRUE" */
     UT_SetDeferredRetcode(UT_KEY(MD_ResolveSymAddr), 1, true);
@@ -864,10 +864,10 @@ void MD_ProcessJamCmd_Test_JamAddrNot16BitFieldLength2(void)
     TestMsgId = CFE_SB_ValueToMsgId(MD_CMD_MID);
     UT_SetDataBuffer(UT_KEY(CFE_MSG_GetMsgId), &TestMsgId, sizeof(TestMsgId), false);
 
-    UT_CmdBuf.CmdJam.TableId             = 1;
-    UT_CmdBuf.CmdJam.EntryId             = 2;
-    UT_CmdBuf.CmdJam.FieldLength         = 2;
-    UT_CmdBuf.CmdJam.DwellAddress.Offset = 1;
+    UT_CmdBuf.CmdJam.Payload.TableId             = 1;
+    UT_CmdBuf.CmdJam.Payload.EntryId             = 2;
+    UT_CmdBuf.CmdJam.Payload.FieldLength         = 2;
+    UT_CmdBuf.CmdJam.Payload.DwellAddress.Offset = 1;
 
     /* Set to satisfy condition "MD_ResolveSymAddr(&Jam->DwellAddress,&ResolvedAddr) == TRUE" */
     UT_SetDeferredRetcode(UT_KEY(MD_ResolveSymAddr), 1, true);
@@ -908,10 +908,10 @@ void MD_ProcessJamCmd_Test_JamAddrNot16BitNot32Aligned(void)
     TestMsgId = CFE_SB_ValueToMsgId(MD_CMD_MID);
     UT_SetDataBuffer(UT_KEY(CFE_MSG_GetMsgId), &TestMsgId, sizeof(TestMsgId), false);
 
-    UT_CmdBuf.CmdJam.TableId             = 1;
-    UT_CmdBuf.CmdJam.EntryId             = 2;
-    UT_CmdBuf.CmdJam.FieldLength         = 4;
-    UT_CmdBuf.CmdJam.DwellAddress.Offset = 1;
+    UT_CmdBuf.CmdJam.Payload.TableId             = 1;
+    UT_CmdBuf.CmdJam.Payload.EntryId             = 2;
+    UT_CmdBuf.CmdJam.Payload.FieldLength         = 4;
+    UT_CmdBuf.CmdJam.Payload.DwellAddress.Offset = 1;
 
     /* Set to satisfy condition "MD_ResolveSymAddr(&Jam->DwellAddress,&ResolvedAddr) == TRUE" */
     UT_SetDeferredRetcode(UT_KEY(MD_ResolveSymAddr), 1, true);
@@ -952,10 +952,10 @@ void MD_ProcessJamCmd_Test_JamFieldLength4Addr32Aligned(void)
     TestMsgId = CFE_SB_ValueToMsgId(MD_CMD_MID);
     UT_SetDataBuffer(UT_KEY(CFE_MSG_GetMsgId), &TestMsgId, sizeof(TestMsgId), false);
 
-    UT_CmdBuf.CmdJam.TableId             = 1;
-    UT_CmdBuf.CmdJam.EntryId             = 2;
-    UT_CmdBuf.CmdJam.FieldLength         = 4;
-    UT_CmdBuf.CmdJam.DwellAddress.Offset = 1;
+    UT_CmdBuf.CmdJam.Payload.TableId             = 1;
+    UT_CmdBuf.CmdJam.Payload.EntryId             = 2;
+    UT_CmdBuf.CmdJam.Payload.FieldLength         = 4;
+    UT_CmdBuf.CmdJam.Payload.DwellAddress.Offset = 1;
 
     /* Set to satisfy condition "MD_ResolveSymAddr(&Jam->DwellAddress,&ResolvedAddr) == TRUE" */
     UT_SetDeferredRetcode(UT_KEY(MD_ResolveSymAddr), 1, true);
@@ -999,10 +999,10 @@ void MD_ProcessJamCmd_Test_SuccessNonNullZeroRate(void)
     TestMsgId = CFE_SB_ValueToMsgId(MD_CMD_MID);
     UT_SetDataBuffer(UT_KEY(CFE_MSG_GetMsgId), &TestMsgId, sizeof(TestMsgId), false);
 
-    UT_CmdBuf.CmdJam.TableId     = 1;
-    UT_CmdBuf.CmdJam.EntryId     = 2;
-    UT_CmdBuf.CmdJam.FieldLength = 2;
-    UT_CmdBuf.CmdJam.DwellDelay  = 3;
+    UT_CmdBuf.CmdJam.Payload.TableId     = 1;
+    UT_CmdBuf.CmdJam.Payload.EntryId     = 2;
+    UT_CmdBuf.CmdJam.Payload.FieldLength = 2;
+    UT_CmdBuf.CmdJam.Payload.DwellDelay  = 3;
 
     MD_AppData.MD_DwellTables[0].Entry[1].Delay = 1;
 
@@ -1063,10 +1063,10 @@ void MD_ProcessJamCmd_Test_SuccessZeroRateStreamDisabled(void)
     TestMsgId = CFE_SB_ValueToMsgId(MD_CMD_MID);
     UT_SetDataBuffer(UT_KEY(CFE_MSG_GetMsgId), &TestMsgId, sizeof(TestMsgId), false);
 
-    UT_CmdBuf.CmdJam.TableId     = 1;
-    UT_CmdBuf.CmdJam.EntryId     = 2;
-    UT_CmdBuf.CmdJam.FieldLength = 2;
-    UT_CmdBuf.CmdJam.DwellDelay  = 3;
+    UT_CmdBuf.CmdJam.Payload.TableId     = 1;
+    UT_CmdBuf.CmdJam.Payload.EntryId     = 2;
+    UT_CmdBuf.CmdJam.Payload.FieldLength = 2;
+    UT_CmdBuf.CmdJam.Payload.DwellDelay  = 3;
 
     MD_AppData.MD_DwellTables[0].Entry[1].Delay = 1;
 
@@ -1116,10 +1116,10 @@ void MD_ProcessJamCmd_Test_SuccessRateNotZero(void)
     TestMsgId = CFE_SB_ValueToMsgId(MD_CMD_MID);
     UT_SetDataBuffer(UT_KEY(CFE_MSG_GetMsgId), &TestMsgId, sizeof(TestMsgId), false);
 
-    UT_CmdBuf.CmdJam.TableId     = 1;
-    UT_CmdBuf.CmdJam.EntryId     = 2;
-    UT_CmdBuf.CmdJam.FieldLength = 2;
-    UT_CmdBuf.CmdJam.DwellDelay  = 3;
+    UT_CmdBuf.CmdJam.Payload.TableId     = 1;
+    UT_CmdBuf.CmdJam.Payload.EntryId     = 2;
+    UT_CmdBuf.CmdJam.Payload.FieldLength = 2;
+    UT_CmdBuf.CmdJam.Payload.DwellDelay  = 3;
 
     MD_AppData.MD_DwellTables[0].Entry[1].Delay = 1;
 
@@ -1174,9 +1174,9 @@ void MD_ProcessSignatureCmd_Test_InvalidSignatureLength(void)
     TestMsgId = CFE_SB_ValueToMsgId(MD_CMD_MID);
     UT_SetDataBuffer(UT_KEY(CFE_MSG_GetMsgId), &TestMsgId, sizeof(TestMsgId), false);
 
-    for (i = 0; i < sizeof(UT_CmdBuf.CmdSetSignature.Signature); i++)
+    for (i = 0; i < sizeof(UT_CmdBuf.CmdSetSignature.Payload.Signature); i++)
     {
-        UT_CmdBuf.CmdSetSignature.Signature[i] = 'x';
+        UT_CmdBuf.CmdSetSignature.Payload.Signature[i] = 'x';
     }
 
     /* Execute the function being tested */
@@ -1212,7 +1212,7 @@ void MD_ProcessSignatureCmd_Test_InvalidSignatureTable(void)
     TestMsgId = CFE_SB_ValueToMsgId(MD_CMD_MID);
     UT_SetDataBuffer(UT_KEY(CFE_MSG_GetMsgId), &TestMsgId, sizeof(TestMsgId), false);
 
-    UT_CmdBuf.CmdSetSignature.TableId = 0;
+    UT_CmdBuf.CmdSetSignature.Payload.TableId = 0;
 
     /* Execute the function being tested */
     MD_ProcessSignatureCmd(&UT_CmdBuf.Buf);
@@ -1247,8 +1247,8 @@ void MD_ProcessSignatureCmd_Test_Success(void)
     TestMsgId = CFE_SB_ValueToMsgId(MD_CMD_MID);
     UT_SetDataBuffer(UT_KEY(CFE_MSG_GetMsgId), &TestMsgId, sizeof(TestMsgId), false);
 
-    UT_CmdBuf.CmdSetSignature.TableId = 1;
-    strncpy(UT_CmdBuf.CmdSetSignature.Signature, "signature", sizeof(UT_CmdBuf.CmdSetSignature.Signature) - 1);
+    UT_CmdBuf.CmdSetSignature.Payload.TableId = 1;
+    strncpy(UT_CmdBuf.CmdSetSignature.Payload.Signature, "signature", sizeof(UT_CmdBuf.CmdSetSignature.Payload.Signature) - 1);
 
     /* Prevents segmentation fault in call to subfunction MD_UpdateTableSignature */
     UT_SetHookFunction(UT_KEY(CFE_TBL_GetAddress), &MD_CMDS_TEST_CFE_TBL_GetAddressHook, NULL);
@@ -1291,8 +1291,8 @@ void MD_ProcessSignatureCmd_Test_NoUpdateTableSignature(void)
     TestMsgId = CFE_SB_ValueToMsgId(MD_CMD_MID);
     UT_SetDataBuffer(UT_KEY(CFE_MSG_GetMsgId), &TestMsgId, sizeof(TestMsgId), false);
 
-    UT_CmdBuf.CmdSetSignature.TableId = 1;
-    strncpy(UT_CmdBuf.CmdSetSignature.Signature, "signature", sizeof(UT_CmdBuf.CmdSetSignature.Signature) - 1);
+    UT_CmdBuf.CmdSetSignature.Payload.TableId = 1;
+    strncpy(UT_CmdBuf.CmdSetSignature.Payload.Signature, "signature", sizeof(UT_CmdBuf.CmdSetSignature.Payload.Signature) - 1);
 
     /* Prevents segmentation fault in call to subfunction MD_UpdateTableSignature */
     UT_SetHookFunction(UT_KEY(CFE_TBL_GetAddress), &MD_CMDS_TEST_CFE_TBL_GetAddressHook, NULL);

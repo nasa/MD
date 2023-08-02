@@ -609,11 +609,11 @@ void MD_InitSoftwareBusServices_Test_Nominal(void)
 
     /* Verify results */
 #if MD_SIGNATURE_OPTION == 1
-    UtAssert_True(MD_AppData.MD_DwellPkt[0].Signature[0] == '\0', "MD_AppData.MD_DwellPkt[0].Signature[0] == ''");
-    UtAssert_True(MD_AppData.MD_DwellPkt[MD_NUM_DWELL_TABLES / 2].Signature[0] == '\0',
-                  "MD_AppData.MD_DwellPkt[MD_NUM_DWELL_TABLES/2].Signature[0] == ''");
-    UtAssert_True(MD_AppData.MD_DwellPkt[MD_NUM_DWELL_TABLES - 1].Signature[0] == '\0',
-                  "MD_AppData.MD_DwellPkt[MD_NUM_DWELL_TABLES - 1].Signature[0] == ''");
+    UtAssert_True(MD_AppData.MD_DwellPkt[0].Payload.Signature[0] == '\0', "MD_AppData.MD_DwellPkt[0].Payload.Signature[0] == ''");
+    UtAssert_True(MD_AppData.MD_DwellPkt[MD_NUM_DWELL_TABLES / 2].Payload.Signature[0] == '\0',
+                  "MD_AppData.MD_DwellPkt[MD_NUM_DWELL_TABLES/2].Payload.Signature[0] == ''");
+    UtAssert_True(MD_AppData.MD_DwellPkt[MD_NUM_DWELL_TABLES - 1].Payload.Signature[0] == '\0',
+                  "MD_AppData.MD_DwellPkt[MD_NUM_DWELL_TABLES - 1].Payload.Signature[0] == ''");
 #endif
 
     UtAssert_True(Result == CFE_SUCCESS, "Result == CFE_SUCCESS");
@@ -640,11 +640,11 @@ void MD_InitSoftwareBusServices_Test_CreatePipeError(void)
 
     /* Verify results */
 #if MD_SIGNATURE_OPTION == 1
-    UtAssert_True(MD_AppData.MD_DwellPkt[0].Signature[0] == '\0', "MD_AppData.MD_DwellPkt[0].Signature[0] == ''");
-    UtAssert_True(MD_AppData.MD_DwellPkt[MD_NUM_DWELL_TABLES / 2].Signature[0] == '\0',
-                  "MD_AppData.MD_DwellPkt[MD_NUM_DWELL_TABLES/2].Signature[0] == ''");
-    UtAssert_True(MD_AppData.MD_DwellPkt[MD_NUM_DWELL_TABLES - 1].Signature[0] == '\0',
-                  "MD_AppData.MD_DwellPkt[MD_NUM_DWELL_TABLES - 1].Signature[0] == ''");
+    UtAssert_True(MD_AppData.MD_DwellPkt[0].Payload.Signature[0] == '\0', "MD_AppData.MD_DwellPkt[0].Payload.Signature[0] == ''");
+    UtAssert_True(MD_AppData.MD_DwellPkt[MD_NUM_DWELL_TABLES / 2].Payload.Signature[0] == '\0',
+                  "MD_AppData.MD_DwellPkt[MD_NUM_DWELL_TABLES/2].Payload.Signature[0] == ''");
+    UtAssert_True(MD_AppData.MD_DwellPkt[MD_NUM_DWELL_TABLES - 1].Payload.Signature[0] == '\0',
+                  "MD_AppData.MD_DwellPkt[MD_NUM_DWELL_TABLES - 1].Payload.Signature[0] == ''");
 #endif
 
     UtAssert_True(Result == -1, "Result == -1");
@@ -678,11 +678,11 @@ void MD_InitSoftwareBusServices_Test_SubscribeHkError(void)
 
     /* Verify results */
 #if MD_SIGNATURE_OPTION == 1
-    UtAssert_True(MD_AppData.MD_DwellPkt[0].Signature[0] == '\0', "MD_AppData.MD_DwellPkt[0].Signature[0] == ''");
-    UtAssert_True(MD_AppData.MD_DwellPkt[MD_NUM_DWELL_TABLES / 2].Signature[0] == '\0',
-                  "MD_AppData.MD_DwellPkt[MD_NUM_DWELL_TABLES/2].Signature[0] == ''");
-    UtAssert_True(MD_AppData.MD_DwellPkt[MD_NUM_DWELL_TABLES - 1].Signature[0] == '\0',
-                  "MD_AppData.MD_DwellPkt[MD_NUM_DWELL_TABLES - 1].Signature[0] == ''");
+    UtAssert_True(MD_AppData.MD_DwellPkt[0].Payload.Signature[0] == '\0', "MD_AppData.MD_DwellPkt[0].Payload.Signature[0] == ''");
+    UtAssert_True(MD_AppData.MD_DwellPkt[MD_NUM_DWELL_TABLES / 2].Payload.Signature[0] == '\0',
+                  "MD_AppData.MD_DwellPkt[MD_NUM_DWELL_TABLES/2].Payload.Signature[0] == ''");
+    UtAssert_True(MD_AppData.MD_DwellPkt[MD_NUM_DWELL_TABLES - 1].Payload.Signature[0] == '\0',
+                  "MD_AppData.MD_DwellPkt[MD_NUM_DWELL_TABLES - 1].Payload.Signature[0] == ''");
 #endif
 
     UtAssert_True(Result == -1, "Result == -1");
@@ -716,11 +716,11 @@ void MD_InitSoftwareBusServices_Test_SubscribeCmdError(void)
 
     /* Verify results */
 #if MD_SIGNATURE_OPTION == 1
-    UtAssert_True(MD_AppData.MD_DwellPkt[0].Signature[0] == '\0', "MD_AppData.MD_DwellPkt[0].Signature[0] == ''");
-    UtAssert_True(MD_AppData.MD_DwellPkt[MD_NUM_DWELL_TABLES / 2].Signature[0] == '\0',
-                  "MD_AppData.MD_DwellPkt[MD_NUM_DWELL_TABLES/2].Signature[0] == ''");
-    UtAssert_True(MD_AppData.MD_DwellPkt[MD_NUM_DWELL_TABLES - 1].Signature[0] == '\0',
-                  "MD_AppData.MD_DwellPkt[MD_NUM_DWELL_TABLES - 1].Signature[0] == ''");
+    UtAssert_True(MD_AppData.MD_DwellPkt[0].Payload.Signature[0] == '\0', "MD_AppData.MD_DwellPkt[0].Payload.Signature[0] == ''");
+    UtAssert_True(MD_AppData.MD_DwellPkt[MD_NUM_DWELL_TABLES / 2].Payload.Signature[0] == '\0',
+                  "MD_AppData.MD_DwellPkt[MD_NUM_DWELL_TABLES/2].Payload.Signature[0] == ''");
+    UtAssert_True(MD_AppData.MD_DwellPkt[MD_NUM_DWELL_TABLES - 1].Payload.Signature[0] == '\0',
+                  "MD_AppData.MD_DwellPkt[MD_NUM_DWELL_TABLES - 1].Payload.Signature[0] == ''");
 #endif
 
     UtAssert_True(Result == -1, "Result == -1");
@@ -755,11 +755,11 @@ void MD_InitSoftwareBusServices_Test_SubscribeWakeupError(void)
 
     /* Verify results */
 #if MD_SIGNATURE_OPTION == 1
-    UtAssert_True(MD_AppData.MD_DwellPkt[0].Signature[0] == '\0', "MD_AppData.MD_DwellPkt[0].Signature[0] == ''");
-    UtAssert_True(MD_AppData.MD_DwellPkt[MD_NUM_DWELL_TABLES / 2].Signature[0] == '\0',
-                  "MD_AppData.MD_DwellPkt[MD_NUM_DWELL_TABLES/2].Signature[0] == ''");
-    UtAssert_True(MD_AppData.MD_DwellPkt[MD_NUM_DWELL_TABLES - 1].Signature[0] == '\0',
-                  "MD_AppData.MD_DwellPkt[MD_NUM_DWELL_TABLES - 1].Signature[0] == ''");
+    UtAssert_True(MD_AppData.MD_DwellPkt[0].Payload.Signature[0] == '\0', "MD_AppData.MD_DwellPkt[0].Payload.Signature[0] == ''");
+    UtAssert_True(MD_AppData.MD_DwellPkt[MD_NUM_DWELL_TABLES / 2].Payload.Signature[0] == '\0',
+                  "MD_AppData.MD_DwellPkt[MD_NUM_DWELL_TABLES/2].Payload.Signature[0] == ''");
+    UtAssert_True(MD_AppData.MD_DwellPkt[MD_NUM_DWELL_TABLES - 1].Payload.Signature[0] == '\0',
+                  "MD_AppData.MD_DwellPkt[MD_NUM_DWELL_TABLES - 1].Payload.Signature[0] == ''");
 #endif
 
     UtAssert_True(Result == -1, "Result == -1");
@@ -1713,43 +1713,43 @@ void MD_HkStatus_Test(void)
     MD_HkStatus();
 
     /* Verify results */
-    UtAssert_True(MD_AppData.HkPkt.ValidCmdCntr == 1, "MD_AppData.HkPkt.ValidCmdCntr == 1");
-    UtAssert_True(MD_AppData.HkPkt.InvalidCmdCntr == 2, "MD_AppData.HkPkt.InvalidCmdCntr == 2");
+    UtAssert_True(MD_AppData.HkPkt.Payload.ValidCmdCntr == 1, "MD_AppData.HkPkt.Payload.ValidCmdCntr == 1");
+    UtAssert_True(MD_AppData.HkPkt.Payload.InvalidCmdCntr == 2, "MD_AppData.HkPkt.Payload.InvalidCmdCntr == 2");
 
-    UtAssert_True(MD_AppData.HkPkt.DwellTblAddrCount[0] == 1, "MD_AppData.HkPkt.DwellTblAddrCount[0] == 1");
-    UtAssert_True(MD_AppData.HkPkt.NumWaitsPerPkt[0] == 2, "MD_AppData.HkPkt.NumWaitsPerPkt[0]    == 2");
-    UtAssert_True(MD_AppData.HkPkt.DwellPktOffset[0] == 3, "MD_AppData.HkPkt.DwellPktOffset[0]    == 3");
-    UtAssert_True(MD_AppData.HkPkt.ByteCount[0] == 4, "MD_AppData.HkPkt.ByteCount[0]         == 4");
-    UtAssert_True(MD_AppData.HkPkt.DwellTblEntry[0] == 5, "MD_AppData.HkPkt.DwellTblEntry[0]     == 5");
-    UtAssert_True(MD_AppData.HkPkt.Countdown[0] == 6, "MD_AppData.HkPkt.Countdown[0]         == 6");
+    UtAssert_True(MD_AppData.HkPkt.Payload.DwellTblAddrCount[0] == 1, "MD_AppData.HkPkt.Payload.DwellTblAddrCount[0] == 1");
+    UtAssert_True(MD_AppData.HkPkt.Payload.NumWaitsPerPkt[0] == 2, "MD_AppData.HkPkt.Payload.NumWaitsPerPkt[0]    == 2");
+    UtAssert_True(MD_AppData.HkPkt.Payload.DwellPktOffset[0] == 3, "MD_AppData.HkPkt.Payload.DwellPktOffset[0]    == 3");
+    UtAssert_True(MD_AppData.HkPkt.Payload.ByteCount[0] == 4, "MD_AppData.HkPkt.Payload.ByteCount[0]         == 4");
+    UtAssert_True(MD_AppData.HkPkt.Payload.DwellTblEntry[0] == 5, "MD_AppData.HkPkt.Payload.DwellTblEntry[0]     == 5");
+    UtAssert_True(MD_AppData.HkPkt.Payload.Countdown[0] == 6, "MD_AppData.HkPkt.Payload.Countdown[0]         == 6");
 
-    UtAssert_True(MD_AppData.HkPkt.DwellTblAddrCount[MD_NUM_DWELL_TABLES / 2] == 7,
-                  "MD_AppData.HkPkt.DwellTblAddrCount[MD_NUM_DWELL_TABLES / 2] == 7");
-    UtAssert_True(MD_AppData.HkPkt.NumWaitsPerPkt[MD_NUM_DWELL_TABLES / 2] == 8,
-                  "MD_AppData.HkPkt.NumWaitsPerPkt[MD_NUM_DWELL_TABLES / 2]    == 8");
-    UtAssert_True(MD_AppData.HkPkt.DwellPktOffset[MD_NUM_DWELL_TABLES / 2] == 9,
-                  "MD_AppData.HkPkt.DwellPktOffset[MD_NUM_DWELL_TABLES / 2]    == 9");
-    UtAssert_True(MD_AppData.HkPkt.ByteCount[MD_NUM_DWELL_TABLES / 2] == 10,
-                  "MD_AppData.HkPkt.ByteCount[MD_NUM_DWELL_TABLES / 2]         == 10");
-    UtAssert_True(MD_AppData.HkPkt.DwellTblEntry[MD_NUM_DWELL_TABLES / 2] == 11,
-                  "MD_AppData.HkPkt.DwellTblEntry[MD_NUM_DWELL_TABLES / 2]     == 11");
-    UtAssert_True(MD_AppData.HkPkt.Countdown[MD_NUM_DWELL_TABLES / 2] == 12,
-                  "MD_AppData.HkPkt.Countdown[MD_NUM_DWELL_TABLES / 2]         == 12");
+    UtAssert_True(MD_AppData.HkPkt.Payload.DwellTblAddrCount[MD_NUM_DWELL_TABLES / 2] == 7,
+                  "MD_AppData.HkPkt.Payload.DwellTblAddrCount[MD_NUM_DWELL_TABLES / 2] == 7");
+    UtAssert_True(MD_AppData.HkPkt.Payload.NumWaitsPerPkt[MD_NUM_DWELL_TABLES / 2] == 8,
+                  "MD_AppData.HkPkt.Payload.NumWaitsPerPkt[MD_NUM_DWELL_TABLES / 2]    == 8");
+    UtAssert_True(MD_AppData.HkPkt.Payload.DwellPktOffset[MD_NUM_DWELL_TABLES / 2] == 9,
+                  "MD_AppData.HkPkt.Payload.DwellPktOffset[MD_NUM_DWELL_TABLES / 2]    == 9");
+    UtAssert_True(MD_AppData.HkPkt.Payload.ByteCount[MD_NUM_DWELL_TABLES / 2] == 10,
+                  "MD_AppData.HkPkt.Payload.ByteCount[MD_NUM_DWELL_TABLES / 2]         == 10");
+    UtAssert_True(MD_AppData.HkPkt.Payload.DwellTblEntry[MD_NUM_DWELL_TABLES / 2] == 11,
+                  "MD_AppData.HkPkt.Payload.DwellTblEntry[MD_NUM_DWELL_TABLES / 2]     == 11");
+    UtAssert_True(MD_AppData.HkPkt.Payload.Countdown[MD_NUM_DWELL_TABLES / 2] == 12,
+                  "MD_AppData.HkPkt.Payload.Countdown[MD_NUM_DWELL_TABLES / 2]         == 12");
 
-    UtAssert_True(MD_AppData.HkPkt.DwellTblAddrCount[MD_NUM_DWELL_TABLES - 1] == 13,
-                  "MD_AppData.HkPkt.DwellTblAddrCount[MD_NUM_DWELL_TABLES - 1] == 13");
-    UtAssert_True(MD_AppData.HkPkt.NumWaitsPerPkt[MD_NUM_DWELL_TABLES - 1] == 14,
-                  "MD_AppData.HkPkt.NumWaitsPerPkt[MD_NUM_DWELL_TABLES - 1]    == 14");
-    UtAssert_True(MD_AppData.HkPkt.DwellPktOffset[MD_NUM_DWELL_TABLES - 1] == 15,
-                  "MD_AppData.HkPkt.DwellPktOffset[MD_NUM_DWELL_TABLES - 1]    == 15");
-    UtAssert_True(MD_AppData.HkPkt.ByteCount[MD_NUM_DWELL_TABLES - 1] == 16,
-                  "MD_AppData.HkPkt.ByteCount[MD_NUM_DWELL_TABLES - 1]         == 16");
-    UtAssert_True(MD_AppData.HkPkt.DwellTblEntry[MD_NUM_DWELL_TABLES - 1] == 17,
-                  "MD_AppData.HkPkt.DwellTblEntry[MD_NUM_DWELL_TABLES - 1]     == 17");
-    UtAssert_True(MD_AppData.HkPkt.Countdown[MD_NUM_DWELL_TABLES - 1] == 18,
-                  "MD_AppData.HkPkt.Countdown[MD_NUM_DWELL_TABLES - 1]         == 18");
+    UtAssert_True(MD_AppData.HkPkt.Payload.DwellTblAddrCount[MD_NUM_DWELL_TABLES - 1] == 13,
+                  "MD_AppData.HkPkt.Payload.DwellTblAddrCount[MD_NUM_DWELL_TABLES - 1] == 13");
+    UtAssert_True(MD_AppData.HkPkt.Payload.NumWaitsPerPkt[MD_NUM_DWELL_TABLES - 1] == 14,
+                  "MD_AppData.HkPkt.Payload.NumWaitsPerPkt[MD_NUM_DWELL_TABLES - 1]    == 14");
+    UtAssert_True(MD_AppData.HkPkt.Payload.DwellPktOffset[MD_NUM_DWELL_TABLES - 1] == 15,
+                  "MD_AppData.HkPkt.Payload.DwellPktOffset[MD_NUM_DWELL_TABLES - 1]    == 15");
+    UtAssert_True(MD_AppData.HkPkt.Payload.ByteCount[MD_NUM_DWELL_TABLES - 1] == 16,
+                  "MD_AppData.HkPkt.Payload.ByteCount[MD_NUM_DWELL_TABLES - 1]         == 16");
+    UtAssert_True(MD_AppData.HkPkt.Payload.DwellTblEntry[MD_NUM_DWELL_TABLES - 1] == 17,
+                  "MD_AppData.HkPkt.Payload.DwellTblEntry[MD_NUM_DWELL_TABLES - 1]     == 17");
+    UtAssert_True(MD_AppData.HkPkt.Payload.Countdown[MD_NUM_DWELL_TABLES - 1] == 18,
+                  "MD_AppData.HkPkt.Payload.Countdown[MD_NUM_DWELL_TABLES - 1]         == 18");
 
-    UtAssert_True(MD_AppData.HkPkt.DwellEnabledMask == 1, "MD_AppData.HkPkt.DwellEnabledMask == 1");
+    UtAssert_True(MD_AppData.HkPkt.Payload.DwellEnabledMask == 1, "MD_AppData.HkPkt.Payload.DwellEnabledMask == 1");
 
     call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
 

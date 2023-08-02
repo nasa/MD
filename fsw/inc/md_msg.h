@@ -49,6 +49,41 @@ typedef struct
 } MD_SymAddr_t;
 
 /**
+ * \brief Start and Stop Dwell Commands Payload
+ */
+typedef struct
+{
+    uint16 TableMask; /**< \brief 0x0001=TBL1 bit, 0x0002=TBL2 bit, 0x0004=TBL3 bit, etc. */
+    uint16 Padding;   /**< \brief structure padding */
+} MD_CmdStartStop_Payload_t;
+
+/**
+ * \brief Jam Dwell Command Payload
+ */
+typedef struct
+{
+    uint16       TableId;      /**< \brief Table Id: 1..#MD_NUM_DWELL_TABLES */
+    uint16       EntryId;      /**< \brief Address index: 1..#MD_DWELL_TABLE_SIZE  */
+    uint16       FieldLength;  /**< \brief Length of Dwell Field : 0, 1, 2, or 4  */
+    uint16       DwellDelay;   /**< \brief Dwell Delay (number of task wakeup calls before following dwell) */
+    MD_SymAddr_t DwellAddress; /**< \brief Dwell Address in #MD_SymAddr_t format */
+} MD_CmdJam_Payload_t;
+
+#if MD_SIGNATURE_OPTION == 1
+
+/**
+ * \brief Set Signature Command Payload
+ */
+typedef struct
+{
+    uint16 TableId;                              /**< \brief Table Id: 1..MD_NUM_DWELL_TABLES */
+    uint16 Padding;                              /**< \brief Padding  */
+    char   Signature[MD_SIGNATURE_FIELD_LENGTH]; /**< \brief Sigature */
+} MD_CmdSetSignature_Payload_t;
+
+#endif
+
+/**
  * \brief Generic "no arguments" command
  *
  * This command structure is used for commands that do not have any parameters.
@@ -70,10 +105,8 @@ typedef struct
  */
 typedef struct
 {
-    CFE_MSG_CommandHeader_t Header; /**< \brief Command header */
-
-    uint16 TableMask; /**< \brief 0x0001=TBL1 bit, 0x0002=TBL2 bit, 0x0004=TBL3 bit, etc. */
-    uint16 Padding;   /**< \brief structure padding */
+    CFE_MSG_CommandHeader_t   Header; /**< \brief Command header */
+    MD_CmdStartStop_Payload_t Payload;
 } MD_CmdStartStop_t;
 
 /**
@@ -84,12 +117,7 @@ typedef struct
 typedef struct
 {
     CFE_MSG_CommandHeader_t Header; /**< \brief Command header */
-
-    uint16       TableId;      /**< \brief Table Id: 1..#MD_NUM_DWELL_TABLES */
-    uint16       EntryId;      /**< \brief Address index: 1..#MD_DWELL_TABLE_SIZE  */
-    uint16       FieldLength;  /**< \brief Length of Dwell Field : 0, 1, 2, or 4  */
-    uint16       DwellDelay;   /**< \brief Dwell Delay (number of task wakeup calls before following dwell) */
-    MD_SymAddr_t DwellAddress; /**< \brief Dwell Address in #MD_SymAddr_t format */
+    MD_CmdJam_Payload_t     Payload;
 } MD_CmdJam_t;
 
 #if MD_SIGNATURE_OPTION == 1
@@ -101,11 +129,8 @@ typedef struct
  */
 typedef struct
 {
-    CFE_MSG_CommandHeader_t Header; /**< \brief Command Header */
-
-    uint16 TableId;                              /**< \brief Table Id: 1..MD_NUM_DWELL_TABLES */
-    uint16 Padding;                              /**< \brief Padding  */
-    char   Signature[MD_SIGNATURE_FIELD_LENGTH]; /**< \brief Sigature */
+    CFE_MSG_CommandHeader_t      Header; /**< \brief Command Header */
+    MD_CmdSetSignature_Payload_t Payload;
 } MD_CmdSetSignature_t;
 
 #endif
@@ -118,12 +143,10 @@ typedef struct
  */
 
 /**
- *  \brief Memory Dwell HK Telemetry format
+ *  \brief Memory Dwell HK Telemetry Payload
  */
 typedef struct
 {
-    CFE_MSG_TelemetryHeader_t TlmHeader; /**< \brief Telemetry header */
-
     uint8  InvalidCmdCntr;   /**< \brief Count of invalid commands received */
     uint8  ValidCmdCntr;     /**< \brief Count of valid commands received */
     uint16 DwellEnabledMask; /**< \brief Dwell table enable bitmask 0x0001=TBL1, etc */
@@ -135,6 +158,32 @@ typedef struct
     uint16 DwellTblEntry[MD_NUM_DWELL_TABLES];     /**< \brief Next dwell table entry to be processed  */
 
     uint16 Countdown[MD_NUM_DWELL_TABLES]; /**< \brief Current value of countdown timer  */
+} MD_HkTlm_Payload_t;
+
+/**
+ *  \brief Memory Dwell Telemetry Packet Payload
+ */
+typedef struct
+{
+    uint8  TableId;   /**< \brief TableId from 1 to #MD_NUM_DWELL_TABLES */
+    uint8  AddrCount; /**< \brief Number of addresses being sent - 1..#MD_DWELL_TABLE_SIZE valid */
+    uint16 ByteCount; /**< \brief Number of bytes of dwell data contained in packet */
+    uint32 Rate;      /**< \brief Number of counts between packet sends*/
+
+#if MD_SIGNATURE_OPTION == 1
+    char Signature[MD_SIGNATURE_FIELD_LENGTH]; /**< \brief Signature */
+#endif
+
+    uint8 Data[MD_DWELL_TABLE_SIZE * 4]; /**< \brief Dwell data (can be variable size based on dfn) */
+} MD_DwellPkt_Payload_t;
+
+/**
+ *  \brief Memory Dwell HK Telemetry format
+ */
+typedef struct
+{
+    CFE_MSG_TelemetryHeader_t TlmHeader; /**< \brief Telemetry header */
+    MD_HkTlm_Payload_t        Payload;
 } MD_HkTlm_t;
 
 /**
@@ -148,17 +197,7 @@ typedef struct
 typedef struct
 {
     CFE_MSG_TelemetryHeader_t TlmHeader; /**< \brief Telemetry header */
-
-    uint8  TableId;   /**< \brief TableId from 1 to #MD_NUM_DWELL_TABLES */
-    uint8  AddrCount; /**< \brief Number of addresses being sent - 1..#MD_DWELL_TABLE_SIZE valid */
-    uint16 ByteCount; /**< \brief Number of bytes of dwell data contained in packet */
-    uint32 Rate;      /**< \brief Number of counts between packet sends*/
-
-#if MD_SIGNATURE_OPTION == 1
-    char Signature[MD_SIGNATURE_FIELD_LENGTH]; /**< \brief Signature */
-#endif
-
-    uint8 Data[MD_DWELL_TABLE_SIZE * 4]; /**< \brief Dwell data (can be variable size based on dfn) */
+    MD_DwellPkt_Payload_t     Payload;
 } MD_DwellPkt_t;
 
 /**

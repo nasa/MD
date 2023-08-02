@@ -48,7 +48,7 @@
  *  \par Command Verification
  *       Successful execution of this command may be verified with the
  *       following telemetry:
- *       - #MD_HkTlm_t.ValidCmdCntr will increment
+ *       - #MD_HkTlm_Payload_t.ValidCmdCntr will increment
  *       - The #MD_NOOP_INF_EID informational event message will
  *         be generated
  *
@@ -58,7 +58,7 @@
  *
  *       Evidence of an unexpected command length error may be found
  *       in the following telemetry:
- *       - #MD_HkTlm_t.InvalidCmdCntr will increment.
+ *       - #MD_HkTlm_Payload_t.InvalidCmdCntr will increment.
  *       - The #MD_CMD_LEN_ERR_EID error event message will be issued.
  *
  *  \par Criticality
@@ -81,8 +81,8 @@
  *  \par Command Verification
  *       Successful execution of this command may be verified with
  *       the following telemetry:
- *       - #MD_HkTlm_t.ValidCmdCntr will be set to zero.
- *       - #MD_HkTlm_t.InvalidCmdCntr will be set to zero.
+ *       - #MD_HkTlm_Payload_t.ValidCmdCntr will be set to zero.
+ *       - #MD_HkTlm_Payload_t.InvalidCmdCntr will be set to zero.
  *       - The #MD_RESET_CNTRS_DBG_EID debug event message will be generated.
  *
  *  \par Error Conditions
@@ -91,7 +91,7 @@
  *
  *       Evidence of an unexpected command length error may be found
  *       in the following telemetry:
- *       - #MD_HkTlm_t.InvalidCmdCntr will increment.
+ *       - #MD_HkTlm_Payload_t.InvalidCmdCntr will increment.
  *       - The #MD_CMD_LEN_ERR_EID error event message will be issued.
  *
  *  \par Criticality
@@ -144,8 +144,8 @@
  *  \par Command Verification
  *       Successful execution of this command may be verified with
  *       the following telemetry:
- *       - #MD_HkTlm_t.ValidCmdCntr will increment.
- *       - #MD_HkTlm_t.DwellEnabledMask will be enabled (bit 1 = TBL1, etc)
+ *       - #MD_HkTlm_Payload_t.ValidCmdCntr will increment.
+ *       - #MD_HkTlm_Payload_t.DwellEnabledMask will be enabled (bit 1 = TBL1, etc)
  *       - The #MD_START_DWELL_INF_EID informational event message
  *         will be issued.
  *
@@ -156,12 +156,12 @@
  *
  *       Evidence of an unexpected command length error may be found
  *       in the following telemetry:
- *       - #MD_HkTlm_t.InvalidCmdCntr increments.
+ *       - #MD_HkTlm_Payload_t.InvalidCmdCntr increments.
  *       - The #MD_CMD_LEN_ERR_EID error event message is issued.
  *
  *       Evidence of an invalid value for Dwell Table mask argument may be found
  *       in the following telemetry:
- *       - #MD_HkTlm_t.InvalidCmdCntr increments.
+ *       - #MD_HkTlm_Payload_t.InvalidCmdCntr increments.
  *       - The #MD_EMPTY_TBLMASK_ERR_EID error event message is issued.
  *
  **
@@ -197,8 +197,8 @@
  *  \par Command Verification
  *       Successful execution of this command may be verified with
  *       the following telemetry:
- *       - #MD_HkTlm_t.ValidCmdCntr increments.
- *       - #MD_HkTlm_t.DwellEnabledMask will be disabled (bit 1 = TBL1, etc)
+ *       - #MD_HkTlm_Payload_t.ValidCmdCntr increments.
+ *       - #MD_HkTlm_Payload_t.DwellEnabledMask will be disabled (bit 1 = TBL1, etc)
  *       - The #MD_STOP_DWELL_INF_EID informational event message is issued.
  *
  *  \par Error Conditions
@@ -208,12 +208,12 @@
  *
  *       Evidence of an unexpected command length error may be found
  *       in the following telemetry:
- *       - #MD_HkTlm_t.InvalidCmdCntr increments.
+ *       - #MD_HkTlm_Payload_t.InvalidCmdCntr increments.
  *       - The #MD_CMD_LEN_ERR_EID error event message is issued.
  *
  *       Evidence of an invalid value for Dwell Table argument may be found
  *       in the following telemetry:
- *       - #MD_HkTlm_t.InvalidCmdCntr increments.
+ *       - #MD_HkTlm_Payload_t.InvalidCmdCntr increments.
  *       - The #MD_EMPTY_TBLMASK_ERR_EID error event message is issued.
  *
  *  \par Criticality
@@ -247,7 +247,7 @@
  *  \par Command Verification
  *       Nominal successful execution of this command may be verified with
  *       the following telemetry:
- *       - #MD_HkTlm_t.ValidCmdCntr increments.
+ *       - #MD_HkTlm_Payload_t.ValidCmdCntr increments.
  *       - The #MD_JAM_DWELL_INF_EID or #MD_JAM_NULL_DWELL_INF_EID informational event message is issued.
  *
  *  \par Error Conditions
@@ -261,7 +261,7 @@
  *       - Specified Dwell Address is not properly aligned for the specified Dwell Length
  *         (Event message #MD_JAM_ADDR_NOT_32BIT_ERR_EID or #MD_JAM_ADDR_NOT_16BIT_ERR_EID is issued)
  *
- *       Any time the command fails, #MD_HkTlm_t.InvalidCmdCntr increments.
+ *       Any time the command fails, #MD_HkTlm_Payload_t.InvalidCmdCntr increments.
  *
  *  \par Criticality
  *       None.
@@ -282,14 +282,14 @@
  *  \par Command Verification
  *       Successful execution of this command may be verified with
  *       the following telemetry:
- *       - #MD_HkTlm_t.ValidCmdCntr will increment.
+ *       - #MD_HkTlm_Payload_t.ValidCmdCntr will increment.
  *
  *  \par Error Conditions
  *       This command may fail for the following reason(s):
  *       - Unexpected command length.                    (Event message #MD_CMD_LEN_ERR_EID is issued)
  *       - Dwell Table ID is invalid.                    (Event message #MD_INVALID_SIGNATURE_TABLE_ERR_EID is issued)
  *
- *       Any time the command fails, #MD_HkTlm_t.InvalidCmdCntr increments.
+ *       Any time the command fails, #MD_HkTlm_Payload_t.InvalidCmdCntr increments.
  *
  *  \par Criticality
  *       None.

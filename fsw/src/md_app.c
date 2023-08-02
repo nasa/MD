@@ -261,7 +261,7 @@ CFE_Status_t MD_InitSoftwareBusServices(void)
                      MD_DWELL_PKT_LNGTH); /* this is max pkt size */
 
 #if MD_SIGNATURE_OPTION == 1
-        MD_AppData.MD_DwellPkt[TblIndex].Signature[0] = '\0';
+        MD_AppData.MD_DwellPkt[TblIndex].Payload.Signature[0] = '\0';
 #endif
     }
 
@@ -664,8 +664,8 @@ void MD_HkStatus()
 
     /* Assign values for command counters */
 
-    HkPktPtr->ValidCmdCntr   = MD_AppData.CmdCounter;
-    HkPktPtr->InvalidCmdCntr = MD_AppData.ErrCounter;
+    HkPktPtr->Payload.ValidCmdCntr   = MD_AppData.CmdCounter;
+    HkPktPtr->Payload.InvalidCmdCntr = MD_AppData.ErrCounter;
 
     for (TblIndex = 0; TblIndex < MD_NUM_DWELL_TABLES; TblIndex++)
     {
@@ -686,15 +686,15 @@ void MD_HkStatus()
         /*
         **  Insert current values for each dwell stream
         */
-        HkPktPtr->DwellTblAddrCount[TblIndex] = ThisDwellTablePtr->AddrCount;
-        HkPktPtr->NumWaitsPerPkt[TblIndex]    = ThisDwellTablePtr->Rate;
-        HkPktPtr->DwellPktOffset[TblIndex]    = ThisDwellTablePtr->PktOffset;
-        HkPktPtr->ByteCount[TblIndex]         = ThisDwellTablePtr->DataSize;
-        HkPktPtr->DwellTblEntry[TblIndex]     = ThisDwellTablePtr->CurrentEntry;
-        HkPktPtr->Countdown[TblIndex]         = ThisDwellTablePtr->Countdown;
+        HkPktPtr->Payload.DwellTblAddrCount[TblIndex] = ThisDwellTablePtr->AddrCount;
+        HkPktPtr->Payload.NumWaitsPerPkt[TblIndex]    = ThisDwellTablePtr->Rate;
+        HkPktPtr->Payload.DwellPktOffset[TblIndex]    = ThisDwellTablePtr->PktOffset;
+        HkPktPtr->Payload.ByteCount[TblIndex]         = ThisDwellTablePtr->DataSize;
+        HkPktPtr->Payload.DwellTblEntry[TblIndex]     = ThisDwellTablePtr->CurrentEntry;
+        HkPktPtr->Payload.Countdown[TblIndex]         = ThisDwellTablePtr->Countdown;
     }
 
-    HkPktPtr->DwellEnabledMask = MemDwellEnableBits;
+    HkPktPtr->Payload.DwellEnabledMask = MemDwellEnableBits;
 
     /*
     ** Send housekeeping telemetry packet...
