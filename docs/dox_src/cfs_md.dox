@@ -284,7 +284,7 @@
          <B> (Q)
             Which MD telemetry can be used to confirm that dwell packet processing is proceeding? 
          </B> <BR> <BR> <I>
-            #MD_HkTlm_t.Countdown should change each time a Wakeup Message is received 
+            #MD_HkTlm_Payload_t.Countdown should change each time a Wakeup Message is received 
             for all dwell streams that are being actively processed.
          </I>
             
@@ -333,9 +333,9 @@
             1) An information event, #MD_JAM_DWELL_INF_EID, will be issued showing the table number and 
                entry number affected.
             2) The following housekeeping parameters for the corresponding dwell table may be affected:
-                 - #MD_HkTlm_t.DwellTblAddrCount
-                 - #MD_HkTlm_t.NumWaitsPerPkt
-                 - #MD_HkTlm_t.ByteCount
+                 - #MD_HkTlm_Payload_t.DwellTblAddrCount
+                 - #MD_HkTlm_Payload_t.NumWaitsPerPkt
+                 - #MD_HkTlm_Payload_t.ByteCount
 
          </I>
             

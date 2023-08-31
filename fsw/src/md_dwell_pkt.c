@@ -188,7 +188,7 @@ int32 MD_GetDwellData(uint16 TblIndex, uint16 EntryIndex)
     /* didn't read. */
     if (Status == CFE_SUCCESS)
     {
-        memcpy(&MD_AppData.MD_DwellPkt[TblIndex].Data[TblPtr->PktOffset], &MemReadVal, NumBytes);
+        memcpy(&MD_AppData.MD_DwellPkt[TblIndex].Payload.Data[TblPtr->PktOffset], &MemReadVal, NumBytes);
     }
 
     /* Update write location in dwell packet */
@@ -210,15 +210,15 @@ void MD_SendDwellPkt(uint16 TableIndex)
     /*
     ** Assign packet fields.
     */
-    PktPtr->TableId   = TableIndex + 1;
-    PktPtr->AddrCount = TblPtr->AddrCount;
-    PktPtr->Rate      = TblPtr->Rate;
+    PktPtr->Payload.TableId   = TableIndex + 1;
+    PktPtr->Payload.AddrCount = TblPtr->AddrCount;
+    PktPtr->Payload.Rate      = TblPtr->Rate;
 #if MD_SIGNATURE_OPTION == 1
-    strncpy(PktPtr->Signature, TblPtr->Signature, MD_SIGNATURE_FIELD_LENGTH - 1);
+    strncpy(PktPtr->Payload.Signature, TblPtr->Signature, MD_SIGNATURE_FIELD_LENGTH - 1);
     /* Make sure string is null-terminated. */
-    PktPtr->Signature[MD_SIGNATURE_FIELD_LENGTH - 1] = '\0';
+    PktPtr->Payload.Signature[MD_SIGNATURE_FIELD_LENGTH - 1] = '\0';
 #endif
-    PktPtr->ByteCount = TblPtr->DataSize;
+    PktPtr->Payload.ByteCount = TblPtr->DataSize;
 
     /*
     ** Set packet length in header.
