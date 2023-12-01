@@ -328,15 +328,10 @@ CFE_Status_t MD_InitTableServices(void)
     uint8                TblIndex;
     bool                 RecoveredValidTable = true; /* for current table */
     bool                 TableInitValidFlag  = true; /* for all tables so far*/
-    MD_DwellTableLoad_t  InitMemDwellTable;
-    MD_DwellTableLoad_t *MD_LoadTablePtr = NULL;
-    uint16               TblRecos        = 0; /* Number of Tables Recovered */
-    uint16               TblInits        = 0; /* Number of Tables Initialized */
+    MD_DwellTableLoad_t *MD_LoadTablePtr     = NULL;
+    uint16               TblRecos            = 0; /* Number of Tables Recovered */
+    uint16               TblInits            = 0; /* Number of Tables Initialized */
     char                 TblFileName[OS_MAX_PATH_LEN];
-
-    /*  Prepare Data Structure used for loading Initial Table Data    */
-
-    memset(&InitMemDwellTable, 0, sizeof(InitMemDwellTable));
 
     /*
     ** For each table, load recovered data if available and valid.
