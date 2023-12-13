@@ -66,7 +66,7 @@ typedef union
 extern UT_CmdBuf_t UT_CmdBuf;
 
 /* Unit test ids */
-#define MD_UT_MID_1 CFE_SB_ValueToMsgId(CFE_PLATFORM_TLM_MID_BASE + 1)
+#define MD_UT_MID_1 CFE_SB_ValueToMsgId(1)
 
 /*
  * Function Definitions
