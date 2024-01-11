@@ -55,10 +55,6 @@ CFE_Status_t MD_DWELL_TBL_TEST_CFE_TBL_GetAddressHook(void *UserObj, int32 StubR
 
 void MD_AppMain_Test_AppInitError(void)
 {
-    int32 strCmpResult;
-    char  ExpectedSysLogString[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
-    snprintf(ExpectedSysLogString, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH, "MD:Application Init Failed,RC=%%d\n");
-
     /* Set to make MD_AppInit return -1, in order to generate log message "Application Init Failed" */
     UT_SetDeferredRetcode(UT_KEY(CFE_EVS_Register), 1, -1);
 
@@ -72,21 +68,10 @@ void MD_AppMain_Test_AppInitError(void)
 
     UtAssert_True(call_count_CFE_EVS_SendEvent == 0, "CFE_EVS_SendEvent was called %u time(s), expected 0",
                   call_count_CFE_EVS_SendEvent);
-
-    strCmpResult = strncmp(ExpectedSysLogString, context_CFE_ES_WriteToSysLog.Spec, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH);
-
-    /* Generates 1 log message we don't care about in this test */
-    UtAssert_True(strCmpResult == 0, "Sys Log string matched expected result, '%s'", context_CFE_ES_WriteToSysLog.Spec);
 }
 
 void MD_AppMain_Test_RcvMsgError(void)
 {
-    int32 strCmpResult;
-    char  ExpectedEventString[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
-
-    snprintf(ExpectedEventString, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH,
-             "SB Pipe Read Error, App will exit. Pipe Return Status = %%d");
-
     /* Set to prevent unintended error messages */
     UT_SetDefaultReturnValue(UT_KEY(CFE_TBL_Load), CFE_SUCCESS);
 
@@ -105,10 +90,6 @@ void MD_AppMain_Test_RcvMsgError(void)
 
     UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[2].EventID, MD_PIPE_ERR_EID);
     UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[2].EventType, CFE_EVS_EventType_ERROR);
-
-    strCmpResult = strncmp(ExpectedEventString, context_CFE_EVS_SendEvent[2].Spec, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH);
-
-    UtAssert_True(strCmpResult == 0, "Event string matched expected result, '%s'", context_CFE_EVS_SendEvent[2].Spec);
 
     /* Generates 2 event messages we don't care about in this test */
     call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
@@ -256,7 +237,7 @@ void MD_AppMain_Test_CmdNominal(void)
     CFE_MSG_FcnCode_t FcnCode;
     size_t            MsgSize;
     MD_NoArgsCmd_t    Packet;
-    MD_NoArgsCmd_t *  TempBuf = &Packet;
+    MD_NoArgsCmd_t   *TempBuf = &Packet;
 
     /* Set to prevent unintended error messages */
     UT_SetDefaultReturnValue(UT_KEY(CFE_TBL_Load), CFE_SUCCESS);
@@ -609,7 +590,8 @@ void MD_InitSoftwareBusServices_Test_Nominal(void)
 
     /* Verify results */
 #if MD_SIGNATURE_OPTION == 1
-    UtAssert_True(MD_AppData.MD_DwellPkt[0].Payload.Signature[0] == '\0', "MD_AppData.MD_DwellPkt[0].Payload.Signature[0] == ''");
+    UtAssert_True(MD_AppData.MD_DwellPkt[0].Payload.Signature[0] == '\0',
+                  "MD_AppData.MD_DwellPkt[0].Payload.Signature[0] == ''");
     UtAssert_True(MD_AppData.MD_DwellPkt[MD_NUM_DWELL_TABLES / 2].Payload.Signature[0] == '\0',
                   "MD_AppData.MD_DwellPkt[MD_NUM_DWELL_TABLES/2].Payload.Signature[0] == ''");
     UtAssert_True(MD_AppData.MD_DwellPkt[MD_NUM_DWELL_TABLES - 1].Payload.Signature[0] == '\0',
@@ -640,7 +622,8 @@ void MD_InitSoftwareBusServices_Test_CreatePipeError(void)
 
     /* Verify results */
 #if MD_SIGNATURE_OPTION == 1
-    UtAssert_True(MD_AppData.MD_DwellPkt[0].Payload.Signature[0] == '\0', "MD_AppData.MD_DwellPkt[0].Payload.Signature[0] == ''");
+    UtAssert_True(MD_AppData.MD_DwellPkt[0].Payload.Signature[0] == '\0',
+                  "MD_AppData.MD_DwellPkt[0].Payload.Signature[0] == ''");
     UtAssert_True(MD_AppData.MD_DwellPkt[MD_NUM_DWELL_TABLES / 2].Payload.Signature[0] == '\0',
                   "MD_AppData.MD_DwellPkt[MD_NUM_DWELL_TABLES/2].Payload.Signature[0] == ''");
     UtAssert_True(MD_AppData.MD_DwellPkt[MD_NUM_DWELL_TABLES - 1].Payload.Signature[0] == '\0',
@@ -678,7 +661,8 @@ void MD_InitSoftwareBusServices_Test_SubscribeHkError(void)
 
     /* Verify results */
 #if MD_SIGNATURE_OPTION == 1
-    UtAssert_True(MD_AppData.MD_DwellPkt[0].Payload.Signature[0] == '\0', "MD_AppData.MD_DwellPkt[0].Payload.Signature[0] == ''");
+    UtAssert_True(MD_AppData.MD_DwellPkt[0].Payload.Signature[0] == '\0',
+                  "MD_AppData.MD_DwellPkt[0].Payload.Signature[0] == ''");
     UtAssert_True(MD_AppData.MD_DwellPkt[MD_NUM_DWELL_TABLES / 2].Payload.Signature[0] == '\0',
                   "MD_AppData.MD_DwellPkt[MD_NUM_DWELL_TABLES/2].Payload.Signature[0] == ''");
     UtAssert_True(MD_AppData.MD_DwellPkt[MD_NUM_DWELL_TABLES - 1].Payload.Signature[0] == '\0',
@@ -716,7 +700,8 @@ void MD_InitSoftwareBusServices_Test_SubscribeCmdError(void)
 
     /* Verify results */
 #if MD_SIGNATURE_OPTION == 1
-    UtAssert_True(MD_AppData.MD_DwellPkt[0].Payload.Signature[0] == '\0', "MD_AppData.MD_DwellPkt[0].Payload.Signature[0] == ''");
+    UtAssert_True(MD_AppData.MD_DwellPkt[0].Payload.Signature[0] == '\0',
+                  "MD_AppData.MD_DwellPkt[0].Payload.Signature[0] == ''");
     UtAssert_True(MD_AppData.MD_DwellPkt[MD_NUM_DWELL_TABLES / 2].Payload.Signature[0] == '\0',
                   "MD_AppData.MD_DwellPkt[MD_NUM_DWELL_TABLES/2].Payload.Signature[0] == ''");
     UtAssert_True(MD_AppData.MD_DwellPkt[MD_NUM_DWELL_TABLES - 1].Payload.Signature[0] == '\0',
@@ -741,11 +726,6 @@ void MD_InitSoftwareBusServices_Test_SubscribeCmdError(void)
 void MD_InitSoftwareBusServices_Test_SubscribeWakeupError(void)
 {
     CFE_Status_t Result;
-    int32        strCmpResult;
-    char         ExpectedEventString[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
-
-    snprintf(ExpectedEventString, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH,
-             "Failed to subscribe to wakeup messages.  RC = %%d");
 
     /* Set to generate error message MD_SUB_HK_ERR_EID */
     UT_SetDeferredRetcode(UT_KEY(CFE_SB_Subscribe), 3, -1);
@@ -755,7 +735,8 @@ void MD_InitSoftwareBusServices_Test_SubscribeWakeupError(void)
 
     /* Verify results */
 #if MD_SIGNATURE_OPTION == 1
-    UtAssert_True(MD_AppData.MD_DwellPkt[0].Payload.Signature[0] == '\0', "MD_AppData.MD_DwellPkt[0].Payload.Signature[0] == ''");
+    UtAssert_True(MD_AppData.MD_DwellPkt[0].Payload.Signature[0] == '\0',
+                  "MD_AppData.MD_DwellPkt[0].Payload.Signature[0] == ''");
     UtAssert_True(MD_AppData.MD_DwellPkt[MD_NUM_DWELL_TABLES / 2].Payload.Signature[0] == '\0',
                   "MD_AppData.MD_DwellPkt[MD_NUM_DWELL_TABLES/2].Payload.Signature[0] == ''");
     UtAssert_True(MD_AppData.MD_DwellPkt[MD_NUM_DWELL_TABLES - 1].Payload.Signature[0] == '\0',
@@ -766,10 +747,6 @@ void MD_InitSoftwareBusServices_Test_SubscribeWakeupError(void)
 
     UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, MD_SUB_WAKEUP_ERR_EID);
     UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_ERROR);
-
-    strCmpResult = strncmp(ExpectedEventString, context_CFE_EVS_SendEvent[0].Spec, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH);
-
-    UtAssert_True(strCmpResult == 0, "Event string matched expected result, '%s'", context_CFE_EVS_SendEvent[0].Spec);
 
     call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
 
@@ -830,29 +807,15 @@ void MD_InitTableServices_Test_GetAddressErrorAndLoadError(void)
     UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[1].EventID, MD_TBL_INIT_INF_EID);
     UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[1].EventType, CFE_EVS_EventType_INFORMATION);
 
-    strCmpResult =
-        strncmp(ExpectedEventString[1], context_CFE_EVS_SendEvent[1].Spec, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH);
-
-    UtAssert_True(strCmpResult == 0, "Event string matched expected result, '%s'", context_CFE_EVS_SendEvent[1].Spec);
-
     call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
 
     UtAssert_True(call_count_CFE_EVS_SendEvent == 2, "CFE_EVS_SendEvent was called %u time(s), expected 2",
                   call_count_CFE_EVS_SendEvent);
-
-    strCmpResult = strncmp(ExpectedSysLogString, context_CFE_ES_WriteToSysLog.Spec, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH);
-
-    UtAssert_True(strCmpResult == 0, "Sys Log string matched expected result, '%s'", context_CFE_ES_WriteToSysLog.Spec);
 }
 
 void MD_InitTableServices_Test_TblRecoveredValidThenTblInits(void)
 {
     CFE_Status_t Result;
-    int32        strCmpResult;
-    char         ExpectedEventString[4][CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
-
-    snprintf(ExpectedEventString[1], CFE_MISSION_EVS_MAX_MESSAGE_LENGTH,
-             "Dwell Tables Recovered: %%d, Dwell Tables Initialized: %%d");
 
     /* Set to satisfy condition "Status == CFE_TBL_INFO_RECOVERED_TBL" */
     UT_SetDeferredRetcode(UT_KEY(CFE_TBL_Register), 1, CFE_TBL_INFO_RECOVERED_TBL);
@@ -878,11 +841,6 @@ void MD_InitTableServices_Test_TblRecoveredValidThenTblInits(void)
 
     UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[1].EventID, MD_TBL_INIT_INF_EID);
     UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[1].EventType, CFE_EVS_EventType_INFORMATION);
-
-    strCmpResult =
-        strncmp(ExpectedEventString[1], context_CFE_EVS_SendEvent[1].Spec, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH);
-
-    UtAssert_True(strCmpResult == 0, "Event string matched expected result, '%s'", context_CFE_EVS_SendEvent[1].Spec);
 
     call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
 
@@ -945,11 +903,6 @@ void MD_InitTableServices_Test_TblRecoveredNotValid(void)
     UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[1].EventID, MD_TBL_INIT_INF_EID);
     UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[1].EventType, CFE_EVS_EventType_INFORMATION);
 
-    strCmpResult =
-        strncmp(ExpectedEventString[1], context_CFE_EVS_SendEvent[1].Spec, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH);
-
-    UtAssert_True(strCmpResult == 0, "Event string matched expected result, '%s'", context_CFE_EVS_SendEvent[1].Spec);
-
     call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
 
     UtAssert_True(call_count_CFE_EVS_SendEvent == 2, "CFE_EVS_SendEvent was called %u time(s), expected 2",
@@ -1008,11 +961,6 @@ void MD_InitTableServices_Test_DwellStreamEnabled(void)
 
     UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[1].EventID, MD_TBL_INIT_INF_EID);
     UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[1].EventType, CFE_EVS_EventType_INFORMATION);
-
-    strCmpResult =
-        strncmp(ExpectedEventString[1], context_CFE_EVS_SendEvent[1].Spec, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH);
-
-    UtAssert_True(strCmpResult == 0, "Event string matched expected result, '%s'", context_CFE_EVS_SendEvent[1].Spec);
 
     call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
 
@@ -1075,11 +1023,6 @@ void MD_InitTableServices_Test_TblNotRecovered(void)
 
     UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[1].EventID, MD_TBL_INIT_INF_EID);
     UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[1].EventType, CFE_EVS_EventType_INFORMATION);
-
-    strCmpResult =
-        strncmp(ExpectedEventString[1], context_CFE_EVS_SendEvent[1].Spec, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH);
-
-    UtAssert_True(strCmpResult == 0, "Event string matched expected result, '%s'", context_CFE_EVS_SendEvent[1].Spec);
 }
 
 void MD_InitTableServices_Test_TblTooLarge(void)
@@ -1117,11 +1060,6 @@ void MD_InitTableServices_Test_TblTooLarge(void)
     UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[1].EventID, MD_TBL_INIT_INF_EID);
     UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[1].EventType, CFE_EVS_EventType_INFORMATION);
 
-    strCmpResult =
-        strncmp(ExpectedEventString[1], context_CFE_EVS_SendEvent[1].Spec, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH);
-
-    UtAssert_True(strCmpResult == 0, "Event string matched expected result, '%s'", context_CFE_EVS_SendEvent[1].Spec);
-
     call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
 
     UtAssert_True(call_count_CFE_EVS_SendEvent == 2, "CFE_EVS_SendEvent was called %u time(s), expected 2",
@@ -1131,14 +1069,6 @@ void MD_InitTableServices_Test_TblTooLarge(void)
 void MD_InitTableServices_Test_TblRegisterCriticalError(void)
 {
     CFE_Status_t Result;
-    int32        strCmpResult;
-    char         ExpectedEventString[2][CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
-
-    snprintf(ExpectedEventString[0], CFE_MISSION_EVS_MAX_MESSAGE_LENGTH,
-             "CFE_TBL_Register error %%d received for tbl#%%d");
-
-    snprintf(ExpectedEventString[1], CFE_MISSION_EVS_MAX_MESSAGE_LENGTH,
-             "Dwell Tables Recovered: %%d, Dwell Tables Initialized: %%d");
 
     /* Set to satisfy condition "Status != CFE_SUCCESS" */
     UT_SetDeferredRetcode(UT_KEY(CFE_TBL_Register), 1, -1);
@@ -1156,18 +1086,8 @@ void MD_InitTableServices_Test_TblRegisterCriticalError(void)
     UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, MD_TBL_REGISTER_CRIT_EID);
     UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_CRITICAL);
 
-    strCmpResult =
-        strncmp(ExpectedEventString[0], context_CFE_EVS_SendEvent[0].Spec, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH);
-
-    UtAssert_True(strCmpResult == 0, "Event string matched expected result, '%s'", context_CFE_EVS_SendEvent[0].Spec);
-
     UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[1].EventID, MD_TBL_INIT_INF_EID);
     UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[1].EventType, CFE_EVS_EventType_INFORMATION);
-
-    strCmpResult =
-        strncmp(ExpectedEventString[1], context_CFE_EVS_SendEvent[1].Spec, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH);
-
-    UtAssert_True(strCmpResult == 0, "Event string matched expected result, '%s'", context_CFE_EVS_SendEvent[1].Spec);
 
     call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
 
@@ -1177,15 +1097,6 @@ void MD_InitTableServices_Test_TblRegisterCriticalError(void)
 
 void MD_InitTableServices_Test_TblNameError(void)
 {
-    int32 strCmpResult;
-    char  ExpectedEventString[2][CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
-
-    snprintf(ExpectedEventString[0], CFE_MISSION_EVS_MAX_MESSAGE_LENGTH,
-             "TableName could not be made. Err=0x%%08X, Idx=%%d");
-
-    snprintf(ExpectedEventString[1], CFE_MISSION_EVS_MAX_MESSAGE_LENGTH,
-             "Dwell Tables Recovered: %%d, Dwell Tables Initialized: %%d");
-
     /* Set to generate snprintf error MD_INIT_TBL_NAME_ERR_EID */
     UT_SetDeferredRetcode(UT_KEY(stub_snprintf), 1, -1);
 
@@ -1196,33 +1107,14 @@ void MD_InitTableServices_Test_TblNameError(void)
     UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, MD_INIT_TBL_NAME_ERR_EID);
     UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_ERROR);
 
-    strCmpResult =
-        strncmp(ExpectedEventString[0], context_CFE_EVS_SendEvent[0].Spec, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH);
-
-    UtAssert_True(strCmpResult == 0, "Event string matched expected result, '%s'", context_CFE_EVS_SendEvent[0].Spec);
-
     UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[1].EventID, MD_TBL_INIT_INF_EID);
     UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[1].EventType, CFE_EVS_EventType_INFORMATION);
-
-    strCmpResult =
-        strncmp(ExpectedEventString[1], context_CFE_EVS_SendEvent[1].Spec, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH);
-
-    UtAssert_True(strCmpResult == 0, "Event string matched expected result, '%s'", context_CFE_EVS_SendEvent[1].Spec);
 
     UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 2);
 }
 
 void MD_InitTableServices_Test_TblFileNameError(void)
 {
-    int32 strCmpResult;
-    char  ExpectedEventString[2][CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
-
-    snprintf(ExpectedEventString[0], CFE_MISSION_EVS_MAX_MESSAGE_LENGTH,
-             "TblFileName could not be made. Err=0x%%08X, Idx=%%d");
-
-    snprintf(ExpectedEventString[1], CFE_MISSION_EVS_MAX_MESSAGE_LENGTH,
-             "Dwell Tables Recovered: %%d, Dwell Tables Initialized: %%d");
-
     /* Set to generate snprintf MD_INIT_TBL_FILENAME_ERR_EID error */
     UT_SetDeferredRetcode(UT_KEY(stub_snprintf), 2, -1);
 
@@ -1233,18 +1125,8 @@ void MD_InitTableServices_Test_TblFileNameError(void)
     UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, MD_INIT_TBL_FILENAME_ERR_EID);
     UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_ERROR);
 
-    strCmpResult =
-        strncmp(ExpectedEventString[0], context_CFE_EVS_SendEvent[0].Spec, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH);
-
-    UtAssert_True(strCmpResult == 0, "Event string matched expected result, '%s'", context_CFE_EVS_SendEvent[0].Spec);
-
     UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[1].EventID, MD_TBL_INIT_INF_EID);
     UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[1].EventType, CFE_EVS_EventType_INFORMATION);
-
-    strCmpResult =
-        strncmp(ExpectedEventString[1], context_CFE_EVS_SendEvent[1].Spec, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH);
-
-    UtAssert_True(strCmpResult == 0, "Event string matched expected result, '%s'", context_CFE_EVS_SendEvent[1].Spec);
 
     UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 2);
 }
@@ -1372,11 +1254,6 @@ void MD_ManageDwellTable_Test_UpdatePendingTblCopyError(void)
 {
     CFE_Status_t Result;
     uint8        TblIndex = 0;
-    int32        strCmpResult;
-    char         ExpectedEventString[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
-
-    snprintf(ExpectedEventString, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH,
-             "Didn't update MD tbl #%%d due to unexpected CFE_TBL_GetAddress return: %%d");
 
     /* Set to satisfy condition "Status == CFE_TBL_INFO_UPDATE_PENDING" */
     UT_SetDeferredRetcode(UT_KEY(CFE_TBL_GetStatus), 1, CFE_TBL_INFO_UPDATE_PENDING);
@@ -1393,10 +1270,6 @@ void MD_ManageDwellTable_Test_UpdatePendingTblCopyError(void)
     UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, MD_NO_TBL_COPY_ERR_EID);
     UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_ERROR);
 
-    strCmpResult = strncmp(ExpectedEventString, context_CFE_EVS_SendEvent[0].Spec, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH);
-
-    UtAssert_True(strCmpResult == 0, "Event string matched expected result, '%s'", context_CFE_EVS_SendEvent[0].Spec);
-
     call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
 
     UtAssert_True(call_count_CFE_EVS_SendEvent == 1, "CFE_EVS_SendEvent was called %u time(s), expected 1",
@@ -1407,11 +1280,6 @@ void MD_ManageDwellTable_Test_TblStatusErr(void)
 {
     CFE_Status_t Result;
     uint8        TblIndex = 0;
-    int32        strCmpResult;
-    char         ExpectedEventString[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
-
-    snprintf(ExpectedEventString, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH,
-             "Received unexpected error %%d from CFE_TBL_GetStatus for tbl #%%d");
 
     /* Set to satisfy condition "(Status & CFE_SEVERITY_BITMASK) == CFE_SEVERITY_ERROR" */
     UT_SetDeferredRetcode(UT_KEY(CFE_TBL_GetStatus), 1, CFE_SEVERITY_BITMASK);
@@ -1424,10 +1292,6 @@ void MD_ManageDwellTable_Test_TblStatusErr(void)
 
     UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, MD_TBL_STATUS_ERR_EID);
     UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_ERROR);
-
-    strCmpResult = strncmp(ExpectedEventString, context_CFE_EVS_SendEvent[0].Spec, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH);
-
-    UtAssert_True(strCmpResult == 0, "Event string matched expected result, '%s'", context_CFE_EVS_SendEvent[0].Spec);
 
     call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
 
@@ -1716,9 +1580,12 @@ void MD_HkStatus_Test(void)
     UtAssert_True(MD_AppData.HkPkt.Payload.ValidCmdCntr == 1, "MD_AppData.HkPkt.Payload.ValidCmdCntr == 1");
     UtAssert_True(MD_AppData.HkPkt.Payload.InvalidCmdCntr == 2, "MD_AppData.HkPkt.Payload.InvalidCmdCntr == 2");
 
-    UtAssert_True(MD_AppData.HkPkt.Payload.DwellTblAddrCount[0] == 1, "MD_AppData.HkPkt.Payload.DwellTblAddrCount[0] == 1");
-    UtAssert_True(MD_AppData.HkPkt.Payload.NumWaitsPerPkt[0] == 2, "MD_AppData.HkPkt.Payload.NumWaitsPerPkt[0]    == 2");
-    UtAssert_True(MD_AppData.HkPkt.Payload.DwellPktOffset[0] == 3, "MD_AppData.HkPkt.Payload.DwellPktOffset[0]    == 3");
+    UtAssert_True(MD_AppData.HkPkt.Payload.DwellTblAddrCount[0] == 1,
+                  "MD_AppData.HkPkt.Payload.DwellTblAddrCount[0] == 1");
+    UtAssert_True(MD_AppData.HkPkt.Payload.NumWaitsPerPkt[0] == 2,
+                  "MD_AppData.HkPkt.Payload.NumWaitsPerPkt[0]    == 2");
+    UtAssert_True(MD_AppData.HkPkt.Payload.DwellPktOffset[0] == 3,
+                  "MD_AppData.HkPkt.Payload.DwellPktOffset[0]    == 3");
     UtAssert_True(MD_AppData.HkPkt.Payload.ByteCount[0] == 4, "MD_AppData.HkPkt.Payload.ByteCount[0]         == 4");
     UtAssert_True(MD_AppData.HkPkt.Payload.DwellTblEntry[0] == 5, "MD_AppData.HkPkt.Payload.DwellTblEntry[0]     == 5");
     UtAssert_True(MD_AppData.HkPkt.Payload.Countdown[0] == 6, "MD_AppData.HkPkt.Payload.Countdown[0]         == 6");

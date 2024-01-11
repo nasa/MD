@@ -220,7 +220,7 @@ int32 MD_CheckTableEntries(MD_DwellTableLoad_t *TblPtr, uint16 *ErrorEntryArg)
                 /* Keep counting good,bad,unused, don't exit immediately */
 
                 CFE_EVS_SendEvent(MD_TBL_ENTRY_ERR_EID, CFE_EVS_EventType_ERROR,
-                                  "Table entry %d failed with status 0x%08X", EntryIndex, Status);
+                                  "Table entry %d failed with status 0x%08X", (int)EntryIndex, (unsigned int)Status);
             }
         }
     }
@@ -343,8 +343,8 @@ CFE_Status_t MD_UpdateTableEnabledField(uint16 TableIndex, uint16 FieldValue)
     if ((Status != CFE_SUCCESS) && (Status != CFE_TBL_INFO_UPDATED))
     {
         CFE_EVS_SendEvent(MD_UPDATE_TBL_EN_ERR_EID, CFE_EVS_EventType_ERROR,
-                          "MD_UpdateTableEnabledField, TableIndex %d: CFE_TBL_GetAddress Returned 0x%08x", TableIndex,
-                          Status);
+                          "MD_UpdateTableEnabledField, TableIndex %d: CFE_TBL_GetAddress Returned 0x%08x",
+                          (int)TableIndex, (unsigned int)Status);
     }
     else
     {
@@ -375,8 +375,8 @@ CFE_Status_t MD_UpdateTableDwellEntry(uint16 TableIndex, uint16 EntryIndex, uint
     if ((Status != CFE_SUCCESS) && (Status != CFE_TBL_INFO_UPDATED))
     {
         CFE_EVS_SendEvent(MD_UPDATE_TBL_DWELL_ERR_EID, CFE_EVS_EventType_ERROR,
-                          "MD_UpdateTableDwellEntry, TableIndex %d: CFE_TBL_GetAddress Returned 0x%08x", TableIndex,
-                          Status);
+                          "MD_UpdateTableDwellEntry, TableIndex %d: CFE_TBL_GetAddress Returned 0x%08x",
+                          (int)TableIndex, (unsigned int)Status);
     }
     else
     {
@@ -420,8 +420,8 @@ CFE_Status_t MD_UpdateTableSignature(uint16 TableIndex, char NewSignature[MD_SIG
     if ((Status != CFE_SUCCESS) && (Status != CFE_TBL_INFO_UPDATED))
     {
         CFE_EVS_SendEvent(MD_UPDATE_TBL_SIG_ERR_EID, CFE_EVS_EventType_ERROR,
-                          "MD_UpdateTableSignature, TableIndex %d: CFE_TBL_GetAddress Returned 0x%08x", TableIndex,
-                          Status);
+                          "MD_UpdateTableSignature, TableIndex %d: CFE_TBL_GetAddress Returned 0x%08x", (int)TableIndex,
+                          (unsigned int)Status);
     }
     else
     {
