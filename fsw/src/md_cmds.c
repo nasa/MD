@@ -115,7 +115,7 @@ void MD_ProcessStartCmd(const CFE_SB_Buffer_t *BufPtr)
 
             CFE_EVS_SendEvent(MD_START_DWELL_ERR_EID, CFE_EVS_EventType_ERROR,
                               "Start Dwell Table for mask 0x%04X failed for %d of %d tables", Start->Payload.TableMask,
-                              ErrorCount, NumTblInMask);
+                              (int)ErrorCount, (int)NumTblInMask);
         }
     }
     else /* No valid table id's specified in mask */
@@ -166,7 +166,8 @@ void MD_ProcessStopCmd(const CFE_SB_Buffer_t *BufPtr)
         if (ErrorCount == 0)
         {
             CFE_EVS_SendEvent(MD_STOP_DWELL_INF_EID, CFE_EVS_EventType_INFORMATION,
-                              "Stop Dwell Table command processed successfully for table mask 0x%04X", Stop->Payload.TableMask);
+                              "Stop Dwell Table command processed successfully for table mask 0x%04X",
+                              Stop->Payload.TableMask);
 
             MD_AppData.CmdCounter++;
         }
@@ -176,7 +177,7 @@ void MD_ProcessStopCmd(const CFE_SB_Buffer_t *BufPtr)
 
             CFE_EVS_SendEvent(MD_STOP_DWELL_ERR_EID, CFE_EVS_EventType_ERROR,
                               "Stop Dwell Table for mask 0x%04X failed for %d of %d tables", Stop->Payload.TableMask,
-                              ErrorCount, NumTblInMask);
+                              (int)ErrorCount, (int)NumTblInMask);
         }
     }
     else
@@ -265,8 +266,8 @@ void MD_ProcessJamCmd(const CFE_SB_Buffer_t *BufPtr)
             if (Status == CFE_SUCCESS)
             {
                 CFE_EVS_SendEvent(MD_JAM_NULL_DWELL_INF_EID, CFE_EVS_EventType_INFORMATION,
-                                  "Successful Jam of a Null Dwell Entry to Dwell Tbl#%d Entry #%d", Jam->Payload.TableId,
-                                  Jam->Payload.EntryId);
+                                  "Successful Jam of a Null Dwell Entry to Dwell Tbl#%d Entry #%d",
+                                  Jam->Payload.TableId, Jam->Payload.EntryId);
             }
             else
             {
@@ -311,14 +312,16 @@ void MD_ProcessJamCmd(const CFE_SB_Buffer_t *BufPtr)
                 AllInputsValid = false;
             }
 #if MD_ENFORCE_DWORD_ALIGN == 0
-            else if ((Jam->Payload.FieldLength == 4) && MD_Verify16Aligned(ResolvedAddr, (uint32)Jam->Payload.FieldLength) != true)
+            else if ((Jam->Payload.FieldLength == 4) &&
+                     MD_Verify16Aligned(ResolvedAddr, (uint32)Jam->Payload.FieldLength) != true)
             {
                 CFE_EVS_SendEvent(MD_JAM_ADDR_NOT_16BIT_ERR_EID, CFE_EVS_EventType_ERROR,
                                   "Jam Cmd rejected because address 0x%08X is not 16-bit aligned", ResolvedAddr);
                 AllInputsValid = false;
             }
 #else
-            else if ((Jam->Payload.FieldLength == 4) && MD_Verify32Aligned(ResolvedAddr, (uint32)Jam->Payload.FieldLength) != true)
+            else if ((Jam->Payload.FieldLength == 4) &&
+                     MD_Verify32Aligned(ResolvedAddr, (uint32)Jam->Payload.FieldLength) != true)
             {
                 CFE_EVS_SendEvent(MD_JAM_ADDR_NOT_32BIT_ERR_EID, CFE_EVS_EventType_ERROR,
                                   "Jam Cmd rejected because address 0x%08X is not 32-bit aligned",
@@ -326,7 +329,8 @@ void MD_ProcessJamCmd(const CFE_SB_Buffer_t *BufPtr)
                 AllInputsValid = false;
             }
 #endif
-            else if ((Jam->Payload.FieldLength == 2) && MD_Verify16Aligned(ResolvedAddr, (uint32)Jam->Payload.FieldLength) != true)
+            else if ((Jam->Payload.FieldLength == 2) &&
+                     MD_Verify16Aligned(ResolvedAddr, (uint32)Jam->Payload.FieldLength) != true)
             {
                 CFE_EVS_SendEvent(MD_JAM_ADDR_NOT_16BIT_ERR_EID, CFE_EVS_EventType_ERROR,
                                   "Jam Cmd rejected because address 0x%08X is not 16-bit aligned",
@@ -356,19 +360,21 @@ void MD_ProcessJamCmd(const CFE_SB_Buffer_t *BufPtr)
                 strncpy(NewDwellAddress.SymName, Jam->Payload.DwellAddress.SymName, OS_MAX_SYM_LEN - 1);
                 NewDwellAddress.SymName[OS_MAX_SYM_LEN - 1] = '\0';
 
-                Status = MD_UpdateTableDwellEntry(TableIndex, EntryIndex, Jam->Payload.FieldLength, Jam->Payload.DwellDelay,
-                                                  NewDwellAddress);
+                Status = MD_UpdateTableDwellEntry(TableIndex, EntryIndex, Jam->Payload.FieldLength,
+                                                  Jam->Payload.DwellDelay, NewDwellAddress);
 
                 /* Issue event */
                 if (Status == CFE_SUCCESS)
                 {
                     CFE_EVS_SendEvent(MD_JAM_DWELL_INF_EID, CFE_EVS_EventType_INFORMATION,
-                                      "Successful Jam to Dwell Tbl#%d Entry #%d", Jam->Payload.TableId, Jam->Payload.EntryId);
+                                      "Successful Jam to Dwell Tbl#%d Entry #%d", Jam->Payload.TableId,
+                                      Jam->Payload.EntryId);
                 }
                 else
                 {
                     CFE_EVS_SendEvent(MD_JAM_DWELL_ERR_EID, CFE_EVS_EventType_ERROR,
-                                      "Failed Jam to Dwell Tbl#%d Entry #%d", Jam->Payload.TableId, Jam->Payload.EntryId);
+                                      "Failed Jam to Dwell Tbl#%d Entry #%d", Jam->Payload.TableId,
+                                      Jam->Payload.EntryId);
 
                     AllInputsValid = false;
                 }
@@ -451,7 +457,8 @@ void MD_ProcessSignatureCmd(const CFE_SB_Buffer_t *BufPtr)
     */
     {
         /* Copy signature field to local dwell control structure */
-        strncpy(MD_AppData.MD_DwellTables[TblId - 1].Signature, SignatureCmd->Payload.Signature, MD_SIGNATURE_FIELD_LENGTH - 1);
+        strncpy(MD_AppData.MD_DwellTables[TblId - 1].Signature, SignatureCmd->Payload.Signature,
+                MD_SIGNATURE_FIELD_LENGTH - 1);
         MD_AppData.MD_DwellTables[TblId - 1].Signature[MD_SIGNATURE_FIELD_LENGTH - 1] = '\0';
 
         /* Update signature in Table Services buffer */
@@ -459,14 +466,16 @@ void MD_ProcessSignatureCmd(const CFE_SB_Buffer_t *BufPtr)
         if (Status == CFE_SUCCESS)
         {
             CFE_EVS_SendEvent(MD_SET_SIGNATURE_INF_EID, CFE_EVS_EventType_INFORMATION,
-                              "Successfully set signature for Dwell Tbl#%d to '%s'", TblId, SignatureCmd->Payload.Signature);
+                              "Successfully set signature for Dwell Tbl#%d to '%s'", TblId,
+                              SignatureCmd->Payload.Signature);
 
             MD_AppData.CmdCounter++;
         }
         else
         {
             CFE_EVS_SendEvent(MD_SET_SIGNATURE_ERR_EID, CFE_EVS_EventType_ERROR,
-                              "Failed to set signature for Dwell Tbl#%d. Update returned 0x%08X", TblId, Status);
+                              "Failed to set signature for Dwell Tbl#%d. Update returned 0x%08X", (int)TblId,
+                              (unsigned int)Status);
 
             MD_AppData.ErrCounter++;
         }

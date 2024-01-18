@@ -721,7 +721,7 @@ void MD_ValidTableEntry_Test_InvalidLength(void)
     Result = MD_ValidTableEntry(&Entry);
 
     /* Verify results */
-    UtAssert_True(Result == MD_INVALID_LEN_ERROR, "Result == MD_INVALID_LEN_ERROR 0x%x", Result);
+    UtAssert_INT32_EQ(Result, MD_INVALID_LEN_ERROR);
 
     call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
 
@@ -850,7 +850,7 @@ void MD_ValidTableEntry_Test_NotAligned16DwellLength2(void)
     Result = MD_ValidTableEntry(&Entry);
 
     /* Verify results */
-    UtAssert_True(Result == MD_NOT_ALIGNED_ERROR, "Result == MD_NOT_ALIGNED_ERROR 0x%x", Result);
+    UtAssert_INT32_EQ(Result, MD_NOT_ALIGNED_ERROR);
 
     call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
 

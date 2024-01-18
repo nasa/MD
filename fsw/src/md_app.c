@@ -69,7 +69,7 @@ void MD_AppMain(void)
 
     if (Status != CFE_SUCCESS)
     {
-        CFE_ES_WriteToSysLog("MD:Application Init Failed,RC=%d\n", Status);
+        CFE_ES_WriteToSysLog("MD:Application Init Failed,RC=%08x\n", (unsigned int)Status);
         MD_AppData.RunStatus = CFE_ES_RunStatus_APP_ERROR;
     }
 
@@ -97,7 +97,7 @@ void MD_AppMain(void)
             ** Exit on pipe read error
             */
             CFE_EVS_SendEvent(MD_PIPE_ERR_EID, CFE_EVS_EventType_ERROR,
-                              "SB Pipe Read Error, App will exit. Pipe Return Status = %d", Status);
+                              "SB Pipe Read Error, App will exit. Pipe Return Status = %08x", (unsigned int)Status);
 
             MD_AppData.RunStatus = CFE_ES_RunStatus_APP_ERROR;
         }
@@ -194,7 +194,7 @@ CFE_Status_t MD_AppInit(void)
     }
     else
     {
-        CFE_ES_WriteToSysLog("MD_APP:Call to CFE_EVS_Register Failed:RC=%d\n", Status);
+        CFE_ES_WriteToSysLog("MD_APP:Call to CFE_EVS_Register Failed:RC=%d\n", (unsigned int)Status);
     }
 
     /*
@@ -280,12 +280,13 @@ CFE_Status_t MD_InitSoftwareBusServices(void)
         if (Status != CFE_SUCCESS)
         {
             CFE_EVS_SendEvent(MD_SUB_HK_ERR_EID, CFE_EVS_EventType_ERROR, "Failed to subscribe to HK requests  RC = %d",
-                              Status);
+                              (unsigned int)Status);
         }
     }
     else
     {
-        CFE_EVS_SendEvent(MD_CREATE_PIPE_ERR_EID, CFE_EVS_EventType_ERROR, "Failed to create pipe.  RC = %d", Status);
+        CFE_EVS_SendEvent(MD_CREATE_PIPE_ERR_EID, CFE_EVS_EventType_ERROR, "Failed to create pipe.  RC = %d",
+                          (unsigned int)Status);
     }
 
     /*
@@ -298,7 +299,7 @@ CFE_Status_t MD_InitSoftwareBusServices(void)
         if (Status != CFE_SUCCESS)
         {
             CFE_EVS_SendEvent(MD_SUB_CMD_ERR_EID, CFE_EVS_EventType_ERROR, "Failed to subscribe to commands.  RC = %d",
-                              Status);
+                              (unsigned int)Status);
         }
     }
 
@@ -312,7 +313,7 @@ CFE_Status_t MD_InitSoftwareBusServices(void)
         if (Status != CFE_SUCCESS)
         {
             CFE_EVS_SendEvent(MD_SUB_WAKEUP_ERR_EID, CFE_EVS_EventType_ERROR,
-                              "Failed to subscribe to wakeup messages.  RC = %d", Status);
+                              "Failed to subscribe to wakeup messages.  RC = %08x", (unsigned int)Status);
         }
     }
 
@@ -348,7 +349,8 @@ CFE_Status_t MD_InitTableServices(void)
         if (Status < 0)
         {
             CFE_EVS_SendEvent(MD_INIT_TBL_NAME_ERR_EID, CFE_EVS_EventType_ERROR,
-                              "TableName could not be made. Err=0x%08X, Idx=%d", Status, TblIndex);
+                              "TableName could not be made. Err=0x%08X, Idx=%u", (unsigned int)Status,
+                              (unsigned int)TblIndex);
 
             TableInitValidFlag = false;
 
@@ -362,7 +364,8 @@ CFE_Status_t MD_InitTableServices(void)
         if (Status < 0)
         {
             CFE_EVS_SendEvent(MD_INIT_TBL_FILENAME_ERR_EID, CFE_EVS_EventType_ERROR,
-                              "TblFileName could not be made. Err=0x%08X, Idx=%d", Status, TblIndex);
+                              "TblFileName could not be made. Err=0x%08X, Idx=%u", (unsigned int)Status,
+                              (unsigned int)TblIndex);
 
             TableInitValidFlag = false;
 
@@ -433,7 +436,8 @@ CFE_Status_t MD_InitTableServices(void)
         else if (Status != CFE_SUCCESS)
         {
             CFE_EVS_SendEvent(MD_TBL_REGISTER_CRIT_EID, CFE_EVS_EventType_CRITICAL,
-                              "CFE_TBL_Register error %d received for tbl#%d", Status, TblIndex + 1);
+                              "CFE_TBL_Register error %08x received for tbl#%u", (unsigned int)Status,
+                              (unsigned int)TblIndex + 1);
             TableInitValidFlag = false;
         }
         else
@@ -455,8 +459,8 @@ CFE_Status_t MD_InitTableServices(void)
 
             if (Status != CFE_SUCCESS)
             {
-                CFE_ES_WriteToSysLog("MD_APP: Error 0x%08X received loading tbl#%d\n", (unsigned int)Status,
-                                     TblIndex + 1);
+                CFE_ES_WriteToSysLog("MD_APP: Error 0x%08X received loading tbl#%u\n", (unsigned int)Status,
+                                     (unsigned int)TblIndex + 1);
                 TableInitValidFlag = false;
             }
             else
@@ -475,7 +479,7 @@ CFE_Status_t MD_InitTableServices(void)
 
     /* Output init and recovery event message */
     CFE_EVS_SendEvent(MD_TBL_INIT_INF_EID, CFE_EVS_EventType_INFORMATION,
-                      "Dwell Tables Recovered: %d, Dwell Tables Initialized: %d", TblRecos, TblInits);
+                      "Dwell Tables Recovered: %u, Dwell Tables Initialized: %u", TblRecos, TblInits);
 
     if (TableInitValidFlag == true)
     {
@@ -533,8 +537,8 @@ CFE_Status_t MD_ManageDwellTable(uint8 TblIndex)
                 else
                 {
                     CFE_EVS_SendEvent(MD_NO_TBL_COPY_ERR_EID, CFE_EVS_EventType_ERROR,
-                                      "Didn't update MD tbl #%d due to unexpected CFE_TBL_GetAddress return: %d",
-                                      TblIndex + 1, GetAddressResult);
+                                      "Didn't update MD tbl #%d due to unexpected CFE_TBL_GetAddress return: %u",
+                                      (unsigned int)TblIndex + 1, (unsigned int)GetAddressResult);
                 }
 
                 /* Unlock Table */
@@ -548,7 +552,8 @@ CFE_Status_t MD_ManageDwellTable(uint8 TblIndex)
         else if ((Status & CFE_SEVERITY_BITMASK) == CFE_SEVERITY_ERROR)
         {
             CFE_EVS_SendEvent(MD_TBL_STATUS_ERR_EID, CFE_EVS_EventType_ERROR,
-                              "Received unexpected error %d from CFE_TBL_GetStatus for tbl #%d", Status, TblIndex + 1);
+                              "Received unexpected error %08x from CFE_TBL_GetStatus for tbl #%u", (unsigned int)Status,
+                              (unsigned int)TblIndex + 1);
             FinishedManaging = true;
         }
 
