@@ -25,7 +25,6 @@
 #ifndef MD_VERIFY_H
 #define MD_VERIFY_H
 
-#include "cfe_platform_cfg.h"
 #include "md_platform_cfg.h"
 
 /*************************************************************************
