@@ -729,7 +729,6 @@ void MD_ValidTableEntry_Test_InvalidLength(void)
                   call_count_CFE_EVS_SendEvent);
 }
 
-#if MD_SIGNATURE_OPTION == 1
 void MD_ValidTableEntry_Test_NotAligned16DwellLength4(void)
 {
     int32               Result;
@@ -805,33 +804,6 @@ void MD_ValidTableEntry_Test_NotAligned32(void)
     UtAssert_True(call_count_CFE_EVS_SendEvent == 0, "CFE_EVS_SendEvent was called %u time(s), expected 0",
                   call_count_CFE_EVS_SendEvent);
 }
-#endif
-
-#if MD_SIGNATURE_OPTION == 0
-void MD_ValidTableEntry_Test_NotAligned32(void)
-{
-    int32               Result;
-    MD_TableLoadEntry_t Entry;
-
-    Entry.Length              = 4;
-    Entry.DwellAddress.Offset = 1;
-
-    UT_SetDefaultReturnValue(UT_KEY(MD_ResolveSymAddr), true);
-    UT_SetDefaultReturnValue(UT_KEY(MD_ValidAddrRange), true);
-    UT_SetDefaultReturnValue(UT_KEY(MD_ValidFieldLength), false);
-
-    /* Execute the function being tested */
-    Result = MD_ValidTableEntry(&Entry);
-
-    /* Verify results */
-    UtAssert_True(Result == MD_NOT_ALIGNED_ERROR, "Result == MD_NOT_ALIGNED_ERROR");
-
-    call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
-
-    UtAssert_True(call_count_CFE_EVS_SendEvent == 0, "CFE_EVS_SendEvent was called %u time(s), expected 0",
-                  call_count_CFE_EVS_SendEvent);
-}
-#endif
 
 void MD_ValidTableEntry_Test_NotAligned16DwellLength2(void)
 {
@@ -1231,8 +1203,6 @@ void UtTest_Setup(void)
                "MD_ValidTableEntry_Test_InvalidAddress");
     UtTest_Add(MD_ValidTableEntry_Test_InvalidLength, MD_Test_Setup, MD_Test_TearDown,
                "MD_ValidTableEntry_Test_InvalidLength");
-
-#if MD_SIGNATURE_OPTION == 1
     UtTest_Add(MD_ValidTableEntry_Test_NotAligned16DwellLength4, MD_Test_Setup, MD_Test_TearDown,
                "MD_ValidTableEntry_Test_NotAligned16DwellLength4");
     UtTest_Add(MD_ValidTableEntry_Test_Aligned32, MD_Test_Setup, MD_Test_TearDown, "MD_ValidTableEntry_Test_Aligned32");
@@ -1240,8 +1210,6 @@ void UtTest_Setup(void)
                "MD_ValidTableEntry_Test_NotAligned32");
     UtTest_Add(MD_ValidTableEntry_Test_NotAligned16DwellLength2, MD_Test_Setup, MD_Test_TearDown,
                "MD_ValidTableEntry_Test_NotAligned16DwellLength2");
-#endif
-
     UtTest_Add(MD_ValidTableEntry_Test_ElseSuccess, MD_Test_Setup, MD_Test_TearDown,
                "MD_ValidTableEntry_Test_ElseSuccess");
 
