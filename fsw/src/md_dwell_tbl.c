@@ -392,6 +392,7 @@ CFE_Status_t MD_UpdateTableDwellEntry(uint16 TableIndex, uint16 EntryIndex, uint
         strncpy(EntryPtr->DwellAddress.SymName, NewDwellAddress.SymName, OS_MAX_SYM_LEN - 1);
 
         /* Ensure string is null terminated. */
+        /* SAD: SymName’s last element is accessed on this line by reference to its max size, greatly reducing an off by one risk */
         EntryPtr->DwellAddress.SymName[OS_MAX_SYM_LEN - 1] = '\0';
 
         /* Notify Table Services that buffer was modified */
