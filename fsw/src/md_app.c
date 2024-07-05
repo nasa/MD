@@ -622,7 +622,7 @@ void MD_ExecRequest(const CFE_SB_Buffer_t *BufPtr)
 
             case MD_RESET_CNTRS_CC:
 
-                CFE_EVS_SendEvent(MD_RESET_CNTRS_DBG_EID, CFE_EVS_EventType_DEBUG, "Reset Counters Cmd Received");
+                CFE_EVS_SendEvent(MD_RESET_CNTRS_INF_EID, CFE_EVS_EventType_INFORMATION, "Reset Counters Cmd Received");
                 MD_AppData.CmdCounter = 0;
                 MD_AppData.ErrCounter = 0;
                 break;

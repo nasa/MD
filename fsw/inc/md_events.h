@@ -121,13 +121,13 @@
 /**
  * \brief MD Reset Counters Command Event ID
  *
- *  \par Type: DEBUG
+ *  \par Type: INFORMATION
  *
  *  \par Cause:
  *
  *  Issued upon receipt of a Memory Dwell Reset Counters command.
  */
-#define MD_RESET_CNTRS_DBG_EID 11
+#define MD_RESET_CNTRS_INF_EID 11
 
 /**
  * \brief MD Start Command Event ID
