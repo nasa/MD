@@ -95,7 +95,7 @@ typedef struct
  */
 typedef struct
 {
-    CFE_MSG_CommandHeader_t CmdHeader; /**< Command Header */
+    CFE_MSG_CommandHeader_t CommandHeader; /**< Command Header */
 } MD_NoArgsCmd_t;
 
 /**
@@ -105,7 +105,7 @@ typedef struct
  */
 typedef struct
 {
-    CFE_MSG_CommandHeader_t   Header; /**< \brief Command header */
+    CFE_MSG_CommandHeader_t   CommandHeader; /**< \brief Command header */
     MD_CmdStartStop_Payload_t Payload;
 } MD_CmdStartStop_t;
 
@@ -116,7 +116,7 @@ typedef struct
  */
 typedef struct
 {
-    CFE_MSG_CommandHeader_t Header; /**< \brief Command header */
+    CFE_MSG_CommandHeader_t CommandHeader; /**< \brief Command header */
     MD_CmdJam_Payload_t     Payload;
 } MD_CmdJam_t;
 
@@ -129,7 +129,7 @@ typedef struct
  */
 typedef struct
 {
-    CFE_MSG_CommandHeader_t      Header; /**< \brief Command Header */
+    CFE_MSG_CommandHeader_t      CommandHeader; /**< \brief Command Header */
     MD_CmdSetSignature_Payload_t Payload;
 } MD_CmdSetSignature_t;
 
@@ -182,7 +182,7 @@ typedef struct
  */
 typedef struct
 {
-    CFE_MSG_TelemetryHeader_t TlmHeader; /**< \brief Telemetry header */
+    CFE_MSG_TelemetryHeader_t TelemetryHeader; /**< \brief Telemetry header */
     MD_HkTlm_Payload_t        Payload;
 } MD_HkTlm_t;
 
@@ -196,7 +196,7 @@ typedef struct
  */
 typedef struct
 {
-    CFE_MSG_TelemetryHeader_t TlmHeader; /**< \brief Telemetry header */
+    CFE_MSG_TelemetryHeader_t TelemetryHeader; /**< \brief Telemetry header */
     MD_DwellPkt_Payload_t     Payload;
 } MD_DwellPkt_t;
 
