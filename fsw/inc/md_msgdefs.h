@@ -83,7 +83,7 @@
  *       the following telemetry:
  *       - #MD_HkTlm_Payload_t.ValidCmdCntr will be set to zero.
  *       - #MD_HkTlm_Payload_t.InvalidCmdCntr will be set to zero.
- *       - The #MD_RESET_CNTRS_DBG_EID debug event message will be generated.
+ *       - The #MD_RESET_INF_EID debug event message will be generated.
  *
  *  \par Error Conditions
  *       This command may fail for the following reason(s):

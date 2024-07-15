@@ -285,7 +285,7 @@ CFE_Status_t MD_InitSoftwareBusServices(void)
     }
     else
     {
-        CFE_EVS_SendEvent(MD_CREATE_PIPE_ERR_EID, CFE_EVS_EventType_ERROR, "Failed to create pipe.  RC = %d",
+        CFE_EVS_SendEvent(MD_CR_PIPE_ERR_EID, CFE_EVS_EventType_ERROR, "Failed to create pipe.  RC = %d",
                           (unsigned int)Status);
     }
 
@@ -622,7 +622,7 @@ void MD_ExecRequest(const CFE_SB_Buffer_t *BufPtr)
 
             case MD_RESET_CNTRS_CC:
 
-                CFE_EVS_SendEvent(MD_RESET_CNTRS_DBG_EID, CFE_EVS_EventType_DEBUG, "Reset Counters Cmd Received");
+                CFE_EVS_SendEvent(MD_RESET_INF_EID, CFE_EVS_EventType_DEBUG, "Reset Counters Cmd Received");
                 MD_AppData.CmdCounter = 0;
                 MD_AppData.ErrCounter = 0;
                 break;
