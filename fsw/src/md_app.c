@@ -59,8 +59,6 @@ void MD_AppMain(void)
     CFE_SB_Buffer_t *BufPtr       = NULL;
     size_t           ActualLength = 0;
 
-    MD_AppData.RunStatus = CFE_ES_RunStatus_APP_RUN;
-
     /* Create the first Performance Log entry */
     CFE_ES_PerfLogEntry(MD_APPMAIN_PERF_ID);
 
@@ -176,8 +174,10 @@ CFE_Status_t MD_AppInit(void)
     */
     CFE_Status_t Status = CFE_SUCCESS;
 
-    MD_AppData.CmdCounter = 0;
-    MD_AppData.ErrCounter = 0;
+    /* Zero out the global data structure */
+    memset(&MD_AppData, 0, sizeof(MD_AppData));
+
+    MD_AppData.RunStatus = CFE_ES_RunStatus_APP_RUN;
 
     /* Initialize local control structures */
     MD_InitControlStructures();
@@ -656,7 +656,7 @@ void MD_HkStatus()
 {
     uint8                    TblIndex;
     uint16                   MemDwellEnableBits = 0;
-    MD_HkTlm_t *             HkPktPtr           = NULL;
+    MD_HkTlm_t              *HkPktPtr           = NULL;
     MD_DwellPacketControl_t *ThisDwellTablePtr  = NULL;
 
     /* Assign pointer used as shorthand to access Housekeeping Packet fields */

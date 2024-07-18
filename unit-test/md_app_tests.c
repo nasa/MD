@@ -868,7 +868,7 @@ void MD_InitTableServices_Test_TblRecoveredNotValid(void)
     UT_SetDeferredRetcode(UT_KEY(CFE_TBL_Register), 1, CFE_TBL_INFO_RECOVERED_TBL);
 
     /* Set to fail condition "GetAddressResult != CFE_TBL_INFO_UPDATED", to
-       prevent a core dump by assigning MD_LoadTablePtr, and to make MD_TableValidateionFunc() return non-success */
+       prevent a core dump by assigning MD_LoadTablePtr, and to make MD_TableValidationFunc() return non-success */
     UT_SetDefaultReturnValue(UT_KEY(CFE_TBL_GetAddress), CFE_TBL_INFO_UPDATED);
 
     MD_AppData.MD_DwellTables[0].Enabled = MD_DWELL_STREAM_DISABLED;
@@ -927,7 +927,7 @@ void MD_InitTableServices_Test_DwellStreamEnabled(void)
     UT_SetDeferredRetcode(UT_KEY(CFE_TBL_Register), 1, CFE_TBL_INFO_RECOVERED_TBL);
 
     /* Set to fail condition "GetAddressResult != CFE_TBL_INFO_UPDATED", to
-       prevent a core dump by assigning MD_LoadTablePtr, and to make MD_TableValidateionFunc() return non-success */
+       prevent a core dump by assigning MD_LoadTablePtr, and to make MD_TableValidationFunc() return non-success */
     UT_SetDefaultReturnValue(UT_KEY(CFE_TBL_GetAddress), CFE_TBL_INFO_UPDATED);
 
     LoadTblPtr->Enabled = MD_DWELL_STREAM_ENABLED;
@@ -986,7 +986,7 @@ void MD_InitTableServices_Test_TblNotRecovered(void)
     UT_SetDeferredRetcode(UT_KEY(CFE_TBL_Register), 1, CFE_TBL_INFO_RECOVERED_TBL);
 
     /* Set to fail condition "GetAddressResult != CFE_TBL_INFO_UPDATED", to
-       prevent a core dump by assigning MD_LoadTablePtr, and to make MD_TableValidateionFunc() return non-success */
+       prevent a core dump by assigning MD_LoadTablePtr, and to make MD_TableValidationFunc() return non-success */
     UT_SetDefaultReturnValue(UT_KEY(CFE_TBL_GetAddress), CFE_TBL_INFO_UPDATED);
 
     LoadTblPtr->Enabled = MD_DWELL_STREAM_ENABLED;
@@ -1160,6 +1160,7 @@ void MD_ManageDwellTable_Test_UpdatePendingDwellStreamEnabled(void)
     uint8                TblIndex = 0;
     MD_DwellTableLoad_t  LoadTbl;
     MD_DwellTableLoad_t *LoadTblPtr = &LoadTbl;
+    uint8                call_count_MD_StartDwellStream;
 
     /* Set to satisfy condition "Status == CFE_TBL_INFO_UPDATE_PENDING" */
     UT_SetDeferredRetcode(UT_KEY(CFE_TBL_GetStatus), 1, CFE_TBL_INFO_UPDATE_PENDING);
@@ -1183,7 +1184,7 @@ void MD_ManageDwellTable_Test_UpdatePendingDwellStreamEnabled(void)
     UtAssert_True(call_count_CFE_EVS_SendEvent == 0, "CFE_EVS_SendEvent was called %u time(s), expected 0",
                   call_count_CFE_EVS_SendEvent);
 
-    uint8 call_count_MD_StartDwellStream = UT_GetStubCount(UT_KEY(MD_StartDwellStream));
+    call_count_MD_StartDwellStream = UT_GetStubCount(UT_KEY(MD_StartDwellStream));
     UtAssert_INT32_EQ(call_count_MD_StartDwellStream, 1);
 }
 
@@ -1193,6 +1194,7 @@ void MD_ManageDwellTable_Test_UpdatePendingDwellStreamDisabled(void)
     uint8                TblIndex = 0;
     MD_DwellTableLoad_t  LoadTbl;
     MD_DwellTableLoad_t *LoadTblPtr = &LoadTbl;
+    uint8                call_count_MD_StartDwellStream;
 
     /* Set to satisfy condition "Status == CFE_TBL_INFO_UPDATE_PENDING" */
     UT_SetDeferredRetcode(UT_KEY(CFE_TBL_GetStatus), 1, CFE_TBL_INFO_UPDATE_PENDING);
@@ -1218,7 +1220,7 @@ void MD_ManageDwellTable_Test_UpdatePendingDwellStreamDisabled(void)
     UtAssert_True(call_count_CFE_EVS_SendEvent == 0, "CFE_EVS_SendEvent was called %u time(s), expected 0",
                   call_count_CFE_EVS_SendEvent);
 
-    uint8 call_count_MD_StartDwellStream = UT_GetStubCount(UT_KEY(MD_StartDwellStream));
+    call_count_MD_StartDwellStream = UT_GetStubCount(UT_KEY(MD_StartDwellStream));
     UtAssert_INT32_EQ(call_count_MD_StartDwellStream, 0);
 }
 

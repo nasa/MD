@@ -945,7 +945,7 @@ void MD_UpdateTableEnabledField_Test_Error(void)
     char   ExpectedEventString[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
 
     snprintf(ExpectedEventString, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH,
-             "MD_UpdateTableEnabledField, TableIndex %%d: CFE_TBL_GetAddress Returned 0x%%08x");
+             "%%s, TableIndex %%d: CFE_TBL_GetAddress Returned 0x%%08x");
 
     /* Set to make CFE_TBL_GetAddress != CFE_SUCCESS */
     UT_SetDeferredRetcode(UT_KEY(CFE_TBL_GetAddress), 1, -1);
@@ -1056,7 +1056,7 @@ void MD_UpdateTableDwellEntry_Test_Error(void)
     char         ExpectedEventString[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
 
     snprintf(ExpectedEventString, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH,
-             "MD_UpdateTableDwellEntry, TableIndex %%d: CFE_TBL_GetAddress Returned 0x%%08x");
+             "%%s, TableIndex %%d: CFE_TBL_GetAddress Returned 0x%%08x");
 
     NewDwellAddress.Offset = 1;
 
@@ -1139,7 +1139,7 @@ void MD_UpdateTableSignature_Test_Error(void)
     char   ExpectedEventString[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
 
     snprintf(ExpectedEventString, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH,
-             "MD_UpdateTableSignature, TableIndex %%d: CFE_TBL_GetAddress Returned 0x%%08x");
+             "%%s, TableIndex %%d: CFE_TBL_GetAddress Returned 0x%%08x");
 
     /* Set to make CFE_TBL_GetAddress != CFE_SUCCESS */
     UT_SetDeferredRetcode(UT_KEY(CFE_TBL_GetAddress), 1, -1);
