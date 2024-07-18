@@ -203,7 +203,7 @@ void MD_ValidAddrRange_Test_Valid(void)
 {
     bool    Result;
     cpuaddr Addr = 1;
-    uint32  Size = 1;
+    size_t  Size = 1;
 
     /* Execute the function being tested */
     Result = MD_ValidAddrRange(Addr, Size);
@@ -221,7 +221,7 @@ void MD_ValidAddrRange_Test_Invalid(void)
 {
     bool    Result;
     cpuaddr Addr = 1;
-    uint32  Size = 1;
+    size_t  Size = 1;
 
     /* Set to reach "IsValid = false" */
     UT_SetDeferredRetcode(UT_KEY(CFE_PSP_MemValidateRange), 1, -1);
@@ -378,7 +378,7 @@ void MD_Verify32Aligned_Test(void)
 {
     bool    Result;
     cpuaddr Addr;
-    uint32  Size;
+    size_t  Size;
 
     Addr = 0; /* address is aligned */
     Size = 4; /* size is aligned */
@@ -412,7 +412,7 @@ void MD_Verify16Aligned_Test(void)
 {
     bool    Result;
     cpuaddr Addr;
-    uint32  Size;
+    size_t  Size;
 
     Addr = 0; /* address is aligned */
     Size = 4; /* size is aligned */

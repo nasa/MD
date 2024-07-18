@@ -96,7 +96,7 @@ bool MD_ValidEntryId(uint16 EntryId);
  * \retval true  Address is valid
  * \retval false Address is not valid
  */
-bool MD_ValidAddrRange(cpuaddr Addr, uint32 Size);
+bool MD_ValidAddrRange(cpuaddr Addr, size_t Size);
 
 /**
  * \brief Validate Table ID
@@ -156,7 +156,7 @@ bool MD_ValidFieldLength(uint16 FieldLength);
  *
  *  \sa #MD_Verify16Aligned
  */
-bool MD_Verify32Aligned(cpuaddr Address, uint32 Size);
+bool MD_Verify32Aligned(cpuaddr Address, size_t Size);
 
 /**
  * \brief Verify 16 bit alignment
@@ -178,7 +178,7 @@ bool MD_Verify32Aligned(cpuaddr Address, uint32 Size);
  *
  *  \sa #MD_Verify32Aligned
  */
-bool MD_Verify16Aligned(cpuaddr Address, uint32 Size);
+bool MD_Verify16Aligned(cpuaddr Address, size_t Size);
 
 /**
  * \brief Resolve symbolic address

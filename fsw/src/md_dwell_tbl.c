@@ -295,7 +295,7 @@ void MD_CopyUpdatedTbl(MD_DwellTableLoad_t *MD_LoadTablePtr, uint8 TblIndex)
 {
     uint8                    EntryIndex;
     cpuaddr                  ResolvedAddr       = 0;
-    MD_TableLoadEntry_t *    ThisLoadEntry      = NULL;
+    MD_TableLoadEntry_t     *ThisLoadEntry      = NULL;
     MD_DwellPacketControl_t *LocalControlStruct = &MD_AppData.MD_DwellTables[TblIndex];
 
     /* Null check on MD_LoadTablePtr not necessary - table passed validation */
@@ -343,8 +343,8 @@ CFE_Status_t MD_UpdateTableEnabledField(uint16 TableIndex, uint16 FieldValue)
     if ((Status != CFE_SUCCESS) && (Status != CFE_TBL_INFO_UPDATED))
     {
         CFE_EVS_SendEvent(MD_UPDATE_TBL_EN_ERR_EID, CFE_EVS_EventType_ERROR,
-                          "MD_UpdateTableEnabledField, TableIndex %d: CFE_TBL_GetAddress Returned 0x%08x",
-                          (int)TableIndex, (unsigned int)Status);
+                          "%s, TableIndex %d: CFE_TBL_GetAddress Returned 0x%08x", __func__, (int)TableIndex,
+                          (unsigned int)Status);
     }
     else
     {
@@ -375,8 +375,8 @@ CFE_Status_t MD_UpdateTableDwellEntry(uint16 TableIndex, uint16 EntryIndex, uint
     if ((Status != CFE_SUCCESS) && (Status != CFE_TBL_INFO_UPDATED))
     {
         CFE_EVS_SendEvent(MD_UPDATE_TBL_DWELL_ERR_EID, CFE_EVS_EventType_ERROR,
-                          "MD_UpdateTableDwellEntry, TableIndex %d: CFE_TBL_GetAddress Returned 0x%08x",
-                          (int)TableIndex, (unsigned int)Status);
+                          "%s, TableIndex %d: CFE_TBL_GetAddress Returned 0x%08x", __func__, (int)TableIndex,
+                          (unsigned int)Status);
     }
     else
     {
@@ -392,7 +392,8 @@ CFE_Status_t MD_UpdateTableDwellEntry(uint16 TableIndex, uint16 EntryIndex, uint
         strncpy(EntryPtr->DwellAddress.SymName, NewDwellAddress.SymName, OS_MAX_SYM_LEN - 1);
 
         /* Ensure string is null terminated. */
-        /* SAD: SymName’s last element is accessed on this line by reference to its max size, greatly reducing an off by one risk */
+        /* SAD: SymName’s last element is accessed on this line by reference to its max size, greatly reducing an off by
+         * one risk */
         EntryPtr->DwellAddress.SymName[OS_MAX_SYM_LEN - 1] = '\0';
 
         /* Notify Table Services that buffer was modified */
@@ -421,7 +422,7 @@ CFE_Status_t MD_UpdateTableSignature(uint16 TableIndex, char NewSignature[MD_SIG
     if ((Status != CFE_SUCCESS) && (Status != CFE_TBL_INFO_UPDATED))
     {
         CFE_EVS_SendEvent(MD_UPDATE_TBL_SIG_ERR_EID, CFE_EVS_EventType_ERROR,
-                          "MD_UpdateTableSignature, TableIndex %d: CFE_TBL_GetAddress Returned 0x%08x", (int)TableIndex,
+                          "%s, TableIndex %d: CFE_TBL_GetAddress Returned 0x%08x", __func__, (int)TableIndex,
                           (unsigned int)Status);
     }
     else
