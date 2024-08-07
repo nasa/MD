@@ -97,6 +97,13 @@ void MD_Test_TearDown(void)
     /* cleanup test environment */
 }
 
+/*
+ * The PSP should now provide these stubs as of the Equuleus build.
+ * Including in an OMIT_DEPRECATED block temporarily should allow
+ * backward compatibility to ease the transition.
+ */
+#ifndef OMIT_DEPRECATED
+
 int32 CFE_PSP_MemWrite8(cpuaddr MemoryAddress, uint8 ByteValue)
 {
     if (!MemoryAddress)
@@ -136,3 +143,5 @@ int32 CFE_PSP_MemWrite32(cpuaddr MemoryAddress, uint32 uint32Value)
     else
         return CFE_PSP_SUCCESS;
 }
+
+#endif /* OMIT_DEPRECATED */
