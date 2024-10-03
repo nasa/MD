@@ -121,7 +121,7 @@
 /**
  * \brief MD Reset Counters Command Event ID
  *
- *  \par Type: DEBUG
+ *  \par Type: INFORMATION
  *
  *  \par Cause:
  *

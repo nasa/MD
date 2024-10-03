@@ -1439,7 +1439,8 @@ void MD_ExecRequest_Test_ResetCounters(void)
     UtAssert_True(MD_AppData.ErrCounter == 0, "MD_AppData.ErrCounter == 0");
 
     UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, MD_RESET_INF_EID);
-    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_DEBUG);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType,
+                      CFE_EVS_EventType_INFORMATION);
 
     strCmpResult = strncmp(ExpectedEventString, context_CFE_EVS_SendEvent[0].Spec, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH);
 
