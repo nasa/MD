@@ -455,8 +455,6 @@ CFE_Status_t MD_InitTableServices(void)
                 CFE_TBL_Load(MD_AppData.MD_TableHandle[TblIndex], CFE_TBL_SRC_FILE, /*  following ptr is memory ptr */
                              (const void *)TblFileName);                            /* Pointer to data to be loaded */
 
-            MD_AppData.MD_DwellTables[TblIndex].Enabled = MD_DWELL_STREAM_DISABLED;
-
             if (Status != CFE_SUCCESS)
             {
                 CFE_ES_WriteToSysLog("MD_APP: Error 0x%08X received loading tbl#%u\n", (unsigned int)Status,
@@ -465,6 +463,8 @@ CFE_Status_t MD_InitTableServices(void)
             }
             else
             {
+                CFE_TBL_GetAddress((void *)&MD_LoadTablePtr, MD_AppData.MD_TableHandle[TblIndex]);
+                MD_CopyUpdatedTbl(MD_LoadTablePtr, TblIndex);
                 TblInits++;
             }
         }
@@ -622,11 +622,10 @@ void MD_ExecRequest(const CFE_SB_Buffer_t *BufPtr)
 
             case MD_RESET_CNTRS_CC:
 
-              CFE_EVS_SendEvent(MD_RESET_INF_EID, CFE_EVS_EventType_INFORMATION,
-                                "Reset Counters Cmd Received");
-              MD_AppData.CmdCounter = 0;
-              MD_AppData.ErrCounter = 0;
-              break;
+                CFE_EVS_SendEvent(MD_RESET_INF_EID, CFE_EVS_EventType_INFORMATION, "Reset Counters Cmd Received");
+                MD_AppData.CmdCounter = 0;
+                MD_AppData.ErrCounter = 0;
+                break;
 
             case MD_START_DWELL_CC:
 
@@ -657,7 +656,7 @@ void MD_HkStatus()
 {
     uint8                    TblIndex;
     uint16                   MemDwellEnableBits = 0;
-    MD_HkTlm_t *             HkPktPtr           = NULL;
+    MD_HkTlm_t              *HkPktPtr           = NULL;
     MD_DwellPacketControl_t *ThisDwellTablePtr  = NULL;
 
     /* Assign pointer used as shorthand to access Housekeeping Packet fields */
