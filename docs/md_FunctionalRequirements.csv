@@ -8,7 +8,7 @@ MD1003,MD1003,"If Dwell Table ID specified in any MD command exceeds the <PLATFO
 Heritage missions have supported between 1 and 4 dwell tables."
 MD1004,MD1004,"If MD accepts any command as valid, MD shall execute the command, increment the MD Valid Command Counter and issue an event message",Operation response to command acceptance
 MD1005,MD1005,"If MD rejects any command, MD shall abort the command execution, increment the MD Command Rejected Counter and issue an error event message",Operational response to command rejection
-MD1006,MD1006,The MD application shall generate an error event message if symbol table operations are initiated but not supported in the current target environment.,Gracefully handle running without a system symbol table to query
+MD1006,MD1006,The MD application shall generate an error event message if symbol table operations are initiated but fail.,Gracefully handle running without a system symbol table to query
 MD2000,MD2000,"Upon receipt of a Start Dwell command, MD shall identify the command-specified tables as ENABLED and start processing the command-specified memory dwell tables, starting with the first entry, until one of the following:
 a) an entry that has a zero value for the Number of Bytes field or
 b) until it has processed the last entry in a Dwell Table:",Provides individual control of each memory dwell. Note that more than one dwell table can be started in one command.
