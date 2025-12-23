@@ -101,7 +101,7 @@ bool MD_ValidEntryId(uint16 EntryId)
 
 /******************************************************************************/
 
-bool MD_ValidAddrRange(cpuaddr Addr, uint32 Size)
+bool MD_ValidAddrRange(cpuaddr Addr, size_t Size)
 {
     bool IsValid = false;
 
@@ -142,7 +142,7 @@ bool MD_ValidFieldLength(uint16 FieldLength)
 
 /******************************************************************************/
 
-bool MD_Verify32Aligned(cpuaddr Address, uint32 Size)
+bool MD_Verify32Aligned(cpuaddr Address, size_t Size)
 {
     bool IsAligned;
 
@@ -164,7 +164,7 @@ bool MD_Verify32Aligned(cpuaddr Address, uint32 Size)
 
 /******************************************************************************/
 
-bool MD_Verify16Aligned(cpuaddr Address, uint32 Size)
+bool MD_Verify16Aligned(cpuaddr Address, size_t Size)
 {
     bool IsAligned;
 

@@ -48,7 +48,7 @@ bool MD_ValidEntryId(uint16 EntryId)
     return UT_DEFAULT_IMPL(MD_ValidEntryId) != 0;
 }
 
-bool MD_ValidAddrRange(cpuaddr Addr, uint32 Size)
+bool MD_ValidAddrRange(cpuaddr Addr, size_t Size)
 {
     UT_Stub_RegisterContextGenericArg(UT_KEY(MD_ValidAddrRange), Addr);
     UT_Stub_RegisterContextGenericArg(UT_KEY(MD_ValidAddrRange), Size);
@@ -67,14 +67,14 @@ bool MD_ValidFieldLength(uint16 FieldLength)
     return UT_DEFAULT_IMPL(MD_ValidFieldLength) != 0;
 }
 
-bool MD_Verify32Aligned(cpuaddr Address, uint32 Size)
+bool MD_Verify32Aligned(cpuaddr Address, size_t Size)
 {
     UT_Stub_RegisterContextGenericArg(UT_KEY(MD_Verify32Aligned), Address);
     UT_Stub_RegisterContextGenericArg(UT_KEY(MD_Verify32Aligned), Size);
     return UT_DEFAULT_IMPL(MD_Verify32Aligned) != 0;
 }
 
-bool MD_Verify16Aligned(cpuaddr Address, uint32 Size)
+bool MD_Verify16Aligned(cpuaddr Address, size_t Size)
 {
     UT_Stub_RegisterContextGenericArg(UT_KEY(MD_Verify16Aligned), Address);
     UT_Stub_RegisterContextGenericArg(UT_KEY(MD_Verify16Aligned), Size);
