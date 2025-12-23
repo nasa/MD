@@ -226,13 +226,13 @@ void MD_SendDwellPkt(uint16 TableIndex)
 
     DwellPktSize = MD_DWELL_PKT_LNGTH - MD_DWELL_TABLE_SIZE * 4 + TblPtr->DataSize;
 
-    CFE_MSG_SetSize(&PktPtr->TlmHeader.Msg, DwellPktSize);
+    CFE_MSG_SetSize(CFE_MSG_PTR(PktPtr->TelemetryHeader), DwellPktSize);
 
     /*
     ** Send dwell telemetry packet.
     */
-    CFE_SB_TimeStampMsg(&PktPtr->TlmHeader.Msg);
-    CFE_SB_TransmitMsg(&PktPtr->TlmHeader.Msg, true);
+    CFE_SB_TimeStampMsg(CFE_MSG_PTR(PktPtr->TelemetryHeader));
+    CFE_SB_TransmitMsg(CFE_MSG_PTR(PktPtr->TelemetryHeader), true);
 }
 
 /******************************************************************************/
