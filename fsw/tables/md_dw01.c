@@ -1,8 +1,7 @@
 /************************************************************************
- * NASA Docket No. GSC-18,922-1, and identified as “Core Flight
- * System (cFS) Memory Dwell Application Version 2.4.1”
+ * NASA Docket No. GSC-19,200-1, and identified as "cFS Draco"
  *
- * Copyright (c) 2021 United States Government as represented by the
+ * Copyright (c) 2023 United States Government as represented by the
  * Administrator of the National Aeronautics and Space Administration.
  * All Rights Reserved.
  *
@@ -26,14 +25,15 @@
 ** Includes
 *************************************************************************/
 #include "cfe.h"
-#include "md_tbldefs.h"
 #include "md_extern_typedefs.h"
+#include "md_tbldefs.h"
 #include "cfe_tbl_filedef.h"
+#include "md_tblstruct.h"
 #include "md_platform_cfg.h"
 
 MD_DwellTableLoad_t MD_Default_Dwell1_Tbl = {
-    /* Enabled State */ MD_DWELL_STREAM_DISABLED,
-#if MD_SIGNATURE_OPTION == 1
+    /* Enabled State */ MD_Dwell_States_DISABLED,
+#if MD_INTERFACE_SIGNATURE_OPTION == 1
     /* Signature     */ "Default Table 1",
 #endif
     /* Entry    Length    Delay    Offset           SymName     */

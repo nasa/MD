@@ -1,8 +1,7 @@
 /************************************************************************
- * NASA Docket No. GSC-18,922-1, and identified as “Core Flight
- * System (cFS) Memory Dwell Application Version 2.4.1”
+ * NASA Docket No. GSC-19,200-1, and identified as "cFS Draco"
  *
- * Copyright (c) 2021 United States Government as represented by the
+ * Copyright (c) 2023 United States Government as represented by the
  * Administrator of the National Aeronautics and Space Administration.
  * All Rights Reserved.
  *
@@ -29,6 +28,8 @@
  ************************************************************************/
 
 #include "common_types.h"
+#include "cfe.h"
+#include "md_msg.h"
 
 /************************************************************************
  * Type Definitions
@@ -76,7 +77,7 @@ enum MD_DwellAddrReadError
  * \par Assumptions, External Events, and Notes:
  *          None
  */
-void MD_DwellLoop(void);
+CFE_Status_t MD_DwellLoop(const MD_Wakeup_t *Msg);
 
 /**
  * \brief Read a Single Dwell Address

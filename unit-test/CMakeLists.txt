@@ -15,6 +15,8 @@ add_cfe_coverage_stubs(md_internal
   stubs/md_dwell_tbl_stubs.c
   stubs/md_utils_stubs.c
   stubs/md_dwell_pkt_stubs.c
+  stubs/md_global_stubs.c
+  stubs/md_dispatch_stubs.c
 )
 
 # Link with the cfe core stubs and unit test assert libs

@@ -1,8 +1,7 @@
 /************************************************************************
- * NASA Docket No. GSC-18,922-1, and identified as “Core Flight
- * System (cFS) Memory Dwell Application Version 2.4.1”
+ * NASA Docket No. GSC-19,200-1, and identified as "cFS Draco"
  *
- * Copyright (c) 2021 United States Government as represented by the
+ * Copyright (c) 2023 United States Government as represented by the
  * Administrator of the National Aeronautics and Space Administration.
  * All Rights Reserved.
  *
@@ -17,75 +16,147 @@
  * limitations under the License.
  ************************************************************************/
 
-/*
- * Includes
+/**
+ * @file
+ *
+ * Auto-Generated stub implementations for functions defined in md_dwell_tbl header
  */
 
-#include "cfe.h"
-#include "md_tbldefs.h"
+#include "md_dwell_tbl.h"
+#include "utgenstub.h"
 
-/* UT includes */
-#include "uttest.h"
-#include "utassert.h"
-#include "utstubs.h"
-
-int32 MD_TableValidationFunc(void *TblPtr)
+/*
+ * ----------------------------------------------------
+ * Generated stub function for MD_CheckTableEntries()
+ * ----------------------------------------------------
+ */
+int32 MD_CheckTableEntries(MD_DwellTableLoad_t *TblPtr, uint16 *ErrorEntryArg)
 {
-    UT_Stub_RegisterContext(UT_KEY(MD_TableValidationFunc), TblPtr);
-    return UT_DEFAULT_IMPL(MD_TableValidationFunc);
+    UT_GenStub_SetupReturnBuffer(MD_CheckTableEntries, int32);
+
+    UT_GenStub_AddParam(MD_CheckTableEntries, MD_DwellTableLoad_t *, TblPtr);
+    UT_GenStub_AddParam(MD_CheckTableEntries, uint16 *, ErrorEntryArg);
+
+    UT_GenStub_Execute(MD_CheckTableEntries, Basic, NULL);
+
+    return UT_GenStub_GetReturnValue(MD_CheckTableEntries, int32);
 }
 
+/*
+ * ----------------------------------------------------
+ * Generated stub function for MD_CopyUpdatedTbl()
+ * ----------------------------------------------------
+ */
 void MD_CopyUpdatedTbl(MD_DwellTableLoad_t *MD_LoadTablePtr, uint8 TblIndex)
 {
-    UT_Stub_RegisterContext(UT_KEY(MD_CopyUpdatedTbl), MD_LoadTablePtr);
-    UT_Stub_RegisterContextGenericArg(UT_KEY(MD_CopyUpdatedTbl), TblIndex);
-    UT_DEFAULT_IMPL(MD_CopyUpdatedTbl);
+    UT_GenStub_AddParam(MD_CopyUpdatedTbl, MD_DwellTableLoad_t *, MD_LoadTablePtr);
+    UT_GenStub_AddParam(MD_CopyUpdatedTbl, uint8, TblIndex);
+
+    UT_GenStub_Execute(MD_CopyUpdatedTbl, Basic, NULL);
 }
 
-CFE_Status_t MD_UpdateTableEnabledField(uint16 TableIndex, uint16 FieldValue)
+/*
+ * ----------------------------------------------------
+ * Generated stub function for MD_ReadDwellTable()
+ * ----------------------------------------------------
+ */
+CFE_Status_t MD_ReadDwellTable(const MD_DwellTableLoad_t *TblPtr, uint16 *ActiveAddrCountPtr, uint16 *SizePtr,
+                               uint32 *RatePtr)
 {
-    UT_Stub_RegisterContextGenericArg(UT_KEY(MD_UpdateTableEnabledField), TableIndex);
-    UT_Stub_RegisterContextGenericArg(UT_KEY(MD_UpdateTableEnabledField), FieldValue);
-    return UT_DEFAULT_IMPL(MD_UpdateTableEnabledField);
+    UT_GenStub_SetupReturnBuffer(MD_ReadDwellTable, CFE_Status_t);
+
+    UT_GenStub_AddParam(MD_ReadDwellTable, const MD_DwellTableLoad_t *, TblPtr);
+    UT_GenStub_AddParam(MD_ReadDwellTable, uint16 *, ActiveAddrCountPtr);
+    UT_GenStub_AddParam(MD_ReadDwellTable, uint16 *, SizePtr);
+    UT_GenStub_AddParam(MD_ReadDwellTable, uint32 *, RatePtr);
+
+    UT_GenStub_Execute(MD_ReadDwellTable, Basic, NULL);
+
+    return UT_GenStub_GetReturnValue(MD_ReadDwellTable, CFE_Status_t);
 }
 
+/*
+ * ----------------------------------------------------
+ * Generated stub function for MD_TableValidationFunc()
+ * ----------------------------------------------------
+ */
+int32 MD_TableValidationFunc(void *TblPtr)
+{
+    UT_GenStub_SetupReturnBuffer(MD_TableValidationFunc, int32);
+
+    UT_GenStub_AddParam(MD_TableValidationFunc, void *, TblPtr);
+
+    UT_GenStub_Execute(MD_TableValidationFunc, Basic, NULL);
+
+    return UT_GenStub_GetReturnValue(MD_TableValidationFunc, int32);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for MD_UpdateTableDwellEntry()
+ * ----------------------------------------------------
+ */
 CFE_Status_t MD_UpdateTableDwellEntry(uint16 TableIndex, uint16 EntryIndex, uint16 NewLength, uint16 NewDelay,
                                       MD_SymAddr_t NewDwellAddress)
 {
-    UT_Stub_RegisterContextGenericArg(UT_KEY(MD_UpdateTableDwellEntry), TableIndex);
-    UT_Stub_RegisterContextGenericArg(UT_KEY(MD_UpdateTableDwellEntry), EntryIndex);
-    UT_Stub_RegisterContextGenericArg(UT_KEY(MD_UpdateTableDwellEntry), NewLength);
-    UT_Stub_RegisterContextGenericArg(UT_KEY(MD_UpdateTableDwellEntry), NewDelay);
-    UT_Stub_RegisterContextGenericArg(UT_KEY(MD_UpdateTableDwellEntry), NewDwellAddress);
-    return UT_DEFAULT_IMPL(MD_UpdateTableDwellEntry);
+    UT_GenStub_SetupReturnBuffer(MD_UpdateTableDwellEntry, CFE_Status_t);
+
+    UT_GenStub_AddParam(MD_UpdateTableDwellEntry, uint16, TableIndex);
+    UT_GenStub_AddParam(MD_UpdateTableDwellEntry, uint16, EntryIndex);
+    UT_GenStub_AddParam(MD_UpdateTableDwellEntry, uint16, NewLength);
+    UT_GenStub_AddParam(MD_UpdateTableDwellEntry, uint16, NewDelay);
+    UT_GenStub_AddParam(MD_UpdateTableDwellEntry, MD_SymAddr_t, NewDwellAddress);
+
+    UT_GenStub_Execute(MD_UpdateTableDwellEntry, Basic, NULL);
+
+    return UT_GenStub_GetReturnValue(MD_UpdateTableDwellEntry, CFE_Status_t);
 }
 
-CFE_Status_t MD_UpdateTableSignature(uint16 TableIndex, char NewSignature[MD_SIGNATURE_FIELD_LENGTH])
+/*
+ * ----------------------------------------------------
+ * Generated stub function for MD_UpdateTableEnabledField()
+ * ----------------------------------------------------
+ */
+CFE_Status_t MD_UpdateTableEnabledField(uint16 TableIndex, uint16 FieldValue)
 {
-    UT_Stub_RegisterContextGenericArg(UT_KEY(MD_UpdateTableSignature), TableIndex);
-    UT_Stub_RegisterContext(UT_KEY(MD_UpdateTableSignature), NewSignature);
-    return UT_DEFAULT_IMPL(MD_UpdateTableSignature);
+    UT_GenStub_SetupReturnBuffer(MD_UpdateTableEnabledField, CFE_Status_t);
+
+    UT_GenStub_AddParam(MD_UpdateTableEnabledField, uint16, TableIndex);
+    UT_GenStub_AddParam(MD_UpdateTableEnabledField, uint16, FieldValue);
+
+    UT_GenStub_Execute(MD_UpdateTableEnabledField, Basic, NULL);
+
+    return UT_GenStub_GetReturnValue(MD_UpdateTableEnabledField, CFE_Status_t);
 }
 
-CFE_Status_t MD_ReadDwellTable(MD_DwellTableLoad_t *TblPtr, uint16 *ActiveAddrCountPtr, uint16 *SizePtr,
-                               uint32 *RatePtr)
+/*
+ * ----------------------------------------------------
+ * Generated stub function for MD_UpdateTableSignature()
+ * ----------------------------------------------------
+ */
+CFE_Status_t MD_UpdateTableSignature(uint16 TableIndex, const char NewSignature[MD_INTERFACE_SIGNATURE_FIELD_LENGTH])
 {
-    UT_Stub_RegisterContext(UT_KEY(MD_ReadDwellTable), TblPtr);
-    UT_Stub_RegisterContext(UT_KEY(MD_ReadDwellTable), ActiveAddrCountPtr);
-    UT_Stub_RegisterContext(UT_KEY(MD_ReadDwellTable), SizePtr);
-    UT_Stub_RegisterContext(UT_KEY(MD_ReadDwellTable), RatePtr);
-    return UT_DEFAULT_IMPL(MD_ReadDwellTable);
+    UT_GenStub_SetupReturnBuffer(MD_UpdateTableSignature, CFE_Status_t);
+
+    UT_GenStub_AddParam(MD_UpdateTableSignature, uint16, TableIndex);
+
+    UT_GenStub_Execute(MD_UpdateTableSignature, Basic, NULL);
+
+    return UT_GenStub_GetReturnValue(MD_UpdateTableSignature, CFE_Status_t);
 }
 
+/*
+ * ----------------------------------------------------
+ * Generated stub function for MD_ValidTableEntry()
+ * ----------------------------------------------------
+ */
 int32 MD_ValidTableEntry(MD_TableLoadEntry_t *TblEntryPtr)
 {
-    UT_Stub_RegisterContext(UT_KEY(MD_ValidTableEntry), TblEntryPtr);
-    return UT_DEFAULT_IMPL(MD_ValidTableEntry);
-}
+    UT_GenStub_SetupReturnBuffer(MD_ValidTableEntry, int32);
 
-int32 MD_CheckTableEntries(MD_DwellTableLoad_t *TblPtr, uint16 *ErrorEntryArg)
-{
-    UT_Stub_RegisterContext(UT_KEY(MD_CheckTableEntries), TblPtr);
-    UT_Stub_RegisterContext(UT_KEY(MD_CheckTableEntries), ErrorEntryArg);
-    return UT_DEFAULT_IMPL(MD_CheckTableEntries);
+    UT_GenStub_AddParam(MD_ValidTableEntry, MD_TableLoadEntry_t *, TblEntryPtr);
+
+    UT_GenStub_Execute(MD_ValidTableEntry, Basic, NULL);
+
+    return UT_GenStub_GetReturnValue(MD_ValidTableEntry, int32);
 }

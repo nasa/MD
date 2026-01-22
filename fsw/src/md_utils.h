@@ -1,8 +1,7 @@
 /************************************************************************
- * NASA Docket No. GSC-18,922-1, and identified as “Core Flight
- * System (cFS) Memory Dwell Application Version 2.4.1”
+ * NASA Docket No. GSC-19,200-1, and identified as "cFS Draco"
  *
- * Copyright (c) 2021 United States Government as represented by the
+ * Copyright (c) 2023 United States Government as represented by the
  * Administrator of the National Aeronautics and Space Administration.
  * All Rights Reserved.
  *
@@ -37,7 +36,7 @@
  * \par Description
  *          Determines whether specified Table Id is contained in argument mask.
  *
- * \param[in] TableId    identifies dwell table  (1..#MD_NUM_DWELL_TABLES)
+ * \param[in] TableId    identifies dwell table  (1..#MD_INTERFACE_NUM_DWELL_TABLES)
  * \param[in] TableMask  Mask representing current status of all dwell tables.
  *
  * \return Boolean table in mask result
@@ -57,7 +56,7 @@ bool MD_TableIsInMask(int16 TableId, uint16 TableMask);
  *          A zero value for length in a dwell table entry
  *    represents the end of the active portion of a dwell table.
  *
- * \param[in] TableIndex identifies dwell control structure  (0..#MD_NUM_DWELL_TABLES-1)
+ * \param[in] TableIndex identifies dwell control structure  (0..#MD_INTERFACE_NUM_DWELL_TABLES-1)
  */
 void MD_UpdateDwellControlInfo(uint16 TableIndex);
 
@@ -65,7 +64,7 @@ void MD_UpdateDwellControlInfo(uint16 TableIndex);
  * \brief Validate Entry Index
  *
  * \par Description
- *        Checks for valid value (1..MD_DWELL_TABLE_SIZE ) for entry id
+ *        Checks for valid value (1..MD_INTERFACE_DWELL_TABLE_SIZE ) for entry id
  *        specified in Jam command.
  *
  * \par Assumptions, External Events, and Notes:
@@ -104,11 +103,11 @@ bool MD_ValidAddrRange(cpuaddr Addr, uint32 Size);
  * \par Description
  *        Check valid range for TableId argument used in several
  *        Memory Dwell commands.
- *        Valid range is 1..#MD_NUM_DWELL_TABLES.
+ *        Valid range is 1..#MD_INTERFACE_NUM_DWELL_TABLES.
  *
  * \par Assumptions, External Events, and Notes:
  *        Note that this value will be internally converted to
- *        0..(#MD_NUM_DWELL_TABLES-1) for indexing into arrays.
+ *        0..(#MD_INTERFACE_NUM_DWELL_TABLES-1) for indexing into arrays.
  *
  * \param[in] TableId  Table ID.
  *
@@ -191,7 +190,7 @@ bool MD_Verify16Aligned(cpuaddr Address, uint32 Size);
  *       If the symbol name is a NUL (empty) string, then the offset
  *       becomes the absolute address
  *
- *  \param [in]   SymAddr          A #MD_SymAddr_t pointer that holds
+ *  \param [in]   SymAddr          A MD_SymAddr_t pointer that holds
  *                                 the symbol name and optional offset
  *  \param [out]  ResolvedAddr     The fully resolved address. Only valid
  *                                 if the return value is TRUE
@@ -202,6 +201,6 @@ bool MD_Verify16Aligned(cpuaddr Address, uint32 Size);
  *
  *  \sa #OS_SymbolLookup
  */
-bool MD_ResolveSymAddr(MD_SymAddr_t *SymAddr, cpuaddr *ResolvedAddr);
+bool MD_ResolveSymAddr(const MD_SymAddr_t *SymAddr, cpuaddr *ResolvedAddr);
 
 #endif

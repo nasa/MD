@@ -1,8 +1,7 @@
 /************************************************************************
- * NASA Docket No. GSC-18,922-1, and identified as “Core Flight
- * System (cFS) Memory Dwell Application Version 2.4.1”
+ * NASA Docket No. GSC-19,200-1, and identified as "cFS Draco"
  *
- * Copyright (c) 2021 United States Government as represented by the
+ * Copyright (c) 2023 United States Government as represented by the
  * Administrator of the National Aeronautics and Space Administration.
  * All Rights Reserved.
  *
@@ -21,18 +20,21 @@
  * @file
  *   Data structure definitions for Memory Dwell table loads.
  */
-#ifndef MD_TBLDEFS_H
-#define MD_TBLDEFS_H
+#ifndef DEFAULT_MD_TBLDEFS_H
+#define DEFAULT_MD_TBLDEFS_H
 
-#include <md_platform_cfg.h>
-#include <cfe.h>
-#include <md_msg.h> /* For MD_SymAddr_t */
+/* ======== */
+/* Includes */
+/* ======== */
+
+#include "cfe.h"
+#include "md_extern_typedefs.h"
 
 /************************************************************************
  * Type Definitions
  ************************************************************************/
 
-/*
+/**
  *  \brief Memory Dwell structure for individual memory dwell specifications
  *
  *  \par Description
@@ -59,37 +61,4 @@ typedef struct
     MD_SymAddr_t DwellAddress; /**< \brief Dwell Address in #MD_SymAddr_t format */
 } MD_TableLoadEntry_t;
 
-/** \brief Size of table load entry */
-#define MD_TBL_LOAD_ENTRY_LNGTH sizeof(MD_TableLoadEntry_t)
-
-/**
- *  \brief Memory Dwell Table Load structure
- *
- *  \par Description
- *    To be valid, each of the Entry structures must be valid.  See #MD_TableLoadEntry_t for details.
- *    Tables will be processed beginning with the first entry if it is non-null
- *    and continuing until the first null entry is reached.
- *    Note that non-null entries may follow a terminator entry; however they will not be processed.
- *
- *    In order to be processed, all of the following must be true:
- *    - There are one or more non-null entries beginning with the first entry of the table.
- *    - The sum of individual entry delays, beginning with the first entry and up until the
- *      terminator entry or the end of the table, must be non-zero.
- *    - The table's Enabled field must be set to TRUE.  This is initially set in the load, and
- *      is controlled with the #MD_START_DWELL_CC and #MD_STOP_DWELL_CC commands.
- */
-typedef struct
-{
-    uint32 Enabled; /**< \brief Table enable flag: #MD_DWELL_STREAM_DISABLED, #MD_DWELL_STREAM_ENABLED */
-
-#if MD_SIGNATURE_OPTION == 1
-    char Signature[MD_SIGNATURE_FIELD_LENGTH]; /**< \brief Signature */
-#endif
-
-    MD_TableLoadEntry_t Entry[MD_DWELL_TABLE_SIZE]; /**< \brief Array of individual memory dwell entries */
-} MD_DwellTableLoad_t;
-
-/** \brief Dwell table length */
-#define MD_TBL_LOAD_LNGTH sizeof(MD_DwellTableLoad_t)
-
-#endif
+#endif /* DEFAULT_MD_TBLDEFS_H */

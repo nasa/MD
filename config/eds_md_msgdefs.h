@@ -1,8 +1,7 @@
 /************************************************************************
- * NASA Docket No. GSC-18,922-1, and identified as “Core Flight
- * System (cFS) Memory Dwell Application Version 2.4.1”
+ * NASA Docket No. GSC-19,200-1, and identified as "cFS Draco"
  *
- * Copyright (c) 2021 United States Government as represented by the
+ * Copyright (c) 2023 United States Government as represented by the
  * Administrator of the National Aeronautics and Space Administration.
  * All Rights Reserved.
  *
@@ -19,18 +18,15 @@
 
 /**
  * @file
- *  Define MD Performance IDs
- */
-#ifndef MD_PERFIDS_H
-#define MD_PERFIDS_H
+ *   Specification for the CFS Memory Dwell command and telemetry
+ *   message constant definitions.
+ *
+*/
 
-/**
- * \defgroup cfsmdmissioncfg CFS Memory Dwell Mission Configuration
- * \{
- */
+#ifndef EDS_MD_MSGDEFS_H
+#define EDS_MD_MSGDEFS_H
 
-#define MD_APPMAIN_PERF_ID 26 /**< \brief Application main performance ID */
+#include "md_eds_typedefs.h"
+#include "md_fcncodes.h"
 
-/**\}*/
-
-#endif
+#endif /* EDS_MD_MSGDEFS_H */

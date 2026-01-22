@@ -1,8 +1,7 @@
 /************************************************************************
- * NASA Docket No. GSC-18,922-1, and identified as “Core Flight
- * System (cFS) Memory Dwell Application Version 2.4.1”
+ * NASA Docket No. GSC-19,200-1, and identified as "cFS Draco"
  *
- * Copyright (c) 2021 United States Government as represented by the
+ * Copyright (c) 2023 United States Government as represented by the
  * Administrator of the National Aeronautics and Space Administration.
  * All Rights Reserved.
  *
@@ -22,17 +21,25 @@
  *   Specification for the CFS Memory Dwell macro constants that can
  *   be configured from one mission to another
  */
-#ifndef MD_MSGIDS_H
-#define MD_MSGIDS_H
+#ifndef DEFAULT_MD_MSGIDS_H
+#define DEFAULT_MD_MSGIDS_H
+
+#include "cfe_core_api_base_msgids.h"
+#include "md_msgid_values.h"
 
 /**
  * \defgroup cfsmdcmdmid CFS Memory Dwell Command Message IDs
  * \{
  */
 
-#define MD_CMD_MID     0x1890 /**< \brief Message Id for Memory Dwell's ground command */
-#define MD_SEND_HK_MID 0x1891 /**< \brief Message Id for Memory Dwell's 'Send Housekeeping' message */
-#define MD_WAKEUP_MID  0x1892 /**< \brief Message Id for Memory Dwell's wakeup message */
+/** \brief Message Id for Memory Dwell's ground command      */
+#define MD_CMD_MID CFE_PLATFORM_MD_CMD_MIDVAL(CMD)
+
+/** \brief Message Id for Memory Dwell's 'Send Housekeeping' message  */
+#define MD_SEND_HK_MID CFE_PLATFORM_MD_CMD_MIDVAL(SEND_HK)
+
+/** \brief Message Id for Memory Dwell's wakeup message       */
+#define MD_WAKEUP_MID CFE_PLATFORM_MD_CMD_MIDVAL(WAKEUP)
 
 /**\}*/
 
@@ -41,9 +48,12 @@
  * \{
  */
 
-#define MD_HK_TLM_MID         0x0890 /**< \brief Message Id for Memory Dwell's housekeeping pkt */
-#define MD_DWELL_PKT_MID_BASE 0x0891 /**< \brief Base Message Id for Memory Dwell's dwell packets. */
+/** \brief Message Id for Memory Dwell's housekeeping pkt  */
+#define MD_HK_TLM_MID CFE_PLATFORM_MD_TLM_MIDVAL(HK_TLM)
+
+/** \brief Base Message Id for Memory Dwell's dwell packets. */
+#define MD_DWELL_PKT_MID_BASE CFE_PLATFORM_MD_TLM_MIDVAL(DWELL_PKT_MID_BASE)
 
 /**\}*/
 
-#endif
+#endif /* DEFAULT_MD_MSGIDS_H */

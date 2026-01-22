@@ -1,8 +1,7 @@
 /************************************************************************
- * NASA Docket No. GSC-18,922-1, and identified as “Core Flight
- * System (cFS) Memory Dwell Application Version 2.4.1”
+ * NASA Docket No. GSC-19,200-1, and identified as "cFS Draco"
  *
- * Copyright (c) 2021 United States Government as represented by the
+ * Copyright (c) 2023 United States Government as represented by the
  * Administrator of the National Aeronautics and Space Administration.
  * All Rights Reserved.
  *
@@ -28,7 +27,7 @@
 #include "md_dwell_pkt.h"
 #include "md_utils.h"
 #include "md_app.h"
-#include "md_events.h"
+#include "md_eventids.h"
 #include <string.h>
 #include "md_extern_typedefs.h"
 
@@ -36,22 +35,25 @@ extern MD_AppData_t MD_AppData;
 
 /******************************************************************************/
 
-void MD_DwellLoop(void)
+CFE_Status_t MD_DwellLoop(const MD_Wakeup_t *Msg)
 {
     int32                    Result;
+    CFE_Status_t             Status;
     uint16                   TblIndex;
     uint16                   EntryIndex;
     uint16                   NumDwellAddresses;
     MD_DwellPacketControl_t *TblPtr = NULL;
 
+    Status = CFE_SUCCESS;
+
     /* Check each dwell table */
-    for (TblIndex = 0; TblIndex < MD_NUM_DWELL_TABLES; TblIndex++)
+    for (TblIndex = 0; TblIndex < MD_INTERFACE_NUM_DWELL_TABLES; TblIndex++)
     {
         TblPtr            = &MD_AppData.MD_DwellTables[TblIndex];
         NumDwellAddresses = TblPtr->AddrCount;
 
         /* Process enabled dwell tables */
-        if ((TblPtr->Enabled == MD_DWELL_STREAM_ENABLED) && (TblPtr->Rate > 0))
+        if ((TblPtr->Enabled == MD_Dwell_States_ENABLED) && (TblPtr->Rate > 0))
         {
             /*
             ** Handle special case that dwell pkt is already full because
@@ -90,6 +92,7 @@ void MD_DwellLoop(void)
                         CFE_EVS_SendEvent(MD_DWELL_LOOP_GET_DWELL_DATA_ERR_EID, CFE_EVS_EventType_ERROR,
                                           "Dwell Table failed to read entry %d in table %d ", EntryIndex, TblIndex);
                         /* Don't exit here yet, still need to increment counters or send the packet */
+                        Status = Result;
                     }
 
                     /* Check if the dwell pkt is now full */
@@ -138,6 +141,7 @@ void MD_DwellLoop(void)
         } /* end if current dwell stream enabled */
 
     } /* end for each dwell table */
+    return Status;
 }
 
 /******************************************************************************/
@@ -213,10 +217,10 @@ void MD_SendDwellPkt(uint16 TableIndex)
     PktPtr->Payload.TableId   = TableIndex + 1;
     PktPtr->Payload.AddrCount = TblPtr->AddrCount;
     PktPtr->Payload.Rate      = TblPtr->Rate;
-#if MD_SIGNATURE_OPTION == 1
-    strncpy(PktPtr->Payload.Signature, TblPtr->Signature, MD_SIGNATURE_FIELD_LENGTH - 1);
+#if MD_INTERFACE_SIGNATURE_OPTION == 1
+    strncpy(PktPtr->Payload.Signature, TblPtr->Signature, MD_INTERFACE_SIGNATURE_FIELD_LENGTH - 1);
     /* Make sure string is null-terminated. */
-    PktPtr->Payload.Signature[MD_SIGNATURE_FIELD_LENGTH - 1] = '\0';
+    PktPtr->Payload.Signature[MD_INTERFACE_SIGNATURE_FIELD_LENGTH - 1] = '\0';
 #endif
     PktPtr->Payload.ByteCount = TblPtr->DataSize;
 
@@ -224,15 +228,15 @@ void MD_SendDwellPkt(uint16 TableIndex)
     ** Set packet length in header.
     */
 
-    DwellPktSize = MD_DWELL_PKT_LNGTH - MD_DWELL_TABLE_SIZE * 4 + TblPtr->DataSize;
+    DwellPktSize = sizeof(MD_DwellPkt_t) - MD_INTERFACE_DWELL_TABLE_SIZE * 4 + TblPtr->DataSize;
 
-    CFE_MSG_SetSize(&PktPtr->TlmHeader.Msg, DwellPktSize);
+    CFE_MSG_SetSize(CFE_MSG_PTR(PktPtr->TelemetryHeader), DwellPktSize);
 
     /*
     ** Send dwell telemetry packet.
     */
-    CFE_SB_TimeStampMsg(&PktPtr->TlmHeader.Msg);
-    CFE_SB_TransmitMsg(&PktPtr->TlmHeader.Msg, true);
+    CFE_SB_TimeStampMsg(CFE_MSG_PTR(PktPtr->TelemetryHeader));
+    CFE_SB_TransmitMsg(CFE_MSG_PTR(PktPtr->TelemetryHeader), true);
 }
 
 /******************************************************************************/

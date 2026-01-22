@@ -1,8 +1,7 @@
 /************************************************************************
- * NASA Docket No. GSC-18,922-1, and identified as “Core Flight
- * System (cFS) Memory Dwell Application Version 2.4.1”
+ * NASA Docket No. GSC-19,200-1, and identified as "cFS Draco"
  *
- * Copyright (c) 2021 United States Government as represented by the
+ * Copyright (c) 2023 United States Government as represented by the
  * Administrator of the National Aeronautics and Space Administration.
  * All Rights Reserved.
  *
@@ -17,73 +16,156 @@
  * limitations under the License.
  ************************************************************************/
 
-/*
- * Includes
+/**
+ * @file
+ *
+ * Auto-Generated stub implementations for functions defined in md_utils header
  */
 
-#include "md_msg.h"
-#include "cfe.h"
+#include "md_utils.h"
+#include "utgenstub.h"
 
-/* UT includes */
-#include "uttest.h"
-#include "utassert.h"
-#include "utstubs.h"
+/*
+ * ----------------------------------------------------
+ * Generated stub function for MD_ResolveSymAddr()
+ * ----------------------------------------------------
+ */
+bool MD_ResolveSymAddr(const MD_SymAddr_t *SymAddr, cpuaddr *ResolvedAddr)
+{
+    UT_GenStub_SetupReturnBuffer(MD_ResolveSymAddr, bool);
 
+    UT_GenStub_AddParam(MD_ResolveSymAddr, const MD_SymAddr_t *, SymAddr);
+    UT_GenStub_AddParam(MD_ResolveSymAddr, cpuaddr *, ResolvedAddr);
+
+    UT_GenStub_Execute(MD_ResolveSymAddr, Basic, NULL);
+
+    return UT_GenStub_GetReturnValue(MD_ResolveSymAddr, bool);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for MD_TableIsInMask()
+ * ----------------------------------------------------
+ */
 bool MD_TableIsInMask(int16 TableId, uint16 TableMask)
 {
-    UT_Stub_RegisterContextGenericArg(UT_KEY(MD_TableIsInMask), TableId);
-    UT_Stub_RegisterContextGenericArg(UT_KEY(MD_TableIsInMask), TableMask);
-    return UT_DEFAULT_IMPL(MD_TableIsInMask) != 0;
+    UT_GenStub_SetupReturnBuffer(MD_TableIsInMask, bool);
+
+    UT_GenStub_AddParam(MD_TableIsInMask, int16, TableId);
+    UT_GenStub_AddParam(MD_TableIsInMask, uint16, TableMask);
+
+    UT_GenStub_Execute(MD_TableIsInMask, Basic, NULL);
+
+    return UT_GenStub_GetReturnValue(MD_TableIsInMask, bool);
 }
 
+/*
+ * ----------------------------------------------------
+ * Generated stub function for MD_UpdateDwellControlInfo()
+ * ----------------------------------------------------
+ */
 void MD_UpdateDwellControlInfo(uint16 TableIndex)
 {
-    UT_Stub_RegisterContextGenericArg(UT_KEY(MD_UpdateDwellControlInfo), TableIndex);
-    UT_DEFAULT_IMPL(MD_UpdateDwellControlInfo);
+    UT_GenStub_AddParam(MD_UpdateDwellControlInfo, uint16, TableIndex);
+
+    UT_GenStub_Execute(MD_UpdateDwellControlInfo, Basic, NULL);
 }
 
-bool MD_ValidEntryId(uint16 EntryId)
-{
-    UT_Stub_RegisterContextGenericArg(UT_KEY(MD_ValidEntryId), EntryId);
-    return UT_DEFAULT_IMPL(MD_ValidEntryId) != 0;
-}
-
+/*
+ * ----------------------------------------------------
+ * Generated stub function for MD_ValidAddrRange()
+ * ----------------------------------------------------
+ */
 bool MD_ValidAddrRange(cpuaddr Addr, uint32 Size)
 {
-    UT_Stub_RegisterContextGenericArg(UT_KEY(MD_ValidAddrRange), Addr);
-    UT_Stub_RegisterContextGenericArg(UT_KEY(MD_ValidAddrRange), Size);
-    return UT_DEFAULT_IMPL(MD_ValidAddrRange) != 0;
+    UT_GenStub_SetupReturnBuffer(MD_ValidAddrRange, bool);
+
+    UT_GenStub_AddParam(MD_ValidAddrRange, cpuaddr, Addr);
+    UT_GenStub_AddParam(MD_ValidAddrRange, uint32, Size);
+
+    UT_GenStub_Execute(MD_ValidAddrRange, Basic, NULL);
+
+    return UT_GenStub_GetReturnValue(MD_ValidAddrRange, bool);
 }
 
-bool MD_ValidTableId(uint16 TableId)
+/*
+ * ----------------------------------------------------
+ * Generated stub function for MD_ValidEntryId()
+ * ----------------------------------------------------
+ */
+bool MD_ValidEntryId(uint16 EntryId)
 {
-    UT_Stub_RegisterContextGenericArg(UT_KEY(MD_ValidTableId), TableId);
-    return UT_DEFAULT_IMPL(MD_ValidTableId) != 0;
+    UT_GenStub_SetupReturnBuffer(MD_ValidEntryId, bool);
+
+    UT_GenStub_AddParam(MD_ValidEntryId, uint16, EntryId);
+
+    UT_GenStub_Execute(MD_ValidEntryId, Basic, NULL);
+
+    return UT_GenStub_GetReturnValue(MD_ValidEntryId, bool);
 }
 
+/*
+ * ----------------------------------------------------
+ * Generated stub function for MD_ValidFieldLength()
+ * ----------------------------------------------------
+ */
 bool MD_ValidFieldLength(uint16 FieldLength)
 {
-    UT_Stub_RegisterContextGenericArg(UT_KEY(MD_ValidFieldLength), FieldLength);
-    return UT_DEFAULT_IMPL(MD_ValidFieldLength) != 0;
+    UT_GenStub_SetupReturnBuffer(MD_ValidFieldLength, bool);
+
+    UT_GenStub_AddParam(MD_ValidFieldLength, uint16, FieldLength);
+
+    UT_GenStub_Execute(MD_ValidFieldLength, Basic, NULL);
+
+    return UT_GenStub_GetReturnValue(MD_ValidFieldLength, bool);
 }
 
-bool MD_Verify32Aligned(cpuaddr Address, uint32 Size)
+/*
+ * ----------------------------------------------------
+ * Generated stub function for MD_ValidTableId()
+ * ----------------------------------------------------
+ */
+bool MD_ValidTableId(uint16 TableId)
 {
-    UT_Stub_RegisterContextGenericArg(UT_KEY(MD_Verify32Aligned), Address);
-    UT_Stub_RegisterContextGenericArg(UT_KEY(MD_Verify32Aligned), Size);
-    return UT_DEFAULT_IMPL(MD_Verify32Aligned) != 0;
+    UT_GenStub_SetupReturnBuffer(MD_ValidTableId, bool);
+
+    UT_GenStub_AddParam(MD_ValidTableId, uint16, TableId);
+
+    UT_GenStub_Execute(MD_ValidTableId, Basic, NULL);
+
+    return UT_GenStub_GetReturnValue(MD_ValidTableId, bool);
 }
 
+/*
+ * ----------------------------------------------------
+ * Generated stub function for MD_Verify16Aligned()
+ * ----------------------------------------------------
+ */
 bool MD_Verify16Aligned(cpuaddr Address, uint32 Size)
 {
-    UT_Stub_RegisterContextGenericArg(UT_KEY(MD_Verify16Aligned), Address);
-    UT_Stub_RegisterContextGenericArg(UT_KEY(MD_Verify16Aligned), Size);
-    return UT_DEFAULT_IMPL(MD_Verify16Aligned) != 0;
+    UT_GenStub_SetupReturnBuffer(MD_Verify16Aligned, bool);
+
+    UT_GenStub_AddParam(MD_Verify16Aligned, cpuaddr, Address);
+    UT_GenStub_AddParam(MD_Verify16Aligned, uint32, Size);
+
+    UT_GenStub_Execute(MD_Verify16Aligned, Basic, NULL);
+
+    return UT_GenStub_GetReturnValue(MD_Verify16Aligned, bool);
 }
 
-bool MD_ResolveSymAddr(MD_SymAddr_t *SymAddr, cpuaddr *ResolvedAddr)
+/*
+ * ----------------------------------------------------
+ * Generated stub function for MD_Verify32Aligned()
+ * ----------------------------------------------------
+ */
+bool MD_Verify32Aligned(cpuaddr Address, uint32 Size)
 {
-    UT_Stub_RegisterContext(UT_KEY(MD_ResolveSymAddr), SymAddr);
-    UT_Stub_RegisterContext(UT_KEY(MD_ResolveSymAddr), ResolvedAddr);
-    return UT_DEFAULT_IMPL(MD_ResolveSymAddr) != 0;
+    UT_GenStub_SetupReturnBuffer(MD_Verify32Aligned, bool);
+
+    UT_GenStub_AddParam(MD_Verify32Aligned, cpuaddr, Address);
+    UT_GenStub_AddParam(MD_Verify32Aligned, uint32, Size);
+
+    UT_GenStub_Execute(MD_Verify32Aligned, Basic, NULL);
+
+    return UT_GenStub_GetReturnValue(MD_Verify32Aligned, bool);
 }

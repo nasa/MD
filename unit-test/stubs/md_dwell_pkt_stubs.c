@@ -1,8 +1,7 @@
 /************************************************************************
- * NASA Docket No. GSC-18,922-1, and identified as “Core Flight
- * System (cFS) Memory Dwell Application Version 2.4.1”
+ * NASA Docket No. GSC-19,200-1, and identified as "cFS Draco"
  *
- * Copyright (c) 2021 United States Government as represented by the
+ * Copyright (c) 2023 United States Government as represented by the
  * Administrator of the National Aeronautics and Space Administration.
  * All Rights Reserved.
  *
@@ -17,37 +16,68 @@
  * limitations under the License.
  ************************************************************************/
 
-/*
- * Includes
+/**
+ * @file
+ *
+ * Auto-Generated stub implementations for functions defined in md_dwell_pkt header
  */
 
-#include "common_types.h"
+#include "md_dwell_pkt.h"
+#include "utgenstub.h"
 
-/* UT includes */
-#include "uttest.h"
-#include "utassert.h"
-#include "utstubs.h"
-
-void MD_DwellLoop(void)
+/*
+ * ----------------------------------------------------
+ * Generated stub function for MD_DwellLoop()
+ * ----------------------------------------------------
+ */
+CFE_Status_t MD_DwellLoop(const MD_Wakeup_t *Msg)
 {
-    UT_DEFAULT_IMPL(MD_DwellLoop);
+    UT_GenStub_SetupReturnBuffer(MD_DwellLoop, CFE_Status_t);
+
+    UT_GenStub_AddParam(MD_DwellLoop, const MD_Wakeup_t *, Msg);
+
+    UT_GenStub_Execute(MD_DwellLoop, Basic, NULL);
+
+    return UT_GenStub_GetReturnValue(MD_DwellLoop, CFE_Status_t);
 }
 
+/*
+ * ----------------------------------------------------
+ * Generated stub function for MD_GetDwellData()
+ * ----------------------------------------------------
+ */
 int32 MD_GetDwellData(uint16 TblIndex, uint16 EntryIndex)
 {
-    UT_Stub_RegisterContextGenericArg(UT_KEY(MD_GetDwellData), TblIndex);
-    UT_Stub_RegisterContextGenericArg(UT_KEY(MD_GetDwellData), EntryIndex);
-    return UT_DEFAULT_IMPL(MD_GetDwellData);
+    UT_GenStub_SetupReturnBuffer(MD_GetDwellData, int32);
+
+    UT_GenStub_AddParam(MD_GetDwellData, uint16, TblIndex);
+    UT_GenStub_AddParam(MD_GetDwellData, uint16, EntryIndex);
+
+    UT_GenStub_Execute(MD_GetDwellData, Basic, NULL);
+
+    return UT_GenStub_GetReturnValue(MD_GetDwellData, int32);
 }
 
+/*
+ * ----------------------------------------------------
+ * Generated stub function for MD_SendDwellPkt()
+ * ----------------------------------------------------
+ */
 void MD_SendDwellPkt(uint16 TableIndex)
 {
-    UT_Stub_RegisterContextGenericArg(UT_KEY(MD_SendDwellPkt), TableIndex);
-    UT_DEFAULT_IMPL(MD_SendDwellPkt);
+    UT_GenStub_AddParam(MD_SendDwellPkt, uint16, TableIndex);
+
+    UT_GenStub_Execute(MD_SendDwellPkt, Basic, NULL);
 }
 
+/*
+ * ----------------------------------------------------
+ * Generated stub function for MD_StartDwellStream()
+ * ----------------------------------------------------
+ */
 void MD_StartDwellStream(uint16 TableIndex)
 {
-    UT_Stub_RegisterContextGenericArg(UT_KEY(MD_StartDwellStream), TableIndex);
-    UT_DEFAULT_IMPL(MD_StartDwellStream);
+    UT_GenStub_AddParam(MD_StartDwellStream, uint16, TableIndex);
+
+    UT_GenStub_Execute(MD_StartDwellStream, Basic, NULL);
 }

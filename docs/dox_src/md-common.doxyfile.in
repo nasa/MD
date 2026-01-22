@@ -5,5 +5,6 @@
 # Include front material followed by everything in fsw
 INPUT      += @md_MISSION_DIR@/docs/dox_src/cfs_md.dox
 INPUT      += @md_MISSION_DIR@/fsw
+INPUT      += @md_MISSION_DIR@/config
 
 IMAGE_PATH += @md_MISSION_DIR@/docs/dox_src

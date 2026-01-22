@@ -1,8 +1,7 @@
 /************************************************************************
- * NASA Docket No. GSC-18,922-1, and identified as “Core Flight
- * System (cFS) Memory Dwell Application Version 2.4.1”
+ * NASA Docket No. GSC-19,200-1, and identified as "cFS Draco"
  *
- * Copyright (c) 2021 United States Government as represented by the
+ * Copyright (c) 2023 United States Government as represented by the
  * Administrator of the National Aeronautics and Space Administration.
  * All Rights Reserved.
  *
@@ -26,7 +25,7 @@
 #include "md_utils.h"
 #include "md_msg.h"
 #include "md_msgdefs.h"
-#include "md_events.h"
+#include "md_eventids.h"
 #include "md_version.h"
 #include "md_test_utils.h"
 #include "md_platform_cfg.h"
@@ -52,7 +51,7 @@ CFE_Status_t MD_CMDS_TEST_CFE_TBL_GetAddressHook(void *UserObj, int32 StubRetcod
 
     *TblPtr = &MD_AppData.MD_DwellTables[0];
 
-    MD_AppData.MD_DwellTables[0].Enabled = MD_DWELL_STREAM_ENABLED;
+    MD_AppData.MD_DwellTables[0].Enabled = MD_Dwell_States_ENABLED;
 
     /* Return value doesn't matter in this case */
     return CFE_TBL_INFO_UPDATED;
@@ -61,7 +60,7 @@ CFE_Status_t MD_CMDS_TEST_CFE_TBL_GetAddressHook(void *UserObj, int32 StubRetcod
 int32 MD_CMDS_TEST_MD_UpdateDwellControlInfoHook1(void *UserObj, int32 StubRetcode, uint32 CallCount,
                                                   const UT_StubContext_t *Context)
 {
-    MD_AppData.MD_DwellTables[0].Enabled = MD_DWELL_STREAM_ENABLED;
+    MD_AppData.MD_DwellTables[0].Enabled = MD_Dwell_States_ENABLED;
 
     MD_AppData.MD_DwellTables[0].Rate = 0;
 
@@ -72,12 +71,46 @@ int32 MD_CMDS_TEST_MD_UpdateDwellControlInfoHook1(void *UserObj, int32 StubRetco
 int32 MD_CMDS_TEST_MD_UpdateDwellControlInfoHook2(void *UserObj, int32 StubRetcode, uint32 CallCount,
                                                   const UT_StubContext_t *Context)
 {
-    MD_AppData.MD_DwellTables[0].Enabled = MD_DWELL_STREAM_DISABLED;
+    MD_AppData.MD_DwellTables[0].Enabled = MD_Dwell_States_DISABLED;
 
     MD_AppData.MD_DwellTables[0].Rate = 1;
 
     /* Return value doesn't matter in this case */
     return 0;
+}
+
+void MD_NoopCmd_Test(void)
+{
+    /* Set initial value for counter */
+    MD_AppData.CmdCounter = 1;
+
+    /* Call the function directly */
+    MD_NoopCmd((MD_NoopCmd_t *) &UT_CmdBuf.Buf);
+
+    /* Verify counter was incremented */
+    UtAssert_UINT8_EQ(MD_AppData.CmdCounter, 2);
+    
+    /* Verify event was sent */
+    UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 1);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, MD_NOOP_INF_EID);
+}
+
+void MD_ResetCountersCmd_Test(void)
+{
+    /* Set non-zero initial values */
+    MD_AppData.CmdCounter = 5;
+    MD_AppData.ErrCounter = 3;
+
+    /* Call the function directly */
+    MD_ResetCountersCmd((MD_ResetCountersCmd_t *) &UT_CmdBuf.Buf);
+
+    /* Verify counters were reset */
+    UtAssert_UINT8_EQ(MD_AppData.CmdCounter, 0);
+    UtAssert_UINT8_EQ(MD_AppData.ErrCounter, 0);
+    
+    /* Verify event was sent */
+    UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 1);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, MD_RESET_INF_EID);
 }
 
 void MD_ProcessStartCmd_Test_ZeroRate(void)
@@ -109,11 +142,11 @@ void MD_ProcessStartCmd_Test_ZeroRate(void)
     UT_SetDeferredRetcode(UT_KEY(MD_TableIsInMask), 3, false);
 
     /* Execute the function being tested */
-    MD_ProcessStartCmd(&UT_CmdBuf.Buf);
+    MD_StartDwellCmd((MD_StartDwellCmd_t *) &UT_CmdBuf.Buf);
 
     /* Verify results */
-    UtAssert_True(MD_AppData.MD_DwellTables[0].Enabled == MD_DWELL_STREAM_ENABLED,
-                  "MD_AppData.MD_DwellTables[0].Enabled == MD_DWELL_STREAM_ENABLED");
+    UtAssert_True(MD_AppData.MD_DwellTables[0].Enabled == MD_Dwell_States_ENABLED,
+                  "MD_AppData.MD_DwellTables[0].Enabled == MD_Dwell_States_ENABLED");
     UtAssert_True(MD_AppData.MD_DwellTables[0].Countdown == 1, "MD_AppData.MD_DwellTables[0].Countdown == 1");
     UtAssert_True(MD_AppData.MD_DwellTables[0].CurrentEntry == 0, "MD_AppData.MD_DwellTables[0].CurrentEntry == 0");
     UtAssert_True(MD_AppData.MD_DwellTables[0].PktOffset == 0, "MD_AppData.MD_DwellTables[0].PktOffset == 0");
@@ -168,11 +201,11 @@ void MD_ProcessStartCmd_Test_Success(void)
     UT_SetDeferredRetcode(UT_KEY(MD_TableIsInMask), 3, false);
 
     /* Execute the function being tested */
-    MD_ProcessStartCmd(&UT_CmdBuf.Buf);
+    MD_StartDwellCmd((MD_StartDwellCmd_t *) &UT_CmdBuf.Buf);
 
     /* Verify results */
-    UtAssert_True(MD_AppData.MD_DwellTables[0].Enabled == MD_DWELL_STREAM_ENABLED,
-                  "MD_AppData.MD_DwellTables[0].Enabled == MD_DWELL_STREAM_ENABLED");
+    UtAssert_True(MD_AppData.MD_DwellTables[0].Enabled == MD_Dwell_States_ENABLED,
+                  "MD_AppData.MD_DwellTables[0].Enabled == MD_Dwell_States_ENABLED");
     UtAssert_True(MD_AppData.MD_DwellTables[0].Countdown == 1, "MD_AppData.MD_DwellTables[0].Countdown == 1");
     UtAssert_True(MD_AppData.MD_DwellTables[0].CurrentEntry == 0, "MD_AppData.MD_DwellTables[0].CurrentEntry == 0");
     UtAssert_True(MD_AppData.MD_DwellTables[0].PktOffset == 0, "MD_AppData.MD_DwellTables[0].PktOffset == 0");
@@ -207,7 +240,7 @@ void MD_ProcessStartCmd_Test_EmptyTableMask(void)
     UT_CmdBuf.CmdStartStop.Payload.TableMask = 0;
 
     /* Execute the function being tested */
-    MD_ProcessStartCmd(&UT_CmdBuf.Buf);
+    MD_StartDwellCmd((MD_StartDwellCmd_t *) &UT_CmdBuf.Buf);
 
     /* Verify results */
     UtAssert_True(MD_AppData.ErrCounter == 1, "MD_AppData.ErrCounter == 1");
@@ -251,7 +284,7 @@ void MD_ProcessStartCmd_Test_NoUpdateTableEnabledField(void)
     UT_SetDeferredRetcode(UT_KEY(MD_UpdateTableEnabledField), 1, -1);
 
     /* Execute the function being tested */
-    MD_ProcessStartCmd(&UT_CmdBuf.Buf);
+    MD_StartDwellCmd((MD_StartDwellCmd_t *) &UT_CmdBuf.Buf);
 
     /* Verify results */
     UtAssert_True(MD_AppData.ErrCounter == 1, "MD_AppData.ErrCounter == 1");
@@ -293,11 +326,11 @@ void MD_ProcessStopCmd_Test_Success(void)
     UT_SetDeferredRetcode(UT_KEY(MD_TableIsInMask), 3, false);
 
     /* Execute the function being tested */
-    MD_ProcessStopCmd(&UT_CmdBuf.Buf);
+    MD_StopDwellCmd((MD_StopDwellCmd_t *) &UT_CmdBuf.Buf);
 
     /* Verify results */
-    UtAssert_True(MD_AppData.MD_DwellTables[0].Enabled == MD_DWELL_STREAM_DISABLED,
-                  "MD_AppData.MD_DwellTables[0].Enabled == MD_DWELL_STREAM_ENABLED");
+    UtAssert_True(MD_AppData.MD_DwellTables[0].Enabled == MD_Dwell_States_DISABLED,
+                  "MD_AppData.MD_DwellTables[0].Enabled == MD_Dwell_States_ENABLED");
     UtAssert_True(MD_AppData.MD_DwellTables[0].Countdown == 0, "MD_AppData.MD_DwellTables[0].Countdown == 0");
     UtAssert_True(MD_AppData.MD_DwellTables[0].CurrentEntry == 0, "MD_AppData.MD_DwellTables[0].CurrentEntry == 0");
     UtAssert_True(MD_AppData.MD_DwellTables[0].PktOffset == 0, "MD_AppData.MD_DwellTables[0].PktOffset == 0");
@@ -332,7 +365,7 @@ void MD_ProcessStopCmd_Test_EmptyTableMask(void)
     UT_CmdBuf.CmdStartStop.Payload.TableMask = 0;
 
     /* Execute the function being tested */
-    MD_ProcessStopCmd(&UT_CmdBuf.Buf);
+    MD_StopDwellCmd((MD_StopDwellCmd_t *) &UT_CmdBuf.Buf);
 
     /* Verify results */
     UtAssert_True(MD_AppData.ErrCounter == 1, "MD_AppData.ErrCounter == 1");
@@ -375,11 +408,11 @@ void MD_ProcessStopCmd_Test_NoUpdateTableEnabledField(void)
     UT_SetDeferredRetcode(UT_KEY(MD_UpdateTableEnabledField), 1, -1);
 
     /* Execute the function being tested */
-    MD_ProcessStopCmd(&UT_CmdBuf.Buf);
+    MD_StopDwellCmd((MD_StopDwellCmd_t *) &UT_CmdBuf.Buf);
 
     /* Verify results */
-    UtAssert_True(MD_AppData.MD_DwellTables[0].Enabled == MD_DWELL_STREAM_DISABLED,
-                  "MD_AppData.MD_DwellTables[0].Enabled == MD_DWELL_STREAM_ENABLED");
+    UtAssert_True(MD_AppData.MD_DwellTables[0].Enabled == MD_Dwell_States_DISABLED,
+                  "MD_AppData.MD_DwellTables[0].Enabled == MD_Dwell_States_ENABLED");
     UtAssert_True(MD_AppData.MD_DwellTables[0].Countdown == 0, "MD_AppData.MD_DwellTables[0].Countdown == 0");
     UtAssert_True(MD_AppData.MD_DwellTables[0].CurrentEntry == 0, "MD_AppData.MD_DwellTables[0].CurrentEntry == 0");
     UtAssert_True(MD_AppData.MD_DwellTables[0].PktOffset == 0, "MD_AppData.MD_DwellTables[0].PktOffset == 0");
@@ -415,7 +448,7 @@ void MD_ProcessJamCmd_Test_InvalidJamTable(void)
     UT_CmdBuf.CmdJam.Payload.EntryId = 2;
 
     /* Execute the function being tested */
-    MD_ProcessJamCmd(&UT_CmdBuf.Buf);
+    MD_JamDwellCmd((MD_JamDwellCmd_t *) &UT_CmdBuf.Buf);
 
     /* Verify results */
     UtAssert_True(MD_AppData.ErrCounter == 1, "MD_AppData.ErrCounter == 1");
@@ -451,7 +484,7 @@ void MD_ProcessJamCmd_Test_InvalidEntryArg(void)
     UT_SetDeferredRetcode(UT_KEY(MD_ValidTableId), 1, true);
 
     /* Execute the function being tested */
-    MD_ProcessJamCmd(&UT_CmdBuf.Buf);
+    MD_JamDwellCmd((MD_JamDwellCmd_t *) &UT_CmdBuf.Buf);
 
     /* Verify results */
     UtAssert_True(MD_AppData.ErrCounter == 1, "MD_AppData.ErrCounter == 1");
@@ -489,7 +522,7 @@ void MD_ProcessJamCmd_Test_SuccessNullZeroRate(void)
     UT_CmdBuf.CmdJam.Payload.FieldLength = 0;
 
     MD_AppData.MD_DwellTables[0].Rate    = 1;
-    MD_AppData.MD_DwellTables[0].Enabled = MD_DWELL_STREAM_ENABLED;
+    MD_AppData.MD_DwellTables[0].Enabled = MD_Dwell_States_ENABLED;
 
     /* Prevents segmentation fault in call to subfunction MD_UpdateDwellControlInfo */
     UT_SetHookFunction(UT_KEY(CFE_TBL_GetAddress), &MD_CMDS_TEST_CFE_TBL_GetAddressHook, NULL);
@@ -502,7 +535,7 @@ void MD_ProcessJamCmd_Test_SuccessNullZeroRate(void)
     UT_SetDeferredRetcode(UT_KEY(MD_UpdateTableDwellEntry), 1, CFE_SUCCESS);
 
     /* Execute the function being tested */
-    MD_ProcessJamCmd(&UT_CmdBuf.Buf);
+    MD_JamDwellCmd((MD_JamDwellCmd_t *) &UT_CmdBuf.Buf);
 
     /* Verify results */
     UtAssert_True(MD_AppData.MD_DwellTables[0].Entry[1].ResolvedAddress == 0,
@@ -561,7 +594,7 @@ void MD_ProcessJamCmd_Test_NullTableDwell(void)
     UT_SetDeferredRetcode(UT_KEY(MD_UpdateTableDwellEntry), 1, -1);
 
     /* Execute the function being tested */
-    MD_ProcessJamCmd(&UT_CmdBuf.Buf);
+    MD_JamDwellCmd((MD_JamDwellCmd_t *) &UT_CmdBuf.Buf);
 
     /* Verify results */
     UtAssert_True(MD_AppData.MD_DwellTables[0].Entry[1].ResolvedAddress == 0,
@@ -609,7 +642,7 @@ void MD_ProcessJamCmd_Test_NoUpdateTableDwell(void)
     UT_SetDeferredRetcode(UT_KEY(MD_UpdateTableDwellEntry), 1, -1);
 
     /* Execute the function being tested */
-    MD_ProcessJamCmd(&UT_CmdBuf.Buf);
+    MD_JamDwellCmd((MD_JamDwellCmd_t *) &UT_CmdBuf.Buf);
 
     /* Verify results */
     UtAssert_True(MD_AppData.MD_DwellTables[0].Entry[1].ResolvedAddress == 0,
@@ -657,7 +690,7 @@ void MD_ProcessJamCmd_Test_CantResolveJamAddr(void)
     UT_SetDeferredRetcode(UT_KEY(MD_ValidEntryId), 1, true);
 
     /* Execute the function being tested */
-    MD_ProcessJamCmd(&UT_CmdBuf.Buf);
+    MD_JamDwellCmd((MD_JamDwellCmd_t *) &UT_CmdBuf.Buf);
 
     /* Verify results */
     UtAssert_True(MD_AppData.ErrCounter == 1, "MD_AppData.ErrCounter == 1");
@@ -699,7 +732,7 @@ void MD_ProcessJamCmd_Test_InvalidLenArg(void)
     UT_SetDeferredRetcode(UT_KEY(MD_ValidFieldLength), 1, false);
 
     /* Execute the function being tested */
-    MD_ProcessJamCmd(&UT_CmdBuf.Buf);
+    MD_JamDwellCmd((MD_JamDwellCmd_t *) &UT_CmdBuf.Buf);
 
     /* Verify results */
     UtAssert_True(MD_AppData.ErrCounter == 1, "MD_AppData.ErrCounter == 1");
@@ -742,7 +775,7 @@ void MD_ProcessJamCmd_Test_InvalidJamAddr(void)
     UT_SetDeferredRetcode(UT_KEY(MD_ValidAddrRange), 1, false);
 
     /* Execute the function being tested */
-    MD_ProcessJamCmd(&UT_CmdBuf.Buf);
+    MD_JamDwellCmd((MD_JamDwellCmd_t *) &UT_CmdBuf.Buf);
 
     /* Verify results */
     UtAssert_True(MD_AppData.ErrCounter == 1, "MD_AppData.ErrCounter == 1");
@@ -760,7 +793,7 @@ void MD_ProcessJamCmd_Test_InvalidJamAddr(void)
                   call_count_CFE_EVS_SendEvent);
 }
 
-#if MD_ENFORCE_DWORD_ALIGN == 0
+#if MD_INTERFACE_ENFORCE_DWORD_ALIGN == 0
 void MD_ProcessJamCmd_Test_JamAddrNot16BitFieldLength4(void)
 {
     CFE_SB_MsgId_t TestMsgId;
@@ -787,7 +820,7 @@ void MD_ProcessJamCmd_Test_JamAddrNot16BitFieldLength4(void)
     UT_SetDeferredRetcode(UT_KEY(MD_ValidAddrRange), 1, true);
 
     /* Execute the function being tested */
-    MD_ProcessJamCmd(&UT_CmdBuf.Buf);
+    MD_JamDwellCmd((MD_JamDwellCmd_t *) &UT_CmdBuf.Buf);
 
     /* Verify results */
     UtAssert_True(MD_AppData.ErrCounter == 1, "MD_AppData.ErrCounter == 1");
@@ -806,7 +839,7 @@ void MD_ProcessJamCmd_Test_JamAddrNot16BitFieldLength4(void)
 }
 #endif
 
-#if MD_ENFORCE_DWORD_ALIGN == 1
+#if MD_INTERFACE_ENFORCE_DWORD_ALIGN == 1
 void MD_ProcessJamCmd_Test_JamAddrNot32Bit(void)
 {
     CFE_SB_MsgId_t TestMsgId;
@@ -833,7 +866,7 @@ void MD_ProcessJamCmd_Test_JamAddrNot32Bit(void)
     UT_SetDeferredRetcode(UT_KEY(MD_ValidAddrRange), 1, true);
 
     /* Execute the function being tested */
-    MD_ProcessJamCmd(&UT_CmdBuf.Buf);
+    MD_JamDwellCmd((MD_JamDwellCmd_t *) &UT_CmdBuf.Buf);
 
     /* Verify results */
     UtAssert_True(MD_AppData.ErrCounter == 1, "MD_AppData.ErrCounter == 1");
@@ -878,7 +911,7 @@ void MD_ProcessJamCmd_Test_JamAddrNot16BitFieldLength2(void)
     UT_SetDeferredRetcode(UT_KEY(MD_ValidAddrRange), 1, true);
 
     /* Execute the function being tested */
-    MD_ProcessJamCmd(&UT_CmdBuf.Buf);
+    MD_JamDwellCmd((MD_JamDwellCmd_t *) &UT_CmdBuf.Buf);
 
     /* Verify results */
     UtAssert_True(MD_AppData.ErrCounter == 1, "MD_AppData.ErrCounter == 1");
@@ -923,7 +956,7 @@ void MD_ProcessJamCmd_Test_JamAddrNot16BitNot32Aligned(void)
     UT_SetDeferredRetcode(UT_KEY(MD_Verify32Aligned), 1, false);
 
     /* Execute the function being tested */
-    MD_ProcessJamCmd(&UT_CmdBuf.Buf);
+    MD_JamDwellCmd((MD_JamDwellCmd_t *) &UT_CmdBuf.Buf);
 
     /* Verify results */
     UtAssert_True(MD_AppData.ErrCounter == 1, "MD_AppData.ErrCounter == 1");
@@ -967,7 +1000,7 @@ void MD_ProcessJamCmd_Test_JamFieldLength4Addr32Aligned(void)
     UT_SetDeferredRetcode(UT_KEY(MD_Verify32Aligned), 1, true);
 
     /* Execute the function being tested */
-    MD_ProcessJamCmd(&UT_CmdBuf.Buf);
+    MD_JamDwellCmd((MD_JamDwellCmd_t *) &UT_CmdBuf.Buf);
 
     /* Verify results */
     UtAssert_True(MD_AppData.CmdCounter == 1, "MD_AppData.CmdCounter == 1");
@@ -1018,7 +1051,7 @@ void MD_ProcessJamCmd_Test_SuccessNonNullZeroRate(void)
     UT_SetDeferredRetcode(UT_KEY(MD_Verify16Aligned), 1, true);
 
     /* Execute the function being tested */
-    MD_ProcessJamCmd(&UT_CmdBuf.Buf);
+    MD_JamDwellCmd((MD_JamDwellCmd_t *) &UT_CmdBuf.Buf);
 
     /* Verify results */
     UtAssert_True(MD_AppData.MD_DwellTables[0].Entry[1].ResolvedAddress == 0,
@@ -1080,7 +1113,7 @@ void MD_ProcessJamCmd_Test_SuccessZeroRateStreamDisabled(void)
     UT_SetDeferredRetcode(UT_KEY(MD_Verify16Aligned), 1, true);
 
     /* Execute the function being tested */
-    MD_ProcessJamCmd(&UT_CmdBuf.Buf);
+    MD_JamDwellCmd((MD_JamDwellCmd_t *) &UT_CmdBuf.Buf);
 
     /* Verify results */
     UtAssert_True(MD_AppData.MD_DwellTables[0].Entry[1].ResolvedAddress == 0,
@@ -1135,7 +1168,7 @@ void MD_ProcessJamCmd_Test_SuccessRateNotZero(void)
     UT_SetDeferredRetcode(UT_KEY(MD_Verify16Aligned), 1, true);
 
     /* Execute the function being tested */
-    MD_ProcessJamCmd(&UT_CmdBuf.Buf);
+    MD_JamDwellCmd((MD_JamDwellCmd_t *) &UT_CmdBuf.Buf);
 
     /* Verify results */
     UtAssert_True(MD_AppData.MD_DwellTables[0].Entry[1].ResolvedAddress == 0,
@@ -1160,7 +1193,7 @@ void MD_ProcessJamCmd_Test_SuccessRateNotZero(void)
                   call_count_CFE_EVS_SendEvent);
 }
 
-#if MD_SIGNATURE_OPTION == 1
+#if MD_INTERFACE_SIGNATURE_OPTION == 1
 void MD_ProcessSignatureCmd_Test_InvalidSignatureLength(void)
 {
     uint16         i;
@@ -1180,7 +1213,7 @@ void MD_ProcessSignatureCmd_Test_InvalidSignatureLength(void)
     }
 
     /* Execute the function being tested */
-    MD_ProcessSignatureCmd(&UT_CmdBuf.Buf);
+    MD_SetSignatureCmd((MD_SetSignatureCmd_t *) &UT_CmdBuf.Buf);
 
     /* Verify results */
     UtAssert_True(MD_AppData.ErrCounter == 1, "MD_AppData.ErrCounter == 1");
@@ -1199,7 +1232,7 @@ void MD_ProcessSignatureCmd_Test_InvalidSignatureLength(void)
 }
 #endif
 
-#if MD_SIGNATURE_OPTION == 1
+#if MD_INTERFACE_SIGNATURE_OPTION == 1
 void MD_ProcessSignatureCmd_Test_InvalidSignatureTable(void)
 {
     CFE_SB_MsgId_t TestMsgId;
@@ -1215,7 +1248,7 @@ void MD_ProcessSignatureCmd_Test_InvalidSignatureTable(void)
     UT_CmdBuf.CmdSetSignature.Payload.TableId = 0;
 
     /* Execute the function being tested */
-    MD_ProcessSignatureCmd(&UT_CmdBuf.Buf);
+    MD_SetSignatureCmd((MD_SetSignatureCmd_t *) &UT_CmdBuf.Buf);
 
     /* Verify results */
     UtAssert_True(MD_AppData.ErrCounter == 1, "MD_AppData.ErrCounter == 1");
@@ -1234,7 +1267,7 @@ void MD_ProcessSignatureCmd_Test_InvalidSignatureTable(void)
 }
 #endif
 
-#if MD_SIGNATURE_OPTION == 1
+#if MD_INTERFACE_SIGNATURE_OPTION == 1
 void MD_ProcessSignatureCmd_Test_Success(void)
 {
     CFE_SB_MsgId_t TestMsgId;
@@ -1256,11 +1289,11 @@ void MD_ProcessSignatureCmd_Test_Success(void)
     UT_SetDeferredRetcode(UT_KEY(MD_ValidTableId), 1, true);
 
     /* Execute the function being tested */
-    MD_ProcessSignatureCmd(&UT_CmdBuf.Buf);
+    MD_SetSignatureCmd((MD_SetSignatureCmd_t *) &UT_CmdBuf.Buf);
 
     /* Verify results */
-    UtAssert_True(strncmp(MD_AppData.MD_DwellTables[0].Signature, "signature", MD_SIGNATURE_FIELD_LENGTH) == 0,
-                  "strncmp(MD_AppData.MD_DwellTables[0].Signature, 'signature', MD_SIGNATURE_FIELD_LENGTH) == 0");
+    UtAssert_True(strncmp(MD_AppData.MD_DwellTables[0].Signature, "signature", MD_INTERFACE_SIGNATURE_FIELD_LENGTH) == 0,
+                  "strncmp(MD_AppData.MD_DwellTables[0].Signature, 'signature', MD_INTERFACE_SIGNATURE_FIELD_LENGTH) == 0");
 
     UtAssert_True(MD_AppData.CmdCounter == 1, "MD_AppData.CmdCounter == 1");
 
@@ -1278,7 +1311,7 @@ void MD_ProcessSignatureCmd_Test_Success(void)
 }
 #endif
 
-#if MD_SIGNATURE_OPTION == 1
+#if MD_INTERFACE_SIGNATURE_OPTION == 1
 void MD_ProcessSignatureCmd_Test_NoUpdateTableSignature(void)
 {
     CFE_SB_MsgId_t TestMsgId;
@@ -1301,11 +1334,11 @@ void MD_ProcessSignatureCmd_Test_NoUpdateTableSignature(void)
     UT_SetDeferredRetcode(UT_KEY(MD_UpdateTableSignature), 1, true);
 
     /* Execute the function being tested */
-    MD_ProcessSignatureCmd(&UT_CmdBuf.Buf);
+    MD_SetSignatureCmd((MD_SetSignatureCmd_t *) &UT_CmdBuf.Buf);
 
     /* Verify results */
-    UtAssert_True(strncmp(MD_AppData.MD_DwellTables[0].Signature, "signature", MD_SIGNATURE_FIELD_LENGTH) == 0,
-                  "strncmp(MD_AppData.MD_DwellTables[0].Signature, 'signature', MD_SIGNATURE_FIELD_LENGTH) == 0");
+    UtAssert_True(strncmp(MD_AppData.MD_DwellTables[0].Signature, "signature", MD_INTERFACE_SIGNATURE_FIELD_LENGTH) == 0,
+                  "strncmp(MD_AppData.MD_DwellTables[0].Signature, 'signature', MD_INTERFACE_SIGNATURE_FIELD_LENGTH) == 0");
 
     UtAssert_True(MD_AppData.ErrCounter == 1, "MD_AppData.ErrCounter == 1");
 
@@ -1325,6 +1358,9 @@ void MD_ProcessSignatureCmd_Test_NoUpdateTableSignature(void)
 
 void UtTest_Setup(void)
 {
+    UtTest_Add(MD_NoopCmd_Test, MD_Test_Setup, MD_Test_TearDown, "MD_NoopCmd_Test");
+    UtTest_Add(MD_ResetCountersCmd_Test, MD_Test_Setup, MD_Test_TearDown, "MD_ResetCountersCmd_Test");
+
     UtTest_Add(MD_ProcessStartCmd_Test_ZeroRate, MD_Test_Setup, MD_Test_TearDown, "MD_ProcessStartCmd_Test_ZeroRate");
     UtTest_Add(MD_ProcessStartCmd_Test_Success, MD_Test_Setup, MD_Test_TearDown, "MD_ProcessStartCmd_Test_Success");
     UtTest_Add(MD_ProcessStartCmd_Test_EmptyTableMask, MD_Test_Setup, MD_Test_TearDown,
@@ -1347,7 +1383,7 @@ void UtTest_Setup(void)
     UtTest_Add(MD_ProcessJamCmd_Test_NullTableDwell, MD_Test_Setup, MD_Test_TearDown,
                "MD_ProcessJamCmd_Test_NullTableDwell");
     UtTest_Add(MD_ProcessJamCmd_Test_NoUpdateTableDwell, MD_Test_Setup, MD_Test_TearDown,
-               "MD_ProcessJamCmd_Test_SuccessNullZeroRate");
+               "MD_ProcessJamCmd_Test_NoUpdateTableDwell");
     UtTest_Add(MD_ProcessJamCmd_Test_CantResolveJamAddr, MD_Test_Setup, MD_Test_TearDown,
                "MD_ProcessJamCmd_Test_CantResolveJamAddr");
     UtTest_Add(MD_ProcessJamCmd_Test_InvalidLenArg, MD_Test_Setup, MD_Test_TearDown,
@@ -1355,12 +1391,12 @@ void UtTest_Setup(void)
     UtTest_Add(MD_ProcessJamCmd_Test_InvalidJamAddr, MD_Test_Setup, MD_Test_TearDown,
                "MD_ProcessJamCmd_Test_InvalidJamAddr");
 
-#if MD_ENFORCE_DWORD_ALIGN == 0
+#if MD_INTERFACE_ENFORCE_DWORD_ALIGN == 0
     UtTest_Add(MD_ProcessJamCmd_Test_JamAddrNot16BitFieldLength4, MD_Test_Setup, MD_Test_TearDown,
                "MD_ProcessJamCmd_Test_JamAddrNot16BitFieldLength4");
 #endif
 
-#if MD_ENFORCE_DWORD_ALIGN == 1
+#if MD_INTERFACE_ENFORCE_DWORD_ALIGN == 1
     UtTest_Add(MD_ProcessJamCmd_Test_JamAddrNot32Bit, MD_Test_Setup, MD_Test_TearDown,
                "MD_ProcessJamCmd_Test_JamAddrNot32Bit");
 #endif
@@ -1377,7 +1413,7 @@ void UtTest_Setup(void)
                "MD_ProcessJamCmd_Test_SuccessZeroRateStreamDisabled");
     UtTest_Add(MD_ProcessJamCmd_Test_SuccessRateNotZero, MD_Test_Setup, MD_Test_TearDown,
                "MD_ProcessJamCmd_Test_SuccessRateNotZero");
-#if MD_SIGNATURE_OPTION == 1
+#if MD_INTERFACE_SIGNATURE_OPTION == 1
     UtTest_Add(MD_ProcessSignatureCmd_Test_InvalidSignatureLength, MD_Test_Setup, MD_Test_TearDown,
                "MD_ProcessSignatureCmd_Test_InvalidSignatureLength");
     UtTest_Add(MD_ProcessSignatureCmd_Test_InvalidSignatureTable, MD_Test_Setup, MD_Test_TearDown,

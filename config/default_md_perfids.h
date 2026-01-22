@@ -1,8 +1,7 @@
 /************************************************************************
- * NASA Docket No. GSC-18,447-1, and identified as “CFS CFDP (CF)
- * Application version 3.0.0”
+ * NASA Docket No. GSC-19,200-1, and identified as "cFS Draco"
  *
- * Copyright (c) 2019 United States Government as represented by the
+ * Copyright (c) 2023 United States Government as represented by the
  * Administrator of the National Aeronautics and Space Administration.
  * All Rights Reserved.
  *
@@ -19,24 +18,18 @@
 
 /**
  * @file
- *
- * Declarations and prototypes for md_extern_typedefs module
+ *  Define MD Performance IDs
  */
-
-#ifndef MD_EXTERN_TYPEDEFS_H
-#define MD_EXTERN_TYPEDEFS_H
-
-/************************************************************************
- * Type Definitions
- ************************************************************************/
+#ifndef DEFAULT_MD_PERFIDS_H
+#define DEFAULT_MD_PERFIDS_H
 
 /**
- *  \brief  MD enum used for representing values for enable state
+ * \defgroup cfsmdmissioncfg CFS Memory Dwell Mission Configuration
+ * \{
  */
-enum MD_Dwell_States
-{
-    MD_DWELL_STREAM_DISABLED, /**< \brief MD Dwell Stream Disabled */
-    MD_DWELL_STREAM_ENABLED   /**< \brief MD Dwell Stream Enabled */
-};
 
-#endif /* MD_EXTERN_TYPEDEFS_H */
+#define MD_APPMAIN_PERF_ID 26 /**< \brief Application main performance ID */
+
+/**\}*/
+
+#endif /* DEFAULT_MD_PERFIDS_H */

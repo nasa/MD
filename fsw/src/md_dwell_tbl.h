@@ -1,8 +1,7 @@
 /************************************************************************
- * NASA Docket No. GSC-18,922-1, and identified as “Core Flight
- * System (cFS) Memory Dwell Application Version 2.4.1”
+ * NASA Docket No. GSC-19,200-1, and identified as "cFS Draco"
  *
- * Copyright (c) 2021 United States Government as represented by the
+ * Copyright (c) 2023 United States Government as represented by the
  * Administrator of the National Aeronautics and Space Administration.
  * All Rights Reserved.
  *
@@ -30,6 +29,8 @@
 
 #include "cfe.h"
 #include "md_tbldefs.h"
+#include "md_interface_cfg.h"
+#include "md_tblstruct.h"
 
 /**
  * \brief Dwell Table Validation Function
@@ -75,7 +76,7 @@ int32 MD_TableValidationFunc(void *TblPtr);
  *
  * \param[in] MD_LoadTablePtr Pointer to Table Services buffer.
  * \param[in] TblIndex An identifier specifying which dwell table is to be
- *             copied.  Internal values [0..MD_NUM_DWELL_TABLES-1] are used.
+ *             copied.  Internal values [0..MD_INTERFACE_NUM_DWELL_TABLES-1] are used.
  */
 void MD_CopyUpdatedTbl(MD_DwellTableLoad_t *MD_LoadTablePtr, uint8 TblIndex);
 
@@ -86,11 +87,11 @@ void MD_CopyUpdatedTbl(MD_DwellTableLoad_t *MD_LoadTablePtr, uint8 TblIndex);
  *          Update Dwell Table's Enabled Field.
  *
  * \par Assumptions, External Events, and Notes:
- *          TableIndex is in [0..MD_NUM_DWELL_TABLES-1] range.
- *          FieldValue is MD_DWELL_STREAM_ENABLED or MD_DWELL_STREAM_DISABLED.
+ *          TableIndex is in [0..MD_INTERFACE_NUM_DWELL_TABLES-1] range.
+ *          FieldValue is MD_Dwell_States_ENABLED or MD_Dwell_States_DISABLED.
  *
  * \param[in] TableIndex An identifier specifying which dwell table is to be
- *             modified.  Internal values [0..MD_NUM_DWELL_TABLES-1] are used.
+ *             modified.  Internal values [0..MD_INTERFACE_NUM_DWELL_TABLES-1] are used.
  * \param[in] FieldValue New value for Enabled field.
  *
  *  \return Execution status, see \ref CFEReturnCodes
@@ -105,15 +106,15 @@ CFE_Status_t MD_UpdateTableEnabledField(uint16 TableIndex, uint16 FieldValue);
  *          Update Values for a Dwell Table Entry.
  *
  * \par Assumptions, External Events, and Notes:
- *          TableIndex is in [0..MD_NUM_DWELL_TABLES-1] range.
- *          EntryIndex is in [0..MD_DWELL_TABLE_SIZE-1] range.
+ *          TableIndex is in [0..MD_INTERFACE_NUM_DWELL_TABLES-1] range.
+ *          EntryIndex is in [0..MD_INTERFACE_DWELL_TABLE_SIZE-1] range.
  *          NewLength is 0, 1, 2, or 4.
  *          NewDwellAddress is a valid dwell address.
  *
  * \param[in] TableIndex An identifier specifying which dwell table is to be
- *             modified.  Internal values [0..MD_NUM_DWELL_TABLES-1] are used.
+ *             modified.  Internal values [0..MD_INTERFACE_NUM_DWELL_TABLES-1] are used.
  * \param[in] EntryIndex An identifier specifying which entry is to be
- *             modified.  Internal values [0..MD_DWELL_TABLE_SIZE-1] are used.
+ *             modified.  Internal values [0..MD_INTERFACE_DWELL_TABLE_SIZE-1] are used.
  * \param[in] NewLength         Number of bytes to be read.
  * \param[in] NewDelay          Number of counts before next dwell.
  * \param[in] NewDwellAddress   Memory address to be dwelled on.
@@ -124,7 +125,7 @@ CFE_Status_t MD_UpdateTableEnabledField(uint16 TableIndex, uint16 FieldValue);
 CFE_Status_t MD_UpdateTableDwellEntry(uint16 TableIndex, uint16 EntryIndex, uint16 NewLength, uint16 NewDelay,
                                       MD_SymAddr_t NewDwellAddress);
 
-#if MD_SIGNATURE_OPTION == 1
+#if MD_INTERFACE_SIGNATURE_OPTION == 1
 
 /**
  * \brief Update Dwell Table Signature.
@@ -133,16 +134,16 @@ CFE_Status_t MD_UpdateTableDwellEntry(uint16 TableIndex, uint16 EntryIndex, uint
  *          Update Dwell Table Signature.
  *
  * \par Assumptions, External Events, and Notes:
- *          TableIndex is in [0..MD_NUM_DWELL_TABLES-1] range.
+ *          TableIndex is in [0..MD_INTERFACE_NUM_DWELL_TABLES-1] range.
  *
  * \param[in] TableIndex An identifier specifying which dwell table is to be
- *             modified.  Internal values [0..MD_NUM_DWELL_TABLES-1] are used.
+ *             modified.  Internal values [0..MD_INTERFACE_NUM_DWELL_TABLES-1] are used.
  * \param[in] NewSignature   New Dwell Table signature.
  *
  *  \return Execution status, see \ref CFEReturnCodes
  *  \retval #CFE_SUCCESS \copybrief CFE_SUCCESS
  */
-CFE_Status_t MD_UpdateTableSignature(uint16 TableIndex, char NewSignature[MD_SIGNATURE_FIELD_LENGTH]);
+CFE_Status_t MD_UpdateTableSignature(uint16 TableIndex, const char NewSignature[MD_INTERFACE_SIGNATURE_FIELD_LENGTH]);
 
 #endif
 

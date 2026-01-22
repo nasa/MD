@@ -1,8 +1,7 @@
 /************************************************************************
- * NASA Docket No. GSC-18,922-1, and identified as “Core Flight
- * System (cFS) Memory Dwell Application Version 2.4.1”
+ * NASA Docket No. GSC-19,200-1, and identified as "cFS Draco"
  *
- * Copyright (c) 2021 United States Government as represented by the
+ * Copyright (c) 2023 United States Government as represented by the
  * Administrator of the National Aeronautics and Space Administration.
  * All Rights Reserved.
  *
@@ -37,34 +36,34 @@
  * report dwell stream enable statuses, the size of the mask used for
  * start and stop commands, and the size of variables used in code.
  */
-#if MD_NUM_DWELL_TABLES < 1
-#error MD_NUM_DWELL_TABLES must be at least one.
-#elif MD_NUM_DWELL_TABLES > 16
-#error MD_NUM_DWELL_TABLES cannot be greater than 16.
+#if MD_INTERFACE_NUM_DWELL_TABLES < 1
+#error MD_INTERFACE_NUM_DWELL_TABLES must be at least one.
+#elif MD_INTERFACE_NUM_DWELL_TABLES > 16
+#error MD_INTERFACE_NUM_DWELL_TABLES cannot be greater than 16.
 #endif
 
 /*
- * If MD_DWELL_TABLE_SIZE is too large, the table load structure
+ * If MD_INTERFACE_DWELL_TABLE_SIZE is too large, the table load structure
  *  will be too large for Table Services
  */
-#if MD_DWELL_TABLE_SIZE < 1
-#error MD_DWELL_TABLE_SIZE must be at least one.
-#elif MD_DWELL_TABLE_SIZE > 65535
-#error MD_DWELL_TABLE_SIZE cannot be greater than 65535.
+#if MD_INTERFACE_DWELL_TABLE_SIZE < 1
+#error MD_INTERFACE_DWELL_TABLE_SIZE must be at least one.
+#elif MD_INTERFACE_DWELL_TABLE_SIZE > 65535
+#error MD_INTERFACE_DWELL_TABLE_SIZE cannot be greater than 65535.
 #endif
 
-#if (MD_ENFORCE_DWORD_ALIGN != 0) && (MD_ENFORCE_DWORD_ALIGN != 1)
-#error MD_ENFORCE_DWORD_ALIGN must be 0 or 1.
+#if (MD_INTERFACE_ENFORCE_DWORD_ALIGN != 0) && (MD_INTERFACE_ENFORCE_DWORD_ALIGN != 1)
+#error MD_INTERFACE_ENFORCE_DWORD_ALIGN must be 0 or 1.
 #endif
 
-#if (MD_SIGNATURE_OPTION != 0) && (MD_SIGNATURE_OPTION != 1)
-#error MD_SIGNATURE_OPTION must be 0 or 1.
+#if (MD_INTERFACE_SIGNATURE_OPTION != 0) && (MD_INTERFACE_SIGNATURE_OPTION != 1)
+#error MD_INTERFACE_SIGNATURE_OPTION must be 0 or 1.
 #endif
 
-#if (MD_SIGNATURE_FIELD_LENGTH % 4) != 0
-#error MD_SIGNATURE_FIELD_LENGTH should be longword aligned
-#elif MD_SIGNATURE_FIELD_LENGTH < 4
-#error MD_SIGNATURE_FIELD_LENGTH cannot be less than 4.
+#if (MD_INTERFACE_SIGNATURE_FIELD_LENGTH % 4) != 0
+#error MD_INTERFACE_SIGNATURE_FIELD_LENGTH should be longword aligned
+#elif MD_INTERFACE_SIGNATURE_FIELD_LENGTH < 4
+#error MD_INTERFACE_SIGNATURE_FIELD_LENGTH cannot be less than 4.
 #endif
 
 #endif
