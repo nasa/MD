@@ -1,8 +1,7 @@
 /************************************************************************
- * NASA Docket No. GSC-18,922-1, and identified as “Core Flight
- * System (cFS) Memory Dwell Application Version 2.4.1”
+ * NASA Docket No. GSC-19,200-1, and identified as "cFS Draco"
  *
- * Copyright (c) 2021 United States Government as represented by the
+ * Copyright (c) 2023 United States Government as represented by the
  * Administrator of the National Aeronautics and Space Administration.
  * All Rights Reserved.
  *
@@ -29,10 +28,11 @@
  * Includes
  ************************************************************************/
 #include "common_types.h"
-#include "md_platform_cfg.h"
 #include "cfe_mission_cfg.h"
 #include "md_msgids.h"
-#include "md_msg.h"
+#include "md_interface_cfg.h"
+#include "md_msgstruct.h"
+#include "md_dispatch.h"
 
 /************************************************************************
  * Macro Definitions
@@ -82,7 +82,7 @@ typedef struct
  */
 typedef struct
 {
-    uint16 Enabled;      /**< \brief Dwell enabled: #MD_DWELL_STREAM_DISABLED or #MD_DWELL_STREAM_ENABLED */
+    uint16 Enabled;      /**< \brief Dwell enabled: MD_Dwell_States_DISABLED or MD_Dwell_States_ENABLED */
     uint16 AddrCount;    /**< \brief Number of dwell addresses to telemeter  */
     uint32 Rate;         /**< \brief Packet issuance interval in terms of number of task wakeup calls */
     uint32 Countdown;    /**< \brief Counts down from Rate to 0, then read next address */
@@ -91,10 +91,10 @@ typedef struct
     uint16 DataSize;     /**< \brief Total number of data bytes specified in dwell table */
     uint16 Filler;       /**< \brief Preserves alignment */
 
-    MD_DwellControlEntry_t Entry[MD_DWELL_TABLE_SIZE]; /**< \brief Array of individual memory dwell specifications */
+    MD_DwellControlEntry_t Entry[MD_INTERFACE_DWELL_TABLE_SIZE]; /**< \brief Array of individual memory dwell specifications */
 
-#if MD_SIGNATURE_OPTION == 1
-    char Signature[MD_SIGNATURE_FIELD_LENGTH]; /**< \brief Signature string used for dwell table to dwell pkt */
+#if MD_INTERFACE_SIGNATURE_OPTION == 1
+    char Signature[MD_INTERFACE_SIGNATURE_FIELD_LENGTH]; /**< \brief Signature string used for dwell table to dwell pkt */
 #endif
 } MD_DwellPacketControl_t;
 
@@ -109,15 +109,15 @@ typedef struct
     MD_HkTlm_t HkPkt; /**< \brief Housekeeping telemetry packet */
 
     CFE_SB_PipeId_t         CmdPipe;                             /**< \brief Command pipe ID               */
-    MD_DwellPacketControl_t MD_DwellTables[MD_NUM_DWELL_TABLES]; /**< \brief Array of packet control structures    */
-    MD_DwellPkt_t           MD_DwellPkt[MD_NUM_DWELL_TABLES];    /**< \brief Array of dwell packet  structures    */
+    MD_DwellPacketControl_t MD_DwellTables[MD_INTERFACE_NUM_DWELL_TABLES]; /**< \brief Array of packet control structures    */
+    MD_DwellPkt_t           MD_DwellPkt[MD_INTERFACE_NUM_DWELL_TABLES];    /**< \brief Array of dwell packet  structures    */
 
     uint32 RunStatus; /**< \brief Application run status         */
 
-    char MD_TableName[MD_NUM_DWELL_TABLES]
+    char MD_TableName[MD_INTERFACE_NUM_DWELL_TABLES]
                      [CFE_MISSION_TBL_MAX_NAME_LENGTH + 1]; /**< \brief Array of table names used for TBL Services */
 
-    CFE_TBL_Handle_t MD_TableHandle[MD_NUM_DWELL_TABLES]; /**< \brief Array of handle ids provided by TBL Services  */
+    CFE_TBL_Handle_t MD_TableHandle[MD_INTERFACE_NUM_DWELL_TABLES]; /**< \brief Array of handle ids provided by TBL Services  */
 } MD_AppData_t;
 
 /**
@@ -176,7 +176,7 @@ CFE_Status_t MD_AppInit(void);
  * \brief Initialize local control structures
  *
  * \par Description
- *  Initialize control structures for each of the #MD_NUM_DWELL_TABLES dwell streams.
+ *  Initialize control structures for each of the #MD_INTERFACE_NUM_DWELL_TABLES dwell streams.
  *
  * \par Assumptions, External Events, and Notes:
  *          None
@@ -233,25 +233,12 @@ CFE_Status_t MD_InitTableServices(void);
  *          Assumes that an update is pending for the specified table.
  *
  * \param[in] TblIndex   Dwell table identifier.
- *                       Internal values [0..MD_NUM_DWELL_TABLES-1] are used.
+ *                       Internal values [0..MD_INTERFACE_NUM_DWELL_TABLES-1] are used.
  *
  *  \return Execution status, see \ref CFEReturnCodes
  *  \retval #CFE_SUCCESS \copybrief CFE_SUCCESS
  */
 CFE_Status_t MD_ManageDwellTable(uint8 TblIndex);
-
-/**
- * \brief Execute requested Memory Dwell commands
- *
- * \par Description
- *          Processes messages obtained from the command pipe.
- *
- * \par Assumptions, External Events, and Notes:
- *          None
- *
- * \param[in] BufPtr Pointer to Software Bus buffer
- */
-void MD_ExecRequest(const CFE_SB_Buffer_t *BufPtr);
 
 /**
  * \brief Send Housekeeping Status to Health & Safety task
@@ -265,26 +252,6 @@ void MD_ExecRequest(const CFE_SB_Buffer_t *BufPtr);
  * \par Assumptions, External Events, and Notes:
  *          None
  */
-void MD_HkStatus(void);
-
-/* Utility Functions */
-
-/**
- * \brief Compares message with MD_CmdHandlerTbl to identify the message
- *
- * \par Description
- *          Searches the Command Handler Table for an entry matching the
- *          message ID and, if necessary, the Command Code.  If an entry
- *          is not located, an error code is returned.
- *
- * \par Assumptions, External Events, and Notes:
- *          None
- *
- * \param[in] CommandCode command code from command message received on command pipe
- *
- * \return Search command handler table response, non-negative table index upon success
- * \retval #MD_BAD_CMD_CODE \copydoc MD_BAD_CMD_CODE
- */
-int16 MD_SearchCmdHndlrTbl(CFE_MSG_FcnCode_t CommandCode);
+CFE_Status_t MD_HkStatus(const MD_SendHkCmd_t *Msg);
 
 #endif

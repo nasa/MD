@@ -1,8 +1,7 @@
 /************************************************************************
- * NASA Docket No. GSC-18,922-1, and identified as “Core Flight
- * System (cFS) Memory Dwell Application Version 2.4.1”
+ * NASA Docket No. GSC-19,200-1, and identified as "cFS Draco"
  *
- * Copyright (c) 2021 United States Government as represented by the
+ * Copyright (c) 2023 United States Government as represented by the
  * Administrator of the National Aeronautics and Space Administration.
  * All Rights Reserved.
  *
@@ -17,37 +16,107 @@
  * limitations under the License.
  ************************************************************************/
 
-/*
- * Includes
+/**
+ * @file
+ *
+ * Auto-Generated stub implementations for functions defined in md_cmds header
  */
 
-#include "md_msg.h"
+#include "md_cmds.h"
+#include "utgenstub.h"
 
-/* UT includes */
-#include "uttest.h"
-#include "utassert.h"
-#include "utstubs.h"
-
-void MD_ProcessStartCmd(CFE_SB_Buffer_t *BufPtr)
+/*
+ * ----------------------------------------------------
+ * Generated stub function for MD_JamDwellCmd()
+ * ----------------------------------------------------
+ */
+CFE_Status_t MD_JamDwellCmd(const MD_JamDwellCmd_t *Msg)
 {
-    UT_Stub_RegisterContext(UT_KEY(MD_ProcessStartCmd), BufPtr);
-    UT_DEFAULT_IMPL(MD_ProcessStartCmd);
+    UT_GenStub_SetupReturnBuffer(MD_JamDwellCmd, CFE_Status_t);
+
+    UT_GenStub_AddParam(MD_JamDwellCmd, const MD_JamDwellCmd_t *, Msg);
+
+    UT_GenStub_Execute(MD_JamDwellCmd, Basic, NULL);
+
+    return UT_GenStub_GetReturnValue(MD_JamDwellCmd, CFE_Status_t);
 }
 
-void MD_ProcessStopCmd(CFE_SB_Buffer_t *BufPtr)
+/*
+ * ----------------------------------------------------
+ * Generated stub function for MD_NoopCmd()
+ * ----------------------------------------------------
+ */
+CFE_Status_t MD_NoopCmd(const MD_NoopCmd_t *Msg)
 {
-    UT_Stub_RegisterContext(UT_KEY(MD_ProcessStopCmd), BufPtr);
-    UT_DEFAULT_IMPL(MD_ProcessStopCmd);
+    UT_GenStub_SetupReturnBuffer(MD_NoopCmd, CFE_Status_t);
+
+    UT_GenStub_AddParam(MD_NoopCmd, const MD_NoopCmd_t *, Msg);
+
+    UT_GenStub_Execute(MD_NoopCmd, Basic, NULL);
+
+    return UT_GenStub_GetReturnValue(MD_NoopCmd, CFE_Status_t);
 }
 
-void MD_ProcessJamCmd(CFE_SB_Buffer_t *BufPtr)
+/*
+ * ----------------------------------------------------
+ * Generated stub function for MD_ResetCountersCmd()
+ * ----------------------------------------------------
+ */
+CFE_Status_t MD_ResetCountersCmd(const MD_ResetCountersCmd_t *Msg)
 {
-    UT_Stub_RegisterContext(UT_KEY(MD_ProcessJamCmd), BufPtr);
-    UT_DEFAULT_IMPL(MD_ProcessJamCmd);
+    UT_GenStub_SetupReturnBuffer(MD_ResetCountersCmd, CFE_Status_t);
+
+    UT_GenStub_AddParam(MD_ResetCountersCmd, const MD_ResetCountersCmd_t *, Msg);
+
+    UT_GenStub_Execute(MD_ResetCountersCmd, Basic, NULL);
+
+    return UT_GenStub_GetReturnValue(MD_ResetCountersCmd, CFE_Status_t);
 }
 
-void MD_ProcessSignatureCmd(CFE_SB_Buffer_t *BufPtr)
+/*
+ * ----------------------------------------------------
+ * Generated stub function for MD_SetSignatureCmd()
+ * ----------------------------------------------------
+ */
+CFE_Status_t MD_SetSignatureCmd(const MD_SetSignatureCmd_t *Msg)
 {
-    UT_Stub_RegisterContext(UT_KEY(MD_ProcessSignatureCmd), BufPtr);
-    UT_DEFAULT_IMPL(MD_ProcessSignatureCmd);
+    UT_GenStub_SetupReturnBuffer(MD_SetSignatureCmd, CFE_Status_t);
+
+    UT_GenStub_AddParam(MD_SetSignatureCmd, const MD_SetSignatureCmd_t *, Msg);
+
+    UT_GenStub_Execute(MD_SetSignatureCmd, Basic, NULL);
+
+    return UT_GenStub_GetReturnValue(MD_SetSignatureCmd, CFE_Status_t);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for MD_StartDwellCmd()
+ * ----------------------------------------------------
+ */
+CFE_Status_t MD_StartDwellCmd(const MD_StartDwellCmd_t *Msg)
+{
+    UT_GenStub_SetupReturnBuffer(MD_StartDwellCmd, CFE_Status_t);
+
+    UT_GenStub_AddParam(MD_StartDwellCmd, const MD_StartDwellCmd_t *, Msg);
+
+    UT_GenStub_Execute(MD_StartDwellCmd, Basic, NULL);
+
+    return UT_GenStub_GetReturnValue(MD_StartDwellCmd, CFE_Status_t);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for MD_StopDwellCmd()
+ * ----------------------------------------------------
+ */
+CFE_Status_t MD_StopDwellCmd(const MD_StopDwellCmd_t *Msg)
+{
+    UT_GenStub_SetupReturnBuffer(MD_StopDwellCmd, CFE_Status_t);
+
+    UT_GenStub_AddParam(MD_StopDwellCmd, const MD_StopDwellCmd_t *, Msg);
+
+    UT_GenStub_Execute(MD_StopDwellCmd, Basic, NULL);
+
+    return UT_GenStub_GetReturnValue(MD_StopDwellCmd, CFE_Status_t);
 }

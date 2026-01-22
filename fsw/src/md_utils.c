@@ -1,8 +1,7 @@
 /************************************************************************
- * NASA Docket No. GSC-18,922-1, and identified as “Core Flight
- * System (cFS) Memory Dwell Application Version 2.4.1”
+ * NASA Docket No. GSC-19,200-1, and identified as "cFS Draco"
  *
- * Copyright (c) 2021 United States Government as represented by the
+ * Copyright (c) 2023 United States Government as represented by the
  * Administrator of the National Aeronautics and Space Administration.
  * All Rights Reserved.
  *
@@ -66,7 +65,7 @@ void MD_UpdateDwellControlInfo(uint16 TableIndex)
     /*
     ** Sum Address Count, Data Size, and Rate from Dwell Entries
     */
-    while ((EntryIndex < MD_DWELL_TABLE_SIZE) && (TblPtr->Entry[EntryIndex].Length != 0))
+    while ((EntryIndex < MD_INTERFACE_DWELL_TABLE_SIZE) && (TblPtr->Entry[EntryIndex].Length != 0))
     {
         NumDwellAddresses++;
         NumDwellDataBytes += TblPtr->Entry[EntryIndex].Length;
@@ -90,9 +89,9 @@ bool MD_ValidEntryId(uint16 EntryId)
 {
     bool IsValid = false;
 
-    if ((EntryId >= 1) && (EntryId <= MD_DWELL_TABLE_SIZE))
+    if ((EntryId >= 1) && (EntryId <= MD_INTERFACE_DWELL_TABLE_SIZE))
     {
-        /* validate  value (1..MD_DWELL_TABLE_SIZE ) */
+        /* validate  value (1..MD_INTERFACE_DWELL_TABLE_SIZE ) */
         IsValid = true;
     }
 
@@ -118,7 +117,7 @@ bool MD_ValidTableId(uint16 TableId)
 {
     bool IsValid = false;
 
-    if ((TableId >= 1) && (TableId <= MD_NUM_DWELL_TABLES))
+    if ((TableId >= 1) && (TableId <= MD_INTERFACE_NUM_DWELL_TABLES))
     {
         IsValid = true;
     }
@@ -186,7 +185,7 @@ bool MD_Verify16Aligned(cpuaddr Address, uint32 Size)
 
 /******************************************************************************/
 
-bool MD_ResolveSymAddr(MD_SymAddr_t *SymAddr, cpuaddr *ResolvedAddr)
+bool MD_ResolveSymAddr(const MD_SymAddr_t *SymAddr, cpuaddr *ResolvedAddr)
 {
     bool  Valid;
     int32 OS_Status;
@@ -195,7 +194,7 @@ bool MD_ResolveSymAddr(MD_SymAddr_t *SymAddr, cpuaddr *ResolvedAddr)
     ** NUL terminate the very end of the symbol name string array as a
     ** safety measure
     */
-    SymAddr->SymName[OS_MAX_SYM_LEN - 1] = '\0';
+    // SymAddr->SymName[CFE_MISSION_MAX_PATH_LEN - 1] = '\0';
 
     /*
     ** If the symbol name string is a nul string

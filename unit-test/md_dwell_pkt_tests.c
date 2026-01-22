@@ -1,8 +1,7 @@
 /************************************************************************
- * NASA Docket No. GSC-18,922-1, and identified as “Core Flight
- * System (cFS) Memory Dwell Application Version 2.4.1”
+ * NASA Docket No. GSC-19,200-1, and identified as "cFS Draco"
  *
- * Copyright (c) 2021 United States Government as represented by the
+ * Copyright (c) 2023 United States Government as represented by the
  * Administrator of the National Aeronautics and Space Administration.
  * All Rights Reserved.
  *
@@ -24,7 +23,7 @@
 #include "md_dwell_pkt.h"
 #include "md_msg.h"
 #include "md_msgdefs.h"
-#include "md_events.h"
+#include "md_eventids.h"
 #include "md_version.h"
 #include "md_test_utils.h"
 #include <unistd.h>
@@ -44,47 +43,49 @@ uint8 call_count_CFE_EVS_SendEvent;
 
 void MD_DwellLoop_Test_PacketAlreadyFull(void)
 {
+    MD_Wakeup_t Msg;
+    memset((void*) &Msg, 0, sizeof(MD_Wakeup_t));
     MD_AppData.MD_DwellTables[0].AddrCount                       = 1;
-    MD_AppData.MD_DwellTables[MD_NUM_DWELL_TABLES / 2].AddrCount = 1;
-    MD_AppData.MD_DwellTables[MD_NUM_DWELL_TABLES - 1].AddrCount = 1;
+    MD_AppData.MD_DwellTables[MD_INTERFACE_NUM_DWELL_TABLES / 2].AddrCount = 1;
+    MD_AppData.MD_DwellTables[MD_INTERFACE_NUM_DWELL_TABLES - 1].AddrCount = 1;
 
-    MD_AppData.MD_DwellTables[0].Enabled                       = MD_DWELL_STREAM_ENABLED;
-    MD_AppData.MD_DwellTables[MD_NUM_DWELL_TABLES / 2].Enabled = MD_DWELL_STREAM_ENABLED;
-    MD_AppData.MD_DwellTables[MD_NUM_DWELL_TABLES - 1].Enabled = MD_DWELL_STREAM_ENABLED;
+    MD_AppData.MD_DwellTables[0].Enabled                       = MD_Dwell_States_ENABLED;
+    MD_AppData.MD_DwellTables[MD_INTERFACE_NUM_DWELL_TABLES / 2].Enabled = MD_Dwell_States_ENABLED;
+    MD_AppData.MD_DwellTables[MD_INTERFACE_NUM_DWELL_TABLES - 1].Enabled = MD_Dwell_States_ENABLED;
 
     MD_AppData.MD_DwellTables[0].Rate                       = 1;
-    MD_AppData.MD_DwellTables[MD_NUM_DWELL_TABLES / 2].Rate = 1;
-    MD_AppData.MD_DwellTables[MD_NUM_DWELL_TABLES - 1].Rate = 1;
+    MD_AppData.MD_DwellTables[MD_INTERFACE_NUM_DWELL_TABLES / 2].Rate = 1;
+    MD_AppData.MD_DwellTables[MD_INTERFACE_NUM_DWELL_TABLES - 1].Rate = 1;
 
     MD_AppData.MD_DwellTables[0].CurrentEntry                       = 1;
-    MD_AppData.MD_DwellTables[MD_NUM_DWELL_TABLES / 2].CurrentEntry = 1;
-    MD_AppData.MD_DwellTables[MD_NUM_DWELL_TABLES - 1].CurrentEntry = 1;
+    MD_AppData.MD_DwellTables[MD_INTERFACE_NUM_DWELL_TABLES / 2].CurrentEntry = 1;
+    MD_AppData.MD_DwellTables[MD_INTERFACE_NUM_DWELL_TABLES - 1].CurrentEntry = 1;
 
     MD_AppData.MD_DwellTables[0].Entry[0].Delay                       = 2;
-    MD_AppData.MD_DwellTables[MD_NUM_DWELL_TABLES / 2].Entry[0].Delay = 2;
-    MD_AppData.MD_DwellTables[MD_NUM_DWELL_TABLES - 1].Entry[0].Delay = 2;
+    MD_AppData.MD_DwellTables[MD_INTERFACE_NUM_DWELL_TABLES / 2].Entry[0].Delay = 2;
+    MD_AppData.MD_DwellTables[MD_INTERFACE_NUM_DWELL_TABLES - 1].Entry[0].Delay = 2;
 
     /* Execute the function being tested */
-    MD_DwellLoop();
+    MD_DwellLoop(&Msg);
 
     /* Verify results */
     UtAssert_True(MD_AppData.MD_DwellTables[0].CurrentEntry == 0, "MD_AppData.MD_DwellTables[0].CurrentEntry == 0");
-    UtAssert_True(MD_AppData.MD_DwellTables[MD_NUM_DWELL_TABLES / 2].CurrentEntry == 0,
-                  "MD_AppData.MD_DwellTables[MD_NUM_DWELL_TABLES / 2].CurrentEntry == 0");
-    UtAssert_True(MD_AppData.MD_DwellTables[MD_NUM_DWELL_TABLES - 1].CurrentEntry == 0,
-                  "MD_AppData.MD_DwellTables[MD_NUM_DWELL_TABLES - 1].CurrentEntry == 0");
+    UtAssert_True(MD_AppData.MD_DwellTables[MD_INTERFACE_NUM_DWELL_TABLES / 2].CurrentEntry == 0,
+                  "MD_AppData.MD_DwellTables[MD_INTERFACE_NUM_DWELL_TABLES / 2].CurrentEntry == 0");
+    UtAssert_True(MD_AppData.MD_DwellTables[MD_INTERFACE_NUM_DWELL_TABLES - 1].CurrentEntry == 0,
+                  "MD_AppData.MD_DwellTables[MD_INTERFACE_NUM_DWELL_TABLES - 1].CurrentEntry == 0");
 
     UtAssert_True(MD_AppData.MD_DwellTables[0].PktOffset == 0, "MD_AppData.MD_DwellTables[0].PktOffset == 0");
-    UtAssert_True(MD_AppData.MD_DwellTables[MD_NUM_DWELL_TABLES / 2].PktOffset == 0,
-                  "MD_AppData.MD_DwellTables[MD_NUM_DWELL_TABLES / 2].PktOffset == 0");
-    UtAssert_True(MD_AppData.MD_DwellTables[MD_NUM_DWELL_TABLES - 1].PktOffset == 0,
-                  "MD_AppData.MD_DwellTables[MD_NUM_DWELL_TABLES - 1].PktOffset == 0");
+    UtAssert_True(MD_AppData.MD_DwellTables[MD_INTERFACE_NUM_DWELL_TABLES / 2].PktOffset == 0,
+                  "MD_AppData.MD_DwellTables[MD_INTERFACE_NUM_DWELL_TABLES / 2].PktOffset == 0");
+    UtAssert_True(MD_AppData.MD_DwellTables[MD_INTERFACE_NUM_DWELL_TABLES - 1].PktOffset == 0,
+                  "MD_AppData.MD_DwellTables[MD_INTERFACE_NUM_DWELL_TABLES - 1].PktOffset == 0");
 
     UtAssert_True(MD_AppData.MD_DwellTables[0].Countdown == 2, "MD_AppData.MD_DwellTables[0].Countdown == 2");
-    UtAssert_True(MD_AppData.MD_DwellTables[MD_NUM_DWELL_TABLES / 2].Countdown == 2,
-                  "MD_AppData.MD_DwellTables[MD_NUM_DWELL_TABLES / 2].Countdown == 2");
-    UtAssert_True(MD_AppData.MD_DwellTables[MD_NUM_DWELL_TABLES - 1].Countdown == 2,
-                  "MD_AppData.MD_DwellTables[MD_NUM_DWELL_TABLES - 1].Countdown == 2");
+    UtAssert_True(MD_AppData.MD_DwellTables[MD_INTERFACE_NUM_DWELL_TABLES / 2].Countdown == 2,
+                  "MD_AppData.MD_DwellTables[MD_INTERFACE_NUM_DWELL_TABLES / 2].Countdown == 2");
+    UtAssert_True(MD_AppData.MD_DwellTables[MD_INTERFACE_NUM_DWELL_TABLES - 1].Countdown == 2,
+                  "MD_AppData.MD_DwellTables[MD_INTERFACE_NUM_DWELL_TABLES - 1].Countdown == 2");
 
     call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
 
@@ -94,62 +95,63 @@ void MD_DwellLoop_Test_PacketAlreadyFull(void)
 
 void MD_DwellLoop_Test_SendDwellPacket(void)
 {
+    MD_Wakeup_t Msg;
     MD_AppData.MD_DwellTables[0].AddrCount                       = 1;
-    MD_AppData.MD_DwellTables[MD_NUM_DWELL_TABLES / 2].AddrCount = 1;
-    MD_AppData.MD_DwellTables[MD_NUM_DWELL_TABLES - 1].AddrCount = 1;
+    MD_AppData.MD_DwellTables[MD_INTERFACE_NUM_DWELL_TABLES / 2].AddrCount = 1;
+    MD_AppData.MD_DwellTables[MD_INTERFACE_NUM_DWELL_TABLES - 1].AddrCount = 1;
 
-    MD_AppData.MD_DwellTables[0].Enabled                       = MD_DWELL_STREAM_ENABLED;
-    MD_AppData.MD_DwellTables[MD_NUM_DWELL_TABLES / 2].Enabled = MD_DWELL_STREAM_ENABLED;
-    MD_AppData.MD_DwellTables[MD_NUM_DWELL_TABLES - 1].Enabled = MD_DWELL_STREAM_ENABLED;
+    MD_AppData.MD_DwellTables[0].Enabled                       = MD_Dwell_States_ENABLED;
+    MD_AppData.MD_DwellTables[MD_INTERFACE_NUM_DWELL_TABLES / 2].Enabled = MD_Dwell_States_ENABLED;
+    MD_AppData.MD_DwellTables[MD_INTERFACE_NUM_DWELL_TABLES - 1].Enabled = MD_Dwell_States_ENABLED;
 
     MD_AppData.MD_DwellTables[0].Rate                       = 1;
-    MD_AppData.MD_DwellTables[MD_NUM_DWELL_TABLES / 2].Rate = 1;
-    MD_AppData.MD_DwellTables[MD_NUM_DWELL_TABLES - 1].Rate = 1;
+    MD_AppData.MD_DwellTables[MD_INTERFACE_NUM_DWELL_TABLES / 2].Rate = 1;
+    MD_AppData.MD_DwellTables[MD_INTERFACE_NUM_DWELL_TABLES - 1].Rate = 1;
 
     MD_AppData.MD_DwellTables[0].CurrentEntry                       = 0;
-    MD_AppData.MD_DwellTables[MD_NUM_DWELL_TABLES / 2].CurrentEntry = 0;
-    MD_AppData.MD_DwellTables[MD_NUM_DWELL_TABLES - 1].CurrentEntry = 0;
+    MD_AppData.MD_DwellTables[MD_INTERFACE_NUM_DWELL_TABLES / 2].CurrentEntry = 0;
+    MD_AppData.MD_DwellTables[MD_INTERFACE_NUM_DWELL_TABLES - 1].CurrentEntry = 0;
 
     MD_AppData.MD_DwellTables[0].Entry[0].Delay                       = 2;
-    MD_AppData.MD_DwellTables[MD_NUM_DWELL_TABLES / 2].Entry[0].Delay = 2;
-    MD_AppData.MD_DwellTables[MD_NUM_DWELL_TABLES - 1].Entry[0].Delay = 2;
+    MD_AppData.MD_DwellTables[MD_INTERFACE_NUM_DWELL_TABLES / 2].Entry[0].Delay = 2;
+    MD_AppData.MD_DwellTables[MD_INTERFACE_NUM_DWELL_TABLES - 1].Entry[0].Delay = 2;
 
     MD_AppData.MD_DwellTables[0].Countdown                       = 1;
-    MD_AppData.MD_DwellTables[MD_NUM_DWELL_TABLES / 2].Countdown = 1;
-    MD_AppData.MD_DwellTables[MD_NUM_DWELL_TABLES - 1].Countdown = 1;
+    MD_AppData.MD_DwellTables[MD_INTERFACE_NUM_DWELL_TABLES / 2].Countdown = 1;
+    MD_AppData.MD_DwellTables[MD_INTERFACE_NUM_DWELL_TABLES - 1].Countdown = 1;
 
     MD_AppData.MD_DwellTables[0].Entry[0].Length                       = 1;
-    MD_AppData.MD_DwellTables[MD_NUM_DWELL_TABLES / 2].Entry[0].Length = 2;
-    MD_AppData.MD_DwellTables[MD_NUM_DWELL_TABLES - 1].Entry[0].Length = 4;
+    MD_AppData.MD_DwellTables[MD_INTERFACE_NUM_DWELL_TABLES / 2].Entry[0].Length = 2;
+    MD_AppData.MD_DwellTables[MD_INTERFACE_NUM_DWELL_TABLES - 1].Entry[0].Length = 4;
 
-    MD_AppData.MD_DwellTables[MD_NUM_DWELL_TABLES / 2].Entry[0].ResolvedAddress = 2;
-    MD_AppData.MD_DwellTables[MD_NUM_DWELL_TABLES - 1].Entry[0].ResolvedAddress = 4;
+    MD_AppData.MD_DwellTables[MD_INTERFACE_NUM_DWELL_TABLES / 2].Entry[0].ResolvedAddress = 2;
+    MD_AppData.MD_DwellTables[MD_INTERFACE_NUM_DWELL_TABLES - 1].Entry[0].ResolvedAddress = 4;
 
     UT_SetDeferredRetcode(UT_KEY(CFE_PSP_MemRead8), 1, CFE_SUCCESS);
     UT_SetDeferredRetcode(UT_KEY(CFE_PSP_MemRead16), 1, CFE_SUCCESS);
     UT_SetDeferredRetcode(UT_KEY(CFE_PSP_MemRead32), 1, CFE_SUCCESS);
 
     /* Execute the function being tested */
-    MD_DwellLoop();
+    MD_DwellLoop(&Msg);
 
     /* Verify results */
     UtAssert_True(MD_AppData.MD_DwellTables[0].CurrentEntry == 0, "MD_AppData.MD_DwellTables[0].CurrentEntry == 0");
-    UtAssert_True(MD_AppData.MD_DwellTables[MD_NUM_DWELL_TABLES / 2].CurrentEntry == 0,
-                  "MD_AppData.MD_DwellTables[MD_NUM_DWELL_TABLES / 2].CurrentEntry == 0");
-    UtAssert_True(MD_AppData.MD_DwellTables[MD_NUM_DWELL_TABLES - 1].CurrentEntry == 0,
-                  "MD_AppData.MD_DwellTables[MD_NUM_DWELL_TABLES - 1].CurrentEntry == 0");
+    UtAssert_True(MD_AppData.MD_DwellTables[MD_INTERFACE_NUM_DWELL_TABLES / 2].CurrentEntry == 0,
+                  "MD_AppData.MD_DwellTables[MD_INTERFACE_NUM_DWELL_TABLES / 2].CurrentEntry == 0");
+    UtAssert_True(MD_AppData.MD_DwellTables[MD_INTERFACE_NUM_DWELL_TABLES - 1].CurrentEntry == 0,
+                  "MD_AppData.MD_DwellTables[MD_INTERFACE_NUM_DWELL_TABLES - 1].CurrentEntry == 0");
 
     UtAssert_True(MD_AppData.MD_DwellTables[0].PktOffset == 0, "MD_AppData.MD_DwellTables[0].PktOffset == 0");
-    UtAssert_True(MD_AppData.MD_DwellTables[MD_NUM_DWELL_TABLES / 2].PktOffset == 0,
-                  "MD_AppData.MD_DwellTables[MD_NUM_DWELL_TABLES / 2].PktOffset == 0");
-    UtAssert_True(MD_AppData.MD_DwellTables[MD_NUM_DWELL_TABLES - 1].PktOffset == 0,
-                  "MD_AppData.MD_DwellTables[MD_NUM_DWELL_TABLES - 1].PktOffset == 0");
+    UtAssert_True(MD_AppData.MD_DwellTables[MD_INTERFACE_NUM_DWELL_TABLES / 2].PktOffset == 0,
+                  "MD_AppData.MD_DwellTables[MD_INTERFACE_NUM_DWELL_TABLES / 2].PktOffset == 0");
+    UtAssert_True(MD_AppData.MD_DwellTables[MD_INTERFACE_NUM_DWELL_TABLES - 1].PktOffset == 0,
+                  "MD_AppData.MD_DwellTables[MD_INTERFACE_NUM_DWELL_TABLES - 1].PktOffset == 0");
 
     UtAssert_True(MD_AppData.MD_DwellTables[0].Countdown == 2, "MD_AppData.MD_DwellTables[0].Countdown == 2");
-    UtAssert_True(MD_AppData.MD_DwellTables[MD_NUM_DWELL_TABLES / 2].Countdown == 2,
-                  "MD_AppData.MD_DwellTables[MD_NUM_DWELL_TABLES / 2].Countdown == 2");
-    UtAssert_True(MD_AppData.MD_DwellTables[MD_NUM_DWELL_TABLES - 1].Countdown == 2,
-                  "MD_AppData.MD_DwellTables[MD_NUM_DWELL_TABLES - 1].Countdown == 2");
+    UtAssert_True(MD_AppData.MD_DwellTables[MD_INTERFACE_NUM_DWELL_TABLES / 2].Countdown == 2,
+                  "MD_AppData.MD_DwellTables[MD_INTERFACE_NUM_DWELL_TABLES / 2].Countdown == 2");
+    UtAssert_True(MD_AppData.MD_DwellTables[MD_INTERFACE_NUM_DWELL_TABLES - 1].Countdown == 2,
+                  "MD_AppData.MD_DwellTables[MD_INTERFACE_NUM_DWELL_TABLES - 1].Countdown == 2");
 
     call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
 
@@ -159,56 +161,57 @@ void MD_DwellLoop_Test_SendDwellPacket(void)
 
 void MD_DwellLoop_Test_MoreAddressesToRead(void)
 {
+    MD_Wakeup_t Msg;
     MD_AppData.MD_DwellTables[0].AddrCount                       = 2;
-    MD_AppData.MD_DwellTables[MD_NUM_DWELL_TABLES / 2].AddrCount = 2;
-    MD_AppData.MD_DwellTables[MD_NUM_DWELL_TABLES - 1].AddrCount = 2;
+    MD_AppData.MD_DwellTables[MD_INTERFACE_NUM_DWELL_TABLES / 2].AddrCount = 2;
+    MD_AppData.MD_DwellTables[MD_INTERFACE_NUM_DWELL_TABLES - 1].AddrCount = 2;
 
-    MD_AppData.MD_DwellTables[0].Enabled                       = MD_DWELL_STREAM_ENABLED;
-    MD_AppData.MD_DwellTables[MD_NUM_DWELL_TABLES / 2].Enabled = MD_DWELL_STREAM_ENABLED;
-    MD_AppData.MD_DwellTables[MD_NUM_DWELL_TABLES - 1].Enabled = MD_DWELL_STREAM_ENABLED;
+    MD_AppData.MD_DwellTables[0].Enabled                       = MD_Dwell_States_ENABLED;
+    MD_AppData.MD_DwellTables[MD_INTERFACE_NUM_DWELL_TABLES / 2].Enabled = MD_Dwell_States_ENABLED;
+    MD_AppData.MD_DwellTables[MD_INTERFACE_NUM_DWELL_TABLES - 1].Enabled = MD_Dwell_States_ENABLED;
 
     MD_AppData.MD_DwellTables[0].Rate                       = 1;
-    MD_AppData.MD_DwellTables[MD_NUM_DWELL_TABLES / 2].Rate = 1;
-    MD_AppData.MD_DwellTables[MD_NUM_DWELL_TABLES - 1].Rate = 1;
+    MD_AppData.MD_DwellTables[MD_INTERFACE_NUM_DWELL_TABLES / 2].Rate = 1;
+    MD_AppData.MD_DwellTables[MD_INTERFACE_NUM_DWELL_TABLES - 1].Rate = 1;
 
     MD_AppData.MD_DwellTables[0].CurrentEntry                       = 0;
-    MD_AppData.MD_DwellTables[MD_NUM_DWELL_TABLES / 2].CurrentEntry = 0;
-    MD_AppData.MD_DwellTables[MD_NUM_DWELL_TABLES - 1].CurrentEntry = 0;
+    MD_AppData.MD_DwellTables[MD_INTERFACE_NUM_DWELL_TABLES / 2].CurrentEntry = 0;
+    MD_AppData.MD_DwellTables[MD_INTERFACE_NUM_DWELL_TABLES - 1].CurrentEntry = 0;
 
     MD_AppData.MD_DwellTables[0].Entry[0].Delay                       = 2;
-    MD_AppData.MD_DwellTables[MD_NUM_DWELL_TABLES / 2].Entry[0].Delay = 2;
-    MD_AppData.MD_DwellTables[MD_NUM_DWELL_TABLES - 1].Entry[0].Delay = 2;
+    MD_AppData.MD_DwellTables[MD_INTERFACE_NUM_DWELL_TABLES / 2].Entry[0].Delay = 2;
+    MD_AppData.MD_DwellTables[MD_INTERFACE_NUM_DWELL_TABLES - 1].Entry[0].Delay = 2;
 
     MD_AppData.MD_DwellTables[0].Countdown                       = 1;
-    MD_AppData.MD_DwellTables[MD_NUM_DWELL_TABLES / 2].Countdown = 1;
-    MD_AppData.MD_DwellTables[MD_NUM_DWELL_TABLES - 1].Countdown = 1;
+    MD_AppData.MD_DwellTables[MD_INTERFACE_NUM_DWELL_TABLES / 2].Countdown = 1;
+    MD_AppData.MD_DwellTables[MD_INTERFACE_NUM_DWELL_TABLES - 1].Countdown = 1;
 
     MD_AppData.MD_DwellTables[0].Entry[0].Length                       = 1;
-    MD_AppData.MD_DwellTables[MD_NUM_DWELL_TABLES / 2].Entry[0].Length = 2;
-    MD_AppData.MD_DwellTables[MD_NUM_DWELL_TABLES - 1].Entry[0].Length = 4;
+    MD_AppData.MD_DwellTables[MD_INTERFACE_NUM_DWELL_TABLES / 2].Entry[0].Length = 2;
+    MD_AppData.MD_DwellTables[MD_INTERFACE_NUM_DWELL_TABLES - 1].Entry[0].Length = 4;
 
-    MD_AppData.MD_DwellTables[MD_NUM_DWELL_TABLES / 2].Entry[0].ResolvedAddress = 2;
-    MD_AppData.MD_DwellTables[MD_NUM_DWELL_TABLES - 1].Entry[0].ResolvedAddress = 4;
+    MD_AppData.MD_DwellTables[MD_INTERFACE_NUM_DWELL_TABLES / 2].Entry[0].ResolvedAddress = 2;
+    MD_AppData.MD_DwellTables[MD_INTERFACE_NUM_DWELL_TABLES - 1].Entry[0].ResolvedAddress = 4;
 
     UT_SetDeferredRetcode(UT_KEY(CFE_PSP_MemRead8), 1, CFE_SUCCESS);
     UT_SetDeferredRetcode(UT_KEY(CFE_PSP_MemRead16), 1, CFE_SUCCESS);
     UT_SetDeferredRetcode(UT_KEY(CFE_PSP_MemRead32), 1, CFE_SUCCESS);
 
     /* Execute the function being tested */
-    MD_DwellLoop();
+    MD_DwellLoop(&Msg);
 
     /* Verify results */
     UtAssert_True(MD_AppData.MD_DwellTables[0].Countdown == 2, "MD_AppData.MD_DwellTables[0].Countdown == 2");
-    UtAssert_True(MD_AppData.MD_DwellTables[MD_NUM_DWELL_TABLES / 2].Countdown == 2,
-                  "MD_AppData.MD_DwellTables[MD_NUM_DWELL_TABLES / 2].Countdown == 2");
-    UtAssert_True(MD_AppData.MD_DwellTables[MD_NUM_DWELL_TABLES - 1].Countdown == 2,
-                  "MD_AppData.MD_DwellTables[MD_NUM_DWELL_TABLES - 1].Countdown == 2");
+    UtAssert_True(MD_AppData.MD_DwellTables[MD_INTERFACE_NUM_DWELL_TABLES / 2].Countdown == 2,
+                  "MD_AppData.MD_DwellTables[MD_INTERFACE_NUM_DWELL_TABLES / 2].Countdown == 2");
+    UtAssert_True(MD_AppData.MD_DwellTables[MD_INTERFACE_NUM_DWELL_TABLES - 1].Countdown == 2,
+                  "MD_AppData.MD_DwellTables[MD_INTERFACE_NUM_DWELL_TABLES - 1].Countdown == 2");
 
     UtAssert_True(MD_AppData.MD_DwellTables[0].CurrentEntry == 1, "MD_AppData.MD_DwellTables[0].CurrentEntry == 1");
-    UtAssert_True(MD_AppData.MD_DwellTables[MD_NUM_DWELL_TABLES / 2].CurrentEntry == 1,
-                  "MD_AppData.MD_DwellTables[MD_NUM_DWELL_TABLES / 2].CurrentEntry == 1");
-    UtAssert_True(MD_AppData.MD_DwellTables[MD_NUM_DWELL_TABLES - 1].CurrentEntry == 1,
-                  "MD_AppData.MD_DwellTables[MD_NUM_DWELL_TABLES - 1].CurrentEntry == 1");
+    UtAssert_True(MD_AppData.MD_DwellTables[MD_INTERFACE_NUM_DWELL_TABLES / 2].CurrentEntry == 1,
+                  "MD_AppData.MD_DwellTables[MD_INTERFACE_NUM_DWELL_TABLES / 2].CurrentEntry == 1");
+    UtAssert_True(MD_AppData.MD_DwellTables[MD_INTERFACE_NUM_DWELL_TABLES - 1].CurrentEntry == 1,
+                  "MD_AppData.MD_DwellTables[MD_INTERFACE_NUM_DWELL_TABLES - 1].CurrentEntry == 1");
 
     call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
 
@@ -218,62 +221,63 @@ void MD_DwellLoop_Test_MoreAddressesToRead(void)
 
 void MD_DwellLoop_Test_ZeroRate(void)
 {
+    MD_Wakeup_t Msg;
     MD_AppData.MD_DwellTables[0].AddrCount                       = 1;
-    MD_AppData.MD_DwellTables[MD_NUM_DWELL_TABLES / 2].AddrCount = 1;
-    MD_AppData.MD_DwellTables[MD_NUM_DWELL_TABLES - 1].AddrCount = 1;
+    MD_AppData.MD_DwellTables[MD_INTERFACE_NUM_DWELL_TABLES / 2].AddrCount = 1;
+    MD_AppData.MD_DwellTables[MD_INTERFACE_NUM_DWELL_TABLES - 1].AddrCount = 1;
 
-    MD_AppData.MD_DwellTables[0].Enabled                       = MD_DWELL_STREAM_ENABLED;
-    MD_AppData.MD_DwellTables[MD_NUM_DWELL_TABLES / 2].Enabled = MD_DWELL_STREAM_ENABLED;
-    MD_AppData.MD_DwellTables[MD_NUM_DWELL_TABLES - 1].Enabled = MD_DWELL_STREAM_ENABLED;
+    MD_AppData.MD_DwellTables[0].Enabled                       = MD_Dwell_States_ENABLED;
+    MD_AppData.MD_DwellTables[MD_INTERFACE_NUM_DWELL_TABLES / 2].Enabled = MD_Dwell_States_ENABLED;
+    MD_AppData.MD_DwellTables[MD_INTERFACE_NUM_DWELL_TABLES - 1].Enabled = MD_Dwell_States_ENABLED;
 
     MD_AppData.MD_DwellTables[0].Rate                       = 0;
-    MD_AppData.MD_DwellTables[MD_NUM_DWELL_TABLES / 2].Rate = 0;
-    MD_AppData.MD_DwellTables[MD_NUM_DWELL_TABLES - 1].Rate = 0;
+    MD_AppData.MD_DwellTables[MD_INTERFACE_NUM_DWELL_TABLES / 2].Rate = 0;
+    MD_AppData.MD_DwellTables[MD_INTERFACE_NUM_DWELL_TABLES - 1].Rate = 0;
 
     MD_AppData.MD_DwellTables[0].CurrentEntry                       = 0;
-    MD_AppData.MD_DwellTables[MD_NUM_DWELL_TABLES / 2].CurrentEntry = 0;
-    MD_AppData.MD_DwellTables[MD_NUM_DWELL_TABLES - 1].CurrentEntry = 0;
+    MD_AppData.MD_DwellTables[MD_INTERFACE_NUM_DWELL_TABLES / 2].CurrentEntry = 0;
+    MD_AppData.MD_DwellTables[MD_INTERFACE_NUM_DWELL_TABLES - 1].CurrentEntry = 0;
 
     MD_AppData.MD_DwellTables[0].Entry[0].Delay                       = 2;
-    MD_AppData.MD_DwellTables[MD_NUM_DWELL_TABLES / 2].Entry[0].Delay = 2;
-    MD_AppData.MD_DwellTables[MD_NUM_DWELL_TABLES - 1].Entry[0].Delay = 2;
+    MD_AppData.MD_DwellTables[MD_INTERFACE_NUM_DWELL_TABLES / 2].Entry[0].Delay = 2;
+    MD_AppData.MD_DwellTables[MD_INTERFACE_NUM_DWELL_TABLES - 1].Entry[0].Delay = 2;
 
     MD_AppData.MD_DwellTables[0].Countdown                       = 1;
-    MD_AppData.MD_DwellTables[MD_NUM_DWELL_TABLES / 2].Countdown = 1;
-    MD_AppData.MD_DwellTables[MD_NUM_DWELL_TABLES - 1].Countdown = 1;
+    MD_AppData.MD_DwellTables[MD_INTERFACE_NUM_DWELL_TABLES / 2].Countdown = 1;
+    MD_AppData.MD_DwellTables[MD_INTERFACE_NUM_DWELL_TABLES - 1].Countdown = 1;
 
     MD_AppData.MD_DwellTables[0].Entry[0].Length                       = 1;
-    MD_AppData.MD_DwellTables[MD_NUM_DWELL_TABLES / 2].Entry[0].Length = 2;
-    MD_AppData.MD_DwellTables[MD_NUM_DWELL_TABLES - 1].Entry[0].Length = 4;
+    MD_AppData.MD_DwellTables[MD_INTERFACE_NUM_DWELL_TABLES / 2].Entry[0].Length = 2;
+    MD_AppData.MD_DwellTables[MD_INTERFACE_NUM_DWELL_TABLES - 1].Entry[0].Length = 4;
 
-    MD_AppData.MD_DwellTables[MD_NUM_DWELL_TABLES / 2].Entry[0].ResolvedAddress = 2;
-    MD_AppData.MD_DwellTables[MD_NUM_DWELL_TABLES - 1].Entry[0].ResolvedAddress = 4;
+    MD_AppData.MD_DwellTables[MD_INTERFACE_NUM_DWELL_TABLES / 2].Entry[0].ResolvedAddress = 2;
+    MD_AppData.MD_DwellTables[MD_INTERFACE_NUM_DWELL_TABLES - 1].Entry[0].ResolvedAddress = 4;
 
     UT_SetDeferredRetcode(UT_KEY(CFE_PSP_MemRead8), 1, CFE_SUCCESS);
     UT_SetDeferredRetcode(UT_KEY(CFE_PSP_MemRead16), 1, CFE_SUCCESS);
     UT_SetDeferredRetcode(UT_KEY(CFE_PSP_MemRead32), 1, CFE_SUCCESS);
 
     /* Execute the function being tested */
-    MD_DwellLoop();
+    MD_DwellLoop(&Msg);
 
     /* Verify results */
     UtAssert_True(MD_AppData.MD_DwellTables[0].CurrentEntry == 0, "MD_AppData.MD_DwellTables[0].CurrentEntry == 0");
-    UtAssert_True(MD_AppData.MD_DwellTables[MD_NUM_DWELL_TABLES / 2].CurrentEntry == 0,
-                  "MD_AppData.MD_DwellTables[MD_NUM_DWELL_TABLES / 2].CurrentEntry == 0");
-    UtAssert_True(MD_AppData.MD_DwellTables[MD_NUM_DWELL_TABLES - 1].CurrentEntry == 0,
-                  "MD_AppData.MD_DwellTables[MD_NUM_DWELL_TABLES - 1].CurrentEntry == 0");
+    UtAssert_True(MD_AppData.MD_DwellTables[MD_INTERFACE_NUM_DWELL_TABLES / 2].CurrentEntry == 0,
+                  "MD_AppData.MD_DwellTables[MD_INTERFACE_NUM_DWELL_TABLES / 2].CurrentEntry == 0");
+    UtAssert_True(MD_AppData.MD_DwellTables[MD_INTERFACE_NUM_DWELL_TABLES - 1].CurrentEntry == 0,
+                  "MD_AppData.MD_DwellTables[MD_INTERFACE_NUM_DWELL_TABLES - 1].CurrentEntry == 0");
 
     UtAssert_True(MD_AppData.MD_DwellTables[0].PktOffset == 0, "MD_AppData.MD_DwellTables[0].PktOffset == 0");
-    UtAssert_True(MD_AppData.MD_DwellTables[MD_NUM_DWELL_TABLES / 2].PktOffset == 0,
-                  "MD_AppData.MD_DwellTables[MD_NUM_DWELL_TABLES / 2].PktOffset == 0");
-    UtAssert_True(MD_AppData.MD_DwellTables[MD_NUM_DWELL_TABLES - 1].PktOffset == 0,
-                  "MD_AppData.MD_DwellTables[MD_NUM_DWELL_TABLES - 1].PktOffset == 0");
+    UtAssert_True(MD_AppData.MD_DwellTables[MD_INTERFACE_NUM_DWELL_TABLES / 2].PktOffset == 0,
+                  "MD_AppData.MD_DwellTables[MD_INTERFACE_NUM_DWELL_TABLES / 2].PktOffset == 0");
+    UtAssert_True(MD_AppData.MD_DwellTables[MD_INTERFACE_NUM_DWELL_TABLES - 1].PktOffset == 0,
+                  "MD_AppData.MD_DwellTables[MD_INTERFACE_NUM_DWELL_TABLES - 1].PktOffset == 0");
 
     UtAssert_True(MD_AppData.MD_DwellTables[0].Countdown == 1, "MD_AppData.MD_DwellTables[0].Countdown == 1");
-    UtAssert_True(MD_AppData.MD_DwellTables[MD_NUM_DWELL_TABLES / 2].Countdown == 1,
-                  "MD_AppData.MD_DwellTables[MD_NUM_DWELL_TABLES / 2].Countdown == 1");
-    UtAssert_True(MD_AppData.MD_DwellTables[MD_NUM_DWELL_TABLES - 1].Countdown == 1,
-                  "MD_AppData.MD_DwellTables[MD_NUM_DWELL_TABLES - 1].Countdown == 1");
+    UtAssert_True(MD_AppData.MD_DwellTables[MD_INTERFACE_NUM_DWELL_TABLES / 2].Countdown == 1,
+                  "MD_AppData.MD_DwellTables[MD_INTERFACE_NUM_DWELL_TABLES / 2].Countdown == 1");
+    UtAssert_True(MD_AppData.MD_DwellTables[MD_INTERFACE_NUM_DWELL_TABLES - 1].Countdown == 1,
+                  "MD_AppData.MD_DwellTables[MD_INTERFACE_NUM_DWELL_TABLES - 1].Countdown == 1");
 
     call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
 
@@ -283,6 +287,7 @@ void MD_DwellLoop_Test_ZeroRate(void)
 
 void MD_DwellLoop_Test_DataError(void)
 {
+    MD_Wakeup_t Msg;
     int32 strCmpResult;
     char  ExpectedEventString[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
 
@@ -290,61 +295,61 @@ void MD_DwellLoop_Test_DataError(void)
              "Dwell Table failed to read entry %%d in table %%d ");
 
     MD_AppData.MD_DwellTables[0].AddrCount                       = 1;
-    MD_AppData.MD_DwellTables[MD_NUM_DWELL_TABLES / 2].AddrCount = 1;
-    MD_AppData.MD_DwellTables[MD_NUM_DWELL_TABLES - 1].AddrCount = 1;
+    MD_AppData.MD_DwellTables[MD_INTERFACE_NUM_DWELL_TABLES / 2].AddrCount = 1;
+    MD_AppData.MD_DwellTables[MD_INTERFACE_NUM_DWELL_TABLES - 1].AddrCount = 1;
 
-    MD_AppData.MD_DwellTables[0].Enabled                       = MD_DWELL_STREAM_ENABLED;
-    MD_AppData.MD_DwellTables[MD_NUM_DWELL_TABLES / 2].Enabled = MD_DWELL_STREAM_ENABLED;
-    MD_AppData.MD_DwellTables[MD_NUM_DWELL_TABLES - 1].Enabled = MD_DWELL_STREAM_ENABLED;
+    MD_AppData.MD_DwellTables[0].Enabled                       = MD_Dwell_States_ENABLED;
+    MD_AppData.MD_DwellTables[MD_INTERFACE_NUM_DWELL_TABLES / 2].Enabled = MD_Dwell_States_ENABLED;
+    MD_AppData.MD_DwellTables[MD_INTERFACE_NUM_DWELL_TABLES - 1].Enabled = MD_Dwell_States_ENABLED;
 
     MD_AppData.MD_DwellTables[0].Rate                       = 1;
-    MD_AppData.MD_DwellTables[MD_NUM_DWELL_TABLES / 2].Rate = 1;
-    MD_AppData.MD_DwellTables[MD_NUM_DWELL_TABLES - 1].Rate = 1;
+    MD_AppData.MD_DwellTables[MD_INTERFACE_NUM_DWELL_TABLES / 2].Rate = 1;
+    MD_AppData.MD_DwellTables[MD_INTERFACE_NUM_DWELL_TABLES - 1].Rate = 1;
 
     MD_AppData.MD_DwellTables[0].CurrentEntry                       = 0;
-    MD_AppData.MD_DwellTables[MD_NUM_DWELL_TABLES / 2].CurrentEntry = 0;
-    MD_AppData.MD_DwellTables[MD_NUM_DWELL_TABLES - 1].CurrentEntry = 0;
+    MD_AppData.MD_DwellTables[MD_INTERFACE_NUM_DWELL_TABLES / 2].CurrentEntry = 0;
+    MD_AppData.MD_DwellTables[MD_INTERFACE_NUM_DWELL_TABLES - 1].CurrentEntry = 0;
 
     MD_AppData.MD_DwellTables[0].Entry[0].Delay                       = 2;
-    MD_AppData.MD_DwellTables[MD_NUM_DWELL_TABLES / 2].Entry[0].Delay = 2;
-    MD_AppData.MD_DwellTables[MD_NUM_DWELL_TABLES - 1].Entry[0].Delay = 2;
+    MD_AppData.MD_DwellTables[MD_INTERFACE_NUM_DWELL_TABLES / 2].Entry[0].Delay = 2;
+    MD_AppData.MD_DwellTables[MD_INTERFACE_NUM_DWELL_TABLES - 1].Entry[0].Delay = 2;
 
     MD_AppData.MD_DwellTables[0].Countdown                       = 1;
-    MD_AppData.MD_DwellTables[MD_NUM_DWELL_TABLES / 2].Countdown = 1;
-    MD_AppData.MD_DwellTables[MD_NUM_DWELL_TABLES - 1].Countdown = 1;
+    MD_AppData.MD_DwellTables[MD_INTERFACE_NUM_DWELL_TABLES / 2].Countdown = 1;
+    MD_AppData.MD_DwellTables[MD_INTERFACE_NUM_DWELL_TABLES - 1].Countdown = 1;
 
     MD_AppData.MD_DwellTables[0].Entry[0].Length                       = 1;
-    MD_AppData.MD_DwellTables[MD_NUM_DWELL_TABLES / 2].Entry[0].Length = 2;
-    MD_AppData.MD_DwellTables[MD_NUM_DWELL_TABLES - 1].Entry[0].Length = 4;
+    MD_AppData.MD_DwellTables[MD_INTERFACE_NUM_DWELL_TABLES / 2].Entry[0].Length = 2;
+    MD_AppData.MD_DwellTables[MD_INTERFACE_NUM_DWELL_TABLES - 1].Entry[0].Length = 4;
 
-    MD_AppData.MD_DwellTables[MD_NUM_DWELL_TABLES / 2].Entry[0].ResolvedAddress = 2;
-    MD_AppData.MD_DwellTables[MD_NUM_DWELL_TABLES - 1].Entry[0].ResolvedAddress = 4;
+    MD_AppData.MD_DwellTables[MD_INTERFACE_NUM_DWELL_TABLES / 2].Entry[0].ResolvedAddress = 2;
+    MD_AppData.MD_DwellTables[MD_INTERFACE_NUM_DWELL_TABLES - 1].Entry[0].ResolvedAddress = 4;
 
     UT_SetDeferredRetcode(UT_KEY(CFE_PSP_MemRead8), 1, -1);
     UT_SetDeferredRetcode(UT_KEY(CFE_PSP_MemRead16), 1, -2);
     UT_SetDeferredRetcode(UT_KEY(CFE_PSP_MemRead32), 1, -3);
 
     /* Execute the function being tested */
-    MD_DwellLoop();
+    MD_DwellLoop(&Msg);
 
     /* Verify results */
     UtAssert_True(MD_AppData.MD_DwellTables[0].CurrentEntry == 0, "MD_AppData.MD_DwellTables[0].CurrentEntry == 0");
-    UtAssert_True(MD_AppData.MD_DwellTables[MD_NUM_DWELL_TABLES / 2].CurrentEntry == 0,
-                  "MD_AppData.MD_DwellTables[MD_NUM_DWELL_TABLES / 2].CurrentEntry == 0");
-    UtAssert_True(MD_AppData.MD_DwellTables[MD_NUM_DWELL_TABLES - 1].CurrentEntry == 0,
-                  "MD_AppData.MD_DwellTables[MD_NUM_DWELL_TABLES - 1].CurrentEntry == 0");
+    UtAssert_True(MD_AppData.MD_DwellTables[MD_INTERFACE_NUM_DWELL_TABLES / 2].CurrentEntry == 0,
+                  "MD_AppData.MD_DwellTables[MD_INTERFACE_NUM_DWELL_TABLES / 2].CurrentEntry == 0");
+    UtAssert_True(MD_AppData.MD_DwellTables[MD_INTERFACE_NUM_DWELL_TABLES - 1].CurrentEntry == 0,
+                  "MD_AppData.MD_DwellTables[MD_INTERFACE_NUM_DWELL_TABLES - 1].CurrentEntry == 0");
 
     UtAssert_True(MD_AppData.MD_DwellTables[0].PktOffset == 0, "MD_AppData.MD_DwellTables[0].PktOffset == 0");
-    UtAssert_True(MD_AppData.MD_DwellTables[MD_NUM_DWELL_TABLES / 2].PktOffset == 0,
-                  "MD_AppData.MD_DwellTables[MD_NUM_DWELL_TABLES / 2].PktOffset == 0");
-    UtAssert_True(MD_AppData.MD_DwellTables[MD_NUM_DWELL_TABLES - 1].PktOffset == 0,
-                  "MD_AppData.MD_DwellTables[MD_NUM_DWELL_TABLES - 1].PktOffset == 0");
+    UtAssert_True(MD_AppData.MD_DwellTables[MD_INTERFACE_NUM_DWELL_TABLES / 2].PktOffset == 0,
+                  "MD_AppData.MD_DwellTables[MD_INTERFACE_NUM_DWELL_TABLES / 2].PktOffset == 0");
+    UtAssert_True(MD_AppData.MD_DwellTables[MD_INTERFACE_NUM_DWELL_TABLES - 1].PktOffset == 0,
+                  "MD_AppData.MD_DwellTables[MD_INTERFACE_NUM_DWELL_TABLES - 1].PktOffset == 0");
 
     UtAssert_True(MD_AppData.MD_DwellTables[0].Countdown == 2, "MD_AppData.MD_DwellTables[0].Countdown == 2");
-    UtAssert_True(MD_AppData.MD_DwellTables[MD_NUM_DWELL_TABLES / 2].Countdown == 2,
-                  "MD_AppData.MD_DwellTables[MD_NUM_DWELL_TABLES / 2].Countdown == 2");
-    UtAssert_True(MD_AppData.MD_DwellTables[MD_NUM_DWELL_TABLES - 1].Countdown == 2,
-                  "MD_AppData.MD_DwellTables[MD_NUM_DWELL_TABLES - 1].Countdown == 2");
+    UtAssert_True(MD_AppData.MD_DwellTables[MD_INTERFACE_NUM_DWELL_TABLES / 2].Countdown == 2,
+                  "MD_AppData.MD_DwellTables[MD_INTERFACE_NUM_DWELL_TABLES / 2].Countdown == 2");
+    UtAssert_True(MD_AppData.MD_DwellTables[MD_INTERFACE_NUM_DWELL_TABLES - 1].Countdown == 2,
+                  "MD_AppData.MD_DwellTables[MD_INTERFACE_NUM_DWELL_TABLES - 1].Countdown == 2");
 
     UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, MD_DWELL_LOOP_GET_DWELL_DATA_ERR_EID);
     UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_ERROR);
@@ -492,8 +497,8 @@ void MD_SendDwellPkt_Test(void)
     MD_AppData.MD_DwellTables[TableIndex].Rate      = 4;
     MD_AppData.MD_DwellTables[TableIndex].DataSize  = 5;
 
-#if MD_SIGNATURE_OPTION == 1
-    strncpy(MD_AppData.MD_DwellTables[TableIndex].Signature, "signature", MD_SIGNATURE_FIELD_LENGTH - 1);
+#if MD_INTERFACE_SIGNATURE_OPTION == 1
+    strncpy(MD_AppData.MD_DwellTables[TableIndex].Signature, "signature", MD_INTERFACE_SIGNATURE_FIELD_LENGTH - 1);
 #endif
 
     /* Execute the function being tested */
@@ -505,13 +510,13 @@ void MD_SendDwellPkt_Test(void)
                   "MD_AppData.MD_DwellPkt[TableIndex].Payload.AddrCount == 3");
     UtAssert_True(MD_AppData.MD_DwellPkt[TableIndex].Payload.Rate == 4, "MD_AppData.MD_DwellPkt[TableIndex].Payload.Rate == 4");
 
-#if MD_SIGNATURE_OPTION == 1
+#if MD_INTERFACE_SIGNATURE_OPTION == 1
     UtAssert_True(
-        strncmp(MD_AppData.MD_DwellTables[TableIndex].Signature, "signature", MD_SIGNATURE_FIELD_LENGTH - 1) == 0,
-        "MD_AppData.MD_DwellTables[TableIndex].Payload.Signature, 'signature', MD_SIGNATURE_FIELD_LENGTH - 1) == 0");
+        strncmp(MD_AppData.MD_DwellTables[TableIndex].Signature, "signature", MD_INTERFACE_SIGNATURE_FIELD_LENGTH - 1) == 0,
+        "MD_AppData.MD_DwellTables[TableIndex].Payload.Signature, 'signature', MD_INTERFACE_SIGNATURE_FIELD_LENGTH - 1) == 0");
 
-    UtAssert_True(MD_AppData.MD_DwellTables[TableIndex].Signature[MD_SIGNATURE_FIELD_LENGTH - 1] == '\0',
-                  "MD_AppData.MD_DwellTables[TableIndex].Payload.Signature[MD_SIGNATURE_FIELD_LENGTH - 1] == ''");
+    UtAssert_True(MD_AppData.MD_DwellTables[TableIndex].Signature[MD_INTERFACE_SIGNATURE_FIELD_LENGTH - 1] == '\0',
+                  "MD_AppData.MD_DwellTables[TableIndex].Payload.Signature[MD_INTERFACE_SIGNATURE_FIELD_LENGTH - 1] == ''");
 #endif
 
     UtAssert_True(MD_AppData.MD_DwellTables[TableIndex].DataSize == 5,
@@ -530,8 +535,8 @@ void MD_NoDwellRate_Test(void)
     MD_AppData.MD_DwellTables[TableIndex].Rate      = 0;
     MD_AppData.MD_DwellTables[TableIndex].DataSize  = 5;
 
-#if MD_SIGNATURE_OPTION == 1
-    strncpy(MD_AppData.MD_DwellTables[TableIndex].Signature, "signature", MD_SIGNATURE_FIELD_LENGTH - 1);
+#if MD_INTERFACE_SIGNATURE_OPTION == 1
+    strncpy(MD_AppData.MD_DwellTables[TableIndex].Signature, "signature", MD_INTERFACE_SIGNATURE_FIELD_LENGTH - 1);
 #endif
 
     /* Execute the function being tested */
@@ -543,13 +548,13 @@ void MD_NoDwellRate_Test(void)
                   "MD_AppData.MD_DwellPkt[TableIndex].Payload.AddrCount == 3");
     UtAssert_True(MD_AppData.MD_DwellPkt[TableIndex].Payload.Rate == 0, "MD_AppData.MD_DwellPkt[TableIndex].Payload.Rate == 0");
 
-#if MD_SIGNATURE_OPTION == 1
+#if MD_INTERFACE_SIGNATURE_OPTION == 1
     UtAssert_True(
-        strncmp(MD_AppData.MD_DwellTables[TableIndex].Signature, "signature", MD_SIGNATURE_FIELD_LENGTH - 1) == 0,
-        "MD_AppData.MD_DwellTables[TableIndex].Payload.Signature, 'signature', MD_SIGNATURE_FIELD_LENGTH - 1) == 0");
+        strncmp(MD_AppData.MD_DwellTables[TableIndex].Signature, "signature", MD_INTERFACE_SIGNATURE_FIELD_LENGTH - 1) == 0,
+        "MD_AppData.MD_DwellTables[TableIndex].Payload.Signature, 'signature', MD_INTERFACE_SIGNATURE_FIELD_LENGTH - 1) == 0");
 
-    UtAssert_True(MD_AppData.MD_DwellTables[TableIndex].Signature[MD_SIGNATURE_FIELD_LENGTH - 1] == '\0',
-                  "MD_AppData.MD_DwellTables[TableIndex].Payload.Signature[MD_SIGNATURE_FIELD_LENGTH - 1] == ''");
+    UtAssert_True(MD_AppData.MD_DwellTables[TableIndex].Signature[MD_INTERFACE_SIGNATURE_FIELD_LENGTH - 1] == '\0',
+                  "MD_AppData.MD_DwellTables[TableIndex].Payload.Signature[MD_INTERFACE_SIGNATURE_FIELD_LENGTH - 1] == ''");
 #endif
 
     UtAssert_True(MD_AppData.MD_DwellTables[TableIndex].DataSize == 5,

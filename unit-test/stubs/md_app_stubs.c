@@ -1,8 +1,7 @@
 /************************************************************************
- * NASA Docket No. GSC-18,922-1, and identified as “Core Flight
- * System (cFS) Memory Dwell Application Version 2.4.1”
+ * NASA Docket No. GSC-19,200-1, and identified as "cFS Draco"
  *
- * Copyright (c) 2021 United States Government as represented by the
+ * Copyright (c) 2023 United States Government as represented by the
  * Administrator of the National Aeronautics and Space Administration.
  * All Rights Reserved.
  *
@@ -17,68 +16,107 @@
  * limitations under the License.
  ************************************************************************/
 
-/*
- * Includes
+/**
+ * @file
+ *
+ * Auto-Generated stub implementations for functions defined in md_app header
  */
 
 #include "md_app.h"
-#include "common_types.h"
-#include "md_platform_cfg.h"
-#include "cfe_mission_cfg.h"
-#include "md_msgids.h"
-#include "md_msg.h"
+#include "utgenstub.h"
 
-/* UT includes */
-#include "uttest.h"
-#include "utassert.h"
-#include "utstubs.h"
-
-MD_AppData_t MD_AppData;
-
-void MD_AppMain(void)
-{
-    UT_DEFAULT_IMPL(MD_AppMain);
-}
-
+/*
+ * ----------------------------------------------------
+ * Generated stub function for MD_AppInit()
+ * ----------------------------------------------------
+ */
 CFE_Status_t MD_AppInit(void)
 {
-    return UT_DEFAULT_IMPL(MD_AppInit);
+    UT_GenStub_SetupReturnBuffer(MD_AppInit, CFE_Status_t);
+
+    UT_GenStub_Execute(MD_AppInit, Basic, NULL);
+
+    return UT_GenStub_GetReturnValue(MD_AppInit, CFE_Status_t);
 }
 
+/*
+ * ----------------------------------------------------
+ * Generated stub function for MD_AppMain()
+ * ----------------------------------------------------
+ */
+void MD_AppMain(void)
+{
+
+    UT_GenStub_Execute(MD_AppMain, Basic, NULL);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for MD_HkStatus()
+ * ----------------------------------------------------
+ */
+CFE_Status_t MD_HkStatus(const MD_SendHkCmd_t *Msg)
+{
+    UT_GenStub_SetupReturnBuffer(MD_HkStatus, CFE_Status_t);
+
+    UT_GenStub_AddParam(MD_HkStatus, const MD_SendHkCmd_t *, Msg);
+
+    UT_GenStub_Execute(MD_HkStatus, Basic, NULL);
+
+    return UT_GenStub_GetReturnValue(MD_HkStatus, CFE_Status_t);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for MD_InitControlStructures()
+ * ----------------------------------------------------
+ */
 void MD_InitControlStructures(void)
 {
-    UT_DEFAULT_IMPL(MD_InitControlStructures);
+
+    UT_GenStub_Execute(MD_InitControlStructures, Basic, NULL);
 }
 
+/*
+ * ----------------------------------------------------
+ * Generated stub function for MD_InitSoftwareBusServices()
+ * ----------------------------------------------------
+ */
 CFE_Status_t MD_InitSoftwareBusServices(void)
 {
-    return UT_DEFAULT_IMPL(MD_InitSoftwareBusServices);
+    UT_GenStub_SetupReturnBuffer(MD_InitSoftwareBusServices, CFE_Status_t);
+
+    UT_GenStub_Execute(MD_InitSoftwareBusServices, Basic, NULL);
+
+    return UT_GenStub_GetReturnValue(MD_InitSoftwareBusServices, CFE_Status_t);
 }
 
+/*
+ * ----------------------------------------------------
+ * Generated stub function for MD_InitTableServices()
+ * ----------------------------------------------------
+ */
 CFE_Status_t MD_InitTableServices(void)
 {
-    return UT_DEFAULT_IMPL(MD_InitTableServices);
+    UT_GenStub_SetupReturnBuffer(MD_InitTableServices, CFE_Status_t);
+
+    UT_GenStub_Execute(MD_InitTableServices, Basic, NULL);
+
+    return UT_GenStub_GetReturnValue(MD_InitTableServices, CFE_Status_t);
 }
 
+/*
+ * ----------------------------------------------------
+ * Generated stub function for MD_ManageDwellTable()
+ * ----------------------------------------------------
+ */
 CFE_Status_t MD_ManageDwellTable(uint8 TblIndex)
 {
-    UT_Stub_RegisterContextGenericArg(UT_KEY(MD_ManageDwellTable), TblIndex);
-    return UT_DEFAULT_IMPL(MD_ManageDwellTable);
-}
+    UT_GenStub_SetupReturnBuffer(MD_ManageDwellTable, CFE_Status_t);
 
-void MD_ExecRequest(const CFE_SB_Buffer_t *BufPtr)
-{
-    UT_Stub_RegisterContext(UT_KEY(MD_ExecRequest), BufPtr);
-    UT_DEFAULT_IMPL(MD_ExecRequest);
-}
+    UT_GenStub_AddParam(MD_ManageDwellTable, uint8, TblIndex);
 
-void MD_HkStatus(void)
-{
-    UT_DEFAULT_IMPL(MD_HkStatus);
-}
+    UT_GenStub_Execute(MD_ManageDwellTable, Basic, NULL);
 
-int16 MD_SearchCmdHndlrTbl(CFE_MSG_FcnCode_t CommandCode)
-{
-    UT_Stub_RegisterContextGenericArg(UT_KEY(MD_SearchCmdHndlrTbl), CommandCode);
-    return UT_DEFAULT_IMPL(MD_SearchCmdHndlrTbl);
+    return UT_GenStub_GetReturnValue(MD_ManageDwellTable, CFE_Status_t);
 }

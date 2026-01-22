@@ -1,8 +1,7 @@
 /************************************************************************
- * NASA Docket No. GSC-18,922-1, and identified as “Core Flight
- * System (cFS) Memory Dwell Application Version 2.4.1”
+ * NASA Docket No. GSC-19,200-1, and identified as "cFS Draco"
  *
- * Copyright (c) 2021 United States Government as represented by the
+ * Copyright (c) 2023 United States Government as represented by the
  * Administrator of the National Aeronautics and Space Administration.
  * All Rights Reserved.
  *
@@ -17,18 +16,10 @@
  * limitations under the License.
  ************************************************************************/
 
-/**
- * @file
- *   Specification for the CFS Memory Dwell command and telemetry
- *   message constant definitions.
- *
- * @note
- *   DO NOT PUT ANY TYPEDEFS OR STRUCTURE DEFINITIONS IN THIS FILE!
- *   ADD THEM TO md_msg.h IF NEEDED! */
-#ifndef MD_MSGDEFS_H
-#define MD_MSGDEFS_H
+#ifndef MD_FCNCODES_H
+#define MD_FCNCODES_H
 
-#include <md_platform_cfg.h>
+#include "md_fcncode_values.h"
 
 /**
  * \defgroup cfsmdcmdcodes CFS Memory Dwell Command Codes
@@ -43,13 +34,13 @@
  *       valid command execution counter.
  *
  *  \par Command Structure
- *       #MD_NoArgsCmd_t
+ *       MD_NoopCmd_t
  *
  *  \par Command Verification
  *       Successful execution of this command may be verified with the
  *       following telemetry:
- *       - #MD_HkTlm_Payload_t.ValidCmdCntr will increment
- *       - The #MD_NOOP_INF_EID informational event message will
+ *       - MD_HkTlm_Payload_t.ValidCmdCntr will increment
+ *       - The MD_NOOP_INF_EID informational event message will
  *         be generated
  *
  *  \par Error Conditions
@@ -58,13 +49,13 @@
  *
  *       Evidence of an unexpected command length error may be found
  *       in the following telemetry:
- *       - #MD_HkTlm_Payload_t.InvalidCmdCntr will increment.
- *       - The #MD_CMD_LEN_ERR_EID error event message will be issued.
+ *       - MD_HkTlm_Payload_t.InvalidCmdCntr will increment.
+ *       - The MD_CMD_LEN_ERR_EID error event message will be issued.
  *
  *  \par Criticality
  *       None
  */
-#define MD_NOOP_CC 0
+#define MD_NOOP_CC MD_CCVAL(NOOP)
 
 /**
  * \brief Memory Dwell Reset Counters Command
@@ -76,14 +67,14 @@
  *       - Command Error Counter
  *
  *  \par Command Structure
- *       #MD_NoArgsCmd_t
+ *       MD_ResetCountersCmd_t
  *
  *  \par Command Verification
  *       Successful execution of this command may be verified with
  *       the following telemetry:
- *       - #MD_HkTlm_Payload_t.ValidCmdCntr will be set to zero.
- *       - #MD_HkTlm_Payload_t.InvalidCmdCntr will be set to zero.
- *       - The #MD_RESET_INF_EID debug event message will be generated.
+ *       - MD_HkTlm_Payload_t.ValidCmdCntr will be set to zero.
+ *       - MD_HkTlm_Payload_t.InvalidCmdCntr will be set to zero.
+ *       - The MD_RESET_INF_EID debug event message will be generated.
  *
  *  \par Error Conditions
  *       This command may fail for the following reason(s):
@@ -91,8 +82,8 @@
  *
  *       Evidence of an unexpected command length error may be found
  *       in the following telemetry:
- *       - #MD_HkTlm_Payload_t.InvalidCmdCntr will increment.
- *       - The #MD_CMD_LEN_ERR_EID error event message will be issued.
+ *       - MD_HkTlm_Payload_t.InvalidCmdCntr will increment.
+ *       - The MD_CMD_LEN_ERR_EID error event message will be issued.
  *
  *  \par Criticality
  *       This command is not inherently dangerous.  However, it is
@@ -100,7 +91,7 @@
  *       to be designed such that they react to changes in the counter
  *       values that are reset by this command.
  */
-#define MD_RESET_CNTRS_CC 1
+#define MD_RESET_CNTRS_CC MD_CCVAL(RESET_COUNTERS)
 
 /**
  * \brief Memory Dwell Start Dwell Command
@@ -126,8 +117,8 @@
  *
  *      Note that the dwell state will not be affected for the Dwell Tables
  *      _not_ designated by the TableMask argument.  Thus, for example, if
- *      Dwell Table #1 has already been started, and a Start Dwell Command is
- *      issued to start Dwell Tables #2 and #3, Dwell Table #1 will still be
+ *      Dwell Table 1 has already been started, and a Start Dwell Command is
+ *      issued to start Dwell Tables 2 and 3, Dwell Table 1 will still be
  *      in started state following the command.
  *
  *      Note that if this command is issued when the Dwell Table has already
@@ -139,38 +130,38 @@
  *      Dwell Table is loaded.
  *
  *  \par Command Structure
- *       #MD_CmdStartStop_t
+ *       MD_StartDwellCmd_t
  *
  *  \par Command Verification
  *       Successful execution of this command may be verified with
  *       the following telemetry:
- *       - #MD_HkTlm_Payload_t.ValidCmdCntr will increment.
- *       - #MD_HkTlm_Payload_t.DwellEnabledMask will be enabled (bit 1 = TBL1, etc)
- *       - The #MD_START_DWELL_INF_EID informational event message
+ *       - MD_HkTlm_Payload_t.ValidCmdCntr will increment.
+ *       - MD_HkTlm_Payload_t.DwellEnabledMask will be enabled (bit 1 = TBL1, etc)
+ *       - The MD_START_DWELL_INF_EID informational event message
  *         will be issued.
  *
  *  \par Error Conditions
  *       This command may fail for the following reasons:
  *       - Unexpected command length.
- *       - Dwell Table mask argument contains no valid table values ( 1..#MD_NUM_DWELL_TABLES).
+ *       - Dwell Table mask argument contains no valid table values ( 1..MD_INTERFACE_NUM_DWELL_TABLES).
  *
  *       Evidence of an unexpected command length error may be found
  *       in the following telemetry:
- *       - #MD_HkTlm_Payload_t.InvalidCmdCntr increments.
- *       - The #MD_CMD_LEN_ERR_EID error event message is issued.
+ *       - MD_HkTlm_Payload_t.InvalidCmdCntr increments.
+ *       - The MD_CMD_LEN_ERR_EID error event message is issued.
  *
  *       Evidence of an invalid value for Dwell Table mask argument may be found
  *       in the following telemetry:
- *       - #MD_HkTlm_Payload_t.InvalidCmdCntr increments.
- *       - The #MD_EMPTY_TBLMASK_ERR_EID error event message is issued.
+ *       - MD_HkTlm_Payload_t.InvalidCmdCntr increments.
+ *       - The MD_EMPTY_TBLMASK_ERR_EID error event message is issued.
  *
  **
  *  \par Criticality
  *       None.
  *
- *  \sa  #MD_STOP_DWELL_CC
+ *  \sa  MD_STOP_DWELL_CC
  */
-#define MD_START_DWELL_CC 2
+#define MD_START_DWELL_CC MD_CCVAL(START_DWELL)
 
 /**
  * \brief Memory Dwell Stop Dwell Command
@@ -187,41 +178,41 @@
  *
  *      Note that the dwell state will not be affected for the Dwell Tables
  *      _not_ designated by the TableMask argument.  Thus, for example, if
- *      a Stop Dwell Command is issued to stop Dwell Table #2, all _other_
+ *      a Stop Dwell Command is issued to stop Dwell Table 2, all _other_
  *      Dwell Tables will remain in the same state following the command
  *      that they were in before the command was received.
  *
  *  \par Command Structure
- *       #MD_CmdStartStop_t
+ *       MD_StopDwellCmd_t
  *
  *  \par Command Verification
  *       Successful execution of this command may be verified with
  *       the following telemetry:
- *       - #MD_HkTlm_Payload_t.ValidCmdCntr increments.
- *       - #MD_HkTlm_Payload_t.DwellEnabledMask will be disabled (bit 1 = TBL1, etc)
- *       - The #MD_STOP_DWELL_INF_EID informational event message is issued.
+ *       - MD_HkTlm_Payload_t.ValidCmdCntr increments.
+ *       - MD_HkTlm_Payload_t.DwellEnabledMask will be disabled (bit 1 = TBL1, etc)
+ *       - The MD_STOP_DWELL_INF_EID informational event message is issued.
  *
  *  \par Error Conditions
  *       This command may fail for the following reason(s):
  *       - Unexpected command length.
- *       - Dwell Table mask argument contains no valid table values ( 1..#MD_NUM_DWELL_TABLES).
+ *       - Dwell Table mask argument contains no valid table values ( 1..MD_INTERFACE_NUM_DWELL_TABLES).
  *
  *       Evidence of an unexpected command length error may be found
  *       in the following telemetry:
- *       - #MD_HkTlm_Payload_t.InvalidCmdCntr increments.
- *       - The #MD_CMD_LEN_ERR_EID error event message is issued.
+ *       - MD_HkTlm_Payload_t.InvalidCmdCntr increments.
+ *       - The MD_CMD_LEN_ERR_EID error event message is issued.
  *
  *       Evidence of an invalid value for Dwell Table argument may be found
  *       in the following telemetry:
- *       - #MD_HkTlm_Payload_t.InvalidCmdCntr increments.
- *       - The #MD_EMPTY_TBLMASK_ERR_EID error event message is issued.
+ *       - MD_HkTlm_Payload_t.InvalidCmdCntr increments.
+ *       - The MD_EMPTY_TBLMASK_ERR_EID error event message is issued.
  *
  *  \par Criticality
  *       None.
  *
- *  \sa #MD_START_DWELL_CC
+ *  \sa MD_START_DWELL_CC
  */
-#define MD_STOP_DWELL_CC 3
+#define MD_STOP_DWELL_CC MD_CCVAL(STOP_DWELL)
 
 /**
  * \brief Jam Dwell
@@ -237,38 +228,38 @@
  *      Note that changes made to a Dwell Table using a Jam command will not
  *      be saved across process resets in this version of Memory Dwell.
  *
- *      For details on what constitutes a valid Dwell Table see #MD_DwellTableLoad_t.
+ *      For details on what constitutes a valid Dwell Table see MD_DwellTableLoad_t.
  *      In particular, note that a valid entry _may_ be inserted past a terminator entry;
  *      however it won't be processed as long as it remains following a terminator entry.
  *
  *  \par Command Structure
- *       #MD_CmdJam_t
+ *       MD_JamDwellCmd_t
  *
  *  \par Command Verification
  *       Nominal successful execution of this command may be verified with
  *       the following telemetry:
- *       - #MD_HkTlm_Payload_t.ValidCmdCntr increments.
- *       - The #MD_JAM_DWELL_INF_EID or #MD_JAM_NULL_DWELL_INF_EID informational event message is issued.
+ *       - MD_HkTlm_Payload_t.ValidCmdCntr increments.
+ *       - The MD_JAM_DWELL_INF_EID or MD_JAM_NULL_DWELL_INF_EID informational event message is issued.
  *
  *  \par Error Conditions
  *       This command may fail for the following reason(s):
- *       - Unexpected command length                    (Event message #MD_CMD_LEN_ERR_EID is issued)
- *       - Table Id other than 1..MD_NUM_DWELL_TABLES   (Event message #MD_INVALID_JAM_TABLE_ERR_EID is issued)
- *       - Entry Id other than 1..MD_DWELL_TABLE_SIZE   (Event message #MD_INVALID_ENTRY_ARG_ERR_EID is issued)
- *       - Unrecognized Dwell Address symbol            (Event message #MD_CANT_RESOLVE_JAM_ADDR_ERR_EID is issued)
- *       - Dwell Field Length other than 0, 1, 2, or 4  (Event message #MD_INVALID_LEN_ARG_ERR_EID is issued)
- *       - Specified Dwell Address is out of range      (Event message #MD_INVALID_JAM_ADDR_ERR_EID is issued)
+ *       - Unexpected command length                    (Event message MD_CMD_LEN_ERR_EID is issued)
+ *       - Table Id other than 1..MD_INTERFACE_NUM_DWELL_TABLES   (Event message MD_INVALID_JAM_TABLE_ERR_EID is issued)
+ *       - Entry Id other than 1..MD_INTERFACE_DWELL_TABLE_SIZE   (Event message MD_INVALID_ENTRY_ARG_ERR_EID is issued)
+ *       - Unrecognized Dwell Address symbol            (Event message MD_CANT_RESOLVE_JAM_ADDR_ERR_EID is issued)
+ *       - Dwell Field Length other than 0, 1, 2, or 4  (Event message MD_INVALID_LEN_ARG_ERR_EID is issued)
+ *       - Specified Dwell Address is out of range      (Event message MD_INVALID_JAM_ADDR_ERR_EID is issued)
  *       - Specified Dwell Address is not properly aligned for the specified Dwell Length
- *         (Event message #MD_JAM_ADDR_NOT_32BIT_ERR_EID or #MD_JAM_ADDR_NOT_16BIT_ERR_EID is issued)
+ *         (Event message MD_JAM_ADDR_NOT_32BIT_ERR_EID or MD_JAM_ADDR_NOT_16BIT_ERR_EID is issued)
  *
- *       Any time the command fails, #MD_HkTlm_Payload_t.InvalidCmdCntr increments.
+ *       Any time the command fails, MD_HkTlm_Payload_t.InvalidCmdCntr increments.
  *
  *  \par Criticality
  *       None.
  */
-#define MD_JAM_DWELL_CC 4
+#define MD_JAM_DWELL_CC MD_CCVAL(JAM_DWELL)
 
-#if MD_SIGNATURE_OPTION == 1
+#if MD_INTERFACE_SIGNATURE_OPTION == 1
 
 /**
  * \brief Set Signature Command
@@ -277,27 +268,26 @@
  *       Associates a signature with the specified Dwell Table.
  *
  *  \par Command Structure
- *       #MD_CmdSetSignature_t
+ *       MD_SetSignatureCmd_t
  *
  *  \par Command Verification
  *       Successful execution of this command may be verified with
  *       the following telemetry:
- *       - #MD_HkTlm_Payload_t.ValidCmdCntr will increment.
+ *       - MD_HkTlm_Payload_t.ValidCmdCntr will increment.
  *
  *  \par Error Conditions
  *       This command may fail for the following reason(s):
- *       - Unexpected command length.                    (Event message #MD_CMD_LEN_ERR_EID is issued)
- *       - Dwell Table ID is invalid.                    (Event message #MD_INVALID_SIGNATURE_TABLE_ERR_EID is issued)
+ *       - Unexpected command length.                    (Event message MD_CMD_LEN_ERR_EID is issued)
+ *       - Dwell Table ID is invalid.                    (Event message MD_INVALID_SIGNATURE_TABLE_ERR_EID is issued)
  *
- *       Any time the command fails, #MD_HkTlm_Payload_t.InvalidCmdCntr increments.
+ *       Any time the command fails, MD_HkTlm_Payload_t.InvalidCmdCntr increments.
  *
  *  \par Criticality
  *       None.
  */
-#define MD_SET_SIGNATURE_CC 5
-
+#define MD_SET_SIGNATURE_CC MD_CCVAL(SET_SIGNATURE)
 #endif
 
 /**\}*/
 
-#endif
+#endif /* MD_FCNCODES_H */

@@ -1,8 +1,7 @@
 /************************************************************************
- * NASA Docket No. GSC-18,922-1, and identified as “Core Flight
- * System (cFS) Memory Dwell Application Version 2.4.1”
+ * NASA Docket No. GSC-19,200-1, and identified as "cFS Draco"
  *
- * Copyright (c) 2021 United States Government as represented by the
+ * Copyright (c) 2023 United States Government as represented by the
  * Administrator of the National Aeronautics and Space Administration.
  * All Rights Reserved.
  *
@@ -21,8 +20,8 @@
  * @file
  *  The CFS Memory Dwell (MD) Application event id header file
  */
-#ifndef MD_EVENTS_H
-#define MD_EVENTS_H
+#ifndef MD_EVENTIDS_H
+#define MD_EVENTIDS_H
 
 /**
  * \defgroup cfsmdevents CFS Memory Dwell Event IDs
@@ -81,7 +80,7 @@
  *  \par Cause:
  *
  *  Issued when a #CFE_TBL_ERR_INVALID_SIZE error message is received from #CFE_TBL_Register call.
- *  Load structure can be reduced by reducing #MD_DWELL_TABLE_SIZE, number of entries per Dwell Table.
+ *  Load structure can be reduced by reducing #MD_INTERFACE_DWELL_TABLE_SIZE, number of entries per Dwell Table.
  */
 #define MD_DWELL_TBL_TOO_LARGE_CRIT_EID 5
 
@@ -160,7 +159,7 @@
  *
  *  \par Cause:
  *
- *  None of the valid Table Ids (1..#MD_NUM_DWELL_TABLES) are contained in
+ *  None of the valid Table Ids (1..#MD_INTERFACE_NUM_DWELL_TABLES) are contained in
  *  the table mask argument for the Start Dwell or Stop Dwell command.
  */
 #define MD_EMPTY_TBLMASK_ERR_EID 14
@@ -262,7 +261,7 @@
  *
  *  This error event is issued when a Jam Dwell Command is received
  *  with an invalid value for the table id argument.
- *  Values in the range 1..#MD_NUM_DWELL_TABLES are expected.
+ *  Values in the range 1..#MD_INTERFACE_NUM_DWELL_TABLES are expected.
  */
 #define MD_INVALID_JAM_TABLE_ERR_EID 32
 
@@ -275,7 +274,7 @@
  *
  *  This error event is issued when a Jam Dwell Command is received
  *  with an invalid value for the entry id argument.
- *  Values in the range 1..#MD_DWELL_TABLE_SIZE are expected.
+ *  Values in the range 1..#MD_INTERFACE_DWELL_TABLE_SIZE are expected.
  */
 #define MD_INVALID_ENTRY_ARG_ERR_EID 33
 
@@ -473,7 +472,7 @@
  *
  *  This error event is issued when a Set Signature Command is received
  *  with an invalid value for the table id argument.
- *  Values in the range 1..#MD_NUM_DWELL_TABLES are expected.
+ *  Values in the range 1..#MD_INTERFACE_NUM_DWELL_TABLES are expected.
  */
 #define MD_INVALID_SIGNATURE_TABLE_ERR_EID 47
 
@@ -582,7 +581,7 @@
  *  \par Cause:
  *
  *  This event message is issued when the table address cannot be acquired for
- *  one of the tables being started with the #MD_ProcessStartCmd.  In addition
+ *  one of the tables being started with the #MD_StartDwellCmd.  In addition
  *  to this summary message, a #MD_UPDATE_TBL_EN_ERR_EID event is issed for each
  *  failure.
  */
@@ -596,7 +595,7 @@
  *  \par Cause:
  *
  *  This event message is issued when the table address cannot be acquired for
- *  one of the tables being started with the #MD_ProcessStopCmd.  In addition
+ *  one of the tables being started with the #MD_StopDwellCmd.  In addition
  *  to this summary message, a #MD_UPDATE_TBL_EN_ERR_EID event is issed for each
  *  failure.
  */
@@ -610,7 +609,7 @@
  *  \par Cause:
  *
  *  This event message is issued when the table address cannot be acquired
- *  for the table specified in the #MD_ProcessSignatureCmd.
+ *  for the table specified in the #MD_SetSignatureCmd.
  */
 #define MD_SET_SIGNATURE_ERR_EID 58
 

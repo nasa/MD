@@ -1,8 +1,7 @@
 /************************************************************************
- * NASA Docket No. GSC-18,922-1, and identified as “Core Flight
- * System (cFS) Memory Dwell Application Version 2.4.1”
+ * NASA Docket No. GSC-19,200-1, and identified as "cFS Draco"
  *
- * Copyright (c) 2021 United States Government as represented by the
+ * Copyright (c) 2023 United States Government as represented by the
  * Administrator of the National Aeronautics and Space Administration.
  * All Rights Reserved.
  *
@@ -55,11 +54,11 @@ extern CFE_ES_WriteToSysLog_context_t context_CFE_ES_WriteToSysLog;
 typedef union
 {
     CFE_SB_Buffer_t   Buf;
-    MD_NoArgsCmd_t    NoArgsCmd;
-    MD_CmdStartStop_t CmdStartStop;
-    MD_CmdJam_t       CmdJam;
-#if MD_SIGNATURE_OPTION == 1
-    MD_CmdSetSignature_t CmdSetSignature;
+    MD_NoopCmd_t    NoArgsCmd;
+    MD_StartDwellCmd_t CmdStartStop; /* This can be the StartDwellCmd or StopDwellCmd*/
+    MD_JamDwellCmd_t       CmdJam;
+#if MD_INTERFACE_SIGNATURE_OPTION == 1
+    MD_SetSignatureCmd_t CmdSetSignature;
 #endif
 } UT_CmdBuf_t;
 

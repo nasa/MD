@@ -1,8 +1,7 @@
 /************************************************************************
- * NASA Docket No. GSC-18,922-1, and identified as “Core Flight
- * System (cFS) Memory Dwell Application Version 2.4.1”
+ * NASA Docket No. GSC-19,200-1, and identified as "cFS Draco"
  *
- * Copyright (c) 2021 United States Government as represented by the
+ * Copyright (c) 2023 United States Government as represented by the
  * Administrator of the National Aeronautics and Space Administration.
  * All Rights Reserved.
  *
@@ -25,7 +24,7 @@
 #include "md_utils.h"
 #include "md_msg.h"
 #include "md_msgdefs.h"
-#include "md_events.h"
+#include "md_eventids.h"
 #include "md_version.h"
 #include "md_test_utils.h"
 #include <unistd.h>
@@ -78,7 +77,7 @@ void MD_TableValidationFunc_Test_InvalidEnableFlag(void)
                   call_count_CFE_EVS_SendEvent);
 }
 
-#if MD_SIGNATURE_OPTION == 1
+#if MD_INTERFACE_SIGNATURE_OPTION == 1
 void MD_TableValidationFunc_Test_InvalidSignatureLength(void)
 {
     int32               Result;
@@ -89,7 +88,7 @@ void MD_TableValidationFunc_Test_InvalidSignatureLength(void)
     snprintf(ExpectedEventString, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH,
              "Dwell Table rejected because Signature length was invalid");
 
-    Table.Enabled = MD_DWELL_STREAM_ENABLED;
+    Table.Enabled = MD_Dwell_States_ENABLED;
     memset(Table.Signature, 'x', sizeof(Table.Signature));
 
     /* Execute the function being tested */
@@ -124,13 +123,13 @@ void MD_TableValidationFunc_Test_ResolveError(void)
     snprintf(ExpectedEventString, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH,
              "Dwell Table rejected because address (sym='%%s'/offset=0x%%08X) in entry #%%d couldn't be resolved");
 
-    Table.Enabled = MD_DWELL_STREAM_ENABLED;
+    Table.Enabled = MD_Dwell_States_ENABLED;
 
-#if MD_SIGNATURE_OPTION == 1
-    strncpy(Table.Signature, "signature", MD_SIGNATURE_FIELD_LENGTH);
+#if MD_INTERFACE_SIGNATURE_OPTION == 1
+    strncpy(Table.Signature, "signature", MD_INTERFACE_SIGNATURE_FIELD_LENGTH);
 #endif
 
-    strncpy(Table.Entry[0].DwellAddress.SymName, "symname", 10);
+    strncpy(Table.Entry[0].DwellAddress.SymName, "symname", sizeof(Table.Entry[0].DwellAddress.SymName));
 
     Table.Entry[0].Length              = 1;
     Table.Entry[0].DwellAddress.Offset = 0;
@@ -169,13 +168,13 @@ void MD_TableValidationFunc_Test_InvalidAddress(void)
     snprintf(ExpectedEventString, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH,
              "Dwell Table rejected because address (sym='%%s'/offset=0x%%08X) in entry #%%d was out of range");
 
-    Table.Enabled = MD_DWELL_STREAM_ENABLED;
+    Table.Enabled = MD_Dwell_States_ENABLED;
 
-#if MD_SIGNATURE_OPTION == 1
-    strncpy(Table.Signature, "signature", MD_SIGNATURE_FIELD_LENGTH);
+#if MD_INTERFACE_SIGNATURE_OPTION == 1
+    strncpy(Table.Signature, "signature", MD_INTERFACE_SIGNATURE_FIELD_LENGTH);
 #endif
 
-    strncpy(Table.Entry[0].DwellAddress.SymName, "symname", 10);
+    strncpy(Table.Entry[0].DwellAddress.SymName, "symname", sizeof(Table.Entry[0].DwellAddress.SymName));
 
     Table.Entry[0].DwellAddress.Offset = 0;
     Table.Entry[0].Length              = 1;
@@ -219,13 +218,13 @@ void MD_TableValidationFunc_Test_NullPtr(void)
     snprintf(ExpectedEventString, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH,
              "Dwell Table rejected because of null table pointer");
 
-    Table.Enabled = MD_DWELL_STREAM_ENABLED;
+    Table.Enabled = MD_Dwell_States_ENABLED;
 
-#if MD_SIGNATURE_OPTION == 1
-    strncpy(Table.Signature, "signature", MD_SIGNATURE_FIELD_LENGTH);
+#if MD_INTERFACE_SIGNATURE_OPTION == 1
+    strncpy(Table.Signature, "signature", MD_INTERFACE_SIGNATURE_FIELD_LENGTH);
 #endif
 
-    strncpy(Table.Entry[0].DwellAddress.SymName, "symname", 10);
+    strncpy(Table.Entry[0].DwellAddress.SymName, "symname", sizeof(Table.Entry[0].DwellAddress.SymName));
 
     Table.Entry[0].DwellAddress.Offset = 0;
 
@@ -261,13 +260,13 @@ void MD_TableValidationFunc_Test_InvalidLength(void)
     snprintf(ExpectedEventString, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH,
              "Dwell Table rejected because length (%%d) in entry #%%d was invalid");
 
-    Table.Enabled = MD_DWELL_STREAM_ENABLED;
+    Table.Enabled = MD_Dwell_States_ENABLED;
 
-#if MD_SIGNATURE_OPTION == 1
-    strncpy(Table.Signature, "signature", MD_SIGNATURE_FIELD_LENGTH);
+#if MD_INTERFACE_SIGNATURE_OPTION == 1
+    strncpy(Table.Signature, "signature", MD_INTERFACE_SIGNATURE_FIELD_LENGTH);
 #endif
 
-    strncpy(Table.Entry[0].DwellAddress.SymName, "symname", 10);
+    strncpy(Table.Entry[0].DwellAddress.SymName, "symname", sizeof(Table.Entry[0].DwellAddress.SymName));
 
     Table.Entry[0].DwellAddress.Offset = 0;
     Table.Entry[0].Length              = 5;
@@ -309,13 +308,13 @@ void MD_TableValidationFunc_Test_NotAligned(void)
              "Dwell Table rejected because address (sym='%%s'/offset=0x%%08X) in entry #%%d not properly aligned for "
              "%%d-byte dwell");
 
-    Table.Enabled = MD_DWELL_STREAM_ENABLED;
+    Table.Enabled = MD_Dwell_States_ENABLED;
 
-#if MD_SIGNATURE_OPTION == 1
-    strncpy(Table.Signature, "signature", MD_SIGNATURE_FIELD_LENGTH);
+#if MD_INTERFACE_SIGNATURE_OPTION == 1
+    strncpy(Table.Signature, "signature", MD_INTERFACE_SIGNATURE_FIELD_LENGTH);
 #endif
 
-    strncpy(Table.Entry[0].DwellAddress.SymName, "symname", 10);
+    strncpy(Table.Entry[0].DwellAddress.SymName, "symname", sizeof(Table.Entry[0].DwellAddress.SymName));
 
     Table.Entry[0].DwellAddress.Offset = 1;
     Table.Entry[0].Length              = 2;
@@ -356,15 +355,15 @@ void MD_TableValidationFunc_Test_ZeroRate(void)
     snprintf(ExpectedEventString[1], CFE_MISSION_EVS_MAX_MESSAGE_LENGTH,
              "Dwell Table is enabled but no processing will occur for table being loaded (rate is zero)");
 
-    Table.Enabled = MD_DWELL_STREAM_ENABLED;
+    Table.Enabled = MD_Dwell_States_ENABLED;
 
-#if MD_SIGNATURE_OPTION == 1
-    strncpy(Table.Signature, "signature", MD_SIGNATURE_FIELD_LENGTH);
+#if MD_INTERFACE_SIGNATURE_OPTION == 1
+    strncpy(Table.Signature, "signature", MD_INTERFACE_SIGNATURE_FIELD_LENGTH);
 #endif
 
-    strncpy(Table.Entry[0].DwellAddress.SymName, "symname", 10);
+    strncpy(Table.Entry[0].DwellAddress.SymName, "symname", sizeof(Table.Entry[0].DwellAddress.SymName));
 
-    for (i = 0; i < MD_DWELL_TABLE_SIZE; i++)
+    for (i = 0; i < MD_INTERFACE_DWELL_TABLE_SIZE; i++)
     {
         Table.Entry[i].DwellAddress.Offset = 0;
         Table.Entry[i].Length              = 1;
@@ -403,15 +402,15 @@ void MD_TableValidationFunc_Test_SuccessStreamDisabled(void)
     MD_DwellTableLoad_t Table;
     uint16              i;
 
-    Table.Enabled = MD_DWELL_STREAM_DISABLED;
+    Table.Enabled = MD_Dwell_States_DISABLED;
 
-#if MD_SIGNATURE_OPTION == 1
-    strncpy(Table.Signature, "signature", MD_SIGNATURE_FIELD_LENGTH);
+#if MD_INTERFACE_SIGNATURE_OPTION == 1
+    strncpy(Table.Signature, "signature", MD_INTERFACE_SIGNATURE_FIELD_LENGTH);
 #endif
 
-    strncpy(Table.Entry[0].DwellAddress.SymName, "symname", 10);
+    strncpy(Table.Entry[0].DwellAddress.SymName, "symname", sizeof(Table.Entry[0].DwellAddress.SymName));
 
-    for (i = 0; i < MD_DWELL_TABLE_SIZE; i++)
+    for (i = 0; i < MD_INTERFACE_DWELL_TABLE_SIZE; i++)
     {
         Table.Entry[i].DwellAddress.Offset = 0;
         Table.Entry[i].Length              = 1;
@@ -442,15 +441,15 @@ void MD_TableValidationFunc_Test_Success(void)
     MD_DwellTableLoad_t Table;
     uint16              i;
 
-    Table.Enabled = MD_DWELL_STREAM_ENABLED;
+    Table.Enabled = MD_Dwell_States_ENABLED;
 
-#if MD_SIGNATURE_OPTION == 1
-    strncpy(Table.Signature, "signature", MD_SIGNATURE_FIELD_LENGTH);
+#if MD_INTERFACE_SIGNATURE_OPTION == 1
+    strncpy(Table.Signature, "signature", MD_INTERFACE_SIGNATURE_FIELD_LENGTH);
 #endif
 
-    strncpy(Table.Entry[0].DwellAddress.SymName, "symname", 10);
+    strncpy(Table.Entry[0].DwellAddress.SymName, "symname", sizeof(Table.Entry[0].DwellAddress.SymName));
 
-    for (i = 0; i < MD_DWELL_TABLE_SIZE; i++)
+    for (i = 0; i < MD_INTERFACE_DWELL_TABLE_SIZE; i++)
     {
         Table.Entry[i].DwellAddress.Offset = 0;
         Table.Entry[i].Length              = 1;
@@ -484,7 +483,7 @@ void MD_ReadDwellTable_Test(void)
     uint16              Size            = 0;
     uint32              Rate            = 0;
 
-    for (i = 0; i < MD_DWELL_TABLE_SIZE; i++)
+    for (i = 0; i < MD_INTERFACE_DWELL_TABLE_SIZE; i++)
     {
         Table.Entry[i].Length = 1;
         Table.Entry[i].Delay  = 1;
@@ -494,9 +493,9 @@ void MD_ReadDwellTable_Test(void)
     Result = MD_ReadDwellTable(&Table, &ActiveAddrCount, &Size, &Rate);
 
     /* Verify results */
-    UtAssert_True(ActiveAddrCount == MD_DWELL_TABLE_SIZE, "ActiveAddrCount == MD_DWELL_TABLE_SIZE");
-    UtAssert_True(Size == MD_DWELL_TABLE_SIZE, "Size == MD_DWELL_TABLE_SIZE");
-    UtAssert_True(Rate == MD_DWELL_TABLE_SIZE, "Rate == MD_DWELL_TABLE_SIZE");
+    UtAssert_True(ActiveAddrCount == MD_INTERFACE_DWELL_TABLE_SIZE, "ActiveAddrCount == MD_INTERFACE_DWELL_TABLE_SIZE");
+    UtAssert_True(Size == MD_INTERFACE_DWELL_TABLE_SIZE, "Size == MD_INTERFACE_DWELL_TABLE_SIZE");
+    UtAssert_True(Rate == MD_INTERFACE_DWELL_TABLE_SIZE, "Rate == MD_INTERFACE_DWELL_TABLE_SIZE");
 
     UtAssert_True(Result == CFE_SUCCESS, "Result == CFE_SUCCESS");
 
@@ -604,7 +603,7 @@ void MD_CheckTableEntries_Test_Success(void)
     snprintf(ExpectedEventString, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH,
              "MD Dwell Tbl verify results: good = %%d, bad = %%d, unused = %%d");
 
-    for (i = 0; i < MD_DWELL_TABLE_SIZE; i++)
+    for (i = 0; i < MD_INTERFACE_DWELL_TABLE_SIZE; i++)
     {
         Table.Entry[i].DwellAddress.Offset = 0;
         Table.Entry[i].Length              = 1;
@@ -612,9 +611,9 @@ void MD_CheckTableEntries_Test_Success(void)
     }
 
     /* Test the 'unused' entry count */
-    Table.Entry[MD_DWELL_TABLE_SIZE - 1].DwellAddress.Offset = 0;
-    Table.Entry[MD_DWELL_TABLE_SIZE - 1].Length              = 0;
-    Table.Entry[MD_DWELL_TABLE_SIZE - 1].Delay               = 1;
+    Table.Entry[MD_INTERFACE_DWELL_TABLE_SIZE - 1].DwellAddress.Offset = 0;
+    Table.Entry[MD_INTERFACE_DWELL_TABLE_SIZE - 1].Length              = 0;
+    Table.Entry[MD_INTERFACE_DWELL_TABLE_SIZE - 1].Delay               = 1;
 
     /* Set to make MD_CheckTableEntries return SUCCESS */
     UT_SetDefaultReturnValue(UT_KEY(MD_ResolveSymAddr), true);
@@ -862,8 +861,8 @@ void MD_CopyUpdatedTbl_Test(void)
 
     LoadTable.Enabled = 1;
 
-#if MD_SIGNATURE_OPTION == 1
-    strncpy(LoadTable.Signature, "signature", MD_SIGNATURE_FIELD_LENGTH);
+#if MD_INTERFACE_SIGNATURE_OPTION == 1
+    strncpy(LoadTable.Signature, "signature", MD_INTERFACE_SIGNATURE_FIELD_LENGTH);
 #endif
 
     /* Execute the function being tested */
@@ -872,13 +871,13 @@ void MD_CopyUpdatedTbl_Test(void)
     /* Verify results */
     UtAssert_True(MD_AppData.MD_DwellTables[TblIndex].Enabled == 1, "MD_AppData.MD_DwellTables[TblIndex].Enabled == 1");
 
-#if MD_SIGNATURE_OPTION == 1
+#if MD_INTERFACE_SIGNATURE_OPTION == 1
     UtAssert_True(
-        strncmp(MD_AppData.MD_DwellTables[TblIndex].Signature, "signature", MD_SIGNATURE_FIELD_LENGTH) == 0,
-        "strncmp(MD_AppData.MD_DwellTables[TblIndex].Signature, 'signature', MD_SIGNATURE_FIELD_LENGTH) == 0");
+        strncmp(MD_AppData.MD_DwellTables[TblIndex].Signature, "signature", MD_INTERFACE_SIGNATURE_FIELD_LENGTH) == 0,
+        "strncmp(MD_AppData.MD_DwellTables[TblIndex].Signature, 'signature', MD_INTERFACE_SIGNATURE_FIELD_LENGTH) == 0");
 
-    UtAssert_True(MD_AppData.MD_DwellTables[TblIndex].Signature[MD_SIGNATURE_FIELD_LENGTH - 1] == '\0',
-                  "MD_AppData.MD_DwellTables[TblIndex].Signature[MD_SIGNATURE_FIELD_LENGTH - 1] == ''");
+    UtAssert_True(MD_AppData.MD_DwellTables[TblIndex].Signature[MD_INTERFACE_SIGNATURE_FIELD_LENGTH - 1] == '\0',
+                  "MD_AppData.MD_DwellTables[TblIndex].Signature[MD_INTERFACE_SIGNATURE_FIELD_LENGTH - 1] == ''");
 #endif
 
     call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
@@ -890,14 +889,14 @@ void MD_CopyUpdatedTbl_Test(void)
 void MD_UpdateTableEnabledField_Test_DwellStreamEnabled(void)
 {
     uint16               TableIndex = 0;
-    uint16               FieldValue = MD_DWELL_STREAM_ENABLED;
+    uint16               FieldValue = MD_Dwell_States_ENABLED;
     MD_DwellTableLoad_t  LoadTbl;
     MD_DwellTableLoad_t *LoadTblPtr = &LoadTbl;
 
     /* Set MD_LoadTablePtr = &MD_DWELL_TBL_TEST_GlobalLoadTable */
     /* UT_SetHookFunction(UT_KEY(CFE_TBL_GetAddress), &MD_DWELL_TBL_TEST_CFE_TBL_GetAddressHook2, NULL); */
     UT_SetDefaultReturnValue(UT_KEY(CFE_TBL_GetAddress), CFE_TBL_INFO_UPDATED);
-    LoadTblPtr->Enabled = MD_DWELL_STREAM_DISABLED;
+    LoadTblPtr->Enabled = MD_Dwell_States_DISABLED;
 
     UT_SetDataBuffer(UT_KEY(CFE_TBL_GetAddress), &LoadTblPtr, sizeof(LoadTblPtr), false);
 
@@ -905,7 +904,7 @@ void MD_UpdateTableEnabledField_Test_DwellStreamEnabled(void)
     MD_UpdateTableEnabledField(TableIndex, FieldValue);
 
     /* Verify results */
-    UtAssert_True(LoadTblPtr->Enabled == MD_DWELL_STREAM_ENABLED, "LoadTblPtr->Enabled == MD_DWELL_STREAM_ENABLED");
+    UtAssert_True(LoadTblPtr->Enabled == MD_Dwell_States_ENABLED, "LoadTblPtr->Enabled == MD_Dwell_States_ENABLED");
 
     call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
 
@@ -916,12 +915,12 @@ void MD_UpdateTableEnabledField_Test_DwellStreamEnabled(void)
 void MD_UpdateTableEnabledField_Test_DwellStreamDisabled(void)
 {
     uint16               TableIndex = 0;
-    uint16               FieldValue = MD_DWELL_STREAM_DISABLED;
+    uint16               FieldValue = MD_Dwell_States_DISABLED;
     MD_DwellTableLoad_t  LoadTbl;
     MD_DwellTableLoad_t *LoadTblPtr = &LoadTbl;
 
     UT_SetDefaultReturnValue(UT_KEY(CFE_TBL_GetAddress), CFE_SUCCESS);
-    LoadTblPtr->Enabled = MD_DWELL_STREAM_ENABLED;
+    LoadTblPtr->Enabled = MD_Dwell_States_ENABLED;
 
     UT_SetDataBuffer(UT_KEY(CFE_TBL_GetAddress), &LoadTblPtr, sizeof(LoadTblPtr), false);
 
@@ -929,7 +928,7 @@ void MD_UpdateTableEnabledField_Test_DwellStreamDisabled(void)
     MD_UpdateTableEnabledField(TableIndex, FieldValue);
 
     /* Verify results */
-    UtAssert_True(LoadTblPtr->Enabled == MD_DWELL_STREAM_DISABLED, "LoadTblPtr->Enabled == MD_DWELL_STREAM_DISABLED");
+    UtAssert_True(LoadTblPtr->Enabled == MD_Dwell_States_DISABLED, "LoadTblPtr->Enabled == MD_Dwell_States_DISABLED");
 
     call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
 
@@ -940,7 +939,7 @@ void MD_UpdateTableEnabledField_Test_DwellStreamDisabled(void)
 void MD_UpdateTableEnabledField_Test_Error(void)
 {
     uint16 TableIndex = 0;
-    uint16 FieldValue = MD_DWELL_STREAM_DISABLED;
+    uint16 FieldValue = MD_Dwell_States_DISABLED;
     int32  strCmpResult;
     char   ExpectedEventString[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
 
@@ -977,7 +976,7 @@ void MD_UpdateTableDwellEntry_Test(void)
 
     NewDwellAddress.Offset = 1;
 
-    strncpy(NewDwellAddress.SymName, "symname", 10);
+    strncpy(NewDwellAddress.SymName, "symname", sizeof(NewDwellAddress.SymName));
 
     MD_DwellTableLoad_t  LoadTbl;
     MD_DwellTableLoad_t *LoadTblPtr = &LoadTbl;
@@ -993,11 +992,8 @@ void MD_UpdateTableDwellEntry_Test(void)
     UtAssert_True(LoadTblPtr->Entry[EntryIndex].DwellAddress.Offset == 1,
                   "LoadTablePtr->Entry[EntryIndex].DwellAddress.Offset == 1");
 
-    UtAssert_True(strncmp(LoadTblPtr->Entry[EntryIndex].DwellAddress.SymName, "symname", 10) == 0,
-                  "strncmp(LoadTblPtr->Entry[EntryIndex].DwellAddress.SymName, 'symname', 10) == 0");
-
-    UtAssert_True(LoadTblPtr->Entry[EntryIndex].DwellAddress.SymName[OS_MAX_SYM_LEN - 1] == '\0',
-                  "LoadTblPtr->Entry[EntryIndex].DwellAddress.SymName[OS_MAX_SYM_LEN - 1] == ''");
+    UtAssert_True(strcmp(LoadTblPtr->Entry[EntryIndex].DwellAddress.SymName, "symname") == 0,
+                  "strcmp(LoadTblPtr->Entry[EntryIndex].DwellAddress.SymName, 'symname') == 0");
 
     call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
 
@@ -1015,7 +1011,7 @@ void MD_UpdateTableDwellEntry_Test_Updated(void)
 
     NewDwellAddress.Offset = 1;
 
-    strncpy(NewDwellAddress.SymName, "symname", 10);
+    strncpy(NewDwellAddress.SymName, "symname", sizeof(NewDwellAddress.SymName));
 
     /* Set MD_LoadTablePtr = &MD_DWELL_TBL_TEST_GlobalLoadTable */
     MD_DwellTableLoad_t  LoadTbl;
@@ -1033,11 +1029,8 @@ void MD_UpdateTableDwellEntry_Test_Updated(void)
     UtAssert_True(LoadTblPtr->Entry[EntryIndex].DwellAddress.Offset == 1,
                   "LoadTablePtr->Entry[EntryIndex].DwellAddress.Offset == 1");
 
-    UtAssert_True(strncmp(LoadTblPtr->Entry[EntryIndex].DwellAddress.SymName, "symname", 10) == 0,
-                  "strncmp(LoadTblPtr->Entry[EntryIndex].DwellAddress.SymName, 'symname', 10) == 0");
-
-    UtAssert_True(LoadTblPtr->Entry[EntryIndex].DwellAddress.SymName[OS_MAX_SYM_LEN - 1] == '\0',
-                  "LoadTblPtr->Entry[EntryIndex].DwellAddress.SymName[OS_MAX_SYM_LEN - 1] == ''");
+    UtAssert_True(strcmp(LoadTblPtr->Entry[EntryIndex].DwellAddress.SymName, "symname") == 0,
+                  "strcmp(LoadTblPtr->Entry[EntryIndex].DwellAddress.SymName, 'symname') == 0");
 
     call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
 
@@ -1060,7 +1053,7 @@ void MD_UpdateTableDwellEntry_Test_Error(void)
 
     NewDwellAddress.Offset = 1;
 
-    strncpy(NewDwellAddress.SymName, "symname", 10);
+    strncpy(NewDwellAddress.SymName, "symname", sizeof(NewDwellAddress.SymName));
 
     /* Set to make CFE_TBL_GetAddress != CFE_SUCCESS */
     UT_SetDeferredRetcode(UT_KEY(CFE_TBL_GetAddress), 1, -1);
@@ -1082,11 +1075,11 @@ void MD_UpdateTableDwellEntry_Test_Error(void)
                   call_count_CFE_EVS_SendEvent);
 }
 
-#if MD_SIGNATURE_OPTION == 1
+#if MD_INTERFACE_SIGNATURE_OPTION == 1
 void MD_UpdateTableSignature_Test(void)
 {
     uint16 TableIndex                              = 0;
-    char   newsignature[MD_SIGNATURE_FIELD_LENGTH] = "newsignature";
+    char   newsignature[MD_INTERFACE_SIGNATURE_FIELD_LENGTH] = "newsignature";
 
     MD_DwellTableLoad_t  LoadTbl;
     MD_DwellTableLoad_t *LoadTblPtr = &LoadTbl;
@@ -1109,7 +1102,7 @@ void MD_UpdateTableSignature_Test(void)
 void MD_UpdateTableSignature_Test_Updated(void)
 {
     uint16 TableIndex                              = 0;
-    char   newsignature[MD_SIGNATURE_FIELD_LENGTH] = "newsignature";
+    char   newsignature[MD_INTERFACE_SIGNATURE_FIELD_LENGTH] = "newsignature";
 
     /* Set MD_LoadTablePtr = &MD_DWELL_TBL_TEST_GlobalLoadTable */
     MD_DwellTableLoad_t  LoadTbl;
@@ -1134,7 +1127,7 @@ void MD_UpdateTableSignature_Test_Updated(void)
 void MD_UpdateTableSignature_Test_Error(void)
 {
     uint16 TableIndex                              = 0;
-    char   newsignature[MD_SIGNATURE_FIELD_LENGTH] = "newsignature";
+    char   newsignature[MD_INTERFACE_SIGNATURE_FIELD_LENGTH] = "newsignature";
     int32  strCmpResult;
     char   ExpectedEventString[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
 
@@ -1167,7 +1160,7 @@ void UtTest_Setup(void)
 {
     UtTest_Add(MD_TableValidationFunc_Test_InvalidEnableFlag, MD_Test_Setup, MD_Test_TearDown,
                "MD_TableValidationFunc_Test_InvalidEnableFlag");
-#if MD_SIGNATURE_OPTION == 1
+#if MD_INTERFACE_SIGNATURE_OPTION == 1
     UtTest_Add(MD_TableValidationFunc_Test_InvalidSignatureLength, MD_Test_Setup, MD_Test_TearDown,
                "MD_TableValidationFunc_Test_InvalidSignatureLength");
 #endif
@@ -1228,7 +1221,7 @@ void UtTest_Setup(void)
     UtTest_Add(MD_UpdateTableDwellEntry_Test_Error, MD_Test_Setup, MD_Test_TearDown,
                "MD_UpdateTableDwellEntry_Test_Error");
 
-#if MD_SIGNATURE_OPTION == 1
+#if MD_INTERFACE_SIGNATURE_OPTION == 1
     UtTest_Add(MD_UpdateTableSignature_Test, MD_Test_Setup, MD_Test_TearDown, "MD_UpdateTableSignature_Test");
     UtTest_Add(MD_UpdateTableSignature_Test_Updated, MD_Test_Setup, MD_Test_TearDown,
                "MD_UpdateTableSignature_Test_Updated");

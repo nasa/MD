@@ -1,0 +1,609 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    GSC-18128-1, "Core Flight Executive Version 6.7"
+    LEW-19710-1, "CCSDS electronic data sheet implementation"
+
+    Copyright (c) 2006-2019 United States Government as represented by
+    the Administrator of the National Aeronautics and Space Administration.
+    All Rights Reserved.
+
+    Licensed under the Apache License, Version 2.0 (the "License");
+    you may not use this file except in compliance with the License.
+    You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
+
+    This document adheres to the Electronic Data Sheet (EDS) XML schema
+    as prescribed in CCSDS book 876.0.
+
+    Purpose:
+    This describes all interface objects for the MD application
+-->
+<PackageFile xmlns="http://www.ccsds.org/schema/sois/seds">
+  <Package name="MD" shortDescription="Memory Dwell Application">
+    <DataTypeSet>
+      <!-- ================ -->
+      <!-- BASIC DATA TYPES -->
+      <!-- ================ -->
+
+      <StringDataType name="Signature" length="${MD/SIGNATURE_FIELD_LENGTH}" shortDescription="Dwell table signature string"/>
+
+      <StringDataType name="SymName" length="${CFE_MISSION/CORE_API_MAX_PATH_LEN}" shortDescription="Symbol name string"/>
+
+      <!-- ================= -->
+      <!-- ARRAY DEFINITIONS -->
+      <!-- ================= -->
+
+      <!-- Data Array for Dwell Packet Payload -->
+      <ArrayDataType name="Data" dataTypeRef="BASE_TYPES/uint8" shortDescription="Dwell data (can be variable size based on dfn)">
+        <DimensionList>
+          <Dimension size="${MD/DWELL_TABLE_SIZE} * 4"/>
+        </DimensionList>
+      </ArrayDataType>
+
+      <!-- Housekeeping Telemetry Arrays -->
+      <ArrayDataType name="DwellTblAddrCount" dataTypeRef="BASE_TYPES/uint16" shortDescription="Number of dwell addresses in table">
+        <DimensionList>
+          <Dimension size="${MD/NUM_DWELL_TABLES}"/>
+        </DimensionList>
+      </ArrayDataType>
+
+      <ArrayDataType name="NumWaitsPerPkt" dataTypeRef="BASE_TYPES/uint16" shortDescription="Number of delay counts in table">
+        <DimensionList>
+          <Dimension size="${MD/NUM_DWELL_TABLES}"/>
+        </DimensionList>
+      </ArrayDataType>
+
+      <ArrayDataType name="ByteCount" dataTypeRef="BASE_TYPES/uint16" shortDescription="Number of bytes of data specified by table">
+        <DimensionList>
+          <Dimension size="${MD/NUM_DWELL_TABLES}"/>
+        </DimensionList>
+      </ArrayDataType>
+
+      <ArrayDataType name="DwellPktOffset" dataTypeRef="BASE_TYPES/uint16" shortDescription="Current write offset within dwell pkt data region">
+        <DimensionList>
+          <Dimension size="${MD/NUM_DWELL_TABLES}"/>
+        </DimensionList>
+      </ArrayDataType>
+
+      <ArrayDataType name="DwellTblEntry" dataTypeRef="BASE_TYPES/uint16" shortDescription="Next dwell table entry to be processed">
+        <DimensionList>
+          <Dimension size="${MD/NUM_DWELL_TABLES}"/>
+        </DimensionList>
+      </ArrayDataType>
+
+      <ArrayDataType name="Countdown" dataTypeRef="BASE_TYPES/uint16" shortDescription="Current value of countdown timer">
+        <DimensionList>
+          <Dimension size="${MD/NUM_DWELL_TABLES}"/>
+        </DimensionList>
+      </ArrayDataType>
+
+      <!-- ===================== -->
+      <!-- SUPPORTING STRUCTURES -->
+      <!-- ===================== -->
+
+      <ContainerDataType name="SymAddr" shortDescription="Symbolic Address Type">
+        <EntryList>
+          <Entry name="Offset" type="BASE_TYPES/MemReference" shortDescription="Optional offset that is used as the absolute address if the SymName string is NUL"/>
+          <Entry name="SymName" type="SymName" shortDescription="Symbol name string"/>
+        </EntryList>
+      </ContainerDataType>
+
+      <!-- ========================== -->
+      <!-- COMMAND PAYLOAD STRUCTURES -->
+      <!-- ========================== -->
+
+      <ContainerDataType name="CmdStartStop_Payload" shortDescription="Start and Stop Dwell Commands Payload">
+        <EntryList>
+          <Entry name="TableMask" type="BASE_TYPES/uint16" shortDescription="0x0001=TBL1 bit, 0x0002=TBL2 bit, 0x0004=TBL3 bit, etc."/>
+          <Entry name="Padding" type="BASE_TYPES/uint16" shortDescription="Structure padding"/>
+        </EntryList>
+      </ContainerDataType>
+
+      <ContainerDataType name="CmdJam_Payload" shortDescription="Jam Dwell Command Payload">
+        <EntryList>
+          <Entry name="TableId" type="BASE_TYPES/uint16" shortDescription="Table Id: 1..MD_INTERFACE_NUM_DWELL_TABLES"/>
+          <Entry name="EntryId" type="BASE_TYPES/uint16" shortDescription="Address index: 1..MD_INTERFACE_DWELL_TABLE_SIZE"/>
+          <Entry name="FieldLength" type="BASE_TYPES/uint16" shortDescription="Length of Dwell Field: 0, 1, 2, or 4"/>
+          <Entry name="DwellDelay" type="BASE_TYPES/uint16" shortDescription="Dwell Delay (number of task wakeup calls before following dwell)"/>
+          <Entry name="DwellAddress" type="SymAddr" shortDescription="Dwell Address in MD_SymAddr_t format"/>
+        </EntryList>
+      </ContainerDataType>
+
+      <ContainerDataType name="CmdSetSignature_Payload" shortDescription="Set Signature Command Payload">
+        <EntryList>
+          <Entry name="TableId" type="BASE_TYPES/uint16" shortDescription="Table Id: 1..MD_INTERFACE_NUM_DWELL_TABLES"/>
+          <Entry name="Padding" type="BASE_TYPES/uint16" shortDescription="Padding"/>
+          <Entry name="Signature" type="Signature" shortDescription="Signature"/>
+        </EntryList>
+      </ContainerDataType>
+
+      <!-- ============================ -->
+      <!-- TELEMETRY PAYLOAD STRUCTURES -->
+      <!-- ============================ -->
+
+      <ContainerDataType name="DwellPkt_Payload" shortDescription="Memory Dwell Telemetry Packet Payload">
+        <EntryList>
+          <Entry name="TableId" type="BASE_TYPES/uint8" shortDescription="TableId from 1 to MD_INTERFACE_NUM_DWELL_TABLES"/>
+          <Entry name="AddrCount" type="BASE_TYPES/uint8" shortDescription="Number of addresses being sent - 1..MD_INTERFACE_DWELL_TABLE_SIZE valid"/>
+          <Entry name="ByteCount" type="BASE_TYPES/uint16" shortDescription="Number of bytes of dwell data contained in packet"/>
+          <Entry name="Rate" type="BASE_TYPES/uint32" shortDescription="Number of counts between packet sends"/>
+          <Entry name="Signature" type="Signature" shortDescription="Signature"/>
+          <Entry name="Data" type="Data" shortDescription="Dwell data"/>
+        </EntryList>
+      </ContainerDataType>
+
+      <ContainerDataType name="HkTlm_Payload" shortDescription="Memory Dwell HK Telemetry Payload">
+        <EntryList>
+          <Entry name="InvalidCmdCntr" type="BASE_TYPES/uint8" shortDescription="Count of invalid commands received"/>
+          <Entry name="ValidCmdCntr" type="BASE_TYPES/uint8" shortDescription="Count of valid commands received"/>
+          <Entry name="DwellEnabledMask" type="BASE_TYPES/uint16" shortDescription="Dwell table enable bitmask 0x0001=TBL1, etc"/>
+          <Entry name="DwellTblAddrCount" type="DwellTblAddrCount" shortDescription="Number of dwell addresses in table"/>
+          <Entry name="NumWaitsPerPkt" type="NumWaitsPerPkt" shortDescription="Number of delay counts in table"/>
+          <Entry name="ByteCount" type="ByteCount" shortDescription="Number of bytes of data specified by table"/>
+          <Entry name="DwellPktOffset" type="DwellPktOffset" shortDescription="Current write offset within dwell pkt data region"/>
+          <Entry name="DwellTblEntry" type="DwellTblEntry" shortDescription="Next dwell table entry to be processed"/>
+          <Entry name="Countdown" type="Countdown" shortDescription="Current value of countdown timer"/>
+        </EntryList>
+      </ContainerDataType>
+
+      <!-- ================== -->
+      <!-- MESSAGE STRUCTURES -->
+      <!-- ================== -->
+
+      <ContainerDataType name="CommandBase" baseType="CFE_HDR/CommandHeader"/>
+
+      <ContainerDataType name="Wakeup" baseType="CommandBase" shortDescription="Send MD Wakeup command" />
+
+      <ContainerDataType name="SendHkCmd" baseType="CommandBase" shortDescription="Memory Dwell Send Housekeeping Command"/>
+
+      <ContainerDataType name="HkTlm" baseType="CFE_HDR/TelemetryHeader" shortDescription="Memory Dwell HK Telemetry format">
+        <EntryList>
+          <Entry name="Payload" type="HkTlm_Payload" shortDescription="HK Telemetry payload"/>
+        </EntryList>
+      </ContainerDataType>
+
+      <ContainerDataType name="DwellPkt" baseType="CFE_HDR/TelemetryHeader" shortDescription="Memory Dwell Telemetry Packet format">
+        <EntryList>
+          <Entry name="Payload" type="DwellPkt_Payload" shortDescription="Dwell packet payload"/>
+        </EntryList>
+      </ContainerDataType>
+
+      <!-- =================== -->
+      <!-- COMMAND DEFINITIONS -->
+      <!-- =================== -->
+
+      <ContainerDataType name="NoopCmd" baseType="CommandBase">
+        <LongDescription>
+                  \cfeescmd Memory Dwell No-Op Command
+
+                  \par Description
+                  This command increments the MD application's
+                  valid command execution counter.
+
+                  \par Command Structure
+                  #MD_NoopCmd_t
+
+                  \par Command Verification
+                  Successful execution of this command may be verified with the
+                  following telemetry:
+                  - #MD_HkTlm_Payload_t.ValidCmdCntr will increment
+                  - The #MD_NOOP_INF_EID informational event message will
+                    be generated
+
+                  \par Error Conditions
+                  This command may fail for the following reason(s):
+                  - Unexpected command length.
+
+                  Evidence of an unexpected command length error may be found
+                  in the following telemetry:
+                  - #MD_HkTlm_Payload_t.InvalidCmdCntr will increment.
+                  - The #MD_CMD_LEN_ERR_EID error event message will be issued.
+
+                  \par Criticality
+                  None
+        </LongDescription>
+        <ConstraintSet>
+          <ValueConstraint entry="Sec.FunctionCode" value="0" />
+        </ConstraintSet>
+      </ContainerDataType>
+
+      <ContainerDataType name="ResetCountersCmd" baseType="CommandBase">
+        <LongDescription>
+                  \cfeescmd Memory Dwell Reset Counters Command
+
+                  \par Description
+                  This command resets the following counters within the
+                  Memory Dwell housekeeping telemetry:
+                  - Command Execution Counter
+                  - Command Error Counter
+
+                  \par Command Structure
+                  #MD_ResetCountersCmd_t
+
+                  \par Command Verification
+                  Successful execution of this command may be verified with
+                  the following telemetry:
+                  - #MD_HkTlm_Payload_t.ValidCmdCntr will be set to zero.
+                  - #MD_HkTlm_Payload_t.InvalidCmdCntr will be set to zero.
+                  - The #MD_RESET_INF_EID debug event message will be generated.
+
+                  \par Error Conditions
+                  This command may fail for the following reason(s):
+                  - Unexpected command length.
+
+                  Evidence of an unexpected command length error may be found
+                  in the following telemetry:
+                  - #MD_HkTlm_Payload_t.InvalidCmdCntr will increment.
+                  - The #MD_CMD_LEN_ERR_EID error event message will be issued.
+
+                  \par Criticality
+                  This command is not inherently dangerous. However, it is
+                  possible for ground systems and on-board safing procedures
+                  to be designed such that they react to changes in the counter
+                  values that are reset by this command.
+        </LongDescription>
+        <ConstraintSet>
+          <ValueConstraint entry="Sec.FunctionCode" value="1" />
+        </ConstraintSet>
+      </ContainerDataType>
+
+      <ContainerDataType name="StartDwellCmd" baseType="CommandBase">
+        <LongDescription>
+                  \cfeescmd Memory Dwell Start Dwell Command
+
+                  \par Description
+                  This command sets the Enabled flag(s) associated with the Dwell Table(s)
+                  that have been designated by the command's TableMask argument.
+
+                  When this Enabled flag is set, and the associated Dwell Table has
+                  one or more dwell specifications defined beginning with the Table's
+                  first entry, and the Table has a non-zero value for total delays
+                  (aka as the Rate), dwell processing will occur.
+
+                  The first dwell occurs on receipt of the first Wakeup Message from
+                  the Scheduler following the Start Dwell Command. That dwell means
+                  that a value from memory is read, and inserted into the Dwell Packet.
+
+                  Dwell Packets are issued at a rate specified by the Rate value
+                  associated with the Dwell Table. The Rate is a multiple of
+                  Wakeup Messages issued from the Scheduler. The Rate value is calculated
+                  as the sum of all the individual delays specified by individual dwell
+                  entries in a Dwell Table.
+
+                  Note that the dwell state will not be affected for the Dwell Tables
+                  _not_ designated by the TableMask argument. Thus, for example, if
+                  Dwell Table #1 has already been started, and a Start Dwell Command is
+                  issued to start Dwell Tables #2 and #3, Dwell Table #1 will still be
+                  in started state following the command.
+
+                  Note that if this command is issued when the Dwell Table has already
+                  been started, the effect will be to restart the table. The current
+                  entry will be set to the first entry and any data previously collected
+                  will be lost.
+
+                  Note that the value of the Enabled flag is also updated when a
+                  Dwell Table is loaded.
+
+                  \par Command Structure
+                  #MD_StartDwellCmd_t
+
+                  \par Command Verification
+                  Successful execution of this command may be verified with
+                  the following telemetry:
+                  - #MD_HkTlm_Payload_t.ValidCmdCntr will increment.
+                  - #MD_HkTlm_Payload_t.DwellEnabledMask will be enabled (bit 1 = TBL1, etc)
+                  - The #MD_START_DWELL_INF_EID informational event message
+                    will be issued.
+
+                  \par Error Conditions
+                  This command may fail for the following reasons:
+                  - Unexpected command length.
+                  - Dwell Table mask argument contains no valid table values (1..#MD_INTERFACE_NUM_DWELL_TABLES).
+
+                  Evidence of an unexpected command length error may be found
+                  in the following telemetry:
+                  - #MD_HkTlm_Payload_t.InvalidCmdCntr increments.
+                  - The #MD_CMD_LEN_ERR_EID error event message is issued.
+
+                  Evidence of an invalid value for Dwell Table mask argument may be found
+                  in the following telemetry:
+                  - #MD_HkTlm_Payload_t.InvalidCmdCntr increments.
+                  - The #MD_EMPTY_TBLMASK_ERR_EID error event message is issued.
+
+                  \par Criticality
+                  None.
+
+                  \sa #MD_STOP_DWELL_CC
+        </LongDescription>
+        <EntryList>
+          <Entry name="Payload" type="CmdStartStop_Payload" />
+        </EntryList>
+        <ConstraintSet>
+          <ValueConstraint entry="Sec.FunctionCode" value="2" />
+        </ConstraintSet>
+      </ContainerDataType>
+
+      <ContainerDataType name="StopDwellCmd" baseType="CommandBase">
+        <LongDescription>
+                  \cfeescmd Memory Dwell Stop Dwell Command
+
+                  \par Description
+                  This command clears the Enabled flag(s) associated with the Dwell Table(s)
+                  that have been designated by the command's TableMask argument.
+
+                  When the Enabled flag associated with a Dwell Table is cleared,
+                  dwell processing cannot occur for that Dwell Table.
+
+                  Note that the value of the Enabled flag is also updated when a
+                  Dwell Table is loaded.
+
+                  Note that the dwell state will not be affected for the Dwell Tables
+                  _not_ designated by the TableMask argument. Thus, for example, if
+                  a Stop Dwell Command is issued to stop Dwell Table #2, all _other_
+                  Dwell Tables will remain in the same state following the command
+                  that they were in before the command was received.
+
+                  \par Command Structure
+                  #MD_StopDwellCmd_t
+
+                  \par Command Verification
+                  Successful execution of this command may be verified with
+                  the following telemetry:
+                  - #MD_HkTlm_Payload_t.ValidCmdCntr increments.
+                  - #MD_HkTlm_Payload_t.DwellEnabledMask will be disabled (bit 1 = TBL1, etc)
+                  - The #MD_STOP_DWELL_INF_EID informational event message is issued.
+
+                  \par Error Conditions
+                  This command may fail for the following reason(s):
+                  - Unexpected command length.
+                  - Dwell Table mask argument contains no valid table values (1..#MD_INTERFACE_NUM_DWELL_TABLES).
+
+                  Evidence of an unexpected command length error may be found
+                  in the following telemetry:
+                  - #MD_HkTlm_Payload_t.InvalidCmdCntr increments.
+                  - The #MD_CMD_LEN_ERR_EID error event message is issued.
+
+                  Evidence of an invalid value for Dwell Table argument may be found
+                  in the following telemetry:
+                  - #MD_HkTlm_Payload_t.InvalidCmdCntr increments.
+                  - The #MD_EMPTY_TBLMASK_ERR_EID error event message is issued.
+
+                  \par Criticality
+                  None.
+
+                  \sa #MD_START_DWELL_CC
+        </LongDescription>
+        <EntryList>
+          <Entry name="Payload" type="CmdStartStop_Payload" />
+        </EntryList>
+        <ConstraintSet>
+          <ValueConstraint entry="Sec.FunctionCode" value="3" />
+        </ConstraintSet>
+      </ContainerDataType>
+
+      <ContainerDataType name="JamDwellCmd" baseType="CommandBase">
+        <LongDescription>
+                  \cfeescmd Jam Dwell Command
+
+                  \par Description
+                  This command inserts the specified dwell parameters (dwell address,
+                  dwell field length, and delay count) into the specified table,
+                  at the specified index.
+
+                  Note that it is safe to send a Jam command to an active Dwell Table.
+                  ('Active' indicates a Table which is enabled; thus, the Dwell Table
+                  is actively being used to generate a dwell packet telemetry stream.)
+                  Note that changes made to a Dwell Table using a Jam command will not
+                  be saved across process resets in this version of Memory Dwell.
+
+                  For details on what constitutes a valid Dwell Table see #MD_DwellTableLoad_t.
+                  In particular, note that a valid entry _may_ be inserted past a terminator entry;
+                  however it won't be processed as long as it remains following a terminator entry.
+
+                  \par Command Structure
+                  #MD_JamDwellCmd_t
+
+                  \par Command Verification
+                  Nominal successful execution of this command may be verified with
+                  the following telemetry:
+                  - #MD_HkTlm_Payload_t.ValidCmdCntr increments.
+                  - The #MD_JAM_DWELL_INF_EID or #MD_JAM_NULL_DWELL_INF_EID informational event message is issued.
+
+                  \par Error Conditions
+                  This command may fail for the following reason(s):
+                  - Unexpected command length (Event message #MD_CMD_LEN_ERR_EID is issued)
+                  - Table Id other than 1..MD_INTERFACE_NUM_DWELL_TABLES (Event message #MD_INVALID_JAM_TABLE_ERR_EID is issued)
+                  - Entry Id other than 1..MD_INTERFACE_DWELL_TABLE_SIZE (Event message #MD_INVALID_ENTRY_ARG_ERR_EID is issued)
+                  - Unrecognized Dwell Address symbol (Event message #MD_CANT_RESOLVE_JAM_ADDR_ERR_EID is issued)
+                  - Dwell Field Length other than 0, 1, 2, or 4 (Event message #MD_INVALID_LEN_ARG_ERR_EID is issued)
+                  - Specified Dwell Address is out of range (Event message #MD_INVALID_JAM_ADDR_ERR_EID is issued)
+                  - Specified Dwell Address is not properly aligned for the specified Dwell Length
+                    (Event message #MD_JAM_ADDR_NOT_32BIT_ERR_EID or #MD_JAM_ADDR_NOT_16BIT_ERR_EID is issued)
+
+                  Any time the command fails, #MD_HkTlm_Payload_t.InvalidCmdCntr increments.
+
+                  \par Criticality
+                  None.
+        </LongDescription>
+        <EntryList>
+          <Entry name="Payload" type="CmdJam_Payload" />
+        </EntryList>
+        <ConstraintSet>
+          <ValueConstraint entry="Sec.FunctionCode" value="4" />
+        </ConstraintSet>
+      </ContainerDataType>
+
+      <ContainerDataType name="SetSignatureCmd" baseType="CommandBase">
+        <LongDescription>
+                  \cfeescmd Set Signature Command
+
+                  \par Description
+                  Associates a signature with the specified Dwell Table.
+
+                  \par Command Structure
+                  #MD_SetSignatureCmd_t
+
+                  \par Command Verification
+                  Successful execution of this command may be verified with
+                  the following telemetry:
+                  - #MD_HkTlm_Payload_t.ValidCmdCntr will increment.
+
+                  \par Error Conditions
+                  This command may fail for the following reason(s):
+                  - Unexpected command length. (Event message #MD_CMD_LEN_ERR_EID is issued)
+                  - Dwell Table ID is invalid. (Event message #MD_INVALID_SIGNATURE_TABLE_ERR_EID is issued)
+
+                  Any time the command fails, #MD_HkTlm_Payload_t.InvalidCmdCntr increments.
+
+                  \par Criticality
+                  None.
+        </LongDescription>
+        <EntryList>
+          <Entry name="Payload" type="CmdSetSignature_Payload" />
+        </EntryList>
+        <ConstraintSet>
+          <ValueConstraint entry="Sec.FunctionCode" value="5" />
+        </ConstraintSet>
+      </ContainerDataType>
+
+      <!-- ================= -->
+      <!-- TABLE DEFINITIONS -->
+      <!-- ================= -->
+
+      <!-- Memory Dwell States Enumeration -->
+      <EnumeratedDataType name="Dwell_States" baseType="BASE_TYPES/uint8" shortDescription="MD enum used for representing values for enable state">
+          <EnumerationList>
+              <Enumeration label="DISABLED" value="0" shortDescription="MD Dwell Stream Disabled"/>
+              <Enumeration label="ENABLED" value="1" shortDescription="MD Dwell Stream Enabled"/>
+          </EnumerationList>
+          <IntegerDataEncoding sizeInBits="8" encoding="unsigned"/>
+      </EnumeratedDataType>
+
+      <!-- Individual Table Entry Definition -->
+      <ContainerDataType name="TableLoadEntry" shortDescription="Memory Dwell structure for individual memory dwell specifications">
+        <LongDescription>
+                    To be valid, entry must either be a null entry
+                    (specified by a zero field length) or all of its
+                    address and length fields must pass various checks.
+
+                    The following checks must be met for a valid non-null entry:
+
+                    - Length fields must be 1, 2, or 4.
+                    - Delay can be any value in a uint16 field.
+                    - DwellAddress.SymName must be a null string or must be found in the Symbol Table.
+                    - The sum of DwellAddress.SymName plus DwellAddress.Offset must be in a valid range,
+                      as determined by OSAL routines.
+                    - If the Length field is 2, the sum of DwellAddress.SymName plus DwellAddress.Offset
+                      must be even.
+                    - If the Length field is 4, the sum of DwellAddress.SymName plus DwellAddress.Offset
+                      must be evenly divisable by 4.
+        </LongDescription>
+        <EntryList>
+          <Entry name="Length" type="BASE_TYPES/uint16" shortDescription="Length of dwell field in bytes. 0 indicates null entry."/>
+          <Entry name="Delay" type="BASE_TYPES/uint16" shortDescription="Delay before following dwell sample in number of task wakeup calls"/>
+          <Entry name="DwellAddress" type="SymAddr" shortDescription="Dwell Address in MD_SymAddr format"/>
+        </EntryList>
+      </ContainerDataType>
+
+      <!-- Array of Table Entries -->
+      <ArrayDataType name="TableEntries" dataTypeRef="TableLoadEntry" shortDescription="Array of individual memory dwell entries">
+        <DimensionList>
+          <Dimension size="${MD/DWELL_TABLE_SIZE}"/>
+        </DimensionList>
+      </ArrayDataType>
+
+      <!-- Complete Table Definition -->
+      <ContainerDataType name="DwellTableLoad" shortDescription="Memory Dwell Table Load structure">
+        <LongDescription>
+                    To be valid, each of the Entry structures must be valid. See MD_TableLoadEntry for details.
+                    Tables will be processed beginning with the first entry if it is non-null
+                    and continuing until the first null entry is reached.
+                    Note that non-null entries may follow a terminator entry; however they will not be processed.
+
+                    In order to be processed, all of the following must be true:
+                    - There are one or more non-null entries beginning with the first entry of the table.
+                    - The sum of individual entry delays, beginning with the first entry and up until the
+                      terminator entry or the end of the table, must be non-zero.
+                    - The table's Enabled field must be set to TRUE. This is initially set in the load, and
+                      is controlled with the MD_START_DWELL_CC and MD_STOP_DWELL_CC commands.
+        </LongDescription>
+        <EntryList>
+          <Entry name="Enabled" type="Dwell_States" shortDescription="Table enable flag: MD_Dwell_States_DISABLED, MD_Dwell_States_ENABLED"/>
+          <Entry name="Signature" type="Signature" shortDescription="Signature"/>
+          <Entry name="Entry" type="TableEntries" shortDescription="Array of individual memory dwell entries"/>
+        </EntryList>
+      </ContainerDataType>
+    </DataTypeSet>
+
+    <ComponentSet>
+      <Component name="Application">
+        <RequiredInterfaceSet>
+          <!-- Dwell table interface -->
+          <Interface name="DWELL_TABLE" shortDescription="Memory Dwell table interface" type="CFE_TBL/Table">
+            <GenericTypeMapSet>
+              <GenericTypeMap name="TableDataType" type="DwellTableLoad" />
+            </GenericTypeMapSet>
+          </Interface>
+          <!-- Command Interface -->
+          <Interface name="CMD" shortDescription="Software bus telecommand interface" type="CFE_SB/Telecommand">
+            <GenericTypeMapSet>
+              <GenericTypeMap name="TelecommandDataType" type="CommandBase" />
+            </GenericTypeMapSet>
+          </Interface>
+          <!-- Send HK Interface -->
+          <Interface name="SEND_HK" shortDescription="Send telemetry command interface" type="CFE_SB/Telecommand">
+            <!-- This uses a bare spacepacket with no payload -->
+            <GenericTypeMapSet>
+              <GenericTypeMap name="TelecommandDataType" type="SendHkCmd" />
+            </GenericTypeMapSet>
+          </Interface>
+          <!-- HK Tlm Interface -->
+          <Interface name="HK_TLM" shortDescription="Software bus housekeeping telemetry interface" type="CFE_SB/Telemetry">
+            <GenericTypeMapSet>
+              <GenericTypeMap name="TelemetryDataType" type="HkTlm" />
+            </GenericTypeMapSet>
+          </Interface>
+          <!-- Wakeup Interface-->
+          <Interface name="WAKEUP" shortDescription="MD Wakeup Message ID" type="CFE_SB/Telecommand">
+            <GenericTypeMapSet>
+              <GenericTypeMap name="TelecommandDataType" type="Wakeup" />
+            </GenericTypeMapSet>
+          </Interface>
+          <!-- Dwell Telemetry Packet Interface -->
+          <Interface name="DWELL_TLM" shortDescription="Memory Dwell telemetry packet interface" type="CFE_SB/Telemetry">
+            <GenericTypeMapSet>
+              <GenericTypeMap name="TelemetryDataType" type="DwellPkt" />
+            </GenericTypeMapSet>
+          </Interface>
+        </RequiredInterfaceSet>
+        <Implementation>
+
+          <!-- Command and telemetry topic IDs -->
+          <VariableSet>
+            <Variable type="BASE_TYPES/uint16" readOnly="true" name="CmdTopicId" initialValue="${CFE_MISSION/MD_CMD_TOPICID}" />
+            <Variable type="BASE_TYPES/uint16" readOnly="true" name="SendHkTopicId" initialValue="${CFE_MISSION/MD_SEND_HK_TOPICID}" />
+            <Variable type="BASE_TYPES/uint16" readOnly="true" name="HkTlmTopicId" initialValue="${CFE_MISSION/MD_HK_TLM_TOPICID}" />
+            <Variable type="BASE_TYPES/uint16" readOnly="true" name="WakeupTopicId" initialValue="${CFE_MISSION/MD_WAKEUP_TOPICID}" />
+            <Variable type="BASE_TYPES/uint16" readOnly="true" name="DwellTlmTopicId" initialValue="${CFE_MISSION/MD_DWELL_PKT_MID_BASE_TOPICID}" />
+          </VariableSet>
+
+          <!-- Map the topic IDs to the interfaces -->
+          <ParameterMapSet>
+            <ParameterMap interface="CMD" parameter="TopicId" variableRef="CmdTopicId" />
+            <ParameterMap interface="SEND_HK" parameter="TopicId" variableRef="SendHkTopicId" />
+            <ParameterMap interface="HK_TLM" parameter="TopicId" variableRef="HkTlmTopicId" />
+            <ParameterMap interface="WAKEUP" parameter="TopicId" variableRef="WakeupTopicId" />
+            <ParameterMap interface="DWELL_TLM" parameter="TopicId" variableRef="DwellTlmTopicId" />
+          </ParameterMapSet>
+        </Implementation>
+      </Component>
+    </ComponentSet>
+  </Package>
+</PackageFile>

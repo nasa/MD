@@ -1,8 +1,7 @@
 /************************************************************************
- * NASA Docket No. GSC-18,922-1, and identified as “Core Flight
- * System (cFS) Memory Dwell Application Version 2.4.1”
+ * NASA Docket No. GSC-19,200-1, and identified as "cFS Draco"
  *
- * Copyright (c) 2021 United States Government as represented by the
+ * Copyright (c) 2023 United States Government as represented by the
  * Administrator of the National Aeronautics and Space Administration.
  * All Rights Reserved.
  *
@@ -24,7 +23,7 @@
 #include "md_utils.h"
 #include "md_msg.h"
 #include "md_msgdefs.h"
-#include "md_events.h"
+#include "md_eventids.h"
 #include "md_version.h"
 #include "md_test_utils.h"
 #include <unistd.h>
@@ -125,7 +124,7 @@ void MD_UpdateDwellControlInfo_TestAllTableEntries(void)
     uint16 TableIndex = 1;
     int    i;
 
-    for (i = 0; i < MD_DWELL_TABLE_SIZE; i++)
+    for (i = 0; i < MD_INTERFACE_DWELL_TABLE_SIZE; i++)
     {
         MD_AppData.MD_DwellTables[TableIndex].Entry[i].Length = 1;
         MD_AppData.MD_DwellTables[TableIndex].Entry[i].Delay  = 2;
@@ -185,7 +184,7 @@ void MD_ValidEntryId_Test_Invalid(void)
 void MD_ValidEntryId_Test_RangeError(void)
 {
     bool   Result;
-    uint16 EntryId = MD_DWELL_TABLE_SIZE + 1;
+    uint16 EntryId = MD_INTERFACE_DWELL_TABLE_SIZE + 1;
 
     /* Execute the function being tested */
     Result = MD_ValidEntryId(EntryId);
@@ -275,7 +274,7 @@ void MD_ValidTableId_Test_Invalid(void)
 void MD_ValidTableId_Test_RangeError(void)
 {
     bool   Result;
-    uint16 TableId = MD_NUM_DWELL_TABLES + 1;
+    uint16 TableId = MD_INTERFACE_NUM_DWELL_TABLES + 1;
 
     /* Execute the function being tested */
     Result = MD_ValidTableId(TableId);
@@ -460,7 +459,7 @@ void MD_ResolveSymAddr_Test(void)
     UtAssert_True(ResolvedAddr == SymAddr.Offset, "ResolvedAddr == SymAddr.Offset");
 
     ResolvedAddr = 0;
-    strncpy(SymAddr.SymName, "symname", OS_MAX_PATH_LEN);
+    strncpy(SymAddr.SymName, "symname", sizeof(SymAddr.SymName));
 
     UT_SetDataBuffer(UT_KEY(OS_SymbolLookup), &ResolvedAddr, sizeof(ResolvedAddr), false);
     UT_SetDefaultReturnValue(UT_KEY(OS_SymbolLookup), OS_SUCCESS);
