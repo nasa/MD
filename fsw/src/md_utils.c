@@ -68,7 +68,7 @@ void MD_UpdateDwellControlInfo(uint16 TableIndex)
     while ((EntryIndex < MD_INTERFACE_DWELL_TABLE_SIZE) && (TblPtr->Entry[EntryIndex].Length != 0))
     {
         NumDwellAddresses++;
-        NumDwellDataBytes += TblPtr->Entry[EntryIndex].Length;
+        NumDwellDataBytes   += TblPtr->Entry[EntryIndex].Length;
         NumDwellDelayCounts += TblPtr->Entry[EntryIndex].Delay;
         EntryIndex++;
     }
@@ -215,7 +215,7 @@ bool MD_ResolveSymAddr(const MD_SymAddr_t *SymAddr, cpuaddr *ResolvedAddr)
         if (OS_Status == OS_SUCCESS)
         {
             *ResolvedAddr += SymAddr->Offset;
-            Valid = true;
+            Valid          = true;
         }
         else
             Valid = false;

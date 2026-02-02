@@ -29,7 +29,7 @@
  *  \par Limits:
  *       The string must be no longer than #OS_MAX_API_NAME (including terminator).
  */
-#define MD_INTERNAL_PIPE_NAME          MD_INTERNAL_CFGVAL(PIPE_NAME)
+#define MD_INTERNAL_PIPE_NAME         MD_INTERNAL_CFGVAL(PIPE_NAME)
 #define DEFAULT_MD_INTERNAL_PIPE_NAME "MD_CMD_PIPE"
 
 /**

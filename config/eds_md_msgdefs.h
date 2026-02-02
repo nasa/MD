@@ -21,7 +21,7 @@
  *   Specification for the CFS Memory Dwell command and telemetry
  *   message constant definitions.
  *
-*/
+ */
 
 #ifndef EDS_MD_MSGDEFS_H
 #define EDS_MD_MSGDEFS_H

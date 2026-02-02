@@ -55,7 +55,8 @@ void MD_TableIsInMask_Test_ShiftOddResult(void)
 
     call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
 
-    UtAssert_True(call_count_CFE_EVS_SendEvent == 0, "CFE_EVS_SendEvent was called %u time(s), expected 0",
+    UtAssert_True(call_count_CFE_EVS_SendEvent == 0,
+                  "CFE_EVS_SendEvent was called %u time(s), expected 0",
                   call_count_CFE_EVS_SendEvent);
 }
 
@@ -73,7 +74,8 @@ void MD_TableIsInMask_Test_ShiftEvenResult(void)
 
     call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
 
-    UtAssert_True(call_count_CFE_EVS_SendEvent == 0, "CFE_EVS_SendEvent was called %u time(s), expected 0",
+    UtAssert_True(call_count_CFE_EVS_SendEvent == 0,
+                  "CFE_EVS_SendEvent was called %u time(s), expected 0",
                   call_count_CFE_EVS_SendEvent);
 }
 
@@ -91,7 +93,8 @@ void MD_TableIsInMask_Test_TableNotInMask(void)
 
     call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
 
-    UtAssert_True(call_count_CFE_EVS_SendEvent == 0, "CFE_EVS_SendEvent was called %u time(s), expected 0",
+    UtAssert_True(call_count_CFE_EVS_SendEvent == 0,
+                  "CFE_EVS_SendEvent was called %u time(s), expected 0",
                   call_count_CFE_EVS_SendEvent);
 }
 
@@ -115,7 +118,8 @@ void MD_UpdateDwellControlInfo_Test(void)
 
     call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
 
-    UtAssert_True(call_count_CFE_EVS_SendEvent == 0, "CFE_EVS_SendEvent was called %u time(s), expected 0",
+    UtAssert_True(call_count_CFE_EVS_SendEvent == 0,
+                  "CFE_EVS_SendEvent was called %u time(s), expected 0",
                   call_count_CFE_EVS_SendEvent);
 }
 
@@ -143,7 +147,8 @@ void MD_UpdateDwellControlInfo_TestAllTableEntries(void)
 
     call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
 
-    UtAssert_True(call_count_CFE_EVS_SendEvent == 0, "CFE_EVS_SendEvent was called %u time(s), expected 0",
+    UtAssert_True(call_count_CFE_EVS_SendEvent == 0,
+                  "CFE_EVS_SendEvent was called %u time(s), expected 0",
                   call_count_CFE_EVS_SendEvent);
 }
 
@@ -160,7 +165,8 @@ void MD_ValidEntryId_Test_Valid(void)
 
     call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
 
-    UtAssert_True(call_count_CFE_EVS_SendEvent == 0, "CFE_EVS_SendEvent was called %u time(s), expected 0",
+    UtAssert_True(call_count_CFE_EVS_SendEvent == 0,
+                  "CFE_EVS_SendEvent was called %u time(s), expected 0",
                   call_count_CFE_EVS_SendEvent);
 }
 
@@ -177,7 +183,8 @@ void MD_ValidEntryId_Test_Invalid(void)
 
     call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
 
-    UtAssert_True(call_count_CFE_EVS_SendEvent == 0, "CFE_EVS_SendEvent was called %u time(s), expected 0",
+    UtAssert_True(call_count_CFE_EVS_SendEvent == 0,
+                  "CFE_EVS_SendEvent was called %u time(s), expected 0",
                   call_count_CFE_EVS_SendEvent);
 }
 
@@ -194,7 +201,8 @@ void MD_ValidEntryId_Test_RangeError(void)
 
     call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
 
-    UtAssert_True(call_count_CFE_EVS_SendEvent == 0, "CFE_EVS_SendEvent was called %u time(s), expected 0",
+    UtAssert_True(call_count_CFE_EVS_SendEvent == 0,
+                  "CFE_EVS_SendEvent was called %u time(s), expected 0",
                   call_count_CFE_EVS_SendEvent);
 }
 
@@ -212,7 +220,8 @@ void MD_ValidAddrRange_Test_Valid(void)
 
     call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
 
-    UtAssert_True(call_count_CFE_EVS_SendEvent == 0, "CFE_EVS_SendEvent was called %u time(s), expected 0",
+    UtAssert_True(call_count_CFE_EVS_SendEvent == 0,
+                  "CFE_EVS_SendEvent was called %u time(s), expected 0",
                   call_count_CFE_EVS_SendEvent);
 }
 
@@ -233,7 +242,8 @@ void MD_ValidAddrRange_Test_Invalid(void)
 
     call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
 
-    UtAssert_True(call_count_CFE_EVS_SendEvent == 0, "CFE_EVS_SendEvent was called %u time(s), expected 0",
+    UtAssert_True(call_count_CFE_EVS_SendEvent == 0,
+                  "CFE_EVS_SendEvent was called %u time(s), expected 0",
                   call_count_CFE_EVS_SendEvent);
 }
 
@@ -250,7 +260,8 @@ void MD_ValidTableId_Test_Valid(void)
 
     call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
 
-    UtAssert_True(call_count_CFE_EVS_SendEvent == 0, "CFE_EVS_SendEvent was called %u time(s), expected 0",
+    UtAssert_True(call_count_CFE_EVS_SendEvent == 0,
+                  "CFE_EVS_SendEvent was called %u time(s), expected 0",
                   call_count_CFE_EVS_SendEvent);
 }
 
@@ -267,7 +278,8 @@ void MD_ValidTableId_Test_Invalid(void)
 
     call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
 
-    UtAssert_True(call_count_CFE_EVS_SendEvent == 0, "CFE_EVS_SendEvent was called %u time(s), expected 0",
+    UtAssert_True(call_count_CFE_EVS_SendEvent == 0,
+                  "CFE_EVS_SendEvent was called %u time(s), expected 0",
                   call_count_CFE_EVS_SendEvent);
 }
 
@@ -284,7 +296,8 @@ void MD_ValidTableId_Test_RangeError(void)
 
     call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
 
-    UtAssert_True(call_count_CFE_EVS_SendEvent == 0, "CFE_EVS_SendEvent was called %u time(s), expected 0",
+    UtAssert_True(call_count_CFE_EVS_SendEvent == 0,
+                  "CFE_EVS_SendEvent was called %u time(s), expected 0",
                   call_count_CFE_EVS_SendEvent);
 }
 
@@ -301,7 +314,8 @@ void MD_ValidFieldLength_Test_ValidFieldLength0(void)
 
     call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
 
-    UtAssert_True(call_count_CFE_EVS_SendEvent == 0, "CFE_EVS_SendEvent was called %u time(s), expected 0",
+    UtAssert_True(call_count_CFE_EVS_SendEvent == 0,
+                  "CFE_EVS_SendEvent was called %u time(s), expected 0",
                   call_count_CFE_EVS_SendEvent);
 }
 
@@ -318,7 +332,8 @@ void MD_ValidFieldLength_Test_ValidFieldLength1(void)
 
     call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
 
-    UtAssert_True(call_count_CFE_EVS_SendEvent == 0, "CFE_EVS_SendEvent was called %u time(s), expected 0",
+    UtAssert_True(call_count_CFE_EVS_SendEvent == 0,
+                  "CFE_EVS_SendEvent was called %u time(s), expected 0",
                   call_count_CFE_EVS_SendEvent);
 }
 
@@ -335,7 +350,8 @@ void MD_ValidFieldLength_Test_ValidFieldLength2(void)
 
     call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
 
-    UtAssert_True(call_count_CFE_EVS_SendEvent == 0, "CFE_EVS_SendEvent was called %u time(s), expected 0",
+    UtAssert_True(call_count_CFE_EVS_SendEvent == 0,
+                  "CFE_EVS_SendEvent was called %u time(s), expected 0",
                   call_count_CFE_EVS_SendEvent);
 }
 
@@ -352,7 +368,8 @@ void MD_ValidFieldLength_Test_ValidFieldLength4(void)
 
     call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
 
-    UtAssert_True(call_count_CFE_EVS_SendEvent == 0, "CFE_EVS_SendEvent was called %u time(s), expected 0",
+    UtAssert_True(call_count_CFE_EVS_SendEvent == 0,
+                  "CFE_EVS_SendEvent was called %u time(s), expected 0",
                   call_count_CFE_EVS_SendEvent);
 }
 
@@ -369,7 +386,8 @@ void MD_ValidFieldLength_Test_Invalid(void)
 
     call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
 
-    UtAssert_True(call_count_CFE_EVS_SendEvent == 0, "CFE_EVS_SendEvent was called %u time(s), expected 0",
+    UtAssert_True(call_count_CFE_EVS_SendEvent == 0,
+                  "CFE_EVS_SendEvent was called %u time(s), expected 0",
                   call_count_CFE_EVS_SendEvent);
 }
 
@@ -482,15 +500,23 @@ void MD_ResolveSymAddr_Test(void)
 
 void UtTest_Setup(void)
 {
-    UtTest_Add(MD_TableIsInMask_Test_ShiftOddResult, MD_Test_Setup, MD_Test_TearDown,
+    UtTest_Add(MD_TableIsInMask_Test_ShiftOddResult,
+               MD_Test_Setup,
+               MD_Test_TearDown,
                "MD_TableIsInMask_Test_ShiftOddResult");
-    UtTest_Add(MD_TableIsInMask_Test_ShiftEvenResult, MD_Test_Setup, MD_Test_TearDown,
+    UtTest_Add(MD_TableIsInMask_Test_ShiftEvenResult,
+               MD_Test_Setup,
+               MD_Test_TearDown,
                "MD_TableIsInMask_Test_ShiftEvenResult");
-    UtTest_Add(MD_TableIsInMask_Test_TableNotInMask, MD_Test_Setup, MD_Test_TearDown,
+    UtTest_Add(MD_TableIsInMask_Test_TableNotInMask,
+               MD_Test_Setup,
+               MD_Test_TearDown,
                "MD_TableIsInMask_Test_TableNotInMask");
 
     UtTest_Add(MD_UpdateDwellControlInfo_Test, MD_Test_Setup, MD_Test_TearDown, "MD_UpdateDwellControlInfo_Test");
-    UtTest_Add(MD_UpdateDwellControlInfo_TestAllTableEntries, MD_Test_Setup, MD_Test_TearDown,
+    UtTest_Add(MD_UpdateDwellControlInfo_TestAllTableEntries,
+               MD_Test_Setup,
+               MD_Test_TearDown,
                "MD_UpdateDwellControlInfo_TestAllTableEntries");
 
     UtTest_Add(MD_ValidEntryId_Test_Valid, MD_Test_Setup, MD_Test_TearDown, "MD_ValidEntryId_Test_Valid");
@@ -504,13 +530,21 @@ void UtTest_Setup(void)
     UtTest_Add(MD_ValidTableId_Test_Invalid, MD_Test_Setup, MD_Test_TearDown, "MD_ValidTableId_Test_Invalid");
     UtTest_Add(MD_ValidTableId_Test_RangeError, MD_Test_Setup, MD_Test_TearDown, "MD_ValidTableId_Test_RangeError");
 
-    UtTest_Add(MD_ValidFieldLength_Test_ValidFieldLength0, MD_Test_Setup, MD_Test_TearDown,
+    UtTest_Add(MD_ValidFieldLength_Test_ValidFieldLength0,
+               MD_Test_Setup,
+               MD_Test_TearDown,
                "MD_ValidFieldLength_Test_ValidFieldLength0");
-    UtTest_Add(MD_ValidFieldLength_Test_ValidFieldLength1, MD_Test_Setup, MD_Test_TearDown,
+    UtTest_Add(MD_ValidFieldLength_Test_ValidFieldLength1,
+               MD_Test_Setup,
+               MD_Test_TearDown,
                "MD_ValidFieldLength_Test_ValidFieldLength1");
-    UtTest_Add(MD_ValidFieldLength_Test_ValidFieldLength2, MD_Test_Setup, MD_Test_TearDown,
+    UtTest_Add(MD_ValidFieldLength_Test_ValidFieldLength2,
+               MD_Test_Setup,
+               MD_Test_TearDown,
                "MD_ValidFieldLength_Test_ValidFieldLength2");
-    UtTest_Add(MD_ValidFieldLength_Test_ValidFieldLength4, MD_Test_Setup, MD_Test_TearDown,
+    UtTest_Add(MD_ValidFieldLength_Test_ValidFieldLength4,
+               MD_Test_Setup,
+               MD_Test_TearDown,
                "MD_ValidFieldLength_Test_ValidFieldLength4");
     UtTest_Add(MD_ValidFieldLength_Test_Invalid, MD_Test_Setup, MD_Test_TearDown, "MD_ValidFieldLength_Test_Invalid");
 

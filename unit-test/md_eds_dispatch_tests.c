@@ -65,5 +65,8 @@ void Test_MD_ProcessCommandPacket(void)
  */
 void UtTest_Setup(void)
 {
-    UtTest_Add(Test_MD_ProcessCommandPacket, md_dispatch_tests_Setup, md_dispatch_tests_Teardown, "Test_MD_ProcessCommandPacket");
+    UtTest_Add(Test_MD_ProcessCommandPacket,
+               md_dispatch_tests_Setup,
+               md_dispatch_tests_Teardown,
+               "Test_MD_ProcessCommandPacket");
 }

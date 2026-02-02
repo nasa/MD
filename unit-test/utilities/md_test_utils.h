@@ -53,10 +53,10 @@ extern CFE_ES_WriteToSysLog_context_t context_CFE_ES_WriteToSysLog;
 /* Command buffer typedef for any handler */
 typedef union
 {
-    CFE_SB_Buffer_t   Buf;
-    MD_NoopCmd_t    NoArgsCmd;
+    CFE_SB_Buffer_t    Buf;
+    MD_NoopCmd_t       NoArgsCmd;
     MD_StartDwellCmd_t CmdStartStop; /* This can be the StartDwellCmd or StopDwellCmd*/
-    MD_JamDwellCmd_t       CmdJam;
+    MD_JamDwellCmd_t   CmdJam;
 #if MD_INTERFACE_SIGNATURE_OPTION == 1
     MD_SetSignatureCmd_t CmdSetSignature;
 #endif

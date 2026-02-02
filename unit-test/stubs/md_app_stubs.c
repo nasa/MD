@@ -46,7 +46,6 @@ CFE_Status_t MD_AppInit(void)
  */
 void MD_AppMain(void)
 {
-
     UT_GenStub_Execute(MD_AppMain, Basic, NULL);
 }
 
@@ -73,7 +72,6 @@ CFE_Status_t MD_HkStatus(const MD_SendHkCmd_t *Msg)
  */
 void MD_InitControlStructures(void)
 {
-
     UT_GenStub_Execute(MD_InitControlStructures, Basic, NULL);
 }
 

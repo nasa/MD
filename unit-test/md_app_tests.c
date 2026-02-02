@@ -43,7 +43,9 @@
 uint8               call_count_CFE_EVS_SendEvent;
 MD_DwellTableLoad_t MD_DWELL_TBL_TEST_GlobalLoadTable;
 
-CFE_Status_t MD_DWELL_TBL_TEST_CFE_TBL_GetAddressHook(void *UserObj, int32 StubRetcode, uint32 CallCount,
+CFE_Status_t MD_DWELL_TBL_TEST_CFE_TBL_GetAddressHook(void                   *UserObj,
+                                                      int32                   StubRetcode,
+                                                      uint32                  CallCount,
                                                       const UT_StubContext_t *Context)
 {
     void **TblPtr                             = (void **)Context->ArgPtr[0];
@@ -66,7 +68,8 @@ void MD_AppMain_Test_AppInitError(void)
 
     call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
 
-    UtAssert_True(call_count_CFE_EVS_SendEvent == 0, "CFE_EVS_SendEvent was called %u time(s), expected 0",
+    UtAssert_True(call_count_CFE_EVS_SendEvent == 0,
+                  "CFE_EVS_SendEvent was called %u time(s), expected 0",
                   call_count_CFE_EVS_SendEvent);
 }
 
@@ -94,7 +97,8 @@ void MD_AppMain_Test_RcvMsgError(void)
     /* Generates 2 event messages we don't care about in this test */
     call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
 
-    UtAssert_True(call_count_CFE_EVS_SendEvent == 3, "CFE_EVS_SendEvent was called %u time(s), expected 3",
+    UtAssert_True(call_count_CFE_EVS_SendEvent == 3,
+                  "CFE_EVS_SendEvent was called %u time(s), expected 3",
                   call_count_CFE_EVS_SendEvent);
 }
 
@@ -118,7 +122,8 @@ void MD_AppMain_Test_RcvMsgTimeout(void)
     /* Generates 1 event messages we don't care about in this test */
     call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
 
-    UtAssert_True(call_count_CFE_EVS_SendEvent == 2, "CFE_EVS_SendEvent was called %u time(s), expected 2",
+    UtAssert_True(call_count_CFE_EVS_SendEvent == 2,
+                  "CFE_EVS_SendEvent was called %u time(s), expected 2",
                   call_count_CFE_EVS_SendEvent);
 }
 
@@ -140,7 +145,8 @@ void MD_AppMain_Test_RcvMsgNullBuffer(void)
     call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
 
     /* Generates 2 event messages we don't care about in this test */
-    UtAssert_True(call_count_CFE_EVS_SendEvent == 2, "CFE_EVS_SendEvent was called %u time(s), expected 2",
+    UtAssert_True(call_count_CFE_EVS_SendEvent == 2,
+                  "CFE_EVS_SendEvent was called %u time(s), expected 2",
                   call_count_CFE_EVS_SendEvent);
 }
 
@@ -171,7 +177,8 @@ void MD_AppInit_Test_Nominal(void)
     /* Generates 2 event messages we don't care about in this test */
     call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
 
-    UtAssert_True(call_count_CFE_EVS_SendEvent == 2, "CFE_EVS_SendEvent was called %u time(s), expected 2",
+    UtAssert_True(call_count_CFE_EVS_SendEvent == 2,
+                  "CFE_EVS_SendEvent was called %u time(s), expected 2",
                   call_count_CFE_EVS_SendEvent);
 
     UtAssert_INT32_EQ(MD_AppData.CmdCounter, 0);
@@ -183,7 +190,8 @@ void MD_AppInit_Test_EvsRegisterNotSuccess(void)
     CFE_Status_t Result;
     int32        strCmpResult;
     char         ExpectedSysLogString[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
-    snprintf(ExpectedSysLogString, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH,
+    snprintf(ExpectedSysLogString,
+             CFE_MISSION_EVS_MAX_MESSAGE_LENGTH,
              "MD_APP:Call to CFE_EVS_Register Failed:RC=%%d\n");
 
     /* Set to make MD_AppInit return -1, in order to generate log message "Application Init Failed" */
@@ -197,7 +205,8 @@ void MD_AppInit_Test_EvsRegisterNotSuccess(void)
 
     call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
 
-    UtAssert_True(call_count_CFE_EVS_SendEvent == 0, "CFE_EVS_SendEvent was called %u time(s), expected 0",
+    UtAssert_True(call_count_CFE_EVS_SendEvent == 0,
+                  "CFE_EVS_SendEvent was called %u time(s), expected 0",
                   call_count_CFE_EVS_SendEvent);
 
     strCmpResult = strncmp(ExpectedSysLogString, context_CFE_ES_WriteToSysLog.Spec, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH);
@@ -221,7 +230,8 @@ void MD_AppInit_Test_InitSoftwareBusServicesNotSuccess(void)
     call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
 
     /* Generates 1 event message we don't care about in this test */
-    UtAssert_True(call_count_CFE_EVS_SendEvent == 1, "CFE_EVS_SendEvent was called %u time(s), expected 1",
+    UtAssert_True(call_count_CFE_EVS_SendEvent == 1,
+                  "CFE_EVS_SendEvent was called %u time(s), expected 1",
                   call_count_CFE_EVS_SendEvent);
     /* Generates 1 system log message we don't care about in this test */
 }
@@ -242,7 +252,8 @@ void MD_AppInit_Test_InitTableServicesNotSuccess(void)
     /* Generates 1 event message we don't care about in this test */
     call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
 
-    UtAssert_True(call_count_CFE_EVS_SendEvent == 2, "CFE_EVS_SendEvent was called %u time(s), expected 2",
+    UtAssert_True(call_count_CFE_EVS_SendEvent == 2,
+                  "CFE_EVS_SendEvent was called %u time(s), expected 2",
                   call_count_CFE_EVS_SendEvent);
 }
 
@@ -319,19 +330,24 @@ void MD_InitControlStructures_Test(void)
     UtAssert_True(strncmp(MD_AppData.MD_DwellTables[0].Signature, "", MD_INTERFACE_SIGNATURE_FIELD_LENGTH) == 0,
                   "strncmp(MD_AppData.MD_DwellTables[0].Signature, "
                   ", MD_INTERFACE_SIGNATURE_FIELD_LENGTH) == 0");
-    UtAssert_True(
-        strncmp(MD_AppData.MD_DwellTables[MD_INTERFACE_NUM_DWELL_TABLES / 2].Signature, "", MD_INTERFACE_SIGNATURE_FIELD_LENGTH) == 0,
-        "strncmp(MD_AppData.MD_DwellTables[MD_INTERFACE_NUM_DWELL_TABLES / 2].Signature, "
-        ", MD_INTERFACE_SIGNATURE_FIELD_LENGTH) == 0");
-    UtAssert_True(
-        strncmp(MD_AppData.MD_DwellTables[MD_INTERFACE_NUM_DWELL_TABLES - 1].Signature, "", MD_INTERFACE_SIGNATURE_FIELD_LENGTH) == 0,
-        "strncmp(MD_AppData.MD_DwellTables[MD_INTERFACE_NUM_DWELL_TABLES - 1].Signature, "
-        ", MD_INTERFACE_SIGNATURE_FIELD_LENGTH) == 0");
+    UtAssert_True(strncmp(MD_AppData.MD_DwellTables[MD_INTERFACE_NUM_DWELL_TABLES / 2].Signature,
+                          "",
+                          MD_INTERFACE_SIGNATURE_FIELD_LENGTH)
+                      == 0,
+                  "strncmp(MD_AppData.MD_DwellTables[MD_INTERFACE_NUM_DWELL_TABLES / 2].Signature, "
+                  ", MD_INTERFACE_SIGNATURE_FIELD_LENGTH) == 0");
+    UtAssert_True(strncmp(MD_AppData.MD_DwellTables[MD_INTERFACE_NUM_DWELL_TABLES - 1].Signature,
+                          "",
+                          MD_INTERFACE_SIGNATURE_FIELD_LENGTH)
+                      == 0,
+                  "strncmp(MD_AppData.MD_DwellTables[MD_INTERFACE_NUM_DWELL_TABLES - 1].Signature, "
+                  ", MD_INTERFACE_SIGNATURE_FIELD_LENGTH) == 0");
 #endif
 
     call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
 
-    UtAssert_True(call_count_CFE_EVS_SendEvent == 0, "CFE_EVS_SendEvent was called %u time(s), expected 0",
+    UtAssert_True(call_count_CFE_EVS_SendEvent == 0,
+                  "CFE_EVS_SendEvent was called %u time(s), expected 0",
                   call_count_CFE_EVS_SendEvent);
 }
 
@@ -356,7 +372,8 @@ void MD_InitSoftwareBusServices_Test_Nominal(void)
 
     call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
 
-    UtAssert_True(call_count_CFE_EVS_SendEvent == 0, "CFE_EVS_SendEvent was called %u time(s), expected 0",
+    UtAssert_True(call_count_CFE_EVS_SendEvent == 0,
+                  "CFE_EVS_SendEvent was called %u time(s), expected 0",
                   call_count_CFE_EVS_SendEvent);
 }
 
@@ -395,7 +412,8 @@ void MD_InitSoftwareBusServices_Test_CreatePipeError(void)
 
     call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
 
-    UtAssert_True(call_count_CFE_EVS_SendEvent == 1, "CFE_EVS_SendEvent was called %u time(s), expected 1",
+    UtAssert_True(call_count_CFE_EVS_SendEvent == 1,
+                  "CFE_EVS_SendEvent was called %u time(s), expected 1",
                   call_count_CFE_EVS_SendEvent);
 }
 
@@ -434,7 +452,8 @@ void MD_InitSoftwareBusServices_Test_SubscribeHkError(void)
 
     call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
 
-    UtAssert_True(call_count_CFE_EVS_SendEvent == 1, "CFE_EVS_SendEvent was called %u time(s), expected 1",
+    UtAssert_True(call_count_CFE_EVS_SendEvent == 1,
+                  "CFE_EVS_SendEvent was called %u time(s), expected 1",
                   call_count_CFE_EVS_SendEvent);
 }
 
@@ -473,7 +492,8 @@ void MD_InitSoftwareBusServices_Test_SubscribeCmdError(void)
 
     call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
 
-    UtAssert_True(call_count_CFE_EVS_SendEvent == 1, "CFE_EVS_SendEvent was called %u time(s), expected 1",
+    UtAssert_True(call_count_CFE_EVS_SendEvent == 1,
+                  "CFE_EVS_SendEvent was called %u time(s), expected 1",
                   call_count_CFE_EVS_SendEvent);
 }
 
@@ -504,7 +524,8 @@ void MD_InitSoftwareBusServices_Test_SubscribeWakeupError(void)
 
     call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
 
-    UtAssert_True(call_count_CFE_EVS_SendEvent == 1, "CFE_EVS_SendEvent was called %u time(s), expected 1",
+    UtAssert_True(call_count_CFE_EVS_SendEvent == 1,
+                  "CFE_EVS_SendEvent was called %u time(s), expected 1",
                   call_count_CFE_EVS_SendEvent);
 }
 
@@ -515,13 +536,16 @@ void MD_InitTableServices_Test_GetAddressErrorAndLoadError(void)
     char         ExpectedEventString[2][CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
     char         ExpectedSysLogString[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
 
-    snprintf(ExpectedEventString[0], CFE_MISSION_EVS_MAX_MESSAGE_LENGTH,
+    snprintf(ExpectedEventString[0],
+             CFE_MISSION_EVS_MAX_MESSAGE_LENGTH,
              "Didn't update MD tbl #%%d due to unexpected CFE_TBL_GetAddress return: 0x%%08X");
 
-    snprintf(ExpectedEventString[1], CFE_MISSION_EVS_MAX_MESSAGE_LENGTH,
+    snprintf(ExpectedEventString[1],
+             CFE_MISSION_EVS_MAX_MESSAGE_LENGTH,
              "Dwell Tables Recovered: %%d, Dwell Tables Initialized: %%d");
 
-    snprintf(ExpectedSysLogString, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH,
+    snprintf(ExpectedSysLogString,
+             CFE_MISSION_EVS_MAX_MESSAGE_LENGTH,
              "MD_APP: Error 0x%%08X received loading tbl#%%d\n");
 
     /* Set to satisfy condition "Status == CFE_TBL_INFO_RECOVERED_TBL" */
@@ -563,7 +587,8 @@ void MD_InitTableServices_Test_GetAddressErrorAndLoadError(void)
 
     call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
 
-    UtAssert_True(call_count_CFE_EVS_SendEvent == 2, "CFE_EVS_SendEvent was called %u time(s), expected 2",
+    UtAssert_True(call_count_CFE_EVS_SendEvent == 2,
+                  "CFE_EVS_SendEvent was called %u time(s), expected 2",
                   call_count_CFE_EVS_SendEvent);
 }
 
@@ -598,7 +623,8 @@ void MD_InitTableServices_Test_TblRecoveredValidThenTblInits(void)
 
     call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
 
-    UtAssert_True(call_count_CFE_EVS_SendEvent == 2, "CFE_EVS_SendEvent was called %u time(s), expected 2",
+    UtAssert_True(call_count_CFE_EVS_SendEvent == 2,
+                  "CFE_EVS_SendEvent was called %u time(s), expected 2",
                   call_count_CFE_EVS_SendEvent);
 }
 
@@ -612,10 +638,12 @@ void MD_InitTableServices_Test_TblRecoveredNotValid(void)
 
     memset(&LoadTbl, 0, sizeof(LoadTbl));
 
-    snprintf(ExpectedEventString[0], CFE_MISSION_EVS_MAX_MESSAGE_LENGTH,
+    snprintf(ExpectedEventString[0],
+             CFE_MISSION_EVS_MAX_MESSAGE_LENGTH,
              "Recovered Dwell Table #%%d is valid and has been copied to the MD App");
 
-    snprintf(ExpectedEventString[1], CFE_MISSION_EVS_MAX_MESSAGE_LENGTH,
+    snprintf(ExpectedEventString[1],
+             CFE_MISSION_EVS_MAX_MESSAGE_LENGTH,
              "Dwell Tables Recovered: %%d, Dwell Tables Initialized: %%d");
 
     /* Set to satisfy condition "Status == CFE_TBL_INFO_RECOVERED_TBL" */
@@ -659,7 +687,8 @@ void MD_InitTableServices_Test_TblRecoveredNotValid(void)
 
     call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
 
-    UtAssert_True(call_count_CFE_EVS_SendEvent == 2, "CFE_EVS_SendEvent was called %u time(s), expected 2",
+    UtAssert_True(call_count_CFE_EVS_SendEvent == 2,
+                  "CFE_EVS_SendEvent was called %u time(s), expected 2",
                   call_count_CFE_EVS_SendEvent);
 }
 
@@ -671,10 +700,12 @@ void MD_InitTableServices_Test_DwellStreamEnabled(void)
     MD_DwellTableLoad_t  LoadTbl;
     MD_DwellTableLoad_t *LoadTblPtr = &LoadTbl;
 
-    snprintf(ExpectedEventString[0], CFE_MISSION_EVS_MAX_MESSAGE_LENGTH,
+    snprintf(ExpectedEventString[0],
+             CFE_MISSION_EVS_MAX_MESSAGE_LENGTH,
              "Recovered Dwell Table #%%d is valid and has been copied to the MD App");
 
-    snprintf(ExpectedEventString[1], CFE_MISSION_EVS_MAX_MESSAGE_LENGTH,
+    snprintf(ExpectedEventString[1],
+             CFE_MISSION_EVS_MAX_MESSAGE_LENGTH,
              "Dwell Tables Recovered: %%d, Dwell Tables Initialized: %%d");
 
     /* Set to satisfy condition "Status == CFE_TBL_INFO_RECOVERED_TBL" */
@@ -718,7 +749,8 @@ void MD_InitTableServices_Test_DwellStreamEnabled(void)
 
     call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
 
-    UtAssert_True(call_count_CFE_EVS_SendEvent == 2, "CFE_EVS_SendEvent was called %u time(s), expected 2",
+    UtAssert_True(call_count_CFE_EVS_SendEvent == 2,
+                  "CFE_EVS_SendEvent was called %u time(s), expected 2",
                   call_count_CFE_EVS_SendEvent);
 }
 
@@ -730,10 +762,12 @@ void MD_InitTableServices_Test_TblNotRecovered(void)
     MD_DwellTableLoad_t  LoadTbl;
     MD_DwellTableLoad_t *LoadTblPtr = &LoadTbl;
 
-    snprintf(ExpectedEventString[0], CFE_MISSION_EVS_MAX_MESSAGE_LENGTH,
+    snprintf(ExpectedEventString[0],
+             CFE_MISSION_EVS_MAX_MESSAGE_LENGTH,
              "MD App will reinitialize Dwell Table #%%d because recovered table is not valid");
 
-    snprintf(ExpectedEventString[1], CFE_MISSION_EVS_MAX_MESSAGE_LENGTH,
+    snprintf(ExpectedEventString[1],
+             CFE_MISSION_EVS_MAX_MESSAGE_LENGTH,
              "Dwell Tables Recovered: %%d, Dwell Tables Initialized: %%d");
 
     /* Set to satisfy condition "Status == CFE_TBL_INFO_RECOVERED_TBL" */
@@ -764,7 +798,8 @@ void MD_InitTableServices_Test_TblNotRecovered(void)
 
     call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
 
-    UtAssert_True(call_count_CFE_EVS_SendEvent == 2, "CFE_EVS_SendEvent was called %u time(s), expected 2",
+    UtAssert_True(call_count_CFE_EVS_SendEvent == 2,
+                  "CFE_EVS_SendEvent was called %u time(s), expected 2",
                   call_count_CFE_EVS_SendEvent);
 
     UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, MD_RECOVERED_TBL_NOT_VALID_ERR_EID);
@@ -785,10 +820,12 @@ void MD_InitTableServices_Test_TblTooLarge(void)
     int32        strCmpResult;
     char         ExpectedEventString[2][CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
 
-    snprintf(ExpectedEventString[0], CFE_MISSION_EVS_MAX_MESSAGE_LENGTH,
+    snprintf(ExpectedEventString[0],
+             CFE_MISSION_EVS_MAX_MESSAGE_LENGTH,
              "Dwell Table(s) are too large to register: %%u bytes, %%d entries");
 
-    snprintf(ExpectedEventString[1], CFE_MISSION_EVS_MAX_MESSAGE_LENGTH,
+    snprintf(ExpectedEventString[1],
+             CFE_MISSION_EVS_MAX_MESSAGE_LENGTH,
              "Dwell Tables Recovered: %%d, Dwell Tables Initialized: %%d");
 
     /* Set to satisfy condition "Status == CFE_TBL_ERR_INVALID_SIZE" */
@@ -816,7 +853,8 @@ void MD_InitTableServices_Test_TblTooLarge(void)
 
     call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
 
-    UtAssert_True(call_count_CFE_EVS_SendEvent == 2, "CFE_EVS_SendEvent was called %u time(s), expected 2",
+    UtAssert_True(call_count_CFE_EVS_SendEvent == 2,
+                  "CFE_EVS_SendEvent was called %u time(s), expected 2",
                   call_count_CFE_EVS_SendEvent);
 }
 
@@ -845,7 +883,8 @@ void MD_InitTableServices_Test_TblRegisterCriticalError(void)
 
     call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
 
-    UtAssert_True(call_count_CFE_EVS_SendEvent == 2, "CFE_EVS_SendEvent was called %u time(s), expected 2",
+    UtAssert_True(call_count_CFE_EVS_SendEvent == 2,
+                  "CFE_EVS_SendEvent was called %u time(s), expected 2",
                   call_count_CFE_EVS_SendEvent);
 }
 
@@ -904,7 +943,8 @@ void MD_ManageDwellTable_Test_ValidationPendingSucceedThenFail(void)
 
     call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
 
-    UtAssert_True(call_count_CFE_EVS_SendEvent == 0, "CFE_EVS_SendEvent was called %u time(s), expected 0",
+    UtAssert_True(call_count_CFE_EVS_SendEvent == 0,
+                  "CFE_EVS_SendEvent was called %u time(s), expected 0",
                   call_count_CFE_EVS_SendEvent);
 }
 
@@ -934,7 +974,8 @@ void MD_ManageDwellTable_Test_UpdatePendingDwellStreamEnabled(void)
 
     call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
 
-    UtAssert_True(call_count_CFE_EVS_SendEvent == 0, "CFE_EVS_SendEvent was called %u time(s), expected 0",
+    UtAssert_True(call_count_CFE_EVS_SendEvent == 0,
+                  "CFE_EVS_SendEvent was called %u time(s), expected 0",
                   call_count_CFE_EVS_SendEvent);
 
     uint8 call_count_MD_StartDwellStream = UT_GetStubCount(UT_KEY(MD_StartDwellStream));
@@ -969,7 +1010,8 @@ void MD_ManageDwellTable_Test_UpdatePendingDwellStreamDisabled(void)
 
     call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
 
-    UtAssert_True(call_count_CFE_EVS_SendEvent == 0, "CFE_EVS_SendEvent was called %u time(s), expected 0",
+    UtAssert_True(call_count_CFE_EVS_SendEvent == 0,
+                  "CFE_EVS_SendEvent was called %u time(s), expected 0",
                   call_count_CFE_EVS_SendEvent);
 
     uint8 call_count_MD_StartDwellStream = UT_GetStubCount(UT_KEY(MD_StartDwellStream));
@@ -987,7 +1029,9 @@ void MD_ManageDwellTable_Test_TblNotUpdated(void)
     /* Set to satisfy condition "MD_LoadTablePtr->Enabled == MD_Dwell_States_ENABLED" and to prevent a core dump by
      * assigning MD_LoadTablePtr */
     MD_AppData.MD_DwellTables[0].Enabled = MD_Dwell_States_ENABLED;
-    UT_SetDataBuffer(UT_KEY(CFE_TBL_GetAddress), &MD_AppData.MD_DwellTables[0], sizeof(MD_AppData.MD_DwellTables[0]),
+    UT_SetDataBuffer(UT_KEY(CFE_TBL_GetAddress),
+                     &MD_AppData.MD_DwellTables[0],
+                     sizeof(MD_AppData.MD_DwellTables[0]),
                      false);
 
     UT_SetDeferredRetcode(UT_KEY(CFE_TBL_Update), 1, -1);
@@ -1000,7 +1044,8 @@ void MD_ManageDwellTable_Test_TblNotUpdated(void)
 
     call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
 
-    UtAssert_True(call_count_CFE_EVS_SendEvent == 0, "CFE_EVS_SendEvent was called %u time(s), expected 0",
+    UtAssert_True(call_count_CFE_EVS_SendEvent == 0,
+                  "CFE_EVS_SendEvent was called %u time(s), expected 0",
                   call_count_CFE_EVS_SendEvent);
 }
 
@@ -1026,7 +1071,8 @@ void MD_ManageDwellTable_Test_UpdatePendingTblCopyError(void)
 
     call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
 
-    UtAssert_True(call_count_CFE_EVS_SendEvent == 1, "CFE_EVS_SendEvent was called %u time(s), expected 1",
+    UtAssert_True(call_count_CFE_EVS_SendEvent == 1,
+                  "CFE_EVS_SendEvent was called %u time(s), expected 1",
                   call_count_CFE_EVS_SendEvent);
 }
 
@@ -1049,7 +1095,8 @@ void MD_ManageDwellTable_Test_TblStatusErr(void)
 
     call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
 
-    UtAssert_True(call_count_CFE_EVS_SendEvent == 1, "CFE_EVS_SendEvent was called %u time(s), expected 1",
+    UtAssert_True(call_count_CFE_EVS_SendEvent == 1,
+                  "CFE_EVS_SendEvent was called %u time(s), expected 1",
                   call_count_CFE_EVS_SendEvent);
 }
 
@@ -1069,14 +1116,15 @@ void MD_ManageDwellTable_Test_OtherStatus(void)
 
     call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
 
-    UtAssert_True(call_count_CFE_EVS_SendEvent == 0, "CFE_EVS_SendEvent was called %u time(s), expected 0",
+    UtAssert_True(call_count_CFE_EVS_SendEvent == 0,
+                  "CFE_EVS_SendEvent was called %u time(s), expected 0",
                   call_count_CFE_EVS_SendEvent);
 }
 
 void MD_HkStatus_Test(void)
 {
     MD_SendHkCmd_t Msg;
-    memset((void*) &Msg, 0, sizeof(MD_SendHkCmd_t));
+    memset((void *)&Msg, 0, sizeof(MD_SendHkCmd_t));
     MD_AppData.CmdCounter = 1;
     MD_AppData.ErrCounter = 2;
 
@@ -1150,7 +1198,8 @@ void MD_HkStatus_Test(void)
 
     call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
 
-    UtAssert_True(call_count_CFE_EVS_SendEvent == 0, "CFE_EVS_SendEvent was called %u time(s), expected 0",
+    UtAssert_True(call_count_CFE_EVS_SendEvent == 0,
+                  "CFE_EVS_SendEvent was called %u time(s), expected 0",
                   call_count_CFE_EVS_SendEvent);
 }
 
@@ -1163,37 +1212,109 @@ void UtTest_Setup(void)
     UtTest_Add(MD_AppMain_Test_RcvMsgError, MD_Test_Setup, MD_Test_TearDown, "MD_AppMain_Test_RcvMsgError");
     UtTest_Add(MD_AppMain_Test_RcvMsgTimeout, MD_Test_Setup, MD_Test_TearDown, "MD_AppMain_Test_RcvMsgTimeout");
     UtTest_Add(MD_AppMain_Test_RcvMsgNullBuffer, MD_Test_Setup, MD_Test_TearDown, "MD_AppMain_Test_RcvMsgNullBuffer");
-    
+
     UtTest_Add(MD_AppInit_Test_Nominal, MD_Test_Setup, MD_Test_TearDown, "MD_AppInit_Test_Nominal");
-    UtTest_Add(MD_AppInit_Test_EvsRegisterNotSuccess, MD_Test_Setup, MD_Test_TearDown, "MD_AppInit_Test_EvsRegisterNotSuccess");
-    UtTest_Add(MD_AppInit_Test_InitSoftwareBusServicesNotSuccess, MD_Test_Setup, MD_Test_TearDown, "MD_AppInit_Test_InitSoftwareBusServicesNotSuccess");
-    UtTest_Add(MD_AppInit_Test_InitTableServicesNotSuccess, MD_Test_Setup, MD_Test_TearDown, "MD_AppInit_Test_InitTableServicesNotSuccess");
-    
+    UtTest_Add(MD_AppInit_Test_EvsRegisterNotSuccess,
+               MD_Test_Setup,
+               MD_Test_TearDown,
+               "MD_AppInit_Test_EvsRegisterNotSuccess");
+    UtTest_Add(MD_AppInit_Test_InitSoftwareBusServicesNotSuccess,
+               MD_Test_Setup,
+               MD_Test_TearDown,
+               "MD_AppInit_Test_InitSoftwareBusServicesNotSuccess");
+    UtTest_Add(MD_AppInit_Test_InitTableServicesNotSuccess,
+               MD_Test_Setup,
+               MD_Test_TearDown,
+               "MD_AppInit_Test_InitTableServicesNotSuccess");
+
     UtTest_Add(MD_InitControlStructures_Test, MD_Test_Setup, MD_Test_TearDown, "MD_InitControlStructures_Test");
-    
-    UtTest_Add(MD_InitSoftwareBusServices_Test_Nominal, MD_Test_Setup, MD_Test_TearDown, "MD_InitSoftwareBusServices_Test_Nominal");
-    UtTest_Add(MD_InitSoftwareBusServices_Test_CreatePipeError, MD_Test_Setup, MD_Test_TearDown, "MD_InitSoftwareBusServices_Test_CreatePipeError");
-    UtTest_Add(MD_InitSoftwareBusServices_Test_SubscribeHkError, MD_Test_Setup, MD_Test_TearDown, "MD_InitSoftwareBusServices_Test_SubscribeHkError");
-    UtTest_Add(MD_InitSoftwareBusServices_Test_SubscribeCmdError, MD_Test_Setup, MD_Test_TearDown, "MD_InitSoftwareBusServices_Test_SubscribeCmdError");
-    UtTest_Add(MD_InitSoftwareBusServices_Test_SubscribeWakeupError, MD_Test_Setup, MD_Test_TearDown, "MD_InitSoftwareBusServices_Test_SubscribeWakeupError");
-    
-    UtTest_Add(MD_InitTableServices_Test_GetAddressErrorAndLoadError, MD_Test_Setup, MD_Test_TearDown, "MD_InitTableServices_Test_GetAddressErrorAndLoadError");
-    UtTest_Add(MD_InitTableServices_Test_TblRecoveredValidThenTblInits, MD_Test_Setup, MD_Test_TearDown, "MD_InitTableServices_Test_TblRecoveredValidThenTblInits");
-    UtTest_Add(MD_InitTableServices_Test_TblRecoveredNotValid, MD_Test_Setup, MD_Test_TearDown, "MD_InitTableServices_Test_TblRecoveredNotValid");
-    UtTest_Add(MD_InitTableServices_Test_DwellStreamEnabled, MD_Test_Setup, MD_Test_TearDown, "MD_InitTableServices_Test_DwellStreamEnabled");
-    UtTest_Add(MD_InitTableServices_Test_TblNotRecovered, MD_Test_Setup, MD_Test_TearDown, "MD_InitTableServices_Test_TblNotRecovered");
-    UtTest_Add(MD_InitTableServices_Test_TblTooLarge, MD_Test_Setup, MD_Test_TearDown, "MD_InitTableServices_Test_TblTooLarge");
-    UtTest_Add(MD_InitTableServices_Test_TblRegisterCriticalError, MD_Test_Setup, MD_Test_TearDown, "MD_InitTableServices_Test_TblRegisterCriticalError");
-    UtTest_Add(MD_InitTableServices_Test_TblNameError, MD_Test_Setup, MD_Test_TearDown, "MD_InitTableServices_Test_TblNameError");
-    UtTest_Add(MD_InitTableServices_Test_TblFileNameError, MD_Test_Setup, MD_Test_TearDown, "MD_InitTableServices_Test_TblFileNameError");
-    
-    UtTest_Add(MD_ManageDwellTable_Test_ValidationPendingSucceedThenFail, MD_Test_Setup, MD_Test_TearDown, "MD_ManageDwellTable_Test_ValidationPendingSucceedThenFail");
-    UtTest_Add(MD_ManageDwellTable_Test_UpdatePendingDwellStreamEnabled, MD_Test_Setup, MD_Test_TearDown, "MD_ManageDwellTable_Test_UpdatePendingDwellStreamEnabled");
-    UtTest_Add(MD_ManageDwellTable_Test_UpdatePendingDwellStreamDisabled, MD_Test_Setup, MD_Test_TearDown, "MD_ManageDwellTable_Test_UpdatePendingDwellStreamDisabled");
-    UtTest_Add(MD_ManageDwellTable_Test_TblNotUpdated, MD_Test_Setup, MD_Test_TearDown, "MD_ManageDwellTable_Test_TblNotUpdated");
-    UtTest_Add(MD_ManageDwellTable_Test_UpdatePendingTblCopyError, MD_Test_Setup, MD_Test_TearDown, "MD_ManageDwellTable_Test_UpdatePendingTblCopyError");
-    UtTest_Add(MD_ManageDwellTable_Test_TblStatusErr, MD_Test_Setup, MD_Test_TearDown, "MD_ManageDwellTable_Test_TblStatusErr");
-    UtTest_Add(MD_ManageDwellTable_Test_OtherStatus, MD_Test_Setup, MD_Test_TearDown, "MD_ManageDwellTable_Test_OtherStatus");
-    
+
+    UtTest_Add(MD_InitSoftwareBusServices_Test_Nominal,
+               MD_Test_Setup,
+               MD_Test_TearDown,
+               "MD_InitSoftwareBusServices_Test_Nominal");
+    UtTest_Add(MD_InitSoftwareBusServices_Test_CreatePipeError,
+               MD_Test_Setup,
+               MD_Test_TearDown,
+               "MD_InitSoftwareBusServices_Test_CreatePipeError");
+    UtTest_Add(MD_InitSoftwareBusServices_Test_SubscribeHkError,
+               MD_Test_Setup,
+               MD_Test_TearDown,
+               "MD_InitSoftwareBusServices_Test_SubscribeHkError");
+    UtTest_Add(MD_InitSoftwareBusServices_Test_SubscribeCmdError,
+               MD_Test_Setup,
+               MD_Test_TearDown,
+               "MD_InitSoftwareBusServices_Test_SubscribeCmdError");
+    UtTest_Add(MD_InitSoftwareBusServices_Test_SubscribeWakeupError,
+               MD_Test_Setup,
+               MD_Test_TearDown,
+               "MD_InitSoftwareBusServices_Test_SubscribeWakeupError");
+
+    UtTest_Add(MD_InitTableServices_Test_GetAddressErrorAndLoadError,
+               MD_Test_Setup,
+               MD_Test_TearDown,
+               "MD_InitTableServices_Test_GetAddressErrorAndLoadError");
+    UtTest_Add(MD_InitTableServices_Test_TblRecoveredValidThenTblInits,
+               MD_Test_Setup,
+               MD_Test_TearDown,
+               "MD_InitTableServices_Test_TblRecoveredValidThenTblInits");
+    UtTest_Add(MD_InitTableServices_Test_TblRecoveredNotValid,
+               MD_Test_Setup,
+               MD_Test_TearDown,
+               "MD_InitTableServices_Test_TblRecoveredNotValid");
+    UtTest_Add(MD_InitTableServices_Test_DwellStreamEnabled,
+               MD_Test_Setup,
+               MD_Test_TearDown,
+               "MD_InitTableServices_Test_DwellStreamEnabled");
+    UtTest_Add(MD_InitTableServices_Test_TblNotRecovered,
+               MD_Test_Setup,
+               MD_Test_TearDown,
+               "MD_InitTableServices_Test_TblNotRecovered");
+    UtTest_Add(MD_InitTableServices_Test_TblTooLarge,
+               MD_Test_Setup,
+               MD_Test_TearDown,
+               "MD_InitTableServices_Test_TblTooLarge");
+    UtTest_Add(MD_InitTableServices_Test_TblRegisterCriticalError,
+               MD_Test_Setup,
+               MD_Test_TearDown,
+               "MD_InitTableServices_Test_TblRegisterCriticalError");
+    UtTest_Add(MD_InitTableServices_Test_TblNameError,
+               MD_Test_Setup,
+               MD_Test_TearDown,
+               "MD_InitTableServices_Test_TblNameError");
+    UtTest_Add(MD_InitTableServices_Test_TblFileNameError,
+               MD_Test_Setup,
+               MD_Test_TearDown,
+               "MD_InitTableServices_Test_TblFileNameError");
+
+    UtTest_Add(MD_ManageDwellTable_Test_ValidationPendingSucceedThenFail,
+               MD_Test_Setup,
+               MD_Test_TearDown,
+               "MD_ManageDwellTable_Test_ValidationPendingSucceedThenFail");
+    UtTest_Add(MD_ManageDwellTable_Test_UpdatePendingDwellStreamEnabled,
+               MD_Test_Setup,
+               MD_Test_TearDown,
+               "MD_ManageDwellTable_Test_UpdatePendingDwellStreamEnabled");
+    UtTest_Add(MD_ManageDwellTable_Test_UpdatePendingDwellStreamDisabled,
+               MD_Test_Setup,
+               MD_Test_TearDown,
+               "MD_ManageDwellTable_Test_UpdatePendingDwellStreamDisabled");
+    UtTest_Add(MD_ManageDwellTable_Test_TblNotUpdated,
+               MD_Test_Setup,
+               MD_Test_TearDown,
+               "MD_ManageDwellTable_Test_TblNotUpdated");
+    UtTest_Add(MD_ManageDwellTable_Test_UpdatePendingTblCopyError,
+               MD_Test_Setup,
+               MD_Test_TearDown,
+               "MD_ManageDwellTable_Test_UpdatePendingTblCopyError");
+    UtTest_Add(MD_ManageDwellTable_Test_TblStatusErr,
+               MD_Test_Setup,
+               MD_Test_TearDown,
+               "MD_ManageDwellTable_Test_TblStatusErr");
+    UtTest_Add(MD_ManageDwellTable_Test_OtherStatus,
+               MD_Test_Setup,
+               MD_Test_TearDown,
+               "MD_ManageDwellTable_Test_OtherStatus");
+
     UtTest_Add(MD_HkStatus_Test, MD_Test_Setup, MD_Test_TearDown, "MD_HkStatus_Test");
 }

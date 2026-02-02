@@ -91,10 +91,12 @@ typedef struct
     uint16 DataSize;     /**< \brief Total number of data bytes specified in dwell table */
     uint16 Filler;       /**< \brief Preserves alignment */
 
-    MD_DwellControlEntry_t Entry[MD_INTERFACE_DWELL_TABLE_SIZE]; /**< \brief Array of individual memory dwell specifications */
+    MD_DwellControlEntry_t
+        Entry[MD_INTERFACE_DWELL_TABLE_SIZE]; /**< \brief Array of individual memory dwell specifications */
 
 #if MD_INTERFACE_SIGNATURE_OPTION == 1
-    char Signature[MD_INTERFACE_SIGNATURE_FIELD_LENGTH]; /**< \brief Signature string used for dwell table to dwell pkt */
+    char Signature[MD_INTERFACE_SIGNATURE_FIELD_LENGTH]; /**< \brief Signature string used for dwell table to dwell pkt
+                                                          */
 #endif
 } MD_DwellPacketControl_t;
 
@@ -108,16 +110,18 @@ typedef struct
 
     MD_HkTlm_t HkPkt; /**< \brief Housekeeping telemetry packet */
 
-    CFE_SB_PipeId_t         CmdPipe;                             /**< \brief Command pipe ID               */
-    MD_DwellPacketControl_t MD_DwellTables[MD_INTERFACE_NUM_DWELL_TABLES]; /**< \brief Array of packet control structures    */
-    MD_DwellPkt_t           MD_DwellPkt[MD_INTERFACE_NUM_DWELL_TABLES];    /**< \brief Array of dwell packet  structures    */
+    CFE_SB_PipeId_t CmdPipe; /**< \brief Command pipe ID               */
+    MD_DwellPacketControl_t
+                  MD_DwellTables[MD_INTERFACE_NUM_DWELL_TABLES]; /**< \brief Array of packet control structures    */
+    MD_DwellPkt_t MD_DwellPkt[MD_INTERFACE_NUM_DWELL_TABLES];    /**< \brief Array of dwell packet  structures    */
 
     uint32 RunStatus; /**< \brief Application run status         */
 
     char MD_TableName[MD_INTERFACE_NUM_DWELL_TABLES]
                      [CFE_MISSION_TBL_MAX_NAME_LENGTH + 1]; /**< \brief Array of table names used for TBL Services */
 
-    CFE_TBL_Handle_t MD_TableHandle[MD_INTERFACE_NUM_DWELL_TABLES]; /**< \brief Array of handle ids provided by TBL Services  */
+    CFE_TBL_Handle_t
+        MD_TableHandle[MD_INTERFACE_NUM_DWELL_TABLES]; /**< \brief Array of handle ids provided by TBL Services  */
 } MD_AppData_t;
 
 /**

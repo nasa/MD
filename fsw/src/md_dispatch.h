@@ -16,7 +16,7 @@
  * limitations under the License.
  ************************************************************************/
 
- /**
+/**
  * @file
  *   Specification for MD dispatch functions
  */

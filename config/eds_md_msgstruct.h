@@ -24,4 +24,4 @@
  ************************************************************************/
 #include "md_eds_typedefs.h"
 
-#endif /* EDS_MD_MSGSTRUCT_H */ 
+#endif /* EDS_MD_MSGSTRUCT_H */
