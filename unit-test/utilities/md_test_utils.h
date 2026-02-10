@@ -32,6 +32,8 @@
 
 extern MD_AppData_t MD_AppData;
 
+#define ADD_TEST(test) UtTest_Add(test, MD_Test_Setup, MD_Test_TearDown, #test)
+
 /*
  * Global context structures
  */
@@ -70,7 +72,7 @@ extern UT_CmdBuf_t UT_CmdBuf;
 /*
  * Function Definitions
  */
-
+void MD_Test_Verify_Event(uint8 IssuedOrder, uint16 EventId, uint16 EventType, const char *EventText);
 void MD_Test_Setup(void);
 void MD_Test_TearDown(void);
 

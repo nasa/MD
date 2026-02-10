@@ -1152,7 +1152,7 @@ void MD_HkStatus_Test(void)
     MD_AppData.MD_DwellTables[MD_INTERFACE_NUM_DWELL_TABLES - 1].Countdown    = 18;
 
     /* Execute the function being tested */
-    MD_HkStatus(&Msg);
+    MD_SendHkCmd(&Msg);
 
     /* Verify results */
     UtAssert_True(MD_AppData.HkPkt.Payload.ValidCmdCntr == 1, "MD_AppData.HkPkt.Payload.ValidCmdCntr == 1");

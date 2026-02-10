@@ -79,6 +79,20 @@ void UT_Handler_CFE_ES_WriteToSysLog(void *UserObj, UT_EntryKey_t FuncKey, const
 /*
  * Function Definitions
  */
+
+void MD_Test_Verify_Event(uint8 IssuedOrder, uint16 EventId, uint16 EventType, const char *EventText)
+{
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[IssuedOrder].EventID, EventId);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[IssuedOrder].EventType, EventType);
+
+    UtAssert_StrnCmp(EventText,
+                     context_CFE_EVS_SendEvent[IssuedOrder].Spec,
+                     CFE_MISSION_EVS_MAX_MESSAGE_LENGTH,
+                     "Event string expected: '%s'\nEvent string received: '%s'",
+                     EventText,
+                     context_CFE_EVS_SendEvent[IssuedOrder].Spec);
+}
+
 void MD_Test_Setup(void)
 {
     /* initialize test environment to default state for every test */

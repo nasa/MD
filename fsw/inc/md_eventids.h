@@ -183,12 +183,10 @@
  *
  *  \par Cause:
  *
- *  This event is issued when a command for the Memory Dwell task is
- *  received with a function code which is not listed in the internal
- *  MD_CmdHandlerTbl structure, which is used to associate an expected
- *  length for the command.
+ *  This event message is issued when a software bus message is received
+ *  with an invalid command code.
  */
-#define MD_CC_NOT_IN_TBL_ERR_EID 16
+#define MD_CC_ERR_EID 16
 
 /**
  * \brief MD Dwell Table Get Status Failed Event ID

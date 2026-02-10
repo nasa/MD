@@ -54,7 +54,7 @@ static const EdsDispatchTable_EdsComponent_MD_Application_CFE_SB_Telecommand_t M
     },
     .SEND_HK =
     {
-        .indication = MD_HkStatus
+        .indication = MD_SendHkCmd
     },
     .WAKEUP =
     {
@@ -70,7 +70,7 @@ static const EdsDispatchTable_EdsComponent_MD_Application_CFE_SB_Telecommand_t M
 /*     command pipe.                                                          */
 /*                                                                            */
 /* * * * * * * * * * * * * * * * * * * * * * * *  * * * * * * *  * *  * * * * */
-void MD_ProcessCommandPacket(const CFE_SB_Buffer_t *BufPtr)
+void MD_TaskPipe(const CFE_SB_Buffer_t *BufPtr)
 {
     CFE_Status_t      Status;
     CFE_SB_MsgId_t    MsgId;
@@ -104,7 +104,7 @@ void MD_ProcessCommandPacket(const CFE_SB_Buffer_t *BufPtr)
         }
         else
         {
-            CFE_EVS_SendEvent(MD_CC_NOT_IN_TBL_ERR_EID,
+            CFE_EVS_SendEvent(MD_CC_ERR_EID,
                               CFE_EVS_EventType_ERROR,
                               "MD: Invalid ground command code: CC = %d",
                               (int)MsgFc);

@@ -256,6 +256,6 @@ CFE_Status_t MD_ManageDwellTable(uint8 TblIndex);
  * \par Assumptions, External Events, and Notes:
  *          None
  */
-CFE_Status_t MD_HkStatus(const MD_SendHkCmd_t *Msg);
+CFE_Status_t MD_SendHkCmd(const MD_SendHkCmd_t *Msg);
 
 #endif

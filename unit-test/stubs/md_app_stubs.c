@@ -51,18 +51,18 @@ void MD_AppMain(void)
 
 /*
  * ----------------------------------------------------
- * Generated stub function for MD_HkStatus()
+ * Generated stub function for MD_SendHkCmd()
  * ----------------------------------------------------
  */
-CFE_Status_t MD_HkStatus(const MD_SendHkCmd_t *Msg)
+CFE_Status_t MD_SendHkCmd(const MD_SendHkCmd_t *Msg)
 {
-    UT_GenStub_SetupReturnBuffer(MD_HkStatus, CFE_Status_t);
+    UT_GenStub_SetupReturnBuffer(MD_SendHkCmd, CFE_Status_t);
 
-    UT_GenStub_AddParam(MD_HkStatus, const MD_SendHkCmd_t *, Msg);
+    UT_GenStub_AddParam(MD_SendHkCmd, const MD_SendHkCmd_t *, Msg);
 
-    UT_GenStub_Execute(MD_HkStatus, Basic, NULL);
+    UT_GenStub_Execute(MD_SendHkCmd, Basic, NULL);
 
-    return UT_GenStub_GetReturnValue(MD_HkStatus, CFE_Status_t);
+    return UT_GenStub_GetReturnValue(MD_SendHkCmd, CFE_Status_t);
 }
 
 /*

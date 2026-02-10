@@ -35,6 +35,7 @@
 #include "md_utils.h"
 #include "md_perfids.h"
 #include "md_version.h"
+#include "md_dispatch.h"
 
 MD_AppData_t MD_AppData;
 
@@ -94,7 +95,7 @@ void MD_AppMain(void)
         /* Process message if received successfully */
         if (Status == CFE_SUCCESS)
         {
-            MD_ProcessCommandPacket(BufPtr);
+            MD_TaskPipe(BufPtr);
         }
 
     } /* end while forever loop */
@@ -545,7 +546,7 @@ CFE_Status_t MD_ManageDwellTable(uint8 TblIndex)
 }
 
 /******************************************************************************/
-CFE_Status_t MD_HkStatus(const MD_SendHkCmd_t *Msg)
+CFE_Status_t MD_SendHkCmd(const MD_SendHkCmd_t *Msg)
 {
     uint8                    TblIndex;
     uint16                   MemDwellEnableBits = 0;
