@@ -120,8 +120,8 @@ CFE_Status_t MD_AppInit(void)
     */
     CFE_Status_t Status = CFE_SUCCESS;
 
-    MD_AppData.CmdCounter = 0;
-    MD_AppData.ErrCounter = 0;
+    MD_AppData.CommandCounter      = 0;
+    MD_AppData.CommandErrorCounter = 0;
 
     /* Initialize local control structures */
     MD_InitControlStructures();
@@ -558,8 +558,8 @@ CFE_Status_t MD_SendHkCmd(const MD_SendHkCmd_t *Msg)
 
     /* Assign values for command counters */
 
-    HkPktPtr->Payload.ValidCmdCntr   = MD_AppData.CmdCounter;
-    HkPktPtr->Payload.InvalidCmdCntr = MD_AppData.ErrCounter;
+    HkPktPtr->Payload.ValidCmdCntr   = MD_AppData.CommandCounter;
+    HkPktPtr->Payload.InvalidCmdCntr = MD_AppData.CommandErrorCounter;
 
     for (TblIndex = 0; TblIndex < MD_INTERFACE_NUM_DWELL_TABLES; TblIndex++)
     {

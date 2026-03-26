@@ -39,7 +39,7 @@
  * Define a lookup table for MD app command codes
  */
 /* clang-format off */
-static const EdsDispatchTable_EdsComponent_MD_Application_CFE_SB_Telecommand_t MD_TC_DISPATCH_TABLE = 
+static const EdsDispatchTable_EdsComponent_MD_Application_CFE_SB_Telecommand_t MD_TC_DISPATCH_TABLE =
 {
     .CMD =
     {
@@ -84,7 +84,7 @@ void MD_TaskPipe(const CFE_SB_Buffer_t *BufPtr)
         CFE_MSG_GetMsgId(&BufPtr->Msg, &MsgId);
         CFE_MSG_GetSize(&BufPtr->Msg, &MsgSize);
         CFE_MSG_GetFcnCode(&BufPtr->Msg, &MsgFc);
-        ++MD_AppData.ErrCounter;
+        ++MD_AppData.CommandErrorCounter;
 
         if (Status == CFE_STATUS_UNKNOWN_MSG_ID)
         {

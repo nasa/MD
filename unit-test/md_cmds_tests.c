@@ -86,13 +86,13 @@ int32 MD_CMDS_TEST_MD_UpdateDwellControlInfoHook2(void                   *UserOb
 void MD_NoopCmd_Test(void)
 {
     /* Set initial value for counter */
-    MD_AppData.CmdCounter = 1;
+    MD_AppData.CommandCounter = 1;
 
     /* Call the function directly */
     MD_NoopCmd((MD_NoopCmd_t *)&UT_CmdBuf.Buf);
 
     /* Verify counter was incremented */
-    UtAssert_UINT8_EQ(MD_AppData.CmdCounter, 2);
+    UtAssert_UINT8_EQ(MD_AppData.CommandCounter, 2);
 
     /* Verify event was sent */
     UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 1);
@@ -102,15 +102,15 @@ void MD_NoopCmd_Test(void)
 void MD_ResetCountersCmd_Test(void)
 {
     /* Set non-zero initial values */
-    MD_AppData.CmdCounter = 5;
-    MD_AppData.ErrCounter = 3;
+    MD_AppData.CommandCounter      = 5;
+    MD_AppData.CommandErrorCounter = 3;
 
     /* Call the function directly */
     MD_ResetCountersCmd((MD_ResetCountersCmd_t *)&UT_CmdBuf.Buf);
 
     /* Verify counters were reset */
-    UtAssert_UINT8_EQ(MD_AppData.CmdCounter, 0);
-    UtAssert_UINT8_EQ(MD_AppData.ErrCounter, 0);
+    UtAssert_UINT8_EQ(MD_AppData.CommandCounter, 0);
+    UtAssert_UINT8_EQ(MD_AppData.CommandErrorCounter, 0);
 
     /* Verify event was sent */
     UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 1);
@@ -157,7 +157,7 @@ void MD_ProcessStartCmd_Test_ZeroRate(void)
     UtAssert_True(MD_AppData.MD_DwellTables[0].CurrentEntry == 0, "MD_AppData.MD_DwellTables[0].CurrentEntry == 0");
     UtAssert_True(MD_AppData.MD_DwellTables[0].PktOffset == 0, "MD_AppData.MD_DwellTables[0].PktOffset == 0");
 
-    UtAssert_True(MD_AppData.CmdCounter == 1, "MD_AppData.CmdCounter == 1");
+    UtAssert_True(MD_AppData.CommandCounter == 1, "MD_AppData.CommandCounter == 1");
 
     UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, MD_ZERO_RATE_CMD_INF_EID);
     UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_INFORMATION);
@@ -218,7 +218,7 @@ void MD_ProcessStartCmd_Test_Success(void)
     UtAssert_True(MD_AppData.MD_DwellTables[0].CurrentEntry == 0, "MD_AppData.MD_DwellTables[0].CurrentEntry == 0");
     UtAssert_True(MD_AppData.MD_DwellTables[0].PktOffset == 0, "MD_AppData.MD_DwellTables[0].PktOffset == 0");
 
-    UtAssert_True(MD_AppData.CmdCounter == 1, "MD_AppData.CmdCounter == 1");
+    UtAssert_True(MD_AppData.CommandCounter == 1, "MD_AppData.CommandCounter == 1");
 
     UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, MD_START_DWELL_INF_EID);
     UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_INFORMATION);
@@ -253,7 +253,7 @@ void MD_ProcessStartCmd_Test_EmptyTableMask(void)
     MD_StartDwellCmd((MD_StartDwellCmd_t *)&UT_CmdBuf.Buf);
 
     /* Verify results */
-    UtAssert_True(MD_AppData.ErrCounter == 1, "MD_AppData.ErrCounter == 1");
+    UtAssert_True(MD_AppData.CommandErrorCounter == 1, "MD_AppData.CommandErrorCounter == 1");
 
     UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, MD_EMPTY_TBLMASK_ERR_EID);
     UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_ERROR);
@@ -299,7 +299,7 @@ void MD_ProcessStartCmd_Test_NoUpdateTableEnabledField(void)
     MD_StartDwellCmd((MD_StartDwellCmd_t *)&UT_CmdBuf.Buf);
 
     /* Verify results */
-    UtAssert_True(MD_AppData.ErrCounter == 1, "MD_AppData.ErrCounter == 1");
+    UtAssert_True(MD_AppData.CommandErrorCounter == 1, "MD_AppData.CommandErrorCounter == 1");
 
     UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, MD_START_DWELL_ERR_EID);
     UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_ERROR);
@@ -349,7 +349,7 @@ void MD_ProcessStopCmd_Test_Success(void)
     UtAssert_True(MD_AppData.MD_DwellTables[0].CurrentEntry == 0, "MD_AppData.MD_DwellTables[0].CurrentEntry == 0");
     UtAssert_True(MD_AppData.MD_DwellTables[0].PktOffset == 0, "MD_AppData.MD_DwellTables[0].PktOffset == 0");
 
-    UtAssert_True(MD_AppData.CmdCounter == 1, "MD_AppData.CmdCounter == 1");
+    UtAssert_True(MD_AppData.CommandCounter == 1, "MD_AppData.CommandCounter == 1");
 
     UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, MD_STOP_DWELL_INF_EID);
     UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_INFORMATION);
@@ -384,7 +384,7 @@ void MD_ProcessStopCmd_Test_EmptyTableMask(void)
     MD_StopDwellCmd((MD_StopDwellCmd_t *)&UT_CmdBuf.Buf);
 
     /* Verify results */
-    UtAssert_True(MD_AppData.ErrCounter == 1, "MD_AppData.ErrCounter == 1");
+    UtAssert_True(MD_AppData.CommandErrorCounter == 1, "MD_AppData.CommandErrorCounter == 1");
 
     UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, MD_EMPTY_TBLMASK_ERR_EID);
     UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_ERROR);
@@ -435,7 +435,7 @@ void MD_ProcessStopCmd_Test_NoUpdateTableEnabledField(void)
     UtAssert_True(MD_AppData.MD_DwellTables[0].CurrentEntry == 0, "MD_AppData.MD_DwellTables[0].CurrentEntry == 0");
     UtAssert_True(MD_AppData.MD_DwellTables[0].PktOffset == 0, "MD_AppData.MD_DwellTables[0].PktOffset == 0");
 
-    UtAssert_True(MD_AppData.ErrCounter == 1, "MD_AppData.ErrCounter == 1");
+    UtAssert_True(MD_AppData.CommandErrorCounter == 1, "MD_AppData.CommandErrorCounter == 1");
 
     UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, MD_STOP_DWELL_ERR_EID);
     UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_ERROR);
@@ -471,7 +471,7 @@ void MD_ProcessJamCmd_Test_InvalidJamTable(void)
     MD_JamDwellCmd((MD_JamDwellCmd_t *)&UT_CmdBuf.Buf);
 
     /* Verify results */
-    UtAssert_True(MD_AppData.ErrCounter == 1, "MD_AppData.ErrCounter == 1");
+    UtAssert_True(MD_AppData.CommandErrorCounter == 1, "MD_AppData.CommandErrorCounter == 1");
 
     UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, MD_INVALID_JAM_TABLE_ERR_EID);
     UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_ERROR);
@@ -509,7 +509,7 @@ void MD_ProcessJamCmd_Test_InvalidEntryArg(void)
     MD_JamDwellCmd((MD_JamDwellCmd_t *)&UT_CmdBuf.Buf);
 
     /* Verify results */
-    UtAssert_True(MD_AppData.ErrCounter == 1, "MD_AppData.ErrCounter == 1");
+    UtAssert_True(MD_AppData.CommandErrorCounter == 1, "MD_AppData.CommandErrorCounter == 1");
 
     UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, MD_INVALID_ENTRY_ARG_ERR_EID);
     UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_ERROR);
@@ -569,7 +569,7 @@ void MD_ProcessJamCmd_Test_SuccessNullZeroRate(void)
                   "MD_AppData.MD_DwellTables[0].Entry[1].Length == 0");
     UtAssert_True(MD_AppData.MD_DwellTables[0].Entry[1].Delay == 0, "MD_AppData.MD_DwellTables[0].Entry[1].Delay == 0");
 
-    UtAssert_True(MD_AppData.CmdCounter == 1, "MD_AppData.CmdCounter == 1");
+    UtAssert_True(MD_AppData.CommandCounter == 1, "MD_AppData.CommandCounter == 1");
 
     UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, MD_JAM_NULL_DWELL_INF_EID);
     UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_INFORMATION);
@@ -629,7 +629,7 @@ void MD_ProcessJamCmd_Test_NullTableDwell(void)
     UtAssert_True(MD_AppData.MD_DwellTables[0].Entry[1].Length == 0,
                   "MD_AppData.MD_DwellTables[0].Entry[1].Length == 0");
 
-    UtAssert_True(MD_AppData.ErrCounter == 1, "MD_AppData.ErrCounter == 1");
+    UtAssert_True(MD_AppData.CommandErrorCounter == 1, "MD_AppData.CommandErrorCounter == 1");
 
     UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, MD_JAM_NULL_DWELL_ERR_EID);
     UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_ERROR);
@@ -678,7 +678,7 @@ void MD_ProcessJamCmd_Test_NoUpdateTableDwell(void)
     UtAssert_True(MD_AppData.MD_DwellTables[0].Entry[1].Length == 1,
                   "MD_AppData.MD_DwellTables[0].Entry[1].Length == 1");
 
-    UtAssert_True(MD_AppData.ErrCounter == 1, "MD_AppData.ErrCounter == 1");
+    UtAssert_True(MD_AppData.CommandErrorCounter == 1, "MD_AppData.CommandErrorCounter == 1");
 
     UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, MD_JAM_DWELL_ERR_EID);
     UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_ERROR);
@@ -725,7 +725,7 @@ void MD_ProcessJamCmd_Test_CantResolveJamAddr(void)
     MD_JamDwellCmd((MD_JamDwellCmd_t *)&UT_CmdBuf.Buf);
 
     /* Verify results */
-    UtAssert_True(MD_AppData.ErrCounter == 1, "MD_AppData.ErrCounter == 1");
+    UtAssert_True(MD_AppData.CommandErrorCounter == 1, "MD_AppData.CommandErrorCounter == 1");
 
     UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, MD_CANT_RESOLVE_JAM_ADDR_ERR_EID);
     UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_ERROR);
@@ -769,7 +769,7 @@ void MD_ProcessJamCmd_Test_InvalidLenArg(void)
     MD_JamDwellCmd((MD_JamDwellCmd_t *)&UT_CmdBuf.Buf);
 
     /* Verify results */
-    UtAssert_True(MD_AppData.ErrCounter == 1, "MD_AppData.ErrCounter == 1");
+    UtAssert_True(MD_AppData.CommandErrorCounter == 1, "MD_AppData.CommandErrorCounter == 1");
 
     UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, MD_INVALID_LEN_ARG_ERR_EID);
     UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_ERROR);
@@ -814,7 +814,7 @@ void MD_ProcessJamCmd_Test_InvalidJamAddr(void)
     MD_JamDwellCmd((MD_JamDwellCmd_t *)&UT_CmdBuf.Buf);
 
     /* Verify results */
-    UtAssert_True(MD_AppData.ErrCounter == 1, "MD_AppData.ErrCounter == 1");
+    UtAssert_True(MD_AppData.CommandErrorCounter == 1, "MD_AppData.CommandErrorCounter == 1");
 
     UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, MD_INVALID_JAM_ADDR_ERR_EID);
     UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_ERROR);
@@ -861,7 +861,7 @@ void MD_ProcessJamCmd_Test_JamAddrNot16BitFieldLength4(void)
     MD_JamDwellCmd((MD_JamDwellCmd_t *)&UT_CmdBuf.Buf);
 
     /* Verify results */
-    UtAssert_True(MD_AppData.ErrCounter == 1, "MD_AppData.ErrCounter == 1");
+    UtAssert_True(MD_AppData.CommandErrorCounter == 1, "MD_AppData.CommandErrorCounter == 1");
 
     UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, MD_JAM_ADDR_NOT_16BIT_ERR_EID);
     UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_ERROR);
@@ -909,7 +909,7 @@ void MD_ProcessJamCmd_Test_JamAddrNot32Bit(void)
     MD_JamDwellCmd((MD_JamDwellCmd_t *)&UT_CmdBuf.Buf);
 
     /* Verify results */
-    UtAssert_True(MD_AppData.ErrCounter == 1, "MD_AppData.ErrCounter == 1");
+    UtAssert_True(MD_AppData.CommandErrorCounter == 1, "MD_AppData.CommandErrorCounter == 1");
 
     UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, MD_JAM_ADDR_NOT_32BIT_ERR_EID);
     UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_ERROR);
@@ -956,7 +956,7 @@ void MD_ProcessJamCmd_Test_JamAddrNot16BitFieldLength2(void)
     MD_JamDwellCmd((MD_JamDwellCmd_t *)&UT_CmdBuf.Buf);
 
     /* Verify results */
-    UtAssert_True(MD_AppData.ErrCounter == 1, "MD_AppData.ErrCounter == 1");
+    UtAssert_True(MD_AppData.CommandErrorCounter == 1, "MD_AppData.CommandErrorCounter == 1");
 
     UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, MD_JAM_ADDR_NOT_16BIT_ERR_EID);
     UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_ERROR);
@@ -1003,7 +1003,7 @@ void MD_ProcessJamCmd_Test_JamAddrNot16BitNot32Aligned(void)
     MD_JamDwellCmd((MD_JamDwellCmd_t *)&UT_CmdBuf.Buf);
 
     /* Verify results */
-    UtAssert_True(MD_AppData.ErrCounter == 1, "MD_AppData.ErrCounter == 1");
+    UtAssert_True(MD_AppData.CommandErrorCounter == 1, "MD_AppData.CommandErrorCounter == 1");
 
     UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, MD_JAM_ADDR_NOT_32BIT_ERR_EID);
     UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_ERROR);
@@ -1048,7 +1048,7 @@ void MD_ProcessJamCmd_Test_JamFieldLength4Addr32Aligned(void)
     MD_JamDwellCmd((MD_JamDwellCmd_t *)&UT_CmdBuf.Buf);
 
     /* Verify results */
-    UtAssert_True(MD_AppData.CmdCounter == 1, "MD_AppData.CmdCounter == 1");
+    UtAssert_True(MD_AppData.CommandCounter == 1, "MD_AppData.CommandCounter == 1");
 
     UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, MD_JAM_DWELL_INF_EID);
     UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_INFORMATION);
@@ -1108,7 +1108,7 @@ void MD_ProcessJamCmd_Test_SuccessNonNullZeroRate(void)
     UtAssert_True(MD_AppData.MD_DwellTables[0].Entry[1].Delay == 3,
                   "MD_AppData.MD_DwellTables[0].Entry[1].Delay  == 3");
 
-    UtAssert_True(MD_AppData.CmdCounter == 1, "MD_AppData.CmdCounter == 1");
+    UtAssert_True(MD_AppData.CommandCounter == 1, "MD_AppData.CommandCounter == 1");
 
     UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, MD_JAM_DWELL_INF_EID);
     UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_INFORMATION);
@@ -1171,7 +1171,7 @@ void MD_ProcessJamCmd_Test_SuccessZeroRateStreamDisabled(void)
     UtAssert_True(MD_AppData.MD_DwellTables[0].Entry[1].Delay == 3,
                   "MD_AppData.MD_DwellTables[0].Entry[1].Delay  == 3");
 
-    UtAssert_True(MD_AppData.CmdCounter == 1, "MD_AppData.CmdCounter == 1");
+    UtAssert_True(MD_AppData.CommandCounter == 1, "MD_AppData.CommandCounter == 1");
 
     UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, MD_JAM_DWELL_INF_EID);
     UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_INFORMATION);
@@ -1227,7 +1227,7 @@ void MD_ProcessJamCmd_Test_SuccessRateNotZero(void)
     UtAssert_True(MD_AppData.MD_DwellTables[0].Entry[1].Delay == 3,
                   "MD_AppData.MD_DwellTables[0].Entry[1].Delay  == 3");
 
-    UtAssert_True(MD_AppData.CmdCounter == 1, "MD_AppData.CmdCounter == 1");
+    UtAssert_True(MD_AppData.CommandCounter == 1, "MD_AppData.CommandCounter == 1");
 
     UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, MD_JAM_DWELL_INF_EID);
     UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_INFORMATION);
@@ -1267,7 +1267,7 @@ void MD_ProcessSignatureCmd_Test_InvalidSignatureLength(void)
     MD_SetSignatureCmd((MD_SetSignatureCmd_t *)&UT_CmdBuf.Buf);
 
     /* Verify results */
-    UtAssert_True(MD_AppData.ErrCounter == 1, "MD_AppData.ErrCounter == 1");
+    UtAssert_True(MD_AppData.CommandErrorCounter == 1, "MD_AppData.CommandErrorCounter == 1");
 
     UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, MD_INVALID_SIGNATURE_LENGTH_ERR_EID);
     UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_ERROR);
@@ -1304,7 +1304,7 @@ void MD_ProcessSignatureCmd_Test_InvalidSignatureTable(void)
     MD_SetSignatureCmd((MD_SetSignatureCmd_t *)&UT_CmdBuf.Buf);
 
     /* Verify results */
-    UtAssert_True(MD_AppData.ErrCounter == 1, "MD_AppData.ErrCounter == 1");
+    UtAssert_True(MD_AppData.CommandErrorCounter == 1, "MD_AppData.CommandErrorCounter == 1");
 
     UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, MD_INVALID_SIGNATURE_TABLE_ERR_EID);
     UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_ERROR);
@@ -1353,7 +1353,7 @@ void MD_ProcessSignatureCmd_Test_Success(void)
         strncmp(MD_AppData.MD_DwellTables[0].Signature, "signature", MD_INTERFACE_SIGNATURE_FIELD_LENGTH) == 0,
         "strncmp(MD_AppData.MD_DwellTables[0].Signature, 'signature', MD_INTERFACE_SIGNATURE_FIELD_LENGTH) == 0");
 
-    UtAssert_True(MD_AppData.CmdCounter == 1, "MD_AppData.CmdCounter == 1");
+    UtAssert_True(MD_AppData.CommandCounter == 1, "MD_AppData.CommandCounter == 1");
 
     UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, MD_SET_SIGNATURE_INF_EID);
     UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_INFORMATION);
@@ -1403,7 +1403,7 @@ void MD_ProcessSignatureCmd_Test_NoUpdateTableSignature(void)
         strncmp(MD_AppData.MD_DwellTables[0].Signature, "signature", MD_INTERFACE_SIGNATURE_FIELD_LENGTH) == 0,
         "strncmp(MD_AppData.MD_DwellTables[0].Signature, 'signature', MD_INTERFACE_SIGNATURE_FIELD_LENGTH) == 0");
 
-    UtAssert_True(MD_AppData.ErrCounter == 1, "MD_AppData.ErrCounter == 1");
+    UtAssert_True(MD_AppData.CommandErrorCounter == 1, "MD_AppData.CommandErrorCounter == 1");
 
     UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, MD_SET_SIGNATURE_ERR_EID);
     UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_ERROR);

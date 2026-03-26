@@ -59,8 +59,8 @@ void MD_VerifyCmdLength_Nominal(void)
     /* Evaluate run */
     UtAssert_BOOL_TRUE(Result);
 
-    UtAssert_EQ(uint8, MD_AppData.CmdCounter, 0);
-    UtAssert_EQ(uint8, MD_AppData.ErrCounter, 0);
+    UtAssert_EQ(uint8, MD_AppData.CommandCounter, 0);
+    UtAssert_EQ(uint8, MD_AppData.CommandErrorCounter, 0);
 
     UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 0);
 }
@@ -87,8 +87,8 @@ void MD_VerifyCmdLength_InvalidSize(void)
     /* Evaluate run */
     UtAssert_BOOL_FALSE(Result);
 
-    UtAssert_EQ(uint8, MD_AppData.CmdCounter, 0);
-    UtAssert_EQ(uint8, MD_AppData.ErrCounter, 1);
+    UtAssert_EQ(uint8, MD_AppData.CommandCounter, 0);
+    UtAssert_EQ(uint8, MD_AppData.CommandErrorCounter, 1);
 
     UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 1);
     MD_Test_Verify_Event(0,
@@ -114,8 +114,8 @@ void MD_ProcessGroundCommand_NoopCmd(void)
     UtAssert_VOIDCALL(MD_ProcessGroundCommand(NULL));
 
     /* Evaluate run */
-    UtAssert_EQ(uint8, MD_AppData.CmdCounter, 0);
-    UtAssert_EQ(uint8, MD_AppData.ErrCounter, 0);
+    UtAssert_EQ(uint8, MD_AppData.CommandCounter, 0);
+    UtAssert_EQ(uint8, MD_AppData.CommandErrorCounter, 0);
 
     UtAssert_STUB_COUNT(MD_NoopCmd, 1);
 }
@@ -143,8 +143,8 @@ void MD_ProcessGroundCommand_NoopCmdErr(void)
     UtAssert_VOIDCALL(MD_ProcessGroundCommand(NULL));
 
     /* Evaluate run */
-    UtAssert_EQ(uint8, MD_AppData.CmdCounter, 0);
-    UtAssert_EQ(uint8, MD_AppData.ErrCounter, 1);
+    UtAssert_EQ(uint8, MD_AppData.CommandCounter, 0);
+    UtAssert_EQ(uint8, MD_AppData.CommandErrorCounter, 1);
 
     UtAssert_STUB_COUNT(MD_NoopCmd, 0);
 }
@@ -166,8 +166,8 @@ void MD_ProcessGroundCommand_ResetCountersCmd(void)
     UtAssert_VOIDCALL(MD_ProcessGroundCommand(NULL));
 
     /* Evaluate run */
-    UtAssert_EQ(uint8, MD_AppData.CmdCounter, 0);
-    UtAssert_EQ(uint8, MD_AppData.ErrCounter, 0);
+    UtAssert_EQ(uint8, MD_AppData.CommandCounter, 0);
+    UtAssert_EQ(uint8, MD_AppData.CommandErrorCounter, 0);
 
     UtAssert_STUB_COUNT(MD_ResetCountersCmd, 1);
 }
@@ -195,8 +195,8 @@ void MD_ProcessGroundCommand_ResetCountersCmdErr(void)
     UtAssert_VOIDCALL(MD_ProcessGroundCommand(NULL));
 
     /* Evaluate run */
-    UtAssert_EQ(uint8, MD_AppData.CmdCounter, 0);
-    UtAssert_EQ(uint8, MD_AppData.ErrCounter, 1);
+    UtAssert_EQ(uint8, MD_AppData.CommandCounter, 0);
+    UtAssert_EQ(uint8, MD_AppData.CommandErrorCounter, 1);
 
     UtAssert_STUB_COUNT(MD_ResetCountersCmd, 0);
 }
@@ -218,8 +218,8 @@ void MD_ProcessGroundCommand_StartDwellCmd(void)
     UtAssert_VOIDCALL(MD_ProcessGroundCommand(NULL));
 
     /* Evaluate run */
-    UtAssert_EQ(uint8, MD_AppData.CmdCounter, 0);
-    UtAssert_EQ(uint8, MD_AppData.ErrCounter, 0);
+    UtAssert_EQ(uint8, MD_AppData.CommandCounter, 0);
+    UtAssert_EQ(uint8, MD_AppData.CommandErrorCounter, 0);
 
     UtAssert_STUB_COUNT(MD_StartDwellCmd, 1);
 }
@@ -246,8 +246,8 @@ void MD_ProcessGroundCommand_StartDwellCmdErr(void)
     UtAssert_VOIDCALL(MD_ProcessGroundCommand(NULL));
 
     /* Evaluate run */
-    UtAssert_EQ(uint8, MD_AppData.CmdCounter, 0);
-    UtAssert_EQ(uint8, MD_AppData.ErrCounter, 1);
+    UtAssert_EQ(uint8, MD_AppData.CommandCounter, 0);
+    UtAssert_EQ(uint8, MD_AppData.CommandErrorCounter, 1);
 }
 
 void MD_ProcessGroundCommand_StopDwellCmd(void)
@@ -267,8 +267,8 @@ void MD_ProcessGroundCommand_StopDwellCmd(void)
     UtAssert_VOIDCALL(MD_ProcessGroundCommand(NULL));
 
     /* Evaluate run */
-    UtAssert_EQ(uint8, MD_AppData.CmdCounter, 0);
-    UtAssert_EQ(uint8, MD_AppData.ErrCounter, 0);
+    UtAssert_EQ(uint8, MD_AppData.CommandCounter, 0);
+    UtAssert_EQ(uint8, MD_AppData.CommandErrorCounter, 0);
 
     UtAssert_STUB_COUNT(MD_StopDwellCmd, 1);
 }
@@ -295,8 +295,8 @@ void MD_ProcessGroundCommand_StopDwellCmdErr(void)
     UtAssert_VOIDCALL(MD_ProcessGroundCommand(NULL));
 
     /* Evaluate run */
-    UtAssert_EQ(uint8, MD_AppData.CmdCounter, 0);
-    UtAssert_EQ(uint8, MD_AppData.ErrCounter, 1);
+    UtAssert_EQ(uint8, MD_AppData.CommandCounter, 0);
+    UtAssert_EQ(uint8, MD_AppData.CommandErrorCounter, 1);
 }
 
 void MD_ProcessGroundCommand_JamDwellCmd(void)
@@ -316,8 +316,8 @@ void MD_ProcessGroundCommand_JamDwellCmd(void)
     UtAssert_VOIDCALL(MD_ProcessGroundCommand(NULL));
 
     /* Evaluate run */
-    UtAssert_EQ(uint8, MD_AppData.CmdCounter, 0);
-    UtAssert_EQ(uint8, MD_AppData.ErrCounter, 0);
+    UtAssert_EQ(uint8, MD_AppData.CommandCounter, 0);
+    UtAssert_EQ(uint8, MD_AppData.CommandErrorCounter, 0);
 
     UtAssert_STUB_COUNT(MD_JamDwellCmd, 1);
 }
@@ -344,8 +344,8 @@ void MD_ProcessGroundCommand_JamDwellCmdErr(void)
     UtAssert_VOIDCALL(MD_ProcessGroundCommand(NULL));
 
     /* Evaluate run */
-    UtAssert_EQ(uint8, MD_AppData.CmdCounter, 0);
-    UtAssert_EQ(uint8, MD_AppData.ErrCounter, 1);
+    UtAssert_EQ(uint8, MD_AppData.CommandCounter, 0);
+    UtAssert_EQ(uint8, MD_AppData.CommandErrorCounter, 1);
 }
 
 #if MD_INTERFACE_SIGNATURE_OPTION == 1
@@ -367,8 +367,8 @@ void MD_ProcessGroundCommand_SetSignatureCmd(void)
     UtAssert_VOIDCALL(MD_ProcessGroundCommand(NULL));
 
     /* Evaluate run */
-    UtAssert_EQ(uint8, MD_AppData.CmdCounter, 0);
-    UtAssert_EQ(uint8, MD_AppData.ErrCounter, 0);
+    UtAssert_EQ(uint8, MD_AppData.CommandCounter, 0);
+    UtAssert_EQ(uint8, MD_AppData.CommandErrorCounter, 0);
 
     UtAssert_STUB_COUNT(MD_SetSignatureCmd, 1);
 }
@@ -395,8 +395,8 @@ void MD_ProcessGroundCommand_SetSignatureCmdErr(void)
     UtAssert_VOIDCALL(MD_ProcessGroundCommand(NULL));
 
     /* Evaluate run */
-    UtAssert_EQ(uint8, MD_AppData.CmdCounter, 0);
-    UtAssert_EQ(uint8, MD_AppData.ErrCounter, 1);
+    UtAssert_EQ(uint8, MD_AppData.CommandCounter, 0);
+    UtAssert_EQ(uint8, MD_AppData.CommandErrorCounter, 1);
 }
 
 #endif
@@ -413,8 +413,8 @@ void MD_ProcessGroundCommand_Err(void)
     UtAssert_VOIDCALL(MD_ProcessGroundCommand(NULL));
 
     /* Evaluate run */
-    UtAssert_EQ(uint8, MD_AppData.CmdCounter, 0);
-    UtAssert_EQ(uint8, MD_AppData.ErrCounter, 1);
+    UtAssert_EQ(uint8, MD_AppData.CommandCounter, 0);
+    UtAssert_EQ(uint8, MD_AppData.CommandErrorCounter, 1);
 
     MD_Test_Verify_Event(0, MD_CC_ERR_EID, CFE_EVS_EventType_ERROR, "Invalid ground command code %d");
 }
@@ -506,8 +506,8 @@ void MD_TaskPipe_Test_InvalidMsgId(void)
     UtAssert_STUB_COUNT(MD_SendHkCmd, 0);
     UtAssert_STUB_COUNT(MD_ProcessGroundCommand, 0);
 
-    UtAssert_EQ(uint8, MD_AppData.CmdCounter, 0);
-    UtAssert_EQ(uint8, MD_AppData.ErrCounter, 1);
+    UtAssert_EQ(uint8, MD_AppData.CommandCounter, 0);
+    UtAssert_EQ(uint8, MD_AppData.CommandErrorCounter, 1);
 
     MD_Test_Verify_Event(0, MD_MID_ERR_EID, CFE_EVS_EventType_ERROR, "Invalid command pipe message ID: 0x%08lX");
 }

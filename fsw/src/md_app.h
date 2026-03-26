@@ -24,9 +24,10 @@
 #ifndef MD_APP_H
 #define MD_APP_H
 
-/************************************************************************
- * Includes
- ************************************************************************/
+/* ======== */
+/* Includes */
+/* ======== */
+
 #include "common_types.h"
 #include "cfe_mission_cfg.h"
 #include "md_msgids.h"
@@ -105,8 +106,8 @@ typedef struct
  */
 typedef struct
 {
-    uint8 CmdCounter; /**< \brief MD Application Command Counter */
-    uint8 ErrCounter; /**< \brief MD Application Error Counter */
+    uint8 CommandCounter;      /**< \brief MD Application Command Counter */
+    uint8 CommandErrorCounter; /**< \brief MD Application Error Counter */
 
     MD_HkTlm_t HkPkt; /**< \brief Housekeeping telemetry packet */
 

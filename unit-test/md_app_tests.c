@@ -158,8 +158,8 @@ void MD_AppInit_Test_Nominal(void)
 
     snprintf(ExpectedEventString, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH, "MD Initialized.  Version %%d.%%d.%%d.%%d");
 
-    MD_AppData.CmdCounter = 1;
-    MD_AppData.ErrCounter = 1;
+    MD_AppData.CommandCounter      = 1;
+    MD_AppData.CommandErrorCounter = 1;
 
     /* Execute the function being tested */
     Result = MD_AppInit();
@@ -181,8 +181,8 @@ void MD_AppInit_Test_Nominal(void)
                   "CFE_EVS_SendEvent was called %u time(s), expected 2",
                   call_count_CFE_EVS_SendEvent);
 
-    UtAssert_INT32_EQ(MD_AppData.CmdCounter, 0);
-    UtAssert_INT32_EQ(MD_AppData.ErrCounter, 0);
+    UtAssert_INT32_EQ(MD_AppData.CommandCounter, 0);
+    UtAssert_INT32_EQ(MD_AppData.CommandErrorCounter, 0);
 }
 
 void MD_AppInit_Test_EvsRegisterNotSuccess(void)
@@ -1125,8 +1125,8 @@ void MD_HkStatus_Test(void)
 {
     MD_SendHkCmd_t Msg;
     memset((void *)&Msg, 0, sizeof(MD_SendHkCmd_t));
-    MD_AppData.CmdCounter = 1;
-    MD_AppData.ErrCounter = 2;
+    MD_AppData.CommandCounter      = 1;
+    MD_AppData.CommandErrorCounter = 2;
 
     MD_AppData.MD_DwellTables[0].Enabled = 1;
 

@@ -159,9 +159,9 @@
 
       <ContainerDataType name="CommandBase" baseType="CFE_HDR/CommandHeader"/>
 
-      <ContainerDataType name="Wakeup" baseType="CommandBase" shortDescription="Send MD Wakeup command" />
+      <ContainerDataType name="Wakeup" baseType="CFE_HDR/CommandHeader" shortDescription="Send MD Wakeup command" />
 
-      <ContainerDataType name="SendHkCmd" baseType="CommandBase" shortDescription="Memory Dwell Send Housekeeping Command"/>
+      <ContainerDataType name="SendHkCmd" baseType="CFE_HDR/CommandHeader" shortDescription="Memory Dwell Send Housekeeping Command"/>
 
       <ContainerDataType name="HkTlm" baseType="CFE_HDR/TelemetryHeader" shortDescription="Memory Dwell HK Telemetry format">
         <EntryList>

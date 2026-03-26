@@ -57,7 +57,7 @@ CFE_Status_t MD_NoopCmd(const MD_NoopCmd_t *Msg)
                       MD_REVISION,
                       MD_INTERNAL_MISSION_REV);
 
-    MD_AppData.CmdCounter++;
+    MD_AppData.CommandCounter++;
     return CFE_SUCCESS;
 }
 
@@ -69,8 +69,8 @@ CFE_Status_t MD_NoopCmd(const MD_NoopCmd_t *Msg)
 CFE_Status_t MD_ResetCountersCmd(const MD_ResetCountersCmd_t *Msg)
 {
     CFE_EVS_SendEvent(MD_RESET_INF_EID, CFE_EVS_EventType_INFORMATION, "Reset Counters Cmd Received");
-    MD_AppData.CmdCounter = 0;
-    MD_AppData.ErrCounter = 0;
+    MD_AppData.CommandCounter      = 0;
+    MD_AppData.CommandErrorCounter = 0;
     return CFE_SUCCESS;
 }
 
@@ -140,7 +140,7 @@ CFE_Status_t MD_StartDwellCmd(const MD_StartDwellCmd_t *Msg)
 
         if (ErrorCount == 0)
         {
-            MD_AppData.CmdCounter++;
+            MD_AppData.CommandCounter++;
 
             CFE_EVS_SendEvent(MD_START_DWELL_INF_EID,
                               CFE_EVS_EventType_INFORMATION,
@@ -149,7 +149,7 @@ CFE_Status_t MD_StartDwellCmd(const MD_StartDwellCmd_t *Msg)
         }
         else
         {
-            MD_AppData.ErrCounter++;
+            MD_AppData.CommandErrorCounter++;
 
             CFE_EVS_SendEvent(MD_START_DWELL_ERR_EID,
                               CFE_EVS_EventType_ERROR,
@@ -161,7 +161,7 @@ CFE_Status_t MD_StartDwellCmd(const MD_StartDwellCmd_t *Msg)
     }
     else /* No valid table id's specified in mask */
     {
-        MD_AppData.ErrCounter++;
+        MD_AppData.CommandErrorCounter++;
         CFE_EVS_SendEvent(MD_EMPTY_TBLMASK_ERR_EID,
                           CFE_EVS_EventType_ERROR,
                           "%s command rejected because no tables were specified in table mask (0x%04X)",
@@ -217,11 +217,11 @@ CFE_Status_t MD_StopDwellCmd(const MD_StopDwellCmd_t *Msg)
                               "Stop Dwell Table command processed successfully for table mask 0x%04X",
                               Msg->Payload.TableMask);
 
-            MD_AppData.CmdCounter++;
+            MD_AppData.CommandCounter++;
         }
         else
         {
-            MD_AppData.ErrCounter++;
+            MD_AppData.CommandErrorCounter++;
 
             CFE_EVS_SendEvent(MD_STOP_DWELL_ERR_EID,
                               CFE_EVS_EventType_ERROR,
@@ -238,7 +238,7 @@ CFE_Status_t MD_StopDwellCmd(const MD_StopDwellCmd_t *Msg)
                           "%s command rejected because no tables were specified in table mask (0x%04X)",
                           "Stop Dwell",
                           Msg->Payload.TableMask);
-        MD_AppData.ErrCounter++;
+        MD_AppData.CommandErrorCounter++;
     }
     return Status;
 }
@@ -464,7 +464,7 @@ CFE_Status_t MD_JamDwellCmd(const MD_JamDwellCmd_t *Msg)
     */
     if (AllInputsValid == true)
     {
-        MD_AppData.CmdCounter++;
+        MD_AppData.CommandCounter++;
 
         /* Update Dwell Table Control Info, including rate */
         MD_UpdateDwellControlInfo(TableIndex);
@@ -481,7 +481,7 @@ CFE_Status_t MD_JamDwellCmd(const MD_JamDwellCmd_t *Msg)
     }
     else
     {
-        MD_AppData.ErrCounter++;
+        MD_AppData.CommandErrorCounter++;
     }
     return Status;
 }
@@ -514,7 +514,7 @@ CFE_Status_t MD_SetSignatureCmd(const MD_SetSignatureCmd_t *Msg)
                           CFE_EVS_EventType_ERROR,
                           "Set Signature cmd rejected due to invalid Signature length");
 
-        MD_AppData.ErrCounter++;
+        MD_AppData.CommandErrorCounter++;
     }
 
     /*
@@ -528,7 +528,7 @@ CFE_Status_t MD_SetSignatureCmd(const MD_SetSignatureCmd_t *Msg)
                           TblId,
                           MD_INTERFACE_NUM_DWELL_TABLES);
 
-        MD_AppData.ErrCounter++;
+        MD_AppData.CommandErrorCounter++;
     }
 
     else
@@ -553,7 +553,7 @@ CFE_Status_t MD_SetSignatureCmd(const MD_SetSignatureCmd_t *Msg)
                               TblId,
                               Msg->Payload.Signature);
 
-            MD_AppData.CmdCounter++;
+            MD_AppData.CommandCounter++;
         }
         else
         {
@@ -563,7 +563,7 @@ CFE_Status_t MD_SetSignatureCmd(const MD_SetSignatureCmd_t *Msg)
                               (int)TblId,
                               (unsigned int)Status);
 
-            MD_AppData.ErrCounter++;
+            MD_AppData.CommandErrorCounter++;
         }
     }
     return Status;

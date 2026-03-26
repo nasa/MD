@@ -68,7 +68,7 @@ bool MD_VerifyCmdLength(const CFE_MSG_Message_t *MsgPtr, size_t ExpectedLength)
                           (unsigned int)ExpectedLength);
 
         IsValidLength = false;
-        MD_AppData.ErrCounter++;
+        MD_AppData.CommandErrorCounter++;
     }
 
     return IsValidLength;
@@ -122,7 +122,7 @@ void MD_ProcessGroundCommand(const CFE_SB_Buffer_t *BufPtr)
 #endif
 
         default:
-            MD_AppData.ErrCounter++;
+            MD_AppData.CommandErrorCounter++;
             CFE_EVS_SendEvent(MD_CC_ERR_EID, CFE_EVS_EventType_ERROR, "Invalid ground command code %d", CommandCode);
             break;
     }
@@ -164,7 +164,7 @@ void MD_TaskPipe(const CFE_SB_Buffer_t *BufPtr)
     }
     else
     {
-        MD_AppData.ErrCounter++;
+        MD_AppData.CommandErrorCounter++;
         CFE_EVS_SendEvent(MD_MID_ERR_EID,
                           CFE_EVS_EventType_ERROR,
                           "Invalid command pipe message ID: 0x%08lX",
