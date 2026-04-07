@@ -89,8 +89,11 @@ CFE_Status_t MD_DwellLoop(const MD_Wakeup_t *Msg)
                     if (Result != CFE_SUCCESS)
                     {
                         /* Send error event message */
-                        CFE_EVS_SendEvent(MD_DWELL_LOOP_GET_DWELL_DATA_ERR_EID, CFE_EVS_EventType_ERROR,
-                                          "Dwell Table failed to read entry %d in table %d ", EntryIndex, TblIndex);
+                        CFE_EVS_SendEvent(MD_DWELL_LOOP_GET_DWELL_DATA_ERR_EID,
+                                          CFE_EVS_EventType_ERROR,
+                                          "Dwell Table failed to read entry %d in table %d ",
+                                          EntryIndex,
+                                          TblIndex);
                         /* Don't exit here yet, still need to increment counters or send the packet */
                         Status = Result;
                     }
@@ -209,7 +212,7 @@ void MD_SendDwellPkt(uint16 TableIndex)
 
     /* Assign pointers to structures */
     MD_DwellPacketControl_t *TblPtr = &MD_AppData.MD_DwellTables[TableIndex];
-    MD_DwellPkt_t *          PktPtr = &MD_AppData.MD_DwellPkt[TableIndex];
+    MD_DwellPkt_t           *PktPtr = &MD_AppData.MD_DwellPkt[TableIndex];
 
     /*
     ** Assign packet fields.

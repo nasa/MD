@@ -41,7 +41,7 @@ typedef struct stub_FILE stub_FILE;
 /* ----------------------------------------- */
 
 extern int        stub_fclose(stub_FILE *stream);
-extern char *     stub_fgets(char *s, int n, stub_FILE *stream);
+extern char      *stub_fgets(char *s, int n, stub_FILE *stream);
 extern stub_FILE *stub_fopen(const char *filename, const char *modes);
 extern int        stub_fputs(const char *s, stub_FILE *stream);
 extern int        stub_remove(const char *filename);

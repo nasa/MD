@@ -19,7 +19,8 @@
 /**
  * @file
  *
- * Auto-Generated stub implementations for functions defined in md_dispatch header
+ * Auto-Generated stub implementations for functions defined in md_dispatch
+ * header
  */
 
 #include "md_dispatch.h"
@@ -27,40 +28,41 @@
 
 /*
  * ----------------------------------------------------
- * Generated stub function for MD_ExecRequest()
+ * Generated stub function for MD_ProcessGroundCommand()
  * ----------------------------------------------------
  */
-void MD_ExecRequest(const CFE_SB_Buffer_t *BufPtr)
+void MD_ProcessGroundCommand(const CFE_SB_Buffer_t *BufPtr)
 {
-    UT_GenStub_AddParam(MD_ExecRequest, const CFE_SB_Buffer_t *, BufPtr);
+    UT_GenStub_AddParam(MD_ProcessGroundCommand, const CFE_SB_Buffer_t *, BufPtr);
 
-    UT_GenStub_Execute(MD_ExecRequest, Basic, NULL);
+    UT_GenStub_Execute(MD_ProcessGroundCommand, Basic, NULL);
 }
 
 /*
  * ----------------------------------------------------
- * Generated stub function for MD_ProcessCommandPacket()
+ * Generated stub function for MD_TaskPipe()
  * ----------------------------------------------------
  */
-void MD_ProcessCommandPacket(const CFE_SB_Buffer_t *BufPtr)
+void MD_TaskPipe(const CFE_SB_Buffer_t *BufPtr)
 {
-    UT_GenStub_AddParam(MD_ProcessCommandPacket, const CFE_SB_Buffer_t *, BufPtr);
+    UT_GenStub_AddParam(MD_TaskPipe, const CFE_SB_Buffer_t *, BufPtr);
 
-    UT_GenStub_Execute(MD_ProcessCommandPacket, Basic, NULL);
+    UT_GenStub_Execute(MD_TaskPipe, Basic, NULL);
 }
 
 /*
  * ----------------------------------------------------
- * Generated stub function for MD_SearchCmdHndlrTbl()
+ * Generated stub function for MD_VerifyCmdLength()
  * ----------------------------------------------------
  */
-int16 MD_SearchCmdHndlrTbl(CFE_MSG_FcnCode_t CommandCode)
+bool MD_VerifyCmdLength(const CFE_MSG_Message_t *MsgPtr, size_t ExpectedLength)
 {
-    UT_GenStub_SetupReturnBuffer(MD_SearchCmdHndlrTbl, int16);
+    UT_GenStub_SetupReturnBuffer(MD_VerifyCmdLength, bool);
 
-    UT_GenStub_AddParam(MD_SearchCmdHndlrTbl, CFE_MSG_FcnCode_t, CommandCode);
+    UT_GenStub_AddParam(MD_VerifyCmdLength, const CFE_MSG_Message_t *, MsgPtr);
+    UT_GenStub_AddParam(MD_VerifyCmdLength, size_t, ExpectedLength);
 
-    UT_GenStub_Execute(MD_SearchCmdHndlrTbl, Basic, NULL);
+    UT_GenStub_Execute(MD_VerifyCmdLength, Basic, NULL);
 
-    return UT_GenStub_GetReturnValue(MD_SearchCmdHndlrTbl, int16);
+    return UT_GenStub_GetReturnValue(MD_VerifyCmdLength, bool);
 }

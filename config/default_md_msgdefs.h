@@ -87,8 +87,8 @@ typedef struct
  */
 typedef struct
 {
-    uint16 TableId;                              /**< \brief Table Id: 1..MD_INTERFACE_NUM_DWELL_TABLES */
-    uint16 Padding;                              /**< \brief Padding  */
+    uint16 TableId;                                        /**< \brief Table Id: 1..MD_INTERFACE_NUM_DWELL_TABLES */
+    uint16 Padding;                                        /**< \brief Padding  */
     char   Signature[MD_INTERFACE_SIGNATURE_FIELD_LENGTH]; /**< \brief Sigature */
 } MD_CmdSetSignature_Payload_t;
 
@@ -106,8 +106,9 @@ typedef struct
     uint16 DwellTblAddrCount[MD_INTERFACE_NUM_DWELL_TABLES]; /**< \brief Number of dwell addresses in table */
     uint16 NumWaitsPerPkt[MD_INTERFACE_NUM_DWELL_TABLES];    /**< \brief Number of delay counts in table */
     uint16 ByteCount[MD_INTERFACE_NUM_DWELL_TABLES];         /**< \brief Number of bytes of data specified by table */
-    uint16 DwellPktOffset[MD_INTERFACE_NUM_DWELL_TABLES];    /**< \brief Current write offset within dwell pkt data region */
-    uint16 DwellTblEntry[MD_INTERFACE_NUM_DWELL_TABLES];     /**< \brief Next dwell table entry to be processed  */
+    uint16
+        DwellPktOffset[MD_INTERFACE_NUM_DWELL_TABLES]; /**< \brief Current write offset within dwell pkt data region */
+    uint16 DwellTblEntry[MD_INTERFACE_NUM_DWELL_TABLES]; /**< \brief Next dwell table entry to be processed  */
 
     uint16 Countdown[MD_INTERFACE_NUM_DWELL_TABLES]; /**< \brief Current value of countdown timer  */
 } MD_HkTlm_Payload_t;

@@ -41,11 +41,10 @@
  */
 typedef struct
 {
-    cpuaddr Offset;               /**< \brief Optional offset that is used as the
-                                     absolute address if the SymName string is NUL */
-    char SymName[CFE_MISSION_MAX_PATH_LEN]; /**< \brief Symbol name string  */
+    cpuaddr Offset;                            /**< \brief Optional offset that is used as the
+                                                  absolute address if the SymName string is NUL */
+    char    SymName[CFE_MISSION_MAX_PATH_LEN]; /**< \brief Symbol name string  */
 } MD_SymAddr_t;
-
 
 /**
  *  \brief  MD enum used for representing values for enable state
@@ -55,6 +54,5 @@ typedef enum
     MD_Dwell_States_DISABLED, /**< \brief MD Dwell Stream Disabled */
     MD_Dwell_States_ENABLED   /**< \brief MD Dwell Stream Enabled */
 } MD_Dwell_States;
-
 
 #endif /* DEFAULT_MD_EXTERN_TYPEDEFS_H */

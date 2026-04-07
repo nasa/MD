@@ -16,7 +16,7 @@
  * limitations under the License.
  ************************************************************************/
 
- #include "md_app.h"
+#include "md_app.h"
 
 /* Global data only */
 MD_AppData_t MD_AppData;

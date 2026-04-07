@@ -93,8 +93,8 @@ char *stub_fgets(char *s, int n, stub_FILE *stream)
 stub_FILE *stub_fopen(const char *filename, const char *modes)
 {
     int32            Status;
-    stub_FILE *      retval;
-    static stub_FILE FOPEN_FP = {0};
+    stub_FILE       *retval;
+    static stub_FILE FOPEN_FP = { 0 };
 
     Status = UT_DEFAULT_IMPL(stub_fopen);
 
@@ -202,7 +202,7 @@ int stub_fprintf(stub_FILE *fp, const char *format, ...)
     return UT_DEFAULT_IMPL(stub_fprintf);
 }
 
-static stub_FILE LOCAL_FP[3] = {{10}, {11}, {12}};
+static stub_FILE LOCAL_FP[3] = { { 10 }, { 11 }, { 12 } };
 
 stub_FILE *stub_stdin  = &LOCAL_FP[0];
 stub_FILE *stub_stdout = &LOCAL_FP[1];

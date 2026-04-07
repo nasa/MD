@@ -16,7 +16,7 @@
  * limitations under the License.
  ************************************************************************/
 
- /**
+/**
  * @file
  *   Specification for MD dispatch functions
  */
@@ -27,26 +27,39 @@
 #include "cfe.h"
 
 /**
- * \brief Process message received on MD command pipe
+ * \brief Verify command message length
  *
- * \param[in] BufPtr Pointer to Software Bus message buffer
+ *  \par Description
+ *       This routine will check if the actual length of a software bus
+ *       command message matches the expected length and send an
+ *       error event message if a mismatch occurs
+ *
+ *  \par Assumptions, External Events, and Notes:
+ *       None
+ *
+ *  \param [in]   MsgPtr           Pointer to message
+ *  \param [in]   ExpectedLength   The expected length of the message
+ *                                 based upon the command code
+ *
+ *  \return Boolean length validation status
+ *  \retval true  Length matches expected
+ *  \retval false Length does not match expected
  */
-void MD_ProcessCommandPacket(const CFE_SB_Buffer_t *BufPtr);
+bool MD_VerifyCmdLength(const CFE_MSG_Message_t *MsgPtr, size_t ExpectedLength);
 
 /**
- * \brief Process MD ground commands
- *
- * \param[in] BufPtr Pointer to Software Bus message buffer
+ * \brief Processes a single software bus command pipe message. Checks
+ *        the message and command IDs and calls the appropriate routine
+ *        to handle the command.
+ * \param[in] BufPtr Pointer to Software Bus buffer
  */
-void MD_ExecRequest(const CFE_SB_Buffer_t *BufPtr);
+void MD_ProcessGroundCommand(const CFE_SB_Buffer_t *BufPtr);
 
 /**
- * \brief Search command handler table for matching command code
- *
- * \param[in] CommandCode Command code to search for
- *
- * \return Index into command handler table, or MD_BAD_CMD_CODE if not found
+ * \brief Route a message/packet to the command processing function or to
+ *        the housekeeping request function
+ * \param[in] BufPtr SB buffer pointer to be routed
  */
-int16 MD_SearchCmdHndlrTbl(CFE_MSG_FcnCode_t CommandCode);
+void MD_TaskPipe(const CFE_SB_Buffer_t *BufPtr);
 
 #endif /* MD_DISPATCH_H */
