@@ -60,8 +60,8 @@ void MD_CopyUpdatedTbl(MD_DwellTableLoad_t *MD_LoadTablePtr, uint8 TblIndex)
  * Generated stub function for MD_ReadDwellTable()
  * ----------------------------------------------------
  */
-CFE_Status_t MD_ReadDwellTable(const MD_DwellTableLoad_t *TblPtr, uint16 *ActiveAddrCountPtr, uint16 *SizePtr,
-                               uint32 *RatePtr)
+CFE_Status_t
+MD_ReadDwellTable(const MD_DwellTableLoad_t *TblPtr, uint16 *ActiveAddrCountPtr, uint16 *SizePtr, uint32 *RatePtr)
 {
     UT_GenStub_SetupReturnBuffer(MD_ReadDwellTable, CFE_Status_t);
 
@@ -96,7 +96,10 @@ int32 MD_TableValidationFunc(void *TblPtr)
  * Generated stub function for MD_UpdateTableDwellEntry()
  * ----------------------------------------------------
  */
-CFE_Status_t MD_UpdateTableDwellEntry(uint16 TableIndex, uint16 EntryIndex, uint16 NewLength, uint16 NewDelay,
+CFE_Status_t MD_UpdateTableDwellEntry(uint16       TableIndex,
+                                      uint16       EntryIndex,
+                                      uint16       NewLength,
+                                      uint16       NewDelay,
                                       MD_SymAddr_t NewDwellAddress)
 {
     UT_GenStub_SetupReturnBuffer(MD_UpdateTableDwellEntry, CFE_Status_t);

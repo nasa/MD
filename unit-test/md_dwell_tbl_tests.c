@@ -53,7 +53,8 @@ void MD_TableValidationFunc_Test_InvalidEnableFlag(void)
 
     memset(&Table, 0, sizeof(Table));
 
-    snprintf(ExpectedEventString, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH,
+    snprintf(ExpectedEventString,
+             CFE_MISSION_EVS_MAX_MESSAGE_LENGTH,
              "Dwell Table rejected because value of enable flag (%%d) is invalid");
 
     Table.Enabled = 99;
@@ -73,7 +74,8 @@ void MD_TableValidationFunc_Test_InvalidEnableFlag(void)
 
     call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
 
-    UtAssert_True(call_count_CFE_EVS_SendEvent == 1, "CFE_EVS_SendEvent was called %u time(s), expected 1",
+    UtAssert_True(call_count_CFE_EVS_SendEvent == 1,
+                  "CFE_EVS_SendEvent was called %u time(s), expected 1",
                   call_count_CFE_EVS_SendEvent);
 }
 
@@ -85,7 +87,8 @@ void MD_TableValidationFunc_Test_InvalidSignatureLength(void)
     int32               strCmpResult;
     char                ExpectedEventString[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
 
-    snprintf(ExpectedEventString, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH,
+    snprintf(ExpectedEventString,
+             CFE_MISSION_EVS_MAX_MESSAGE_LENGTH,
              "Dwell Table rejected because Signature length was invalid");
 
     Table.Enabled = MD_Dwell_States_ENABLED;
@@ -106,7 +109,8 @@ void MD_TableValidationFunc_Test_InvalidSignatureLength(void)
 
     call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
 
-    UtAssert_True(call_count_CFE_EVS_SendEvent == 1, "CFE_EVS_SendEvent was called %u time(s), expected 1",
+    UtAssert_True(call_count_CFE_EVS_SendEvent == 1,
+                  "CFE_EVS_SendEvent was called %u time(s), expected 1",
                   call_count_CFE_EVS_SendEvent);
 }
 #endif
@@ -120,7 +124,8 @@ void MD_TableValidationFunc_Test_ResolveError(void)
 
     memset(&Table, 0, sizeof(Table));
 
-    snprintf(ExpectedEventString, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH,
+    snprintf(ExpectedEventString,
+             CFE_MISSION_EVS_MAX_MESSAGE_LENGTH,
              "Dwell Table rejected because address (sym='%%s'/offset=0x%%08X) in entry #%%d couldn't be resolved");
 
     Table.Enabled = MD_Dwell_States_ENABLED;
@@ -152,7 +157,8 @@ void MD_TableValidationFunc_Test_ResolveError(void)
     /* Generates 2 message we don't care about */
     call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
 
-    UtAssert_True(call_count_CFE_EVS_SendEvent == 3, "CFE_EVS_SendEvent was called %u time(s), expected 3",
+    UtAssert_True(call_count_CFE_EVS_SendEvent == 3,
+                  "CFE_EVS_SendEvent was called %u time(s), expected 3",
                   call_count_CFE_EVS_SendEvent);
 }
 
@@ -165,7 +171,8 @@ void MD_TableValidationFunc_Test_InvalidAddress(void)
 
     memset(&Table, 0, sizeof(Table));
 
-    snprintf(ExpectedEventString, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH,
+    snprintf(ExpectedEventString,
+             CFE_MISSION_EVS_MAX_MESSAGE_LENGTH,
              "Dwell Table rejected because address (sym='%%s'/offset=0x%%08X) in entry #%%d was out of range");
 
     Table.Enabled = MD_Dwell_States_ENABLED;
@@ -204,7 +211,8 @@ void MD_TableValidationFunc_Test_InvalidAddress(void)
     /* Generates 1 message we don't care about */
     call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
 
-    UtAssert_True(call_count_CFE_EVS_SendEvent == 3, "CFE_EVS_SendEvent was called %u time(s), expected 3",
+    UtAssert_True(call_count_CFE_EVS_SendEvent == 3,
+                  "CFE_EVS_SendEvent was called %u time(s), expected 3",
                   call_count_CFE_EVS_SendEvent);
 }
 
@@ -215,7 +223,8 @@ void MD_TableValidationFunc_Test_NullPtr(void)
     int32               strCmpResult;
     char                ExpectedEventString[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
 
-    snprintf(ExpectedEventString, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH,
+    snprintf(ExpectedEventString,
+             CFE_MISSION_EVS_MAX_MESSAGE_LENGTH,
              "Dwell Table rejected because of null table pointer");
 
     Table.Enabled = MD_Dwell_States_ENABLED;
@@ -244,7 +253,8 @@ void MD_TableValidationFunc_Test_NullPtr(void)
     /* Generates 1 message we don't care about */
     call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
 
-    UtAssert_True(call_count_CFE_EVS_SendEvent == 1, "CFE_EVS_SendEvent was called %u time(s), expected 1",
+    UtAssert_True(call_count_CFE_EVS_SendEvent == 1,
+                  "CFE_EVS_SendEvent was called %u time(s), expected 1",
                   call_count_CFE_EVS_SendEvent);
 }
 
@@ -257,7 +267,8 @@ void MD_TableValidationFunc_Test_InvalidLength(void)
 
     memset(&Table, 0, sizeof(Table));
 
-    snprintf(ExpectedEventString, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH,
+    snprintf(ExpectedEventString,
+             CFE_MISSION_EVS_MAX_MESSAGE_LENGTH,
              "Dwell Table rejected because length (%%d) in entry #%%d was invalid");
 
     Table.Enabled = MD_Dwell_States_ENABLED;
@@ -291,7 +302,8 @@ void MD_TableValidationFunc_Test_InvalidLength(void)
     /* Generates 2 messages we don't care about */
     call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
 
-    UtAssert_True(call_count_CFE_EVS_SendEvent == 3, "CFE_EVS_SendEvent was called %u time(s), expected 3",
+    UtAssert_True(call_count_CFE_EVS_SendEvent == 3,
+                  "CFE_EVS_SendEvent was called %u time(s), expected 3",
                   call_count_CFE_EVS_SendEvent);
 }
 
@@ -304,7 +316,8 @@ void MD_TableValidationFunc_Test_NotAligned(void)
 
     memset(&Table, 0, sizeof(Table));
 
-    snprintf(ExpectedEventString, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH,
+    snprintf(ExpectedEventString,
+             CFE_MISSION_EVS_MAX_MESSAGE_LENGTH,
              "Dwell Table rejected because address (sym='%%s'/offset=0x%%08X) in entry #%%d not properly aligned for "
              "%%d-byte dwell");
 
@@ -340,7 +353,8 @@ void MD_TableValidationFunc_Test_NotAligned(void)
     /* Generates 2 messages we don't care about */
     call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
 
-    UtAssert_True(call_count_CFE_EVS_SendEvent == 3, "CFE_EVS_SendEvent was called %u time(s), expected 3",
+    UtAssert_True(call_count_CFE_EVS_SendEvent == 3,
+                  "CFE_EVS_SendEvent was called %u time(s), expected 3",
                   call_count_CFE_EVS_SendEvent);
 }
 
@@ -352,7 +366,8 @@ void MD_TableValidationFunc_Test_ZeroRate(void)
     int32               strCmpResult;
     char                ExpectedEventString[2][CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
 
-    snprintf(ExpectedEventString[1], CFE_MISSION_EVS_MAX_MESSAGE_LENGTH,
+    snprintf(ExpectedEventString[1],
+             CFE_MISSION_EVS_MAX_MESSAGE_LENGTH,
              "Dwell Table is enabled but no processing will occur for table being loaded (rate is zero)");
 
     Table.Enabled = MD_Dwell_States_ENABLED;
@@ -392,7 +407,8 @@ void MD_TableValidationFunc_Test_ZeroRate(void)
     /* Generates 1 message we don't care about */
     call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
 
-    UtAssert_True(call_count_CFE_EVS_SendEvent == 2, "CFE_EVS_SendEvent was called %u time(s), expected 2",
+    UtAssert_True(call_count_CFE_EVS_SendEvent == 2,
+                  "CFE_EVS_SendEvent was called %u time(s), expected 2",
                   call_count_CFE_EVS_SendEvent);
 }
 
@@ -431,7 +447,8 @@ void MD_TableValidationFunc_Test_SuccessStreamDisabled(void)
     /* Generates 1 message we don't care about here */
     call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
 
-    UtAssert_True(call_count_CFE_EVS_SendEvent == 1, "CFE_EVS_SendEvent was called %u time(s), expected 1",
+    UtAssert_True(call_count_CFE_EVS_SendEvent == 1,
+                  "CFE_EVS_SendEvent was called %u time(s), expected 1",
                   call_count_CFE_EVS_SendEvent);
 }
 
@@ -470,7 +487,8 @@ void MD_TableValidationFunc_Test_Success(void)
     /* Generates 1 message we don't care about here */
     call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
 
-    UtAssert_True(call_count_CFE_EVS_SendEvent == 1, "CFE_EVS_SendEvent was called %u time(s), expected 1",
+    UtAssert_True(call_count_CFE_EVS_SendEvent == 1,
+                  "CFE_EVS_SendEvent was called %u time(s), expected 1",
                   call_count_CFE_EVS_SendEvent);
 }
 
@@ -501,7 +519,8 @@ void MD_ReadDwellTable_Test(void)
 
     call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
 
-    UtAssert_True(call_count_CFE_EVS_SendEvent == 0, "CFE_EVS_SendEvent was called %u time(s), expected 0",
+    UtAssert_True(call_count_CFE_EVS_SendEvent == 0,
+                  "CFE_EVS_SendEvent was called %u time(s), expected 0",
                   call_count_CFE_EVS_SendEvent);
 }
 
@@ -515,7 +534,8 @@ void MD_CheckTableEntries_Test_Error(void)
 
     memset(&Table, 0, sizeof(Table));
 
-    snprintf(ExpectedEventString, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH,
+    snprintf(ExpectedEventString,
+             CFE_MISSION_EVS_MAX_MESSAGE_LENGTH,
              "MD Dwell Tbl verify results: good = %%d, bad = %%d, unused = %%d");
 
     Table.Entry[0].Length              = 2;
@@ -548,7 +568,8 @@ void MD_CheckTableEntries_Test_Error(void)
 
     call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
 
-    UtAssert_True(call_count_CFE_EVS_SendEvent == 2, "CFE_EVS_SendEvent was called %u time(s), expected 2",
+    UtAssert_True(call_count_CFE_EVS_SendEvent == 2,
+                  "CFE_EVS_SendEvent was called %u time(s), expected 2",
                   call_count_CFE_EVS_SendEvent);
 }
 
@@ -562,7 +583,8 @@ void MD_CheckTableEntries_Test_MultiError(void)
 
     memset(&Table, 0, sizeof(Table));
 
-    snprintf(ExpectedEventString, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH,
+    snprintf(ExpectedEventString,
+             CFE_MISSION_EVS_MAX_MESSAGE_LENGTH,
              "MD Dwell Tbl verify results: good = %%d, bad = %%d, unused = %%d");
 
     Table.Entry[0].Length = 5;
@@ -587,7 +609,8 @@ void MD_CheckTableEntries_Test_MultiError(void)
 
     call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
 
-    UtAssert_True(call_count_CFE_EVS_SendEvent == 2, "CFE_EVS_SendEvent was called %u time(s), expected 2",
+    UtAssert_True(call_count_CFE_EVS_SendEvent == 2,
+                  "CFE_EVS_SendEvent was called %u time(s), expected 2",
                   call_count_CFE_EVS_SendEvent);
 }
 
@@ -600,7 +623,8 @@ void MD_CheckTableEntries_Test_Success(void)
     int32               strCmpResult;
     char                ExpectedEventString[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
 
-    snprintf(ExpectedEventString, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH,
+    snprintf(ExpectedEventString,
+             CFE_MISSION_EVS_MAX_MESSAGE_LENGTH,
              "MD Dwell Tbl verify results: good = %%d, bad = %%d, unused = %%d");
 
     for (i = 0; i < MD_INTERFACE_DWELL_TABLE_SIZE; i++)
@@ -637,7 +661,8 @@ void MD_CheckTableEntries_Test_Success(void)
 
     call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
 
-    UtAssert_True(call_count_CFE_EVS_SendEvent == 1, "CFE_EVS_SendEvent was called %u time(s), expected 1",
+    UtAssert_True(call_count_CFE_EVS_SendEvent == 1,
+                  "CFE_EVS_SendEvent was called %u time(s), expected 1",
                   call_count_CFE_EVS_SendEvent);
 }
 
@@ -656,7 +681,8 @@ void MD_ValidTableEntry_Test_SuccessDwellLengthZero(void)
 
     call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
 
-    UtAssert_True(call_count_CFE_EVS_SendEvent == 0, "CFE_EVS_SendEvent was called %u time(s), expected 0",
+    UtAssert_True(call_count_CFE_EVS_SendEvent == 0,
+                  "CFE_EVS_SendEvent was called %u time(s), expected 0",
                   call_count_CFE_EVS_SendEvent);
 }
 
@@ -678,7 +704,8 @@ void MD_ValidTableEntry_Test_ResolveError(void)
 
     call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
 
-    UtAssert_True(call_count_CFE_EVS_SendEvent == 0, "CFE_EVS_SendEvent was called %u time(s), expected 0",
+    UtAssert_True(call_count_CFE_EVS_SendEvent == 0,
+                  "CFE_EVS_SendEvent was called %u time(s), expected 0",
                   call_count_CFE_EVS_SendEvent);
 }
 
@@ -701,7 +728,8 @@ void MD_ValidTableEntry_Test_InvalidAddress(void)
 
     call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
 
-    UtAssert_True(call_count_CFE_EVS_SendEvent == 0, "CFE_EVS_SendEvent was called %u time(s), expected 0",
+    UtAssert_True(call_count_CFE_EVS_SendEvent == 0,
+                  "CFE_EVS_SendEvent was called %u time(s), expected 0",
                   call_count_CFE_EVS_SendEvent);
 }
 
@@ -724,7 +752,8 @@ void MD_ValidTableEntry_Test_InvalidLength(void)
 
     call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
 
-    UtAssert_True(call_count_CFE_EVS_SendEvent == 0, "CFE_EVS_SendEvent was called %u time(s), expected 0",
+    UtAssert_True(call_count_CFE_EVS_SendEvent == 0,
+                  "CFE_EVS_SendEvent was called %u time(s), expected 0",
                   call_count_CFE_EVS_SendEvent);
 }
 
@@ -748,7 +777,8 @@ void MD_ValidTableEntry_Test_NotAligned16DwellLength4(void)
 
     call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
 
-    UtAssert_True(call_count_CFE_EVS_SendEvent == 0, "CFE_EVS_SendEvent was called %u time(s), expected 0",
+    UtAssert_True(call_count_CFE_EVS_SendEvent == 0,
+                  "CFE_EVS_SendEvent was called %u time(s), expected 0",
                   call_count_CFE_EVS_SendEvent);
 }
 
@@ -774,7 +804,8 @@ void MD_ValidTableEntry_Test_Aligned32(void)
 
     call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
 
-    UtAssert_True(call_count_CFE_EVS_SendEvent == 0, "CFE_EVS_SendEvent was called %u time(s), expected 0",
+    UtAssert_True(call_count_CFE_EVS_SendEvent == 0,
+                  "CFE_EVS_SendEvent was called %u time(s), expected 0",
                   call_count_CFE_EVS_SendEvent);
 }
 
@@ -800,7 +831,8 @@ void MD_ValidTableEntry_Test_NotAligned32(void)
 
     call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
 
-    UtAssert_True(call_count_CFE_EVS_SendEvent == 0, "CFE_EVS_SendEvent was called %u time(s), expected 0",
+    UtAssert_True(call_count_CFE_EVS_SendEvent == 0,
+                  "CFE_EVS_SendEvent was called %u time(s), expected 0",
                   call_count_CFE_EVS_SendEvent);
 }
 
@@ -825,7 +857,8 @@ void MD_ValidTableEntry_Test_NotAligned16DwellLength2(void)
 
     call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
 
-    UtAssert_True(call_count_CFE_EVS_SendEvent == 0, "CFE_EVS_SendEvent was called %u time(s), expected 0",
+    UtAssert_True(call_count_CFE_EVS_SendEvent == 0,
+                  "CFE_EVS_SendEvent was called %u time(s), expected 0",
                   call_count_CFE_EVS_SendEvent);
 }
 
@@ -850,7 +883,8 @@ void MD_ValidTableEntry_Test_ElseSuccess(void)
 
     call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
 
-    UtAssert_True(call_count_CFE_EVS_SendEvent == 0, "CFE_EVS_SendEvent was called %u time(s), expected 0",
+    UtAssert_True(call_count_CFE_EVS_SendEvent == 0,
+                  "CFE_EVS_SendEvent was called %u time(s), expected 0",
                   call_count_CFE_EVS_SendEvent);
 }
 
@@ -874,7 +908,8 @@ void MD_CopyUpdatedTbl_Test(void)
 #if MD_INTERFACE_SIGNATURE_OPTION == 1
     UtAssert_True(
         strncmp(MD_AppData.MD_DwellTables[TblIndex].Signature, "signature", MD_INTERFACE_SIGNATURE_FIELD_LENGTH) == 0,
-        "strncmp(MD_AppData.MD_DwellTables[TblIndex].Signature, 'signature', MD_INTERFACE_SIGNATURE_FIELD_LENGTH) == 0");
+        "strncmp(MD_AppData.MD_DwellTables[TblIndex].Signature, 'signature', MD_INTERFACE_SIGNATURE_FIELD_LENGTH) == "
+        "0");
 
     UtAssert_True(MD_AppData.MD_DwellTables[TblIndex].Signature[MD_INTERFACE_SIGNATURE_FIELD_LENGTH - 1] == '\0',
                   "MD_AppData.MD_DwellTables[TblIndex].Signature[MD_INTERFACE_SIGNATURE_FIELD_LENGTH - 1] == ''");
@@ -882,7 +917,8 @@ void MD_CopyUpdatedTbl_Test(void)
 
     call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
 
-    UtAssert_True(call_count_CFE_EVS_SendEvent == 0, "CFE_EVS_SendEvent was called %u time(s), expected 0",
+    UtAssert_True(call_count_CFE_EVS_SendEvent == 0,
+                  "CFE_EVS_SendEvent was called %u time(s), expected 0",
                   call_count_CFE_EVS_SendEvent);
 }
 
@@ -908,7 +944,8 @@ void MD_UpdateTableEnabledField_Test_DwellStreamEnabled(void)
 
     call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
 
-    UtAssert_True(call_count_CFE_EVS_SendEvent == 0, "CFE_EVS_SendEvent was called %u time(s), expected 0",
+    UtAssert_True(call_count_CFE_EVS_SendEvent == 0,
+                  "CFE_EVS_SendEvent was called %u time(s), expected 0",
                   call_count_CFE_EVS_SendEvent);
 }
 
@@ -932,7 +969,8 @@ void MD_UpdateTableEnabledField_Test_DwellStreamDisabled(void)
 
     call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
 
-    UtAssert_True(call_count_CFE_EVS_SendEvent == 0, "CFE_EVS_SendEvent was called %u time(s), expected 0",
+    UtAssert_True(call_count_CFE_EVS_SendEvent == 0,
+                  "CFE_EVS_SendEvent was called %u time(s), expected 0",
                   call_count_CFE_EVS_SendEvent);
 }
 
@@ -943,7 +981,8 @@ void MD_UpdateTableEnabledField_Test_Error(void)
     int32  strCmpResult;
     char   ExpectedEventString[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
 
-    snprintf(ExpectedEventString, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH,
+    snprintf(ExpectedEventString,
+             CFE_MISSION_EVS_MAX_MESSAGE_LENGTH,
              "MD_UpdateTableEnabledField, TableIndex %%d: CFE_TBL_GetAddress Returned 0x%%08x");
 
     /* Set to make CFE_TBL_GetAddress != CFE_SUCCESS */
@@ -962,7 +1001,8 @@ void MD_UpdateTableEnabledField_Test_Error(void)
 
     call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
 
-    UtAssert_True(call_count_CFE_EVS_SendEvent == 1, "CFE_EVS_SendEvent was called %u time(s), expected 1",
+    UtAssert_True(call_count_CFE_EVS_SendEvent == 1,
+                  "CFE_EVS_SendEvent was called %u time(s), expected 1",
                   call_count_CFE_EVS_SendEvent);
 }
 
@@ -997,7 +1037,8 @@ void MD_UpdateTableDwellEntry_Test(void)
 
     call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
 
-    UtAssert_True(call_count_CFE_EVS_SendEvent == 0, "CFE_EVS_SendEvent was called %u time(s), expected 0",
+    UtAssert_True(call_count_CFE_EVS_SendEvent == 0,
+                  "CFE_EVS_SendEvent was called %u time(s), expected 0",
                   call_count_CFE_EVS_SendEvent);
 }
 
@@ -1034,7 +1075,8 @@ void MD_UpdateTableDwellEntry_Test_Updated(void)
 
     call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
 
-    UtAssert_True(call_count_CFE_EVS_SendEvent == 0, "CFE_EVS_SendEvent was called %u time(s), expected 0",
+    UtAssert_True(call_count_CFE_EVS_SendEvent == 0,
+                  "CFE_EVS_SendEvent was called %u time(s), expected 0",
                   call_count_CFE_EVS_SendEvent);
 }
 
@@ -1048,7 +1090,8 @@ void MD_UpdateTableDwellEntry_Test_Error(void)
     int32        strCmpResult;
     char         ExpectedEventString[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
 
-    snprintf(ExpectedEventString, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH,
+    snprintf(ExpectedEventString,
+             CFE_MISSION_EVS_MAX_MESSAGE_LENGTH,
              "MD_UpdateTableDwellEntry, TableIndex %%d: CFE_TBL_GetAddress Returned 0x%%08x");
 
     NewDwellAddress.Offset = 1;
@@ -1071,14 +1114,15 @@ void MD_UpdateTableDwellEntry_Test_Error(void)
 
     call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
 
-    UtAssert_True(call_count_CFE_EVS_SendEvent == 1, "CFE_EVS_SendEvent was called %u time(s), expected 1",
+    UtAssert_True(call_count_CFE_EVS_SendEvent == 1,
+                  "CFE_EVS_SendEvent was called %u time(s), expected 1",
                   call_count_CFE_EVS_SendEvent);
 }
 
 #if MD_INTERFACE_SIGNATURE_OPTION == 1
 void MD_UpdateTableSignature_Test(void)
 {
-    uint16 TableIndex                              = 0;
+    uint16 TableIndex                                        = 0;
     char   newsignature[MD_INTERFACE_SIGNATURE_FIELD_LENGTH] = "newsignature";
 
     MD_DwellTableLoad_t  LoadTbl;
@@ -1095,13 +1139,14 @@ void MD_UpdateTableSignature_Test(void)
 
     call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
 
-    UtAssert_True(call_count_CFE_EVS_SendEvent == 0, "CFE_EVS_SendEvent was called %u time(s), expected 0",
+    UtAssert_True(call_count_CFE_EVS_SendEvent == 0,
+                  "CFE_EVS_SendEvent was called %u time(s), expected 0",
                   call_count_CFE_EVS_SendEvent);
 }
 
 void MD_UpdateTableSignature_Test_Updated(void)
 {
-    uint16 TableIndex                              = 0;
+    uint16 TableIndex                                        = 0;
     char   newsignature[MD_INTERFACE_SIGNATURE_FIELD_LENGTH] = "newsignature";
 
     /* Set MD_LoadTablePtr = &MD_DWELL_TBL_TEST_GlobalLoadTable */
@@ -1120,18 +1165,20 @@ void MD_UpdateTableSignature_Test_Updated(void)
 
     call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
 
-    UtAssert_True(call_count_CFE_EVS_SendEvent == 0, "CFE_EVS_SendEvent was called %u time(s), expected 0",
+    UtAssert_True(call_count_CFE_EVS_SendEvent == 0,
+                  "CFE_EVS_SendEvent was called %u time(s), expected 0",
                   call_count_CFE_EVS_SendEvent);
 }
 
 void MD_UpdateTableSignature_Test_Error(void)
 {
-    uint16 TableIndex                              = 0;
+    uint16 TableIndex                                        = 0;
     char   newsignature[MD_INTERFACE_SIGNATURE_FIELD_LENGTH] = "newsignature";
     int32  strCmpResult;
     char   ExpectedEventString[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
 
-    snprintf(ExpectedEventString, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH,
+    snprintf(ExpectedEventString,
+             CFE_MISSION_EVS_MAX_MESSAGE_LENGTH,
              "MD_UpdateTableSignature, TableIndex %%d: CFE_TBL_GetAddress Returned 0x%%08x");
 
     /* Set to make CFE_TBL_GetAddress != CFE_SUCCESS */
@@ -1150,7 +1197,8 @@ void MD_UpdateTableSignature_Test_Error(void)
 
     call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
 
-    UtAssert_True(call_count_CFE_EVS_SendEvent == 1, "CFE_EVS_SendEvent was called %u time(s), expected 1",
+    UtAssert_True(call_count_CFE_EVS_SendEvent == 1,
+                  "CFE_EVS_SendEvent was called %u time(s), expected 1",
                   call_count_CFE_EVS_SendEvent);
 }
 
@@ -1158,74 +1206,126 @@ void MD_UpdateTableSignature_Test_Error(void)
 
 void UtTest_Setup(void)
 {
-    UtTest_Add(MD_TableValidationFunc_Test_InvalidEnableFlag, MD_Test_Setup, MD_Test_TearDown,
+    UtTest_Add(MD_TableValidationFunc_Test_InvalidEnableFlag,
+               MD_Test_Setup,
+               MD_Test_TearDown,
                "MD_TableValidationFunc_Test_InvalidEnableFlag");
 #if MD_INTERFACE_SIGNATURE_OPTION == 1
-    UtTest_Add(MD_TableValidationFunc_Test_InvalidSignatureLength, MD_Test_Setup, MD_Test_TearDown,
+    UtTest_Add(MD_TableValidationFunc_Test_InvalidSignatureLength,
+               MD_Test_Setup,
+               MD_Test_TearDown,
                "MD_TableValidationFunc_Test_InvalidSignatureLength");
 #endif
 
-    UtTest_Add(MD_TableValidationFunc_Test_ResolveError, MD_Test_Setup, MD_Test_TearDown,
+    UtTest_Add(MD_TableValidationFunc_Test_ResolveError,
+               MD_Test_Setup,
+               MD_Test_TearDown,
                "MD_TableValidationFunc_Test_ResolveError");
-    UtTest_Add(MD_TableValidationFunc_Test_InvalidAddress, MD_Test_Setup, MD_Test_TearDown,
+    UtTest_Add(MD_TableValidationFunc_Test_InvalidAddress,
+               MD_Test_Setup,
+               MD_Test_TearDown,
                "MD_TableValidationFunc_Test_InvalidAddress");
-    UtTest_Add(MD_TableValidationFunc_Test_NullPtr, MD_Test_Setup, MD_Test_TearDown,
+    UtTest_Add(MD_TableValidationFunc_Test_NullPtr,
+               MD_Test_Setup,
+               MD_Test_TearDown,
                "MD_TableValidationFunc_Test_NullPtr");
-    UtTest_Add(MD_TableValidationFunc_Test_InvalidLength, MD_Test_Setup, MD_Test_TearDown,
+    UtTest_Add(MD_TableValidationFunc_Test_InvalidLength,
+               MD_Test_Setup,
+               MD_Test_TearDown,
                "MD_TableValidationFunc_Test_InvalidLength");
-    UtTest_Add(MD_TableValidationFunc_Test_NotAligned, MD_Test_Setup, MD_Test_TearDown,
+    UtTest_Add(MD_TableValidationFunc_Test_NotAligned,
+               MD_Test_Setup,
+               MD_Test_TearDown,
                "MD_TableValidationFunc_Test_NotAligned");
-    UtTest_Add(MD_TableValidationFunc_Test_ZeroRate, MD_Test_Setup, MD_Test_TearDown,
+    UtTest_Add(MD_TableValidationFunc_Test_ZeroRate,
+               MD_Test_Setup,
+               MD_Test_TearDown,
                "MD_TableValidationFunc_Test_ZeroRate");
-    UtTest_Add(MD_TableValidationFunc_Test_SuccessStreamDisabled, MD_Test_Setup, MD_Test_TearDown,
+    UtTest_Add(MD_TableValidationFunc_Test_SuccessStreamDisabled,
+               MD_Test_Setup,
+               MD_Test_TearDown,
                "MD_TableValidationFunc_Test_SuccessStreamDisabled");
-    UtTest_Add(MD_TableValidationFunc_Test_Success, MD_Test_Setup, MD_Test_TearDown,
+    UtTest_Add(MD_TableValidationFunc_Test_Success,
+               MD_Test_Setup,
+               MD_Test_TearDown,
                "MD_TableValidationFunc_Test_Success");
     UtTest_Add(MD_ReadDwellTable_Test, MD_Test_Setup, MD_Test_TearDown, "MD_ReadDwellTable_Test");
 
     UtTest_Add(MD_CheckTableEntries_Test_Error, MD_Test_Setup, MD_Test_TearDown, "MD_CheckTableEntries_Test_Error");
-    UtTest_Add(MD_CheckTableEntries_Test_MultiError, MD_Test_Setup, MD_Test_TearDown,
+    UtTest_Add(MD_CheckTableEntries_Test_MultiError,
+               MD_Test_Setup,
+               MD_Test_TearDown,
                "MD_CheckTableEntries_Test_MultiError");
     UtTest_Add(MD_CheckTableEntries_Test_Success, MD_Test_Setup, MD_Test_TearDown, "MD_CheckTableEntries_Test_Success");
 
-    UtTest_Add(MD_ValidTableEntry_Test_SuccessDwellLengthZero, MD_Test_Setup, MD_Test_TearDown,
+    UtTest_Add(MD_ValidTableEntry_Test_SuccessDwellLengthZero,
+               MD_Test_Setup,
+               MD_Test_TearDown,
                "MD_ValidTableEntry_Test_SuccessDwellLengthZero");
-    UtTest_Add(MD_ValidTableEntry_Test_ResolveError, MD_Test_Setup, MD_Test_TearDown,
+    UtTest_Add(MD_ValidTableEntry_Test_ResolveError,
+               MD_Test_Setup,
+               MD_Test_TearDown,
                "MD_ValidTableEntry_Test_ResolveError");
-    UtTest_Add(MD_ValidTableEntry_Test_InvalidAddress, MD_Test_Setup, MD_Test_TearDown,
+    UtTest_Add(MD_ValidTableEntry_Test_InvalidAddress,
+               MD_Test_Setup,
+               MD_Test_TearDown,
                "MD_ValidTableEntry_Test_InvalidAddress");
-    UtTest_Add(MD_ValidTableEntry_Test_InvalidLength, MD_Test_Setup, MD_Test_TearDown,
+    UtTest_Add(MD_ValidTableEntry_Test_InvalidLength,
+               MD_Test_Setup,
+               MD_Test_TearDown,
                "MD_ValidTableEntry_Test_InvalidLength");
-    UtTest_Add(MD_ValidTableEntry_Test_NotAligned16DwellLength4, MD_Test_Setup, MD_Test_TearDown,
+    UtTest_Add(MD_ValidTableEntry_Test_NotAligned16DwellLength4,
+               MD_Test_Setup,
+               MD_Test_TearDown,
                "MD_ValidTableEntry_Test_NotAligned16DwellLength4");
     UtTest_Add(MD_ValidTableEntry_Test_Aligned32, MD_Test_Setup, MD_Test_TearDown, "MD_ValidTableEntry_Test_Aligned32");
-    UtTest_Add(MD_ValidTableEntry_Test_NotAligned32, MD_Test_Setup, MD_Test_TearDown,
+    UtTest_Add(MD_ValidTableEntry_Test_NotAligned32,
+               MD_Test_Setup,
+               MD_Test_TearDown,
                "MD_ValidTableEntry_Test_NotAligned32");
-    UtTest_Add(MD_ValidTableEntry_Test_NotAligned16DwellLength2, MD_Test_Setup, MD_Test_TearDown,
+    UtTest_Add(MD_ValidTableEntry_Test_NotAligned16DwellLength2,
+               MD_Test_Setup,
+               MD_Test_TearDown,
                "MD_ValidTableEntry_Test_NotAligned16DwellLength2");
-    UtTest_Add(MD_ValidTableEntry_Test_ElseSuccess, MD_Test_Setup, MD_Test_TearDown,
+    UtTest_Add(MD_ValidTableEntry_Test_ElseSuccess,
+               MD_Test_Setup,
+               MD_Test_TearDown,
                "MD_ValidTableEntry_Test_ElseSuccess");
 
     UtTest_Add(MD_CopyUpdatedTbl_Test, MD_Test_Setup, MD_Test_TearDown, "MD_CopyUpdatedTbl_Test");
 
-    UtTest_Add(MD_UpdateTableEnabledField_Test_DwellStreamEnabled, MD_Test_Setup, MD_Test_TearDown,
+    UtTest_Add(MD_UpdateTableEnabledField_Test_DwellStreamEnabled,
+               MD_Test_Setup,
+               MD_Test_TearDown,
                "MD_UpdateTableEnabledField_Test_DwellStreamEnabled");
-    UtTest_Add(MD_UpdateTableEnabledField_Test_DwellStreamDisabled, MD_Test_Setup, MD_Test_TearDown,
+    UtTest_Add(MD_UpdateTableEnabledField_Test_DwellStreamDisabled,
+               MD_Test_Setup,
+               MD_Test_TearDown,
                "MD_UpdateTableEnabledField_Test_DwellStreamDisabled");
-    UtTest_Add(MD_UpdateTableEnabledField_Test_Error, MD_Test_Setup, MD_Test_TearDown,
+    UtTest_Add(MD_UpdateTableEnabledField_Test_Error,
+               MD_Test_Setup,
+               MD_Test_TearDown,
                "MD_UpdateTableEnabledField_Test_Error");
 
     UtTest_Add(MD_UpdateTableDwellEntry_Test, MD_Test_Setup, MD_Test_TearDown, "MD_UpdateTableDwellEntry_Test");
-    UtTest_Add(MD_UpdateTableDwellEntry_Test_Updated, MD_Test_Setup, MD_Test_TearDown,
+    UtTest_Add(MD_UpdateTableDwellEntry_Test_Updated,
+               MD_Test_Setup,
+               MD_Test_TearDown,
                "MD_UpdateTableDwellEntry_Test_Updated");
-    UtTest_Add(MD_UpdateTableDwellEntry_Test_Error, MD_Test_Setup, MD_Test_TearDown,
+    UtTest_Add(MD_UpdateTableDwellEntry_Test_Error,
+               MD_Test_Setup,
+               MD_Test_TearDown,
                "MD_UpdateTableDwellEntry_Test_Error");
 
 #if MD_INTERFACE_SIGNATURE_OPTION == 1
     UtTest_Add(MD_UpdateTableSignature_Test, MD_Test_Setup, MD_Test_TearDown, "MD_UpdateTableSignature_Test");
-    UtTest_Add(MD_UpdateTableSignature_Test_Updated, MD_Test_Setup, MD_Test_TearDown,
+    UtTest_Add(MD_UpdateTableSignature_Test_Updated,
+               MD_Test_Setup,
+               MD_Test_TearDown,
                "MD_UpdateTableSignature_Test_Updated");
-    UtTest_Add(MD_UpdateTableSignature_Test_Error, MD_Test_Setup, MD_Test_TearDown,
+    UtTest_Add(MD_UpdateTableSignature_Test_Error,
+               MD_Test_Setup,
+               MD_Test_TearDown,
                "MD_UpdateTableSignature_Test_Error");
 #endif
 }

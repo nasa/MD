@@ -52,7 +52,8 @@ void UT_Handler_CFE_EVS_SendEvent(void *UserObj, UT_EntryKey_t FuncKey, const UT
     if (CallCount > (sizeof(context_CFE_EVS_SendEvent) / sizeof(context_CFE_EVS_SendEvent[0])))
     {
         UtAssert_Failed("CFE_EVS_SendEvent UT depth %u exceeded: %u, increase UT_MAX_SENDEVENT_DEPTH",
-                        UT_MAX_SENDEVENT_DEPTH, CallCount);
+                        UT_MAX_SENDEVENT_DEPTH,
+                        CallCount);
     }
     else
     {
@@ -60,7 +61,8 @@ void UT_Handler_CFE_EVS_SendEvent(void *UserObj, UT_EntryKey_t FuncKey, const UT
         context_CFE_EVS_SendEvent[idx].EventID   = UT_Hook_GetArgValueByName(Context, "EventID", uint16);
         context_CFE_EVS_SendEvent[idx].EventType = UT_Hook_GetArgValueByName(Context, "EventType", uint16);
 
-        strncpy(context_CFE_EVS_SendEvent[idx].Spec, UT_Hook_GetArgValueByName(Context, "Spec", const char *),
+        strncpy(context_CFE_EVS_SendEvent[idx].Spec,
+                UT_Hook_GetArgValueByName(Context, "Spec", const char *),
                 CFE_MISSION_EVS_MAX_MESSAGE_LENGTH);
         context_CFE_EVS_SendEvent[idx].Spec[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH - 1] = '\0';
     }
@@ -68,7 +70,8 @@ void UT_Handler_CFE_EVS_SendEvent(void *UserObj, UT_EntryKey_t FuncKey, const UT
 
 void UT_Handler_CFE_ES_WriteToSysLog(void *UserObj, UT_EntryKey_t FuncKey, const UT_StubContext_t *Context, va_list va)
 {
-    strncpy(context_CFE_ES_WriteToSysLog.Spec, UT_Hook_GetArgValueByName(Context, "SpecStringPtr", const char *),
+    strncpy(context_CFE_ES_WriteToSysLog.Spec,
+            UT_Hook_GetArgValueByName(Context, "SpecStringPtr", const char *),
             CFE_MISSION_EVS_MAX_MESSAGE_LENGTH - 1);
     context_CFE_ES_WriteToSysLog.Spec[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH - 1] = '\0';
 }
@@ -76,6 +79,20 @@ void UT_Handler_CFE_ES_WriteToSysLog(void *UserObj, UT_EntryKey_t FuncKey, const
 /*
  * Function Definitions
  */
+
+void MD_Test_Verify_Event(uint8 IssuedOrder, uint16 EventId, uint16 EventType, const char *EventText)
+{
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[IssuedOrder].EventID, EventId);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[IssuedOrder].EventType, EventType);
+
+    UtAssert_StrnCmp(EventText,
+                     context_CFE_EVS_SendEvent[IssuedOrder].Spec,
+                     CFE_MISSION_EVS_MAX_MESSAGE_LENGTH,
+                     "Event string expected: '%s'\nEvent string received: '%s'",
+                     EventText,
+                     context_CFE_EVS_SendEvent[IssuedOrder].Spec);
+}
+
 void MD_Test_Setup(void)
 {
     /* initialize test environment to default state for every test */

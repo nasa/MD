@@ -46,18 +46,18 @@ void md_dispatch_tests_Teardown(void)
 **********************************************************************************
 */
 
-void Test_MD_ProcessCommandPacket(void)
+void Test_MD_TaskPipe(void)
 {
     /*
      * Test Case For:
-     * void MD_ProcessCommandPacket
+     * void MD_TaskPipe
      */
     CFE_SB_Buffer_t UtBuf;
 
     UT_SetDeferredRetcode(UT_KEY(CFE_EDSMSG_Dispatch), 1, CFE_SUCCESS);
 
     memset(&UtBuf, 0, sizeof(UtBuf));
-    UtAssert_VOIDCALL(MD_ProcessCommandPacket(&UtBuf));
+    UtAssert_VOIDCALL(MD_TaskPipe(&UtBuf));
 }
 
 /*
@@ -65,5 +65,5 @@ void Test_MD_ProcessCommandPacket(void)
  */
 void UtTest_Setup(void)
 {
-    UtTest_Add(Test_MD_ProcessCommandPacket, md_dispatch_tests_Setup, md_dispatch_tests_Teardown, "Test_MD_ProcessCommandPacket");
+    UtTest_Add(Test_MD_TaskPipe, md_dispatch_tests_Setup, md_dispatch_tests_Teardown, "Test_MD_TaskPipe");
 }

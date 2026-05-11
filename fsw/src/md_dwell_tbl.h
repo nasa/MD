@@ -122,7 +122,10 @@ CFE_Status_t MD_UpdateTableEnabledField(uint16 TableIndex, uint16 FieldValue);
  *  \return Execution status, see \ref CFEReturnCodes
  *  \retval #CFE_SUCCESS \copybrief CFE_SUCCESS
  */
-CFE_Status_t MD_UpdateTableDwellEntry(uint16 TableIndex, uint16 EntryIndex, uint16 NewLength, uint16 NewDelay,
+CFE_Status_t MD_UpdateTableDwellEntry(uint16       TableIndex,
+                                      uint16       EntryIndex,
+                                      uint16       NewLength,
+                                      uint16       NewDelay,
                                       MD_SymAddr_t NewDwellAddress);
 
 #if MD_INTERFACE_SIGNATURE_OPTION == 1
@@ -166,8 +169,8 @@ CFE_Status_t MD_UpdateTableSignature(uint16 TableIndex, const char NewSignature[
  *  \return Execution status, see \ref CFEReturnCodes
  *  \retval #CFE_SUCCESS \copybrief CFE_SUCCESS
  */
-CFE_Status_t MD_ReadDwellTable(const MD_DwellTableLoad_t *TblPtr, uint16 *ActiveAddrCountPtr, uint16 *SizePtr,
-                               uint32 *RatePtr);
+CFE_Status_t
+MD_ReadDwellTable(const MD_DwellTableLoad_t *TblPtr, uint16 *ActiveAddrCountPtr, uint16 *SizePtr, uint32 *RatePtr);
 
 /**
  * \brief Validate dwell table entry.
