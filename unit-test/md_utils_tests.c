@@ -498,6 +498,64 @@ void MD_ResolveSymAddr_Test(void)
     UtAssert_True(Result == false, "Result == false");
 }
 
+static void MD_Test_SymbolLookup(void *UserObj, UT_EntryKey_t FuncKey, const UT_StubContext_t *Context)
+{
+    const MD_SymAddr_t *Input   = UserObj;
+    const char         *Name    = UT_Hook_GetArgValueByName(Context, "symbol_name", const char *);
+    cpuaddr            *Address = UT_Hook_GetArgValueByName(Context, "symbol_address", cpuaddr *);
+    char                Expected[sizeof(Input->SymName)];
+
+    memcpy(Expected, Input->SymName, sizeof(Expected));
+    Expected[sizeof(Expected) - 1] = '\0';
+    if (UtAssert_True(memchr(Name, '\0', sizeof(Expected)) != NULL, "Lookup name is bounded and terminated"))
+    {
+        UtAssert_True(strcmp(Name, Expected) == 0, "Lookup preserves the bounded symbol name");
+    }
+    *Address = 4096;
+}
+
+void MD_ResolveSymAddr_Test_Unterminated(void)
+{
+    MD_SymAddr_t Input;
+    MD_SymAddr_t Original;
+    cpuaddr      Address = 0;
+
+    memset(&Input, 'X', sizeof(Input));
+    Input.Offset = 7;
+    memcpy(&Original, &Input, sizeof(Input));
+    UT_SetHandlerFunction(UT_KEY(OS_SymbolLookup), MD_Test_SymbolLookup, &Input);
+    UtAssert_True(MD_ResolveSymAddr(&Input, &Address), "Resolve a full-width symbol through a local copy");
+    UtAssert_True(Address == 4103, "Add the offset after successful lookup");
+    UtAssert_True(memcmp(&Input, &Original, sizeof(Input)) == 0, "Input remains unchanged");
+
+    UT_SetDefaultReturnValue(UT_KEY(OS_SymbolLookup), OS_ERROR);
+    UtAssert_True(!MD_ResolveSymAddr(&Input, &Address), "Lookup failure is preserved");
+    UtAssert_True(Address == 4096, "Do not add the offset after lookup failure");
+    UtAssert_True(memcmp(&Input, &Original, sizeof(Input)) == 0, "Failed lookup also preserves input");
+    UtAssert_STUB_COUNT(OS_SymbolLookup, 2);
+}
+
+void MD_ResolveSymAddr_Test_TerminationBoundaries(void)
+{
+    MD_SymAddr_t Input;
+    MD_SymAddr_t Original;
+    cpuaddr      Address = 0;
+    size_t       Length;
+
+    for (Length = 0; Length < sizeof(Input.SymName); ++Length)
+    {
+        memset(&Input, 'X', sizeof(Input));
+        Input.Offset          = 7;
+        Input.SymName[Length] = '\0';
+        memcpy(&Original, &Input, sizeof(Input));
+        UT_SetHandlerFunction(UT_KEY(OS_SymbolLookup), MD_Test_SymbolLookup, &Input);
+        UtAssert_True(MD_ResolveSymAddr(&Input, &Address), "Resolve each termination position");
+        UtAssert_True(Address == (Length == 0 ? 7 : 4103), "Preserve absolute and symbolic addresses");
+        UtAssert_True(memcmp(&Input, &Original, sizeof(Input)) == 0, "Preserve input at each boundary");
+    }
+    UtAssert_STUB_COUNT(OS_SymbolLookup, sizeof(Input.SymName) - 1);
+}
+
 void UtTest_Setup(void)
 {
     UtTest_Add(MD_TableIsInMask_Test_ShiftOddResult,
@@ -550,6 +608,15 @@ void UtTest_Setup(void)
 
     UtTest_Add(MD_Verify32Aligned_Test, MD_Test_Setup, MD_Test_TearDown, "MD_Verify32Aligned_Test");
     UtTest_Add(MD_Verify16Aligned_Test, MD_Test_Setup, MD_Test_TearDown, "MD_Verify16Aligned_Test");
+
+    UtTest_Add(MD_ResolveSymAddr_Test_Unterminated,
+               MD_Test_Setup,
+               MD_Test_TearDown,
+               "Unterminated symbol is copied safely");
+    UtTest_Add(MD_ResolveSymAddr_Test_TerminationBoundaries,
+               MD_Test_Setup,
+               MD_Test_TearDown,
+               "All symbol termination boundaries");
 
     UtTest_Add(MD_ResolveSymAddr_Test, MD_Test_Setup, MD_Test_TearDown, "MD_ResolveSymAddr_Test");
 }
