@@ -126,7 +126,7 @@ void MD_TableValidationFunc_Test_ResolveError(void)
 
     snprintf(ExpectedEventString,
              CFE_MISSION_EVS_MAX_MESSAGE_LENGTH,
-             "Dwell Table rejected because address (sym='%%s'/offset=0x%%08X) in entry #%%d couldn't be resolved");
+             "Dwell Table rejected because address (sym='%%.*s'/offset=0x%%08X) in entry #%%d couldn't be resolved");
 
     Table.Enabled = MD_Dwell_States_ENABLED;
 
@@ -173,7 +173,7 @@ void MD_TableValidationFunc_Test_InvalidAddress(void)
 
     snprintf(ExpectedEventString,
              CFE_MISSION_EVS_MAX_MESSAGE_LENGTH,
-             "Dwell Table rejected because address (sym='%%s'/offset=0x%%08X) in entry #%%d was out of range");
+             "Dwell Table rejected because address (sym='%%.*s'/offset=0x%%08X) in entry #%%d was out of range");
 
     Table.Enabled = MD_Dwell_States_ENABLED;
 
@@ -318,7 +318,7 @@ void MD_TableValidationFunc_Test_NotAligned(void)
 
     snprintf(ExpectedEventString,
              CFE_MISSION_EVS_MAX_MESSAGE_LENGTH,
-             "Dwell Table rejected because address (sym='%%s'/offset=0x%%08X) in entry #%%d not properly aligned for "
+             "Dwell Table rejected because address (sym='%%.*s'/offset=0x%%08X) in entry #%%d not properly aligned for "
              "%%d-byte dwell");
 
     Table.Enabled = MD_Dwell_States_ENABLED;
@@ -1204,8 +1204,63 @@ void MD_UpdateTableSignature_Test_Error(void)
 
 #endif
 
+static void
+MD_Test_CaptureTableEvent(void *UserObj, UT_EntryKey_t FuncKey, const UT_StubContext_t *Context, va_list Args)
+{
+    uint16      EventId = UT_Hook_GetArgValueByName(Context, "EventID", uint16);
+    const char *Format  = UT_Hook_GetArgValueByName(Context, "Spec", const char *);
+    if (EventId == MD_RESOLVE_ERR_EID || EventId == MD_RANGE_ERR_EID || EventId == MD_TBL_ALIGN_ERR_EID)
+    {
+        vsnprintf(UserObj, 512, Format, Args);
+    }
+}
+
+void MD_TableValidationFunc_Test_UnterminatedSymbolEvents(void)
+{
+    MD_DwellTableLoad_t Table;
+    char                Event[512];
+    char                ExpectedSymbol[sizeof(Table.Entry[0].DwellAddress.SymName) + 1];
+    const int32         Errors[] = { MD_RESOLVE_ERROR, MD_INVALID_ADDR_ERROR, MD_NOT_ALIGNED_ERROR };
+    size_t              Index;
+
+    memset(ExpectedSymbol, 'X', sizeof(ExpectedSymbol) - 1);
+    ExpectedSymbol[sizeof(ExpectedSymbol) - 1] = '\0';
+    for (Index = 0; Index < sizeof(Errors) / sizeof(Errors[0]); ++Index)
+    {
+        MD_Test_Setup();
+        memset(&Table, 0, sizeof(Table));
+        Table.Enabled = MD_Dwell_States_ENABLED;
+        memset(Table.Entry[0].DwellAddress.SymName, 'X', sizeof(Table.Entry[0].DwellAddress.SymName));
+        Table.Entry[0].Length = Errors[Index] == MD_NOT_ALIGNED_ERROR ? 2 : 1;
+        UT_SetDefaultReturnValue(UT_KEY(MD_ResolveSymAddr), Errors[Index] != MD_RESOLVE_ERROR);
+        UT_SetDefaultReturnValue(UT_KEY(MD_ValidAddrRange), Errors[Index] != MD_INVALID_ADDR_ERROR);
+        UT_SetDefaultReturnValue(UT_KEY(MD_ValidFieldLength), true);
+        UT_SetDefaultReturnValue(UT_KEY(MD_Verify16Aligned), false);
+        UT_SetVaHandlerFunction(UT_KEY(CFE_EVS_SendEvent), MD_Test_CaptureTableEvent, Event);
+        Event[0] = '\0';
+
+        UtAssert_INT32_EQ(MD_TableValidationFunc(&Table), Errors[Index]);
+        const char *Symbol = strstr(Event, "sym='");
+        UtAssert_True(Symbol != NULL, "Error event contains the symbolic address");
+        if (Symbol != NULL)
+        {
+            Symbol += 5;
+            UtAssert_True(memcmp(Symbol, ExpectedSymbol, sizeof(ExpectedSymbol) - 1) == 0,
+                          "Event retains all bytes within the symbol field");
+            UtAssert_True(Symbol[sizeof(ExpectedSymbol) - 1] == '\'', "Table diagnostic stops at the field boundary");
+        }
+        UtAssert_True(memchr(Table.Entry[0].DwellAddress.SymName, '\0', sizeof(Table.Entry[0].DwellAddress.SymName))
+                          == NULL,
+                      "Table input remains unchanged");
+    }
+}
+
 void UtTest_Setup(void)
 {
+    UtTest_Add(MD_TableValidationFunc_Test_UnterminatedSymbolEvents,
+               MD_Test_Setup,
+               MD_Test_TearDown,
+               "Bound unterminated table events");
     UtTest_Add(MD_TableValidationFunc_Test_InvalidEnableFlag,
                MD_Test_Setup,
                MD_Test_TearDown,

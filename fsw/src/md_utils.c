@@ -189,18 +189,13 @@ bool MD_ResolveSymAddr(const MD_SymAddr_t *SymAddr, cpuaddr *ResolvedAddr)
 {
     bool  Valid;
     int32 OS_Status;
-
-    /*
-    ** NUL terminate the very end of the symbol name string array as a
-    ** safety measure
-    */
-    // SymAddr->SymName[CFE_MISSION_MAX_PATH_LEN - 1] = '\0';
+    char  SymbolName[sizeof(SymAddr->SymName)];
 
     /*
     ** If the symbol name string is a nul string
     ** we use the offset as the absolute address
     */
-    if (strlen(SymAddr->SymName) == 0)
+    if (SymAddr->SymName[0] == '\0')
     {
         *ResolvedAddr = SymAddr->Offset;
         Valid         = true;
@@ -211,7 +206,10 @@ bool MD_ResolveSymAddr(const MD_SymAddr_t *SymAddr, cpuaddr *ResolvedAddr)
         ** If symbol name is not an empty string look it up
         ** using the OSAL API and add the offset if it succeeds
         */
-        OS_Status = OS_SymbolLookup(ResolvedAddr, SymAddr->SymName);
+        /* Terminate a bounded local copy without modifying the command or table. */
+        memcpy(SymbolName, SymAddr->SymName, sizeof(SymbolName));
+        SymbolName[sizeof(SymbolName) - 1] = '\0';
+        OS_Status                          = OS_SymbolLookup(ResolvedAddr, SymbolName);
         if (OS_Status == OS_SUCCESS)
         {
             *ResolvedAddr += SymAddr->Offset;
