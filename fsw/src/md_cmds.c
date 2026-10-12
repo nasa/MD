@@ -258,9 +258,6 @@ CFE_Status_t MD_JamDwellCmd(const MD_JamDwellCmd_t *Msg)
 
     Status = CFE_SUCCESS;
 
-    /* In case Dwell Address sym name isn't null terminated, do it now. */
-    // Msg->Payload.DwellAddress.SymName[CFE_MISSION_MAX_PATH_LEN - 1] = '\0';
-
     /*
     **  Check that TableId and EntryId command arguments,
     **  which are used as array indexes, are valid.
@@ -351,7 +348,8 @@ CFE_Status_t MD_JamDwellCmd(const MD_JamDwellCmd_t *Msg)
                 /* If DwellAddress argument couldn't be resolved, issue error event */
                 CFE_EVS_SendEvent(MD_CANT_RESOLVE_JAM_ADDR_ERR_EID,
                                   CFE_EVS_EventType_ERROR,
-                                  "Jam Cmd rejected because symbolic address '%s' couldn't be resolved",
+                                  "Jam Cmd rejected because symbolic address '%.*s' couldn't be resolved",
+                                  (int)sizeof(Msg->Payload.DwellAddress.SymName),
                                   Msg->Payload.DwellAddress.SymName);
                 AllInputsValid = false;
             }

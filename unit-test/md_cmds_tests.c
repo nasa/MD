@@ -702,7 +702,7 @@ void MD_ProcessJamCmd_Test_CantResolveJamAddr(void)
 
     snprintf(ExpectedEventString,
              CFE_MISSION_EVS_MAX_MESSAGE_LENGTH,
-             "Jam Cmd rejected because symbolic address '%%s' couldn't be resolved");
+             "Jam Cmd rejected because symbolic address '%%.*s' couldn't be resolved");
 
     TestMsgId = CFE_SB_ValueToMsgId(MD_CMD_MID);
     UT_SetDataBuffer(UT_KEY(CFE_MSG_GetMsgId), &TestMsgId, sizeof(TestMsgId), false);
@@ -1420,8 +1420,53 @@ void MD_ProcessSignatureCmd_Test_NoUpdateTableSignature(void)
 }
 #endif
 
+static void MD_Test_CaptureJamEvent(void *UserObj, UT_EntryKey_t FuncKey, const UT_StubContext_t *Context, va_list Args)
+{
+    const char *Format = UT_Hook_GetArgValueByName(Context, "Spec", const char *);
+    vsnprintf(UserObj, 512, Format, Args);
+}
+
+void MD_ProcessJamCmd_Test_UnterminatedSymbolEvent(void)
+{
+    struct
+    {
+        MD_JamDwellCmd_t Msg;
+        char             Guard[8];
+    } Input;
+    char Event[512];
+    char Expected[512];
+
+    memset(&Input, 'X', sizeof(Input));
+    Input.Guard[sizeof(Input.Guard) - 1] = '\0';
+    Input.Msg.Payload.TableId            = 1;
+    Input.Msg.Payload.EntryId            = 1;
+    Input.Msg.Payload.FieldLength        = 1;
+    UT_SetDefaultReturnValue(UT_KEY(MD_ValidTableId), true);
+    UT_SetDefaultReturnValue(UT_KEY(MD_ValidEntryId), true);
+    UT_SetDefaultReturnValue(UT_KEY(MD_ResolveSymAddr), false);
+    UT_SetVaHandlerFunction(UT_KEY(CFE_EVS_SendEvent), MD_Test_CaptureJamEvent, Event);
+
+    MD_JamDwellCmd(&Input.Msg);
+
+    snprintf(Expected,
+             sizeof(Expected),
+             "Jam Cmd rejected because symbolic address '%.*s' couldn't be resolved",
+             (int)sizeof(Input.Msg.Payload.DwellAddress.SymName),
+             Input.Msg.Payload.DwellAddress.SymName);
+    UtAssert_True(strcmp(Event, Expected) == 0, "Jam diagnostic stops at the symbol field boundary");
+    UtAssert_UINT32_EQ(MD_AppData.CommandErrorCounter, 1);
+    UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 1);
+    UtAssert_True(memchr(Input.Msg.Payload.DwellAddress.SymName, '\0', sizeof(Input.Msg.Payload.DwellAddress.SymName))
+                      == NULL,
+                  "Jam input remains unchanged");
+}
+
 void UtTest_Setup(void)
 {
+    UtTest_Add(MD_ProcessJamCmd_Test_UnterminatedSymbolEvent,
+               MD_Test_Setup,
+               MD_Test_TearDown,
+               "Bound unterminated jam event");
     UtTest_Add(MD_NoopCmd_Test, MD_Test_Setup, MD_Test_TearDown, "MD_NoopCmd_Test");
     UtTest_Add(MD_ResetCountersCmd_Test, MD_Test_Setup, MD_Test_TearDown, "MD_ResetCountersCmd_Test");
 
