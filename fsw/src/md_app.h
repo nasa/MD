@@ -132,13 +132,6 @@ typedef struct
 #define MD_BAD_CMD_CODE (-1) /**< \brief Bad command code */
 /**\}*/
 
-/** \brief Command handler table record */
-typedef struct
-{
-    uint32 CmdCode;        /**< \brief Acceptable Command Code (if necessary) */
-    uint32 ExpectedLength; /**< \brief Expected Message Length (in bytes) including message header */
-} MD_CmdHandlerTblRec_t;
-
 /** \brief Memory Dwell Task Global */
 extern MD_AppData_t MD_AppData;
 
