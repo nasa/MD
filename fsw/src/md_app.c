@@ -472,7 +472,7 @@ CFE_Status_t MD_ManageDwellTable(uint8 TblIndex)
     CFE_Status_t         Status           = CFE_SUCCESS;
     int32                GetAddressResult = 0;
     bool                 FinishedManaging = false;
-    MD_DwellTableLoad_t *MD_LoadTablePtr  = 0;
+    MD_DwellTableLoad_t *MD_LoadTablePtr  = NULL;
 
     while (!FinishedManaging)
     {
