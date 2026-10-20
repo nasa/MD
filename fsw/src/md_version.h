@@ -29,9 +29,9 @@
  * \{
  */
 
-#define MD_MAJOR_VERSION 7 /**< \brief Major version number */
-#define MD_MINOR_VERSION 0 /**< \brief Minor version number */
-#define MD_REVISION      1 /**< \brief Revision number */
+#define MD_MAJOR_VERSION 7
+#define MD_MINOR_VERSION 0
+#define MD_REVISION      2
 
 /**\}*/
 
