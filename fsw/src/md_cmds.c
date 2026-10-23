@@ -80,7 +80,7 @@ CFE_Status_t MD_StartDwellCmd(const MD_StartDwellCmd_t *Msg)
     CFE_Status_t Status;
     CFE_Status_t TableUpdateStatus;
     int32        NumTblInMask = 0; /* Purely as info for event message */
-    uint16       TableId      = 0;
+    uint16       TableId;
     uint16       TableIndex;
     bool         AnyTablesInMask = false;
 
@@ -179,7 +179,7 @@ CFE_Status_t MD_StopDwellCmd(const MD_StopDwellCmd_t *Msg)
     CFE_Status_t Status;
     CFE_Status_t TableUpdateStatus;
     int32        NumTblInMask = 0; /* Purely as info for event message */
-    uint16       TableId      = 0;
+    uint16       TableId;
     uint16       TableIndex;
     bool         AnyTablesInMask = false;
 
@@ -249,8 +249,8 @@ CFE_Status_t MD_JamDwellCmd(const MD_JamDwellCmd_t *Msg)
 {
     /* Local variables */
     CFE_Status_t            Status;
-    bool                    AllInputsValid = true;
-    cpuaddr                 ResolvedAddr   = 0;
+    bool                    AllInputsValid;
+    cpuaddr                 ResolvedAddr = 0;
     MD_DwellControlEntry_t *DwellEntryPtr; /* points to local task data */
     uint16                  EntryIndex;
     uint8                   TableIndex = 0;
@@ -492,7 +492,7 @@ CFE_Status_t MD_JamDwellCmd(const MD_JamDwellCmd_t *Msg)
 CFE_Status_t MD_SetSignatureCmd(const MD_SetSignatureCmd_t *Msg)
 {
     CFE_Status_t Status;
-    uint16       TblId = 0;
+    uint16       TblId;
     uint16       StringLength;
 
     Status = CFE_SUCCESS;
