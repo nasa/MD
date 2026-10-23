@@ -41,9 +41,9 @@ MD_AppData_t MD_AppData;
 
 void MD_AppMain(void)
 {
-    CFE_Status_t     Status   = CFE_SUCCESS;
-    uint8            TblIndex = 0;
-    CFE_SB_Buffer_t *BufPtr   = NULL;
+    CFE_Status_t     Status;
+    uint8            TblIndex;
+    CFE_SB_Buffer_t *BufPtr = NULL;
 
     MD_AppData.RunStatus = CFE_ES_RunStatus_APP_RUN;
 
@@ -118,7 +118,7 @@ CFE_Status_t MD_AppInit(void)
     /*
     ** Locals
     */
-    CFE_Status_t Status = CFE_SUCCESS;
+    CFE_Status_t Status;
 
     MD_AppData.CommandCounter      = 0;
     MD_AppData.CommandErrorCounter = 0;
@@ -170,7 +170,7 @@ CFE_Status_t MD_AppInit(void)
 void MD_InitControlStructures(void)
 {
     uint16                   TblIndex;
-    MD_DwellPacketControl_t *DwellControlPtr = NULL;
+    MD_DwellPacketControl_t *DwellControlPtr;
 
     for (TblIndex = 0; TblIndex < MD_INTERFACE_NUM_DWELL_TABLES; TblIndex++)
     {
@@ -192,7 +192,7 @@ void MD_InitControlStructures(void)
 /******************************************************************************/
 CFE_Status_t MD_InitSoftwareBusServices(void)
 {
-    CFE_Status_t Status = CFE_SUCCESS;
+    CFE_Status_t Status;
     uint16       TblIndex;
 
     /*
@@ -280,14 +280,14 @@ CFE_Status_t MD_InitSoftwareBusServices(void)
 
 CFE_Status_t MD_InitTableServices(void)
 {
-    CFE_Status_t         Status           = CFE_SUCCESS;
-    int32                GetAddressResult = 0;
+    CFE_Status_t         Status = CFE_SUCCESS;
+    int32                GetAddressResult;
     uint8                TblIndex;
-    bool                 RecoveredValidTable = true; /* for current table */
-    bool                 TableInitValidFlag  = true; /* for all tables so far*/
-    MD_DwellTableLoad_t *MD_LoadTablePtr     = NULL;
-    uint16               TblRecos            = 0; /* Number of Tables Recovered */
-    uint16               TblInits            = 0; /* Number of Tables Initialized */
+    bool                 RecoveredValidTable;       /* for current table */
+    bool                 TableInitValidFlag = true; /* for all tables so far*/
+    MD_DwellTableLoad_t *MD_LoadTablePtr    = NULL;
+    uint16               TblRecos           = 0; /* Number of Tables Recovered */
+    uint16               TblInits           = 0; /* Number of Tables Initialized */
     char                 TblFileName[OS_MAX_PATH_LEN];
 
     /*
@@ -469,8 +469,8 @@ CFE_Status_t MD_InitTableServices(void)
 /******************************************************************************/
 CFE_Status_t MD_ManageDwellTable(uint8 TblIndex)
 {
-    CFE_Status_t         Status           = CFE_SUCCESS;
-    int32                GetAddressResult = 0;
+    CFE_Status_t         Status = CFE_SUCCESS;
+    int32                GetAddressResult;
     bool                 FinishedManaging = false;
     MD_DwellTableLoad_t *MD_LoadTablePtr  = NULL;
 
@@ -550,8 +550,8 @@ CFE_Status_t MD_SendHkCmd(const MD_SendHkCmd_t *Msg)
 {
     uint8                    TblIndex;
     uint16                   MemDwellEnableBits = 0;
-    MD_HkTlm_t              *HkPktPtr           = NULL;
-    MD_DwellPacketControl_t *ThisDwellTablePtr  = NULL;
+    MD_HkTlm_t              *HkPktPtr;
+    MD_DwellPacketControl_t *ThisDwellTablePtr;
 
     /* Assign pointer used as shorthand to access Housekeeping Packet fields */
     HkPktPtr = &MD_AppData.HkPkt;
