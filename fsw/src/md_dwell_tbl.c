@@ -38,10 +38,10 @@ extern MD_AppData_t MD_AppData;
 /******************************************************************************/
 int32 MD_TableValidationFunc(void *TblPtr)
 {
-    uint16               ActiveEntryCount   = 0;
-    uint16               Size               = 0;
-    uint32               Rate               = 0;
-    int32                Status             = CFE_SUCCESS; /* Initialize to valid table */
+    uint16               ActiveEntryCount = 0;
+    uint16               Size             = 0;
+    uint32               Rate             = 0;
+    int32                Status;
     MD_DwellTableLoad_t *LocalTblPtr        = (MD_DwellTableLoad_t *)TblPtr;
     uint16               TblErrorEntryIndex = 0; /* Zero-based entry number for error; */
                                                  /* valid if there is an error.        */
@@ -189,9 +189,9 @@ int32 MD_CheckTableEntries(MD_DwellTableLoad_t *TblPtr, uint16 *ErrorEntryArg)
     uint16 EntryIndex;
     int32  FirstBadIndex = -1;
 
-    int32 GoodCount   = 0;
-    int32 BadCount    = 0;
-    int32 UnusedCount = 0;
+    int32 GoodCount = 0;
+    int32 BadCount  = 0;
+    int32 UnusedCount;
 
     *ErrorEntryArg = 0;
 
@@ -257,8 +257,8 @@ int32 MD_CheckTableEntries(MD_DwellTableLoad_t *TblPtr, uint16 *ErrorEntryArg)
 /******************************************************************************/
 int32 MD_ValidTableEntry(MD_TableLoadEntry_t *TblEntryPtr)
 {
-    int32   Status       = MD_ERROR;
-    uint16  DwellLength  = 0;
+    int32   Status;
+    uint16  DwellLength;
     cpuaddr ResolvedAddr = 0;
 
     DwellLength = TblEntryPtr->Length;
@@ -311,8 +311,8 @@ int32 MD_ValidTableEntry(MD_TableLoadEntry_t *TblEntryPtr)
 void MD_CopyUpdatedTbl(MD_DwellTableLoad_t *MD_LoadTablePtr, uint8 TblIndex)
 {
     uint8                    EntryIndex;
-    cpuaddr                  ResolvedAddr       = 0;
-    MD_TableLoadEntry_t     *ThisLoadEntry      = NULL;
+    cpuaddr                  ResolvedAddr = 0;
+    MD_TableLoadEntry_t     *ThisLoadEntry;
     MD_DwellPacketControl_t *LocalControlStruct = &MD_AppData.MD_DwellTables[TblIndex];
 
     /* Null check on MD_LoadTablePtr not necessary - table passed validation */
@@ -352,7 +352,7 @@ void MD_CopyUpdatedTbl(MD_DwellTableLoad_t *MD_LoadTablePtr, uint8 TblIndex)
 /******************************************************************************/
 CFE_Status_t MD_UpdateTableEnabledField(uint16 TableIndex, uint16 FieldValue)
 {
-    CFE_Status_t         Status          = CFE_SUCCESS;
+    CFE_Status_t         Status;
     MD_DwellTableLoad_t *MD_LoadTablePtr = NULL;
 
     Status = CFE_TBL_GetAddress((void *)&MD_LoadTablePtr, MD_AppData.MD_TableHandle[TableIndex]);
@@ -387,9 +387,9 @@ CFE_Status_t MD_UpdateTableDwellEntry(uint16       TableIndex,
                                       uint16       NewDelay,
                                       MD_SymAddr_t NewDwellAddress)
 {
-    CFE_Status_t         Status          = CFE_SUCCESS;
+    CFE_Status_t         Status;
     MD_DwellTableLoad_t *MD_LoadTablePtr = NULL;
-    MD_TableLoadEntry_t *EntryPtr        = NULL;
+    MD_TableLoadEntry_t *EntryPtr;
 
     /* Get pointer to Table */
     Status = CFE_TBL_GetAddress((void *)&MD_LoadTablePtr, MD_AppData.MD_TableHandle[TableIndex]);
@@ -431,7 +431,7 @@ CFE_Status_t MD_UpdateTableDwellEntry(uint16       TableIndex,
 
 CFE_Status_t MD_UpdateTableSignature(uint16 TableIndex, const char NewSignature[MD_INTERFACE_SIGNATURE_FIELD_LENGTH])
 {
-    CFE_Status_t         Status          = CFE_SUCCESS;
+    CFE_Status_t         Status;
     MD_DwellTableLoad_t *MD_LoadTablePtr = NULL;
 
     /* Get pointer to Table */

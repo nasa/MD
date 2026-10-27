@@ -42,7 +42,7 @@ CFE_Status_t MD_DwellLoop(const MD_Wakeup_t *Msg)
     uint16                   TblIndex;
     uint16                   EntryIndex;
     uint16                   NumDwellAddresses;
-    MD_DwellPacketControl_t *TblPtr = NULL;
+    MD_DwellPacketControl_t *TblPtr;
 
     Status = CFE_SUCCESS;
 
@@ -151,7 +151,7 @@ CFE_Status_t MD_DwellLoop(const MD_Wakeup_t *Msg)
 
 int32 MD_GetDwellData(uint16 TblIndex, uint16 EntryIndex)
 {
-    uint8                    NumBytes   = 0; /* Num of bytes to read */
+    uint8                    NumBytes;       /* Num of bytes to read */
     uint32                   MemReadVal = 0; /* 1-, 2-, or 4-byte value */
     MD_DwellPacketControl_t *TblPtr     = &MD_AppData.MD_DwellTables[TblIndex];
     int32                    Status     = CFE_SUCCESS;
@@ -208,7 +208,7 @@ int32 MD_GetDwellData(uint16 TblIndex, uint16 EntryIndex)
 
 void MD_SendDwellPkt(uint16 TableIndex)
 {
-    uint16 DwellPktSize = 0; /* Dwell Packet Size, in bytes */
+    uint16 DwellPktSize; /* Dwell Packet Size, in bytes */
 
     /* Assign pointers to structures */
     MD_DwellPacketControl_t *TblPtr = &MD_AppData.MD_DwellTables[TableIndex];
