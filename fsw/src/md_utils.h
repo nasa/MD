@@ -199,6 +199,9 @@ bool MD_Verify16Aligned(cpuaddr Address, uint32 Size);
  *  \retval true  Symbolic address was resolved
  *  \retval false Symbolic address was not resolved
  *
+ *  Symbol names are terminated in a local copy limited to the field size minus
+ *  one. The caller's command or table buffer is not modified.
+ *
  *  \sa #OS_SymbolLookup
  */
 bool MD_ResolveSymAddr(const MD_SymAddr_t *SymAddr, cpuaddr *ResolvedAddr);

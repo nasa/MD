@@ -120,7 +120,8 @@ int32 MD_TableValidationFunc(void *TblPtr)
             CFE_EVS_SendEvent(
                 MD_RESOLVE_ERR_EID,
                 CFE_EVS_EventType_ERROR,
-                "Dwell Table rejected because address (sym='%s'/offset=0x%08X) in entry #%d couldn't be resolved",
+                "Dwell Table rejected because address (sym='%.*s'/offset=0x%08X) in entry #%d couldn't be resolved",
+                (int)sizeof(LocalTblPtr->Entry[TblErrorEntryIndex].DwellAddress.SymName),
                 LocalTblPtr->Entry[TblErrorEntryIndex].DwellAddress.SymName,
                 (unsigned int)LocalTblPtr->Entry[TblErrorEntryIndex].DwellAddress.Offset,
                 TblErrorEntryIndex + 1);
@@ -130,7 +131,8 @@ int32 MD_TableValidationFunc(void *TblPtr)
             CFE_EVS_SendEvent(
                 MD_RANGE_ERR_EID,
                 CFE_EVS_EventType_ERROR,
-                "Dwell Table rejected because address (sym='%s'/offset=0x%08X) in entry #%d was out of range",
+                "Dwell Table rejected because address (sym='%.*s'/offset=0x%08X) in entry #%d was out of range",
+                (int)sizeof(LocalTblPtr->Entry[TblErrorEntryIndex].DwellAddress.SymName),
                 LocalTblPtr->Entry[TblErrorEntryIndex].DwellAddress.SymName,
                 (unsigned int)LocalTblPtr->Entry[TblErrorEntryIndex].DwellAddress.Offset,
                 TblErrorEntryIndex + 1);
@@ -145,14 +147,16 @@ int32 MD_TableValidationFunc(void *TblPtr)
         }
         else /* Status == MD_NOT_ALIGNED_ERROR is only remaining option */
         {
-            CFE_EVS_SendEvent(MD_TBL_ALIGN_ERR_EID,
-                              CFE_EVS_EventType_ERROR,
-                              "Dwell Table rejected because address (sym='%s'/offset=0x%08X) in entry #%d not properly "
-                              "aligned for %d-byte dwell",
-                              LocalTblPtr->Entry[TblErrorEntryIndex].DwellAddress.SymName,
-                              (unsigned int)LocalTblPtr->Entry[TblErrorEntryIndex].DwellAddress.Offset,
-                              TblErrorEntryIndex + 1,
-                              LocalTblPtr->Entry[TblErrorEntryIndex].Length);
+            CFE_EVS_SendEvent(
+                MD_TBL_ALIGN_ERR_EID,
+                CFE_EVS_EventType_ERROR,
+                "Dwell Table rejected because address (sym='%.*s'/offset=0x%08X) in entry #%d not properly "
+                "aligned for %d-byte dwell",
+                (int)sizeof(LocalTblPtr->Entry[TblErrorEntryIndex].DwellAddress.SymName),
+                LocalTblPtr->Entry[TblErrorEntryIndex].DwellAddress.SymName,
+                (unsigned int)LocalTblPtr->Entry[TblErrorEntryIndex].DwellAddress.Offset,
+                TblErrorEntryIndex + 1,
+                LocalTblPtr->Entry[TblErrorEntryIndex].Length);
         }
 
     } /* end else MD_ReadDwellTable */
