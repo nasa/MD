@@ -577,7 +577,22 @@
             </GenericTypeMapSet>
           </Interface>
           <!-- Dwell Telemetry Packet Interface -->
-          <Interface name="DWELL_TLM" shortDescription="Memory Dwell telemetry packet interface" type="CFE_SB/Telemetry">
+          <Interface name="DWELL_1_TLM" shortDescription="Memory Dwell telemetry packet interface" type="CFE_SB/Telemetry">
+            <GenericTypeMapSet>
+              <GenericTypeMap name="TelemetryDataType" type="DwellPkt" />
+            </GenericTypeMapSet>
+          </Interface>
+          <Interface name="DWELL_2_TLM" shortDescription="Memory Dwell telemetry packet interface" type="CFE_SB/Telemetry">
+            <GenericTypeMapSet>
+              <GenericTypeMap name="TelemetryDataType" type="DwellPkt" />
+            </GenericTypeMapSet>
+          </Interface>
+          <Interface name="DWELL_3_TLM" shortDescription="Memory Dwell telemetry packet interface" type="CFE_SB/Telemetry">
+            <GenericTypeMapSet>
+              <GenericTypeMap name="TelemetryDataType" type="DwellPkt" />
+            </GenericTypeMapSet>
+          </Interface>
+          <Interface name="DWELL_4_TLM" shortDescription="Memory Dwell telemetry packet interface" type="CFE_SB/Telemetry">
             <GenericTypeMapSet>
               <GenericTypeMap name="TelemetryDataType" type="DwellPkt" />
             </GenericTypeMapSet>
@@ -591,7 +606,10 @@
             <Variable type="BASE_TYPES/uint16" readOnly="true" name="SendHkTopicId" initialValue="${CFE_MISSION/MD_SEND_HK_TOPICID}" />
             <Variable type="BASE_TYPES/uint16" readOnly="true" name="HkTlmTopicId" initialValue="${CFE_MISSION/MD_HK_TLM_TOPICID}" />
             <Variable type="BASE_TYPES/uint16" readOnly="true" name="WakeupTopicId" initialValue="${CFE_MISSION/MD_WAKEUP_TOPICID}" />
-            <Variable type="BASE_TYPES/uint16" readOnly="true" name="DwellTlmTopicId" initialValue="${CFE_MISSION/MD_DWELL_PKT_MID_BASE_TOPICID}" />
+            <Variable type="BASE_TYPES/uint16" readOnly="true" name="Dwell1TlmTopicId" initialValue="${CFE_MISSION/MD_DWELL_PKT_MID_BASE_TOPICID}" />
+            <Variable type="BASE_TYPES/uint16" readOnly="true" name="Dwell2TlmTopicId" initialValue="${CFE_MISSION/MD_DWELL_PKT_MID_BASE_TOPICID} + 1" />
+            <Variable type="BASE_TYPES/uint16" readOnly="true" name="Dwell3TlmTopicId" initialValue="${CFE_MISSION/MD_DWELL_PKT_MID_BASE_TOPICID} + 2" />
+            <Variable type="BASE_TYPES/uint16" readOnly="true" name="Dwell4TlmTopicId" initialValue="${CFE_MISSION/MD_DWELL_PKT_MID_BASE_TOPICID} + 3" />
           </VariableSet>
 
           <!-- Map the topic IDs to the interfaces -->
@@ -600,7 +618,10 @@
             <ParameterMap interface="SEND_HK" parameter="TopicId" variableRef="SendHkTopicId" />
             <ParameterMap interface="HK_TLM" parameter="TopicId" variableRef="HkTlmTopicId" />
             <ParameterMap interface="WAKEUP" parameter="TopicId" variableRef="WakeupTopicId" />
-            <ParameterMap interface="DWELL_TLM" parameter="TopicId" variableRef="DwellTlmTopicId" />
+            <ParameterMap interface="DWELL_1_TLM" parameter="TopicId" variableRef="Dwell1TlmTopicId" />
+            <ParameterMap interface="DWELL_2_TLM" parameter="TopicId" variableRef="Dwell2TlmTopicId" />
+            <ParameterMap interface="DWELL_3_TLM" parameter="TopicId" variableRef="Dwell3TlmTopicId" />
+            <ParameterMap interface="DWELL_4_TLM" parameter="TopicId" variableRef="Dwell4TlmTopicId" />
           </ParameterMapSet>
         </Implementation>
       </Component>
